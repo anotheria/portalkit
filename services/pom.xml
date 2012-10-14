@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+	<groupId>portalkit</groupId>
+	<artifactId>portalkit</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>portalkit</groupId>
+  <artifactId>services</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>The PortalKIT Services</name>
+  <description>PortalKIT Services Aggregator</description>
+
+	<modules>
+		<module>common</module>
+		<module>accountservice</module>
+	</modules>
+
+</project>

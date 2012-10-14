@@ -1,0 +1,78 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <parent>
+	<groupId>portalkit</groupId>
+	<artifactId>parent</artifactId>
+	<version>1-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>portalkit</groupId>
+  <artifactId>portalkit</artifactId>
+  <version>0.1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>The PortalKIT</name>
+  <description>PortalKIT</description>
+
+  <properties>
+  	<moskito-version>1.6.2</moskito-version>
+  </properties>
+<!--
+  <dependencies>
+	<dependency>
+  		<groupId>net.anotheria</groupId>
+  		<artifactId>ano-util</artifactId>
+  		<version>1.0.14</version>
+	</dependency>
+	<dependency>
+  		<groupId>net.anotheria</groupId>
+  		<artifactId>ano-net</artifactId>
+  		<version>1.0.0</version>
+	</dependency>
+	<dependency>
+  		<groupId>net.anotheria</groupId>
+  		<artifactId>ano-prise</artifactId>
+  		<version>1.0.25</version>
+	</dependency>
+	<dependency>
+  		<groupId>net.anotheria</groupId>
+  		<artifactId>configureme</artifactId>
+  		<version>1.1.0</version>
+	</dependency>
+	<dependency>
+  		<groupId>org.jdom</groupId>
+  		<artifactId>jdom</artifactId>
+  		<version>1.1</version>
+	</dependency>
+	<dependency>
+		<groupId>net.anotheria</groupId>
+		<artifactId>moskito-core</artifactId>
+		<version>${moskito-version}</version>
+	</dependency>
+	<dependency>
+		<groupId>net.anotheria</groupId>
+		<artifactId>moskito-util</artifactId>
+		<version>${moskito-version}</version>
+	</dependency>
+	<dependency>
+		<groupId>net.anotheria</groupId>
+		<artifactId>moskito-web</artifactId>
+		<version>${moskito-version}</version>
+	</dependency>
+	<dependency>
+		<groupId>net.anotheria</groupId>
+		<artifactId>moskito-webui</artifactId>
+		<version>${moskito-version}</version>
+	</dependency>
+  </dependencies>
+-->
+	<modules>
+		<module>services</module>
+	</modules>
+	<scm>
+		<url>svn:http://svn.anotheria.net/portalkit/portalkit/trunk</url>
+		<connection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</connection>
+		<developerConnection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</developerConnection>
+	</scm>
+
+</project>
