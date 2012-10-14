@@ -11,4 +11,14 @@
   <version>0.1.0-SNAPSHOT</version>
   <name>accountservice</name>
   <description>the accountservice</description>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>portalkit</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>
