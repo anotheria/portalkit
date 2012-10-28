@@ -1,24 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <parent>
-	<groupId>portalkit</groupId>
-	<artifactId>services</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-  </parent>
+	<parent>
+		<groupId>portalkit</groupId>
+		<artifactId>services</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>accountservice</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
-  <name>accountservice</name>
-  <description>the accountservice</description>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>services-accountservice</artifactId>
+	<name>services - accountservice</name>
+	<description>Services: Account Service</description>
 
 
-    <dependencies>
-        <dependency>
-            <groupId>portalkit</groupId>
-            <artifactId>common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>portalkit</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 
 </project>
