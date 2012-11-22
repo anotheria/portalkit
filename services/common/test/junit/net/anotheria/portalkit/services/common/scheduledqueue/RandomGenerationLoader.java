@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.common.scheduledqueue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * {@link Loader} testing implementation.
@@ -18,22 +19,31 @@ public class RandomGenerationLoader implements Loader {
 	/**
 	 * Loaded elements amount.
 	 */
-	private int loaded;
+	private static final AtomicInteger loaded = new AtomicInteger(0);
+
+	/**
+	 * Synchronization lock.
+	 */
+	private static final Object LOCK = new Object();
 
 	@Override
-	public synchronized List<Object> load() throws LoadingException {
+	public List<Object> load() throws LoadingException {
 		List<Object> result = new ArrayList<Object>();
 
-		if (loaded < MAX_TO_LOAD) {
-			result.add(System.currentTimeMillis() + "_obj_" + loaded);
-			loaded++;
+		if (loaded.get() < MAX_TO_LOAD) {
+			synchronized (LOCK) {
+				if (loaded.get() < MAX_TO_LOAD) {
+					result.add(System.currentTimeMillis() + "_obj_" + loaded);
+					loaded.incrementAndGet();
+				}
+			}
 		}
 
 		return result;
 	}
 
 	public int getLoaded() {
-		return loaded;
+		return loaded.get();
 	}
 
 }
