@@ -38,14 +38,14 @@ public final class LoaderJob implements Job {
 	public void execute(final JobExecutionContext context) throws JobExecutionException {
 		Object loaderObj = context.getJobDetail().getJobDataMap().get(LOADER);
 		if (!(loaderObj instanceof Loader)) {
-			LOGGER.error("execute(...) fail. No configured Loader.");
+			LOGGER.error("execute(context) fail. No configured Loader.");
 			return;
 		}
 		Loader loader = Loader.class.cast(loaderObj);
 
 		Object processorObj = context.getJobDetail().getJobDataMap().get(PROCESSOR);
 		if (!(processorObj instanceof Processor)) {
-			LOGGER.error("LoaderJob() fail. No configured Processor.");
+			LOGGER.error("execute(context) fail. No configured Processor.");
 			return;
 		}
 		Processor processor = Processor.class.cast(processorObj);
@@ -53,7 +53,7 @@ public final class LoaderJob implements Job {
 		ProcessingMode processingMode = ProcessingMode.DEFAULT;
 		Object processingModeObj = context.getJobDetail().getJobDataMap().get(PROCESSING_MODE);
 		if (!(processingModeObj instanceof ProcessingMode)) {
-			LOGGER.warn("LoaderJob() fail. No configured ProcessingMode.");
+			LOGGER.warn("execute(context) fail. No configured ProcessingMode.");
 			return;
 		}
 		processingMode = ProcessingMode.class.cast(processingModeObj);
@@ -68,16 +68,22 @@ public final class LoaderJob implements Job {
 
 			if (processingMode == ProcessingMode.SYNC) {
 				for (Object element : result) {
-					debug("processing element [" + element + "]");
-					processor.process(element);
+					try {
+						debug("processing element[" + element + "]");
+						processor.process(element);
+					} catch (ProcessingException e) {
+						LOGGER.error("execute(context) processing fail. Skipping element[" + element + "].", e);
+					} catch (Exception e) {
+						LOGGER.error("execute(context) processing fail. Skipping element[" + element + "].", e);
+					}
 				}
 
 				return;
 			}
 
-			// TODO: put result to queue
+			// TODO: put result to queue to process in ASYNC mode
 		} catch (LoadingException e) {
-			String message = "execute(context) fail";
+			String message = "execute(context) loading fail.";
 			LOGGER.error(message, e);
 		} catch (Exception e) {
 			String message = "execute(context) fail";
