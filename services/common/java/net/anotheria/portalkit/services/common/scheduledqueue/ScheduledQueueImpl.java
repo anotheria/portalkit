@@ -56,13 +56,15 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 	/**
 	 * Default constructor.
 	 * 
+	 * @param configFile
+	 *            - name of the 'quartz' configuration file
 	 * @param aLoader
 	 *            - elements loader
 	 * @param aProcessor
 	 *            - elements processor
 	 * @throws ScheduledQueueException
 	 */
-	protected ScheduledQueueImpl(final Loader aLoader, final Processor aProcessor) throws ScheduledQueueException {
+	protected ScheduledQueueImpl(final String configFile, final Loader aLoader, final Processor aProcessor) throws ScheduledQueueException {
 		if (aLoader == null)
 			throw new IllegalArgumentException("aLoader argument is null");
 		if (aProcessor == null)
@@ -75,7 +77,7 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 
 		// scheduler initialization
 		try {
-			scheduler = StdSchedulerFactory.getDefaultScheduler();
+			scheduler = new StdSchedulerFactory(configFile).getScheduler();
 			scheduler.start();
 
 			schedulerJob = JobBuilder.newJob(LoaderJob.class).withIdentity("LoaderJob", "ScheduledQueue").build();

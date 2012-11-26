@@ -10,15 +10,18 @@ public final class ScheduledQueueFactory {
 	/**
 	 * Create instance and configure {@link ScheduledQueue}.
 	 * 
+	 * @param configFile
+	 *            - name of the 'quartz' configuration file
 	 * @param loader
 	 *            - elements loader
 	 * @param processor
 	 *            - elements processor
+	 * 
 	 * @return {@link ScheduledQueue}
 	 * @throws ScheduledQueueException
 	 */
-	public static ScheduledQueue create(final Loader loader, final Processor processor) throws ScheduledQueueException {
-		return new ScheduledQueueImpl(loader, processor);
+	public static ScheduledQueue create(final String configFile, final Loader loader, final Processor processor) throws ScheduledQueueException {
+		return new ScheduledQueueImpl(configFile, loader, processor);
 	}
 
 }

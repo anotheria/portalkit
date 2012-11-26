@@ -37,7 +37,7 @@ public class ScheduledQueueTest {
 	public void before() throws ScheduledQueueException {
 		loader = new RandomGenerationLoader();
 		processor = new SystemOutProcessor();
-		queue = ScheduledQueueFactory.create(loader, processor);
+		queue = ScheduledQueueFactory.create("quartz.properties", loader, processor);
 	}
 
 	/**
