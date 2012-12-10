@@ -8,7 +8,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>services-accountservice</artifactId>
-	<name>services - accountservice</name>
+	<name>services - account service</name>
 	<description>Services: Account Service</description>
 
 
