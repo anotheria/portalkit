@@ -15,7 +15,13 @@
 	<modules>
 		<module>common</module>
 		<module>accountservice</module>
+		<module>accountsettingsservice</module>
+		<module>accountlistservice</module>
 		<module>authenticationservice</module>
+		<module>recordservice</module>
+		<module>notificationservice</module>
+		<module>messagingservice</module>
+		<module>paymentservice</module>
 	</modules>
 
 </project>
