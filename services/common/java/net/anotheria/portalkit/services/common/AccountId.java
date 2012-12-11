@@ -7,4 +7,7 @@ package net.anotheria.portalkit.services.common;
  * @since 14.10.12 21:54
  */
 public class AccountId {
+	private String internalId;
+
+
 }
