@@ -12,6 +12,10 @@ public class AuthToken {
 	 * Used algorithm. Used for encoding of the string.
 	 */
 	static enum Algorithm{
+		BLOWFISH;
+
+
+
 
 	}
 
@@ -40,6 +44,11 @@ public class AuthToken {
 	 * Type of the token. Can be anything, a selection of types is offered in net.anotheria.portalkit.services.authentication.AuthTokenTypes.
 	 */
 	private int type;
+
+	/**
+	 * Used internally to distinguish between generation of the code.
+	 */
+	private Algorithm algorithm;
 
 	/**
 	 * This method should return an authentication code that is usable from external source (mail, cookie etc).

@@ -7,6 +7,9 @@ package net.anotheria.portalkit.services.common.exceptions;
  * @since 11.12.12 11:09
  */
 public class PortalKitServiceException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
 	public PortalKitServiceException(String message){
 		super(message);
 	}

@@ -14,6 +14,7 @@
 	<description>PortalKIT</description>
 
 	<properties>
+        <moskito.version>2.1.2</moskito.version>
 	</properties>
 
 	<modules>
@@ -21,7 +22,80 @@
 		<module>apis</module>
 	</modules>
 
-	<scm>
+    <dependencyManagement>
+        <dependencies>
+            <!-- ano-dependencies -->
+            <dependency>
+                <groupId>net.anotheria</groupId>
+                <artifactId>ano-prise</artifactId>
+                <version>2.0.2-SNAPSHOT</version>
+            </dependency>
+
+            <!-- External dependencies: START -->
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.10</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.5</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.8.3</version>
+            </dependency>
+            <!-- External dependencies: END -->
+            <!-- Testing dependencies: START -->
+            <dependency>
+                <groupId>org.jmock</groupId>
+                <artifactId>jmock</artifactId>
+                <version>2.5.1</version>
+                <scope>test</scope>
+            </dependency>
+            <!-- Testing dependencies: END -->
+            <!-- Provided dependencies: START -->
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>2.5</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>2.2</version>
+                <scope>provided</scope>
+            </dependency>
+            <!-- Provided dependencies: END -->
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>ano-prise</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <scm>
 		<url>svn:http://svn.anotheria.net/portalkit/portalkit/trunk</url>
 		<connection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</connection>
 		<developerConnection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</developerConnection>
