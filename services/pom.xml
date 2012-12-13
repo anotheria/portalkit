@@ -18,6 +18,7 @@
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
+                <module>onlineservice</module>
 		<module>recordservice</module>
 		<module>notificationservice</module>
 		<module>messagingservice</module>
