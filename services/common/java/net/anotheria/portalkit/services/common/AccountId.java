@@ -9,5 +9,19 @@ package net.anotheria.portalkit.services.common;
 public class AccountId {
 	private String internalId;
 
+	public AccountId(String anInternalId){
+		if (anInternalId==null || anInternalId.length()==0)
+			throw new IllegalArgumentException("Empty or null id is not allowed, "+anInternalId);
+		internalId = anInternalId;
+	}
+
+	@Override public boolean equals(Object o){
+		return o instanceof AccountId &&
+				internalId.equals(((AccountId)o).internalId);
+	}
+
+	@Override public int hashCode(){
+		return internalId.hashCode();
+	}
 
 }
