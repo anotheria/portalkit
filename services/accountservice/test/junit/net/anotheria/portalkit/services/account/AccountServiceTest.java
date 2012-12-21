@@ -2,9 +2,11 @@ package net.anotheria.portalkit.services.account;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * TODO comment this class
@@ -19,5 +21,17 @@ public class AccountServiceTest {
 	public void createAccountService() throws MetaFactoryException{
 		AccountService service = MetaFactory.get(AccountService.class);
 		assertNotNull(service);
+	}
+
+	@Test public void testNotExistingAccount() throws Exception{
+		AccountId newAccountId = AccountId.generateNew();
+		AccountService service = MetaFactory.get(AccountService.class);
+		try{
+			Account existing = service.getAccount(newAccountId);
+			fail("Exception expected");
+		}catch(AccountNotFoundException e){
+			//this exception is expected
+		}
+
 	}
 }

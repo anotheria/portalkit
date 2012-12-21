@@ -32,6 +32,6 @@ public interface AccountService extends Service {
 	 * @return
 	 * @throws AccountServiceException
 	 */
-	Account createAccount() throws AccountServiceException;
+	Account createAccount(Account toCreate) throws AccountServiceException;
 
 }

@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.common;
 
+import net.anotheria.portalkit.services.common.id.IdGenerator;
+
 /**
  * TODO comment this class
  *
@@ -22,6 +24,14 @@ public class AccountId {
 
 	@Override public int hashCode(){
 		return internalId.hashCode();
+	}
+
+	public static final AccountId generateNew(){
+		return new AccountId(IdGenerator.generateUniqueRandomId());
+	}
+
+	@Override public String toString(){
+		return internalId;
 	}
 
 }

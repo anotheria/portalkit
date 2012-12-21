@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.account;
 
+import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 /**
  * TODO comment this class
@@ -14,5 +15,9 @@ public class AccountServiceException extends PortalKitServiceException {
 
 	public AccountServiceException(String message, Throwable cause){
 		super(message, cause);
+	}
+
+	public AccountServiceException(AccountPersistenceServiceException exception){
+		super("Persistence failure", exception);
 	}
 }

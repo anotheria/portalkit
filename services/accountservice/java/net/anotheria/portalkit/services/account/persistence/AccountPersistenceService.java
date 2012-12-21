@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.account.persistence;
 
+import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 
@@ -9,10 +10,27 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author lrosenberg
  * @since 12.12.12 11:41
  */
-public interface AccountPersistenceService {
+public interface AccountPersistenceService extends Service {
+	/**
+	 * Returns the account with that account id.
+	 * @param id
+	 * @return
+	 * @throws AccountPersistenceServiceException
+	 */
 	Account getAccount(AccountId id) throws AccountPersistenceServiceException;
 
+	/**
+	 * Saves the account.
+	 * @param account
+	 * @throws AccountPersistenceServiceException
+	 */
 	void saveAccount(Account account) throws AccountPersistenceServiceException;
 
-	Account createAccount() throws AccountPersistenceServiceException;
+	/**
+	 * Deletes the account with submitted id.
+	 * @param id
+	 * @throws AccountPersistenceServiceException
+	 */
+	void deleteAccount(AccountId id) throws AccountPersistenceServiceException;
+
 }
