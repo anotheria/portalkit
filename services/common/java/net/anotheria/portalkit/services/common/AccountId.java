@@ -64,7 +64,7 @@ public class AccountId implements Serializable, Cloneable {
 	}
 
 	@Override
-	protected AccountId clone() {
+	public AccountId clone() {
 		return new AccountId(internalId);
 	}
 
