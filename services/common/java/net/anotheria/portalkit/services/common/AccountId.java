@@ -1,37 +1,71 @@
 package net.anotheria.portalkit.services.common;
 
+import java.io.Serializable;
+
 import net.anotheria.portalkit.services.common.id.IdGenerator;
+import net.anotheria.util.StringUtils;
 
 /**
- * TODO comment this class
- *
- * @author lrosenberg
- * @since 14.10.12 21:54
+ * Account unique identifier.
+ * 
+ * @author Leon Rosenberg, Alexandr Bolbat
  */
-public class AccountId {
+public class AccountId implements Serializable, Cloneable {
+
+	/**
+	 * Basic serialVersionUID variable.
+	 */
+	private static final long serialVersionUID = 2996966698795723273L;
+
+	/**
+	 * Internal id.
+	 */
 	private String internalId;
 
-	public AccountId(String anInternalId){
-		if (anInternalId==null || anInternalId.length()==0)
-			throw new IllegalArgumentException("Empty or null id is not allowed, "+anInternalId);
-		internalId = anInternalId;
+	/**
+	 * Default constructor.
+	 * 
+	 * @param aInternalId
+	 *            internal id
+	 */
+	public AccountId(final String aInternalId) {
+		if (StringUtils.isEmpty(aInternalId))
+			throw new IllegalArgumentException("aInternalId is empty.");
+
+		internalId = aInternalId;
 	}
 
-	@Override public boolean equals(Object o){
-		return o instanceof AccountId &&
-				internalId.equals(((AccountId)o).internalId);
+	public String getInternalId() {
+		return internalId;
 	}
 
-	@Override public int hashCode(){
-		return internalId.hashCode();
-	}
-
-	public static final AccountId generateNew(){
+	/**
+	 * Generate new unique {@link AccountId}.
+	 * 
+	 * @return generated {@link AccountId}
+	 */
+	public static final AccountId generateNew() {
 		return new AccountId(IdGenerator.generateUniqueRandomId());
 	}
 
-	@Override public String toString(){
+	@Override
+	public String toString() {
 		return internalId;
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		return o instanceof AccountId && internalId.equals(((AccountId) o).internalId);
+	}
+
+	@Override
+	public int hashCode() {
+		return internalId.hashCode();
+	}
+
+	@Override
+	protected AccountId clone() {
+		return new AccountId(internalId);
 	}
 
 }
