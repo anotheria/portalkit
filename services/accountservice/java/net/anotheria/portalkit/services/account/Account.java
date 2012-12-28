@@ -102,4 +102,9 @@ public class Account {
 		email = anotherAccount.email;
 		type = anotherAccount.type;
 	}
+
+	@Override public String toString(){
+		return getId()+" "+getName()+" "+getType();
+	}
+
 }

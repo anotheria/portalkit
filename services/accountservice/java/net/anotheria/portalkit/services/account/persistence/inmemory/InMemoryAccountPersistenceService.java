@@ -32,4 +32,14 @@ public class InMemoryAccountPersistenceService implements AccountPersistenceServ
 	public void deleteAccount(AccountId id) throws AccountPersistenceServiceException {
 		storage.remove(id);
 	}
+
+	@Override
+	public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
+		for (Account acc : storage.values()){
+			System.out.println("checking "+name+" in "+acc);
+			if (acc.getName().equals(name))
+				return acc.getId();
+		}
+		return null;
+	}
 }

@@ -33,4 +33,12 @@ public interface AccountPersistenceService extends Service {
 	 */
 	void deleteAccount(AccountId id) throws AccountPersistenceServiceException;
 
+	/**
+	 * Returns the id of the account with the given name.
+	 * @param name
+	 * @return
+	 * @throws AccountPersistenceServiceException
+	 */
+	AccountId getIdByName(String name) throws AccountPersistenceServiceException;
+
 }

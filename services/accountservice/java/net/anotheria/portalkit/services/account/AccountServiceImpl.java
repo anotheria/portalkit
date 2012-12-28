@@ -8,6 +8,7 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class AccountServiceImpl implements AccountService{
 
 	private Cache<AccountId, Account> cache;
 	private Cache<AccountId, Account> nonExistingAccountCache;
+	private Cache<String, AccountId> name2idCache;
 
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
@@ -34,6 +36,7 @@ public class AccountServiceImpl implements AccountService{
 		//TODO cache config
 		cache = Caches.createHardwiredCache("accountservice-cache");
 		nonExistingAccountCache = Caches.createHardwiredCache("accountservice-nullcache");
+		name2idCache = Caches.createHardwiredCache("accountservice-name2id");
 
 		try{
 			persistenceService = MetaFactory.get(AccountPersistenceService.class);
@@ -75,7 +78,17 @@ public class AccountServiceImpl implements AccountService{
 
 	@Override
 	public List<Account> getAccounts(List<AccountId> ids) throws AccountServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		//this method works by iteration. This allows us to preload caches.
+		//later on we will provide additional interface for administration purposes that will bypass caching to prevent overload.
+		if (ids==null)
+			throw new IllegalArgumentException("Null parameter list to getAccount(ids)");
+		ArrayList<Account> ret = new ArrayList<Account>(ids.size());
+		for (AccountId id : ids){
+			Account acc = getAccountInternally(id);
+			ret.add(acc); //this will also add the null account.
+		}
+
+		return ret;
 	}
 
 	@Override
@@ -84,7 +97,7 @@ public class AccountServiceImpl implements AccountService{
 			persistenceService.deleteAccount(id);
 			cache.remove(id);
 		}catch(AccountPersistenceServiceException e){
-
+			throw new AccountServiceException(e);
 		}
 	}
 
@@ -119,5 +132,23 @@ public class AccountServiceImpl implements AccountService{
 		saveAccount(newAccount);
 		nonExistingAccountCache.remove(newAccount.getId());
 		return getAccount(newAccount.getId());
+	}
+
+	@Override
+	public AccountId getAccountIdByName(String accountName) throws AccountServiceException {
+		AccountId fromCache = name2idCache.get(accountName);
+		if (fromCache!=null)
+			return fromCache;
+		try{
+			AccountId fromPersistence = persistenceService.getIdByName(accountName);
+			if (fromPersistence!=null){
+				name2idCache.put(accountName,  fromPersistence);
+				return fromPersistence;
+			}
+			throw new AccountNotFoundException(accountName);
+
+		}catch(AccountPersistenceServiceException e){
+			throw new AccountServiceException(e);
+		}
 	}
 }

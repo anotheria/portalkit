@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.account;
 
+import net.anotheria.portalkit.services.common.AccountId;
+
 /**
  * This class represents a non existing account.
  *
@@ -19,4 +21,57 @@ public class NullAccount extends Account{
 		return 42;
 	}
 
+	@Override public String toString(){
+		return "NULL ACCOUNT";
+	}
+
+	@Override
+	public AccountId getId() {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public void setId(AccountId id) {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public String getName() {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public void setName(String name) {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public String getEmail() {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public void setEmail(String email) {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public int getType() {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public void setType(int type) {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public long getRegistrationTimestamp() {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
+
+	@Override
+	public void setRegistrationTimestamp(long registrationTimestamp) {
+		throw new UnsupportedOperationException("This is a null account, no setter/getter allowed.");
+	}
 }

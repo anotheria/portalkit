@@ -34,4 +34,15 @@ public interface AccountService extends Service {
 	 */
 	Account createAccount(Account toCreate) throws AccountServiceException;
 
+	/**
+	 * Returns accountid for given (login) name. Account name can also be the email adress of the user, or whatever you want
+	 * to use for login purposes.
+	 * This method returns accountid instead of account object for better scaleability (mod distribution).
+	 * @param accountName
+	 * @return
+	 * @throws AccountServiceException
+	 */
+	AccountId getAccountIdByName(String accountName) throws AccountServiceException;
+
+
 }

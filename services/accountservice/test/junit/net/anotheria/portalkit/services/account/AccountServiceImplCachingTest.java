@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -21,7 +22,7 @@ import static org.junit.Assert.fail;
  */
 public class AccountServiceImplCachingTest {
 
-	private int get,save,delete;
+	private int get,save,delete,getbyname;
 
 	@Before @After
 	public void reset(){
@@ -46,6 +47,12 @@ public class AccountServiceImplCachingTest {
 				delete++;
 				super.deleteAccount(id);
 			}
+
+			@Override
+			public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
+				getbyname++;
+				return super.getIdByName(name);
+			}
 		});
 	}
 
@@ -65,6 +72,22 @@ public class AccountServiceImplCachingTest {
 		}catch(AccountNotFoundException e){
 			assertEquals("second call shouldn't produce a call to persistence", 1, get);
 		}
+	}
+
+	@Test
+	public void testGetByNameCache() throws AccountServiceException{
+		AccountServiceImpl service = new AccountServiceImpl();
+		Account toCreate = new Account();
+		toCreate.setName("petrov");
+		service.createAccount(toCreate);
+		assertEquals(0, getbyname);
+		AccountId pId = service.getAccountIdByName("petrov");
+		assertNotNull(pId);
+		assertEquals(1, getbyname);
+		pId = service.getAccountIdByName("petrov");
+		//this should have produced no call to persistence.
+		assertEquals(1, getbyname);
+
 	}
 
 
