@@ -18,11 +18,12 @@
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
-                <module>onlineservice</module>
+        <module>onlineservice</module>
 		<module>recordservice</module>
 		<module>notificationservice</module>
 		<module>messagingservice</module>
 		<module>paymentservice</module>
+        <module>foreignidservice</module>
 	</modules>
 
 </project>
