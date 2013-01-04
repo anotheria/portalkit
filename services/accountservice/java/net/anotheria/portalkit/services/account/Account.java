@@ -3,7 +3,7 @@ package net.anotheria.portalkit.services.account;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
- * TODO comment this class
+ * Representation of a user account.
  *
  * @author lrosenberg
  * @since 11.12.12 11:08
