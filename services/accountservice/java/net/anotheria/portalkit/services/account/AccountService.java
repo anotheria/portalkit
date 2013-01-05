@@ -44,5 +44,6 @@ public interface AccountService extends Service {
 	 */
 	AccountId getAccountIdByName(String accountName) throws AccountServiceException;
 
+	AccountId getAccountIdByEmail(String accountName) throws AccountServiceException;
 
 }

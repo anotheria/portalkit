@@ -26,6 +26,7 @@ public class AccountServiceImpl implements AccountService{
 	private Cache<AccountId, Account> cache;
 	private Cache<AccountId, Account> nonExistingAccountCache;
 	private Cache<String, AccountId> name2idCache;
+	private Cache<String, AccountId> email2idCache;
 
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
@@ -37,6 +38,7 @@ public class AccountServiceImpl implements AccountService{
 		cache = Caches.createHardwiredCache("accountservice-cache");
 		nonExistingAccountCache = Caches.createHardwiredCache("accountservice-nullcache");
 		name2idCache = Caches.createHardwiredCache("accountservice-name2id");
+		email2idCache = Caches.createHardwiredCache("accountservice-email2id");
 
 		try{
 			persistenceService = MetaFactory.get(AccountPersistenceService.class);
@@ -128,6 +130,10 @@ public class AccountServiceImpl implements AccountService{
 
 	@Override
 	public Account createAccount(Account toCreate) throws AccountServiceException {
+
+		if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName())!=null)
+			throw new AccountAlreadyExistsException("name", toCreate.getName());
+
 		Account newAccount = Account.newAccountFromPattern(toCreate);
 		saveAccount(newAccount);
 		nonExistingAccountCache.remove(newAccount.getId());
@@ -136,6 +142,13 @@ public class AccountServiceImpl implements AccountService{
 
 	@Override
 	public AccountId getAccountIdByName(String accountName) throws AccountServiceException {
+		AccountId id = getAccountIdByNameInternally(accountName);
+		if (id==null)
+			throw new AccountNotFoundException(accountName);
+		return id;
+	}
+
+	private AccountId getAccountIdByNameInternally(String accountName) throws AccountServiceException {
 		AccountId fromCache = name2idCache.get(accountName);
 		if (fromCache!=null)
 			return fromCache;
@@ -143,10 +156,31 @@ public class AccountServiceImpl implements AccountService{
 			AccountId fromPersistence = persistenceService.getIdByName(accountName);
 			if (fromPersistence!=null){
 				name2idCache.put(accountName,  fromPersistence);
-				return fromPersistence;
 			}
-			throw new AccountNotFoundException(accountName);
+			return fromPersistence;
+		}catch(AccountPersistenceServiceException e){
+			throw new AccountServiceException(e);
+		}
+	}
 
+	@Override
+	public AccountId getAccountIdByEmail(String accountName) throws AccountServiceException {
+		AccountId id = getAccountIdByEmailInternally(accountName);
+		if (id==null)
+			throw new AccountNotFoundException(accountName);
+		return id;
+	}
+
+	private AccountId getAccountIdByEmailInternally(String email) throws AccountServiceException {
+		AccountId fromCache = email2idCache.get(email);
+		if (fromCache!=null)
+			return fromCache;
+		try{
+			AccountId fromPersistence = persistenceService.getIdByEmail(email);
+			if (fromPersistence!=null){
+				email2idCache.put(email,  fromPersistence);
+			}
+			return fromPersistence;
 		}catch(AccountPersistenceServiceException e){
 			throw new AccountServiceException(e);
 		}

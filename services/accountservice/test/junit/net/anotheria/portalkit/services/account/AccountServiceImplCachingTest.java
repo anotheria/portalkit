@@ -22,11 +22,11 @@ import static org.junit.Assert.fail;
  */
 public class AccountServiceImplCachingTest {
 
-	private int get,save,delete,getbyname;
+	private int get,save,delete,getbyname,getbyemail;
 
 	@Before @After
 	public void reset(){
-		get = save = delete = 0;
+		get = save = delete = getbyname = getbyemail = 0;
 		MetaFactory.reset();
 		MetaFactory.createOnTheFlyFactory(AccountPersistenceService.class, Extension.NONE, new InMemoryAccountPersistenceService(){
 
@@ -52,6 +52,12 @@ public class AccountServiceImplCachingTest {
 			public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
 				getbyname++;
 				return super.getIdByName(name);
+			}
+
+			@Override
+			public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
+				getbyemail++;
+				return super.getIdByEmail(email);
 			}
 		});
 	}
@@ -80,13 +86,13 @@ public class AccountServiceImplCachingTest {
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
 		service.createAccount(toCreate);
-		assertEquals(0, getbyname);
+		assertEquals(1, getbyname);
 		AccountId pId = service.getAccountIdByName("petrov");
 		assertNotNull(pId);
-		assertEquals(1, getbyname);
+		assertEquals(2, getbyname);
 		pId = service.getAccountIdByName("petrov");
 		//this should have produced no call to persistence.
-		assertEquals(1, getbyname);
+		assertEquals(2, getbyname);
 
 	}
 

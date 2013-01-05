@@ -40,5 +40,6 @@ public interface AccountPersistenceService extends Service {
 	 * @throws AccountPersistenceServiceException
 	 */
 	AccountId getIdByName(String name) throws AccountPersistenceServiceException;
+	AccountId getIdByEmail(String name) throws AccountPersistenceServiceException;
 
 }

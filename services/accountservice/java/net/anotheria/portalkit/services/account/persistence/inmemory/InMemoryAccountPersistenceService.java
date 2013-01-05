@@ -42,4 +42,13 @@ public class InMemoryAccountPersistenceService implements AccountPersistenceServ
 		}
 		return null;
 	}
+	@Override
+	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
+		for (Account acc : storage.values()){
+			System.out.println("checking "+email+" in "+acc);
+			if (acc.getEmail().equals(email))
+				return acc.getId();
+		}
+		return null;
+	}
 }

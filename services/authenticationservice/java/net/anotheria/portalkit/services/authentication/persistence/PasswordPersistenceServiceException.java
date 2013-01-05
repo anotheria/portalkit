@@ -8,12 +8,12 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceSe
  * @author lrosenberg
  * @since 12.12.12 23:00
  */
-public class AuthenticationPersistenceServiceException extends PortalKitPersistenceServiceException{
-	public AuthenticationPersistenceServiceException(String message) {
+public class PasswordPersistenceServiceException extends PortalKitPersistenceServiceException{
+	public PasswordPersistenceServiceException(String message) {
 		super(message);
 	}
 
-	public AuthenticationPersistenceServiceException(String message, Throwable cause) {
+	public PasswordPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);
 	}
 }

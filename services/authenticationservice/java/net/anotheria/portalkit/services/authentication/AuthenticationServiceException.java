@@ -1,6 +1,6 @@
 package net.anotheria.portalkit.services.authentication;
 
-import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
+import net.anotheria.portalkit.services.authentication.persistence.PasswordPersistenceServiceException;
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 
 /**
@@ -18,7 +18,7 @@ public class AuthenticationServiceException extends PortalKitServiceException{
 		super(message, cause);
 	}
 
-	public AuthenticationServiceException(AuthenticationPersistenceServiceException persistenceFailure){
+	public AuthenticationServiceException(PasswordPersistenceServiceException persistenceFailure){
 		super("Failure in persistence", persistenceFailure);
 	}
 }
