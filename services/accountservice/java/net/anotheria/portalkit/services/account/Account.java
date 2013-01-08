@@ -107,4 +107,8 @@ public class Account {
 		return getId()+" "+getName()+" "+getType();
 	}
 
+	@Override public boolean equals(Object o){
+		return o instanceof Account && ((Account)o).getId().equals(getId());
+	}
+
 }

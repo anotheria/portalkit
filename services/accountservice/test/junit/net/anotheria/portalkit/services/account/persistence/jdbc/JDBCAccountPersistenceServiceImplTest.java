@@ -1,10 +1,15 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 
 /**
  * TODO comment this class
@@ -13,6 +18,9 @@ import org.junit.Test;
  * @since 06.01.13 01:22
  */
 public class JDBCAccountPersistenceServiceImplTest {
+
+	public static final String HSQL = "hsqldb";
+	public static final String PSQL = "psql";
 
 	private JDBCAccountPersistenceServiceImpl getService(String environment) throws Exception{
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", environment));
@@ -25,20 +33,42 @@ public class JDBCAccountPersistenceServiceImplTest {
 	//alter pk-jdbc-account.json in test/appdata.
 	@Test @Ignore
 	public void createAccountWithPSQL() throws Exception{
-		createAccount(getService("psql"));
+		createAccount(getService(PSQL));
 	}
 
 	@Test
 	public void createAccountWithHSQL() throws Exception{
-		createAccount(getService("hsqldb"));
+		createAccount(getService(HSQL));
 	}
 
-	public void createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
+	public Account createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
 		Account toCreate = new Account();
 		toCreate.setName("test");
 		toCreate.setEmail("test@example.com");
-		toCreate.setType(0);
+		toCreate.setType(1);
 		toCreate.setRegistrationTimestamp(System.currentTimeMillis());
-		service.saveAccount(Account.newAccountFromPattern(toCreate));
+		Account newAcc = Account.newAccountFromPattern(toCreate);
+		service.saveAccount(newAcc);
+		return newAcc;
+	}
+
+	@Ignore @Test public void getAccountWithPSQL() throws Exception{
+		testGetAccount(getService(PSQL));
+	}
+	@Test public void getAccountWithHSQL() throws Exception{
+		testGetAccount(getService(HSQL));
+	}
+
+	public void testGetAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
+		AccountId any = AccountId.generateNew();
+		Account nonExisting = service.getAccount(any);
+		assertNull(nonExisting);
+
+		Account created = createAccount(service);
+		Account existing = service.getAccount(created.getId());
+		assertNotSame(created, existing);
+		assertEquals(created, existing);
+
+
 	}
 }

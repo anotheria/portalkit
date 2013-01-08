@@ -29,7 +29,13 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 
 	@Override
 	public Account getAccount(AccountId id) throws AccountPersistenceServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		try{
+			return dao.getAccount(getConnection(), id);
+		}catch(DAOException e){
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}catch(SQLException e){
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
 	}
 
 	@Override
