@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ public class AccountServiceTest {
 	@After
 	@Before public void setup(){
 		MetaFactory.reset();
+		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 	}
 
 	//this test will be removed later, for now it 'tests' the new metafactory functionality, instantiation of service

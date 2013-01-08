@@ -12,12 +12,23 @@
 	<description>Services: Account Service</description>
 
 
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/java</directory>
+                <includes>
+                    <include>**/*.sql</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 	<dependencies>
 		<dependency>
 			<groupId>portalkit</groupId>
 			<artifactId>services-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 </project>

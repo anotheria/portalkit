@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  * @author lrosenberg
  * @since 20.12.12 09:56
  */
-public class InMemoryAccountPersistenceService implements AccountPersistenceService{
+public class InMemoryAccountPersistenceServiceImpl implements AccountPersistenceService{
 
 	private ConcurrentMap<AccountId, Account> storage = new ConcurrentHashMap<AccountId, Account>();
 

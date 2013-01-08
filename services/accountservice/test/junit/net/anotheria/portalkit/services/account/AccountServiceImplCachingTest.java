@@ -4,7 +4,7 @@ import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
-import net.anotheria.portalkit.services.account.persistence.inmemory.InMemoryAccountPersistenceService;
+import net.anotheria.portalkit.services.account.persistence.inmemory.InMemoryAccountPersistenceServiceImpl;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class AccountServiceImplCachingTest {
 	public void reset(){
 		get = save = delete = getbyname = getbyemail = 0;
 		MetaFactory.reset();
-		MetaFactory.createOnTheFlyFactory(AccountPersistenceService.class, Extension.NONE, new InMemoryAccountPersistenceService(){
+		MetaFactory.createOnTheFlyFactory(AccountPersistenceService.class, Extension.NONE, new InMemoryAccountPersistenceServiceImpl(){
 
 			@Override
 			public Account getAccount(AccountId id) throws AccountPersistenceServiceException {

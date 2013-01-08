@@ -1,0 +1,19 @@
+{
+	//"driver": "org.postgresql.Driver",
+	//"url": "jdbc:postgresql://localhost/pk_test",
+	//"username": "another",
+
+	"test": {
+		"psql": {
+			"driver": "org.postgresql.Driver",
+			"url": "jdbc:postgresql://localhost/pk_test",
+			"username": "another"
+		},
+
+		"hsqldb": {
+			"driver": "org.hsqldb.jdbcDriver",
+			"url": "jdbc:hsqldb:file:db/pk_test;shutdown=true",
+			"username": "SA"
+		}
+	}
+}
