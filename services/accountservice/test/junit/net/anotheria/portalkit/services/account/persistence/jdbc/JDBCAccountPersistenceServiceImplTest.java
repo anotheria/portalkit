@@ -17,6 +17,7 @@ import static org.junit.Assert.assertNull;
  * @author lrosenberg
  * @since 06.01.13 01:22
  */
+@Ignore
 public class JDBCAccountPersistenceServiceImplTest {
 
 	public static final String HSQL = "hsqldb";
@@ -31,7 +32,7 @@ public class JDBCAccountPersistenceServiceImplTest {
 
 	//set to ignore to not break build, if you want to run this test locally create db pk_test on your local postgres or
 	//alter pk-jdbc-account.json in test/appdata.
-	@Test @Ignore
+	@Test
 	public void createAccountWithPSQL() throws Exception{
 		createAccount(getService(PSQL));
 	}
@@ -52,7 +53,7 @@ public class JDBCAccountPersistenceServiceImplTest {
 		return newAcc;
 	}
 
-	@Ignore @Test public void getAccountWithPSQL() throws Exception{
+	@Test public void getAccountWithPSQL() throws Exception{
 		testGetAccount(getService(PSQL));
 	}
 	@Test public void getAccountWithHSQL() throws Exception{
@@ -69,6 +70,31 @@ public class JDBCAccountPersistenceServiceImplTest {
 		assertNotSame(created, existing);
 		assertEquals(created, existing);
 
+	}
+
+	@Test public void deleteAccountWithPSQL() throws Exception{
+		testDeleteAccount(getService(PSQL));
+	}
+
+	@Test public void deleteAccountWithHSQL() throws Exception{
+		testDeleteAccount(getService(HSQL));
+	}
+
+	public void testDeleteAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
+		AccountId any = AccountId.generateNew();
+		service.deleteAccount(any);
+
+		//sofar so good, we can delete nonexisting accounts.
+
+
+		Account created = createAccount(service);
+		Account existing = service.getAccount(created.getId());
+		assertEquals(created.getId(), existing.getId());
+
+		service.deleteAccount(existing.getId());
+
+		Account nonexisting = service.getAccount(created.getId());
+		assertNull("expected null", nonexisting);
 
 	}
 }

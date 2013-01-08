@@ -51,7 +51,13 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 
 	@Override
 	public void deleteAccount(AccountId id) throws AccountPersistenceServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		try{
+			dao.deleteAccount(getConnection(), id);
+		}catch(DAOException e){
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}catch(SQLException e){
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
 	}
 
 	@Override
