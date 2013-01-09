@@ -31,12 +31,63 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	public static final int POS_REG = 5;
 	public static final int MAX_POS = POS_REG;
 
-	void saveAccount(Connection connection, Account toSave) throws DAOException,SQLException{
+	private boolean createAccount(Connection connection, Account toSave) throws SQLException{
+		String insert = "INSERT INTO account (id, name, email, type, regts, "+ATT_DAO_CREATED+"," + ATT_DAO_UPDATED+") "+
+				"SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM "+TABLE_NAME+" WHERE id = ? );";
 
+		PreparedStatement insertStatement = connection.prepareStatement(
+				insert
+		) ;
+
+		insertStatement.setString(POS_ID, toSave.getId().getInternalId());
+		insertStatement.setString(POS_NAME, toSave.getName());
+		insertStatement.setString(POS_EMAIL, toSave.getEmail());
+		insertStatement.setInt(POS_TYPE, toSave.getType());
+		insertStatement.setLong(POS_REG, toSave.getRegistrationTimestamp());
+		insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
+		insertStatement.setLong(MAX_POS + 2, 0);
+		insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
+
+		int insertResult = insertStatement.executeUpdate();
+		System.out.println("INSERT: "+insertResult);
+		return insertResult == 1;
+
+	}
+
+	private boolean updateAccount(Connection connection, Account toSave) throws SQLException ,DAOException{
+		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, "+ATT_DAO_UPDATED+" = ? WHERE id = ?";
+
+		PreparedStatement updateStatement = connection.prepareStatement(
+				update
+		) ;
+
+		//setupdate
+		int i=1;
+///*
+		updateStatement.setString(i++, toSave.getName());
+		updateStatement.setString(i++, toSave.getEmail());
+		updateStatement.setInt(i++, toSave.getType());
+		updateStatement.setLong(i++, toSave.getRegistrationTimestamp());
+		updateStatement.setLong(i++, System.currentTimeMillis());
+		updateStatement.setString(i++, toSave.getId().getInternalId());
+		//*/
+
+		int updateResult = updateStatement.executeUpdate();
+		if (updateResult>1)
+			throw new DAOException("Update "+update+" on "+toSave+" returned more than 1");
+		return updateResult==1;
+	}
+
+	void saveAccount(Connection connection, Account toSave) throws DAOException,SQLException{
+		if (!updateAccount(connection, toSave)){
+			createAccount(connection, toSave);
+		}
+
+		/*
 		String insert = "INSERT INTO account (id, name, email, type, regts, "+ATT_DAO_CREATED+"," + ATT_DAO_UPDATED+") "+
 				"SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM "+TABLE_NAME+" WHERE id = ? );";
 		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, "+ATT_DAO_UPDATED+" = ? WHERE id = ?";
-		String sql = update + "; "+insert;
+		String sql =  update + "; "+insert;
 		log.debug("saveAccount, upsert sql : " + sql);
 
 		System.out.println(sql);
@@ -53,7 +104,6 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		upsertStatement.setLong(i++, toSave.getRegistrationTimestamp());
 		upsertStatement.setLong(i++, System.currentTimeMillis());
 		upsertStatement.setString(i++, toSave.getId().getInternalId());
-
 		i--;
 
 		//setinsert
@@ -67,6 +117,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		upsertStatement.setString(i+MAX_POS + 3, toSave.getId().getInternalId());
 
 		int insertResult = upsertStatement.executeUpdate();
+*/
 	}
 
 	Account getAccount(Connection connection, AccountId id) throws DAOException, SQLException{

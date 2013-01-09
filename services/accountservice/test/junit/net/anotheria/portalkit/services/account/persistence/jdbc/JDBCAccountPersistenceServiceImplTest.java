@@ -32,12 +32,12 @@ public class JDBCAccountPersistenceServiceImplTest {
 	//set to ignore to not break build, if you want to run this test locally create db pk_test on your local postgres or
 	//alter pk-jdbc-account.json in test/appdata.
 	@Test
-	public void createAccountWithPSQL() throws Exception{
+	public void testCreateAccountWithPSQL() throws Exception{
 		createAccount(getService(PSQL));
 	}
 
 	@Test
-	public void createAccountWithH2() throws Exception{
+	public void testCreateAccountWithH2() throws Exception{
 		createAccount(getService(H2));
 	}
 
@@ -71,11 +71,11 @@ public class JDBCAccountPersistenceServiceImplTest {
 
 	}
 
-	@Test public void deleteAccountWithPSQL() throws Exception{
+	@Test public void testDeleteAccountWithPSQL() throws Exception{
 		testDeleteAccount(getService(PSQL));
 	}
 
-	@Test public void deleteAccountWithH2() throws Exception{
+	@Test public void testDeleteAccountWithH2() throws Exception{
 		testDeleteAccount(getService(H2));
 	}
 
@@ -94,6 +94,29 @@ public class JDBCAccountPersistenceServiceImplTest {
 
 		Account nonexisting = service.getAccount(created.getId());
 		assertNull("expected null", nonexisting);
+	}
 
+
+	@Test public void testEditAccountWithPSQL() throws Exception{
+		testEditAccount(getService(PSQL));
+	}
+
+	@Test public void testEditAccountWithH2() throws Exception{
+		testEditAccount(getService(H2));
+	}
+
+
+	public void testEditAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
+
+		Account created = createAccount(service);
+		Account existing = service.getAccount(created.getId());
+		assertEquals(created.getId(), existing.getId());
+		assertEquals(created.getType(), existing.getType());
+
+		existing.setType(100);
+		service.saveAccount(existing);
+		Account reread = service.getAccount(created.getId());
+		assertEquals(created.getId(), reread.getId());
+		assertEquals(100, reread.getType());
 	}
 }
