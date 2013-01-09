@@ -4,7 +4,6 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -17,10 +16,10 @@ import static org.junit.Assert.assertNull;
  * @author lrosenberg
  * @since 06.01.13 01:22
  */
-@Ignore
 public class JDBCAccountPersistenceServiceImplTest {
 
 	public static final String HSQL = "hsqldb";
+	public static final String H2 = "h2";
 	public static final String PSQL = "psql";
 
 	private JDBCAccountPersistenceServiceImpl getService(String environment) throws Exception{
@@ -38,8 +37,8 @@ public class JDBCAccountPersistenceServiceImplTest {
 	}
 
 	@Test
-	public void createAccountWithHSQL() throws Exception{
-		createAccount(getService(HSQL));
+	public void createAccountWithH2() throws Exception{
+		createAccount(getService(H2));
 	}
 
 	public Account createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
@@ -56,8 +55,8 @@ public class JDBCAccountPersistenceServiceImplTest {
 	@Test public void getAccountWithPSQL() throws Exception{
 		testGetAccount(getService(PSQL));
 	}
-	@Test public void getAccountWithHSQL() throws Exception{
-		testGetAccount(getService(HSQL));
+	@Test public void getAccountWithH2() throws Exception{
+		testGetAccount(getService(H2));
 	}
 
 	public void testGetAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
@@ -76,8 +75,8 @@ public class JDBCAccountPersistenceServiceImplTest {
 		testDeleteAccount(getService(PSQL));
 	}
 
-	@Test public void deleteAccountWithHSQL() throws Exception{
-		testDeleteAccount(getService(HSQL));
+	@Test public void deleteAccountWithH2() throws Exception{
+		testDeleteAccount(getService(H2));
 	}
 
 	public void testDeleteAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
