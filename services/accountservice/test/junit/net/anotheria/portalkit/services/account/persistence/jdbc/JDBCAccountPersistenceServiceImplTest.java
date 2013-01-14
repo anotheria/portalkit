@@ -4,6 +4,7 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -32,6 +33,7 @@ public class JDBCAccountPersistenceServiceImplTest {
 	//set to ignore to not break build, if you want to run this test locally create db pk_test on your local postgres or
 	//alter pk-jdbc-account.json in test/appdata.
 	@Test
+	@Ignore
 	public void testCreateAccountWithPSQL() throws Exception{
 		createAccount(getService(PSQL));
 	}
@@ -52,7 +54,9 @@ public class JDBCAccountPersistenceServiceImplTest {
 		return newAcc;
 	}
 
-	@Test public void getAccountWithPSQL() throws Exception{
+	@Test
+	@Ignore
+	public void getAccountWithPSQL() throws Exception{
 		testGetAccount(getService(PSQL));
 	}
 	@Test public void getAccountWithH2() throws Exception{
@@ -71,7 +75,9 @@ public class JDBCAccountPersistenceServiceImplTest {
 
 	}
 
-	@Test public void testDeleteAccountWithPSQL() throws Exception{
+	@Test
+	@Ignore
+	public void testDeleteAccountWithPSQL() throws Exception{
 		testDeleteAccount(getService(PSQL));
 	}
 
@@ -97,7 +103,9 @@ public class JDBCAccountPersistenceServiceImplTest {
 	}
 
 
-	@Test public void testEditAccountWithPSQL() throws Exception{
+	@Test
+	@Ignore
+	public void testEditAccountWithPSQL() throws Exception{
 		testEditAccount(getService(PSQL));
 	}
 
