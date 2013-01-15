@@ -4,8 +4,6 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -17,30 +15,15 @@ import static org.junit.Assert.assertNull;
  * @author lrosenberg
  * @since 06.01.13 01:22
  */
-public class JDBCAccountPersistenceServiceImplTest {
+abstract class JDBCAccountPersistenceServiceImplTest {
 
 	public static final String HSQL = "hsqldb";
-	public static final String H2 = "h2";
-	public static final String PSQL = "psql";
 
-	private JDBCAccountPersistenceServiceImpl getService(String environment) throws Exception{
+	protected JDBCAccountPersistenceServiceImpl getService(String environment) throws Exception{
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", environment));
 		JDBCAccountPersistenceServiceImpl service = new JDBCAccountPersistenceServiceImpl();
 		service.cleanupFromUnitTests();
 		return service;
-	}
-
-	//set to ignore to not break build, if you want to run this test locally create db pk_test on your local postgres or
-	//alter pk-jdbc-account.json in test/appdata.
-	@Test
-	@Ignore
-	public void testCreateAccountWithPSQL() throws Exception{
-		createAccount(getService(PSQL));
-	}
-
-	@Test
-	public void testCreateAccountWithH2() throws Exception{
-		createAccount(getService(H2));
 	}
 
 	public Account createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
@@ -54,15 +37,6 @@ public class JDBCAccountPersistenceServiceImplTest {
 		return newAcc;
 	}
 
-	@Test
-	@Ignore
-	public void getAccountWithPSQL() throws Exception{
-		testGetAccount(getService(PSQL));
-	}
-	@Test public void getAccountWithH2() throws Exception{
-		testGetAccount(getService(H2));
-	}
-
 	public void testGetAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
 		AccountId any = AccountId.generateNew();
 		Account nonExisting = service.getAccount(any);
@@ -73,16 +47,6 @@ public class JDBCAccountPersistenceServiceImplTest {
 		assertNotSame(created, existing);
 		assertEquals(created, existing);
 
-	}
-
-	@Test
-	@Ignore
-	public void testDeleteAccountWithPSQL() throws Exception{
-		testDeleteAccount(getService(PSQL));
-	}
-
-	@Test public void testDeleteAccountWithH2() throws Exception{
-		testDeleteAccount(getService(H2));
 	}
 
 	public void testDeleteAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
@@ -103,15 +67,6 @@ public class JDBCAccountPersistenceServiceImplTest {
 	}
 
 
-	@Test
-	@Ignore
-	public void testEditAccountWithPSQL() throws Exception{
-		testEditAccount(getService(PSQL));
-	}
-
-	@Test public void testEditAccountWithH2() throws Exception{
-		testEditAccount(getService(H2));
-	}
 
 
 	public void testEditAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
