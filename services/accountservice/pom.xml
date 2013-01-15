@@ -12,16 +12,6 @@
 	<description>Services: Account Service</description>
 
 
-    <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/java</directory>
-                <includes>
-                    <include>**/*.sql</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
 
 	<dependencies>
 		<dependency>

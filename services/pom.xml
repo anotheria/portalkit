@@ -12,7 +12,19 @@
 	<name>The PortalKIT Services</name>
 	<description>PortalKIT Services Aggregator</description>
 
-	<modules>
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/java</directory>
+                <includes>
+                    <include>**/*.sql</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+
+    <modules>
 		<module>common</module>
 		<module>accountservice</module>
 		<module>accountsettingsservice</module>
