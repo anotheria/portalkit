@@ -19,4 +19,5 @@ public class JDBCPickerConflictResolver implements OnTheFlyConflictResolver {
 		}
 		return null;
 	}
+
 }
