@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account.persistence.jdbc.migrations;
 import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * TODO comment this class
@@ -10,9 +11,18 @@ import java.sql.Connection;
  * @author lrosenberg
  * @since 06.01.13 01:12
  */
-public class Vaccount_4__CreateIndexOnName_Inactive implements JdbcMigration {
+public class V1_0__CreateStructure implements JdbcMigration {
 	public void migrate(Connection connection) throws Exception {
-/*		PreparedStatement statement = connection.prepareStatement("CREATE UNIQUE INDEX name_idx ON account (name);");
+		PreparedStatement statement = connection.prepareStatement(
+			"CREATE TABLE account ("+
+				"id VARCHAR(128) NOT NULL,"+
+				"name VARCHAR(100) NOT NULL,"+
+				"email VARCHAR(100) NOT NULL,"+
+				"type integer,"+
+				"regts bigint,"+
+				"PRIMARY KEY(id)"+
+			");"
+			);
 		try {
 			statement.execute();
 		} catch(Exception e){
@@ -20,6 +30,5 @@ public class Vaccount_4__CreateIndexOnName_Inactive implements JdbcMigration {
 		}finally {
 			statement.close();
 		}
-*/
 	}
 }

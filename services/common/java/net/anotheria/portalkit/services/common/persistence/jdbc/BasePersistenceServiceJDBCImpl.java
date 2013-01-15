@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.common.persistence.jdbc;
 import com.googlecode.flyway.core.Flyway;
 import com.googlecode.flyway.core.api.MigrationInfo;
 import com.googlecode.flyway.core.api.MigrationInfoService;
+import net.anotheria.util.StringUtils;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -97,6 +99,9 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		Flyway flyway = new Flyway();
 		flyway.setDataSource(getDataSource());
 		flyway.setLocations(getClass().getPackage().getName() + ".migrations");
+		flyway.setTable(getTableNameForMigration());
+		System.out.println("TN FOR MIGRTATION: "+getTableNameForMigration());
+		flyway.setInitOnMigrate(true);
 		flyway.migrate();
 		MigrationInfoService flywayInfo =  flyway.info();
 		System.out.println("FLYWAY: ");
@@ -108,6 +113,26 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		}
 		System.out.println("Current: "+ flywayInfo.current().getVersion());
 
+	}
+
+	private String getTableNameForMigration(){
+		String[] commonPackage = StringUtils.tokenize(BasePersistenceServiceJDBCImpl.class.getPackage().getName(), '.');
+		String[] customPackage = StringUtils.tokenize(getClass().getPackage().getName(), '.');
+		HashSet<String> parts = new HashSet<String>();
+		for (String p : customPackage){
+			parts.add(p);
+		}
+		for (String p : commonPackage){
+			parts.remove(p);
+		}
+
+		StringBuilder name = new StringBuilder();
+		for (Iterator<String> it = parts.iterator(); it.hasNext();){
+			if (name.length()>0)
+				name.append('_');
+			name.append(it.next());
+		}
+		return "flyway_"+name.toString();
 	}
 
 	/**
