@@ -38,7 +38,7 @@ public interface ForeignIdPersistenceService {
 	public void link(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException;
 
 	/**
-	 * Dissociate all foreign ids linked to specified account.
+	 * Dissociate all foreign id.
 	 * @param foreignId
 	 * @throws ForeignIdPersistenceServiceException
 	 */
