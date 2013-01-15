@@ -1,6 +1,8 @@
 package net.anotheria.portalkit.services.common.persistence.jdbc;
 
 import com.googlecode.flyway.core.Flyway;
+import com.googlecode.flyway.core.api.MigrationInfo;
+import com.googlecode.flyway.core.api.MigrationInfoService;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
@@ -19,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -52,6 +55,8 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	 * Name of the configuration. Can be ommited.
 	 */
 	private String configName;
+
+	private ArrayList<DAO> daos = new ArrayList<DAO>();
 
 	/**
 	 * Default constructor.
@@ -91,8 +96,17 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		//prepare db.
 		Flyway flyway = new Flyway();
 		flyway.setDataSource(getDataSource());
-		flyway.setLocations(getClass().getPackage().getName()+".migrations");
+		flyway.setLocations(getClass().getPackage().getName() + ".migrations");
 		flyway.migrate();
+		MigrationInfoService flywayInfo =  flyway.info();
+		System.out.println("FLYWAY: ");
+		for (MigrationInfo mi : flywayInfo.applied()){
+			System.out.println("Applied: "+mi.getVersion());
+		}
+		for (MigrationInfo mi : flywayInfo.pending()){
+			System.out.println("Pending: "+mi.getVersion());
+		}
+		System.out.println("Current: "+ flywayInfo.current().getVersion());
 
 	}
 
@@ -271,6 +285,17 @@ public abstract class BasePersistenceServiceJDBCImpl {
 				throw e.getCause();
 			}
 		}
+	}
+
+	protected void addDaos(DAO ... someDaos){
+		if (someDaos!=null)
+			for (DAO d : someDaos)
+				daos.add(d);
+	}
+
+	public void cleanupFromUnitTests() throws Exception {
+		for (DAO d : daos)
+			d.cleanupFromUnitTests(getConnection());
 	}
 
 }

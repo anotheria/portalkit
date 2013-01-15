@@ -2,8 +2,8 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.authentication.persistence.PasswordPersistenceService;
-import net.anotheria.portalkit.services.authentication.persistence.PasswordPersistenceServiceException;
+import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
+import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
@@ -16,7 +16,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 	private PasswordEncryptionAlgorithm passwordAlgorithm;
 
-	private PasswordPersistenceService persistenceService;
+	private AuthenticationPersistenceService persistenceService;
 
 	public AuthenticationServiceImpl(){
 		AuthenticationServiceConfig config = new AuthenticationServiceConfig();
@@ -29,9 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 		passwordAlgorithm.customize(config.getPasswordKey());
 
-		//note, this will work with a) only one PasswordPersistenceService impl or b) configured metafactory
+		//note, this will work with a) only one AuthenticationPersistenceService impl or b) configured metafactory
 		try{
-			persistenceService = MetaFactory.get(PasswordPersistenceService.class);
+			persistenceService = MetaFactory.get(AuthenticationPersistenceService.class);
 		}catch(MetaFactoryException e){
 			throw new IllegalStateException("Can't work without a persistence service", e);
 		}
@@ -44,7 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 			throw new IllegalArgumentException("id can't be null");
 		try{
 			persistenceService.saveEncryptedPassword(id, passwordAlgorithm.encryptPassword(password));
-		}catch(PasswordPersistenceServiceException e){
+		}catch(AuthenticationPersistenceServiceException e){
 			throw new AuthenticationServiceException(e);
 		}
 	}
@@ -56,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 		String storedEncryptedPassword = null;
 		try{
 			storedEncryptedPassword = persistenceService.getEncryptedPassword(id);
-		}catch(PasswordPersistenceServiceException e){
+		}catch(AuthenticationPersistenceServiceException e){
 			throw new AuthenticationServiceException(e);
 		}
 		return storedEncryptedPassword!=null && password != null && storedEncryptedPassword.equals(passwordAlgorithm.encryptPassword(password));

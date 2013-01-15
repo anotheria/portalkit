@@ -2,9 +2,10 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.authentication.persistence.PasswordPersistenceService;
-import net.anotheria.portalkit.services.authentication.persistence.PasswordPersistenceServiceException;
+import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
+import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,10 +29,11 @@ public class AuthenticationServiceTest {
 	@Before @After
 	public void setup(){
 		MetaFactory.reset();
+		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 	}
 
 	@Test
-	public void testPassword() throws MetaFactoryException, AuthenticationServiceException, PasswordPersistenceServiceException {
+	public void testPassword() throws MetaFactoryException, AuthenticationServiceException, AuthenticationPersistenceServiceException {
 		 AuthenticationService service = MetaFactory.get(AuthenticationService.class);
 
 		AccountId id = new AccountId("FOO");
@@ -50,7 +52,7 @@ public class AuthenticationServiceTest {
 		}catch(IllegalArgumentException e){}
 
 		//check if the password is really stored
-		PasswordPersistenceService persistenceService = MetaFactory.get(PasswordPersistenceService.class);
+		AuthenticationPersistenceService persistenceService = MetaFactory.get(AuthenticationPersistenceService.class);
 		assertNotNull(persistenceService.getEncryptedPassword(id));
 		assertNull(persistenceService.getEncryptedPassword(new AccountId("xxx")));
 
