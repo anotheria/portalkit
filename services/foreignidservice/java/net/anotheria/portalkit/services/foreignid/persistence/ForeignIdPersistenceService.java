@@ -19,8 +19,8 @@ public interface ForeignIdPersistenceService {
 	 * @return
 	 * @throws ForeignIdPersistenceServiceException
 	 */
-	public AccountId getAccountIdByForeignId(ForeignId foreignId) throws ForeignIdPersistenceServiceException;
-
+	public AccountId getAccountIdByForeignId(int sid, String fid) throws ForeignIdPersistenceServiceException;
+	
 	/**
 	 * Returns list of foreign ids by account ID. All accounts mapped with foreign ids as one to many.
 	 * @param accountId
@@ -35,28 +35,22 @@ public interface ForeignIdPersistenceService {
 	 * @param accountId
 	 * @throws ForeignIdPersistenceServiceException
 	 */
-	public void link(ForeignId foreignId, AccountId accountId) throws ForeignIdPersistenceServiceException;
+	public void link(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException;
 
 	/**
-	 * Deassociate foreign ID from account.
+	 * Dissociate all foreign ids linked to specified account.
 	 * @param foreignId
 	 * @throws ForeignIdPersistenceServiceException
 	 */
-	public void unlink(ForeignId foreignId) throws ForeignIdPersistenceServiceException;
-
+	public void unlink(int sid, String fid) throws ForeignIdPersistenceServiceException;
+	
 	/**
-	 * Create foreign ID.
-	 * @param sourceId
-	 * @param id
+	 * Dissociate foreign id for specified account.
+	 * @param accountId
+	 * @param sid
+	 * @param fid
 	 * @throws ForeignIdPersistenceServiceException
 	 */
-	public void create(int sourceId, String id) throws ForeignIdPersistenceServiceException;
-
-	/**
-	 * Delete foreign ID.
-	 * @param foreignId
-	 * @throws ForeignIdPersistenceServiceException
-	 */
-	public void delete(ForeignId foreignId) throws ForeignIdPersistenceServiceException;
+	public void unlink(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException;
 
 }
