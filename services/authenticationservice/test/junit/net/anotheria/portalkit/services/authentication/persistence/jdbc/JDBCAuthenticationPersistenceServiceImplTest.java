@@ -16,8 +16,8 @@ import static org.junit.Assert.assertNull;
  * @since 14.01.13 18:36
  */
 public class JDBCAuthenticationPersistenceServiceImplTest {
-	public static final String ENV = "psql";
-	//public static final String ENV = "h2";
+	//public static final String ENV = "psql";
+	public static final String ENV = "h2";
 
 
 	private JDBCAuthenticationPersistenceServiceImpl getService() throws Exception{
