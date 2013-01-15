@@ -24,6 +24,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		super("pk-jdbc-account");
 
 		dao = new AccountDAO();
+		addDaos(dao);
 	}
 
 
@@ -70,7 +71,4 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 
-	public void cleanupFromUnitTests() throws Exception {
-		dao.cleanupFromUnitTests(getConnection());
-	}
 }
