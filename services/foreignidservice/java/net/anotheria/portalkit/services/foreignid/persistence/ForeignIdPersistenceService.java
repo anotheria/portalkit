@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.foreignid.persistence;
 
 import java.util.List;
 
+import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.foreignid.ForeignId;
 
@@ -11,7 +12,7 @@ import net.anotheria.portalkit.services.foreignid.ForeignId;
  * @author dagafonov
  * 
  */
-public interface ForeignIdPersistenceService {
+public interface ForeignIdPersistenceService extends Service {
 
 	/**
 	 * Returns account ID by foreign ID.
