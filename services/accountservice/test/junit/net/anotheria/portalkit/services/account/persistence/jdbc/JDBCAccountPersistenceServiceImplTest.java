@@ -27,14 +27,19 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 	}
 
 	public Account createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
-		Account toCreate = new Account();
-		toCreate.setName("test");
-		toCreate.setEmail("test@example.com");
-		toCreate.setType(1);
-		toCreate.setRegistrationTimestamp(System.currentTimeMillis());
-		Account newAcc = Account.newAccountFromPattern(toCreate);
+		Account newAcc = createAccountTemplate();
 		service.saveAccount(newAcc);
 		return newAcc;
+	}
+
+	public Account createAccountTemplate(){
+		Account account = new Account();
+		account.setName("test");
+		account.setEmail("test@example.com");
+		account.setType(1);
+		account.setRegistrationTimestamp(System.currentTimeMillis());
+		account.addStatus(1); account.addStatus(16); account.addStatus(32);
+		return Account.newAccountFromPattern(account);
 	}
 
 	public void testGetAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
@@ -46,8 +51,9 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 		Account existing = service.getAccount(created.getId());
 		assertNotSame(created, existing);
 		assertEquals(created, existing);
-
 	}
+
+
 
 	public void testDeleteAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
 		AccountId any = AccountId.generateNew();
@@ -81,5 +87,21 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 		Account reread = service.getAccount(created.getId());
 		assertEquals(created.getId(), reread.getId());
 		assertEquals(100, reread.getType());
+	}
+
+	public void testAccountFields(JDBCAccountPersistenceServiceImpl service) throws Exception{
+		Account toCreate = createAccountTemplate();
+		service.saveAccount(toCreate);
+		Account fromService = service.getAccount(toCreate.getId());
+
+		assertEquals(toCreate, fromService);
+		assertNotSame(toCreate, fromService);
+
+		assertEquals("id mismatch", toCreate.getId(), fromService.getId());
+		assertEquals("name mismatch", toCreate.getName(), fromService.getName());
+		assertEquals("type mismatch", toCreate.getType(), fromService.getType());
+		assertEquals("email mismatch", toCreate.getEmail(), fromService.getEmail());
+		assertEquals("status mismatch", toCreate.getStatus(), fromService.getStatus());
+		assertEquals("reg timestamp mismatch", toCreate.getRegistrationTimestamp(), fromService.getRegistrationTimestamp());
 	}
 }

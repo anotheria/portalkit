@@ -29,6 +29,12 @@ public class Account {
 	private int type;
 
 	/**
+	 * This field is used to set different statuses of the account. Feel free to use whatever you like, but
+	 * we would advice to use this field as bitmap and combine multiple statuses.
+	 */
+	private long status;
+
+	/**
 	 * The creation timestamp for this account.
 	 */
 	private long registrationTimestamp;
@@ -101,14 +107,42 @@ public class Account {
 		name = anotherAccount.name;
 		email = anotherAccount.email;
 		type = anotherAccount.type;
+		status = anotherAccount.status;
 	}
 
 	@Override public String toString(){
-		return getId()+" "+getName()+" "+getType();
+		return getId()+" "+getName()+" "+getType()+" "+getStatus();
 	}
 
 	@Override public boolean equals(Object o){
 		return o instanceof Account && ((Account)o).getId().equals(getId());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (email != null ? email.hashCode() : 0);
+		result = 31 * result + type;
+		result = 31 * result + (int) (status ^ (status >>> 32));
+		result = 31 * result + (int) (registrationTimestamp ^ (registrationTimestamp >>> 32));
+		return result;
+	}
+
+	public long getStatus() {
+		return status;
+	}
+
+	public void setStatus(long status) {
+		this.status = status;
+	}
+
+	public void addStatus(long aStatus){
+		status |= aStatus;
+	}
+
+	public boolean hasStatus(long aStatus){
+		return (status & aStatus) == aStatus;
 	}
 
 }

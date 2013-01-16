@@ -29,11 +29,12 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	public static final int POS_EMAIL = 3;
 	public static final int POS_TYPE = 4;
 	public static final int POS_REG = 5;
-	public static final int MAX_POS = POS_REG;
+	public static final int POS_STATUS = 6;
+	public static final int MAX_POS = POS_STATUS;
 
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException{
-		String insert = "INSERT INTO account (id, name, email, type, regts, "+ATT_DAO_CREATED+"," + ATT_DAO_UPDATED+") "+
-				"SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM "+TABLE_NAME+" WHERE id = ? );";
+		String insert = "INSERT INTO account (id, name, email, type, regts, status, "+ATT_DAO_CREATED+"," + ATT_DAO_UPDATED+") "+
+				"SELECT ?,?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM "+TABLE_NAME+" WHERE id = ? );";
 
 		PreparedStatement insertStatement = connection.prepareStatement(
 				insert
@@ -44,6 +45,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		insertStatement.setString(POS_EMAIL, toSave.getEmail());
 		insertStatement.setInt(POS_TYPE, toSave.getType());
 		insertStatement.setLong(POS_REG, toSave.getRegistrationTimestamp());
+		insertStatement.setLong(POS_STATUS, toSave.getStatus());
 		insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 		insertStatement.setLong(MAX_POS + 2, 0);
 		insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
@@ -55,7 +57,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	}
 
 	private boolean updateAccount(Connection connection, Account toSave) throws SQLException ,DAOException{
-		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, "+ATT_DAO_UPDATED+" = ? WHERE id = ?";
+		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, status = ?, "+ATT_DAO_UPDATED+" = ? WHERE id = ?";
 
 		PreparedStatement updateStatement = connection.prepareStatement(
 				update
@@ -68,6 +70,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		updateStatement.setString(i++, toSave.getEmail());
 		updateStatement.setInt(i++, toSave.getType());
 		updateStatement.setLong(i++, toSave.getRegistrationTimestamp());
+		updateStatement.setLong(i++, toSave.getStatus());
 		updateStatement.setLong(i++, System.currentTimeMillis());
 		updateStatement.setString(i++, toSave.getId().getInternalId());
 		//*/
@@ -122,7 +125,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 
 	Account getAccount(Connection connection, AccountId id) throws DAOException, SQLException{
 		PreparedStatement stat = connection.prepareStatement(
-			"SELECT id,name, email, type, regts from "+TABLE_NAME+" WHERE id = ?;"
+			"SELECT id,name, email, type, regts, status from "+TABLE_NAME+" WHERE id = ?;"
 		);
 		stat.setString(1, id.getInternalId());
 		ResultSet result = stat.executeQuery();
@@ -135,6 +138,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		acc.setEmail(result.getString(POS_EMAIL));
 		acc.setRegistrationTimestamp(result.getLong(POS_REG));
 		acc.setType(result.getInt(POS_TYPE));
+		acc.setStatus(result.getLong(POS_STATUS));
 		return acc;
 	}
 
