@@ -4,7 +4,7 @@ import net.anotheria.portalkit.services.authentication.PasswordEncryptionAlgorit
 import net.anotheria.util.crypt.CryptTool;
 
 /**
- * TODO comment this class
+ * Password encryption based on blowfish. Easy to use but has a weakness, passwords are decryptable.
  *
  * @author lrosenberg
  * @since 12.12.12 23:21
@@ -20,8 +20,12 @@ public class BlowfishPasswordEncryptionAlgorithm implements PasswordEncryptionAl
 		return cryptTool.encryptToHex(password);
 	}
 
-	@Override
-	public String decryptPassword(String encryptedPassword) {
+	/**
+	 * Decrypts a password, shouldn't be used.
+	 * @param encryptedPassword
+	 * @return
+	 */
+	/* test */String decryptPassword(String encryptedPassword) {
 		if (cryptTool==null)
 			throw new IllegalStateException("Uninitialzed call customize(key) first");
 		return cryptTool.decryptFromHex(encryptedPassword);

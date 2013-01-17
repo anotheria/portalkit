@@ -6,6 +6,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 
@@ -103,5 +104,41 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 		assertEquals("email mismatch", toCreate.getEmail(), fromService.getEmail());
 		assertEquals("status mismatch", toCreate.getStatus(), fromService.getStatus());
 		assertEquals("reg timestamp mismatch", toCreate.getRegistrationTimestamp(), fromService.getRegistrationTimestamp());
+	}
+
+	public void testGetByEmailAndGetByName(JDBCAccountPersistenceServiceImpl service) throws Exception{
+		Account toCreate1 = createAccountTemplate();
+		toCreate1.setEmail("foo@example.com");
+		toCreate1.setName("foo");
+
+		Account toCreate2 = createAccountTemplate();
+		toCreate2.setEmail("foo2@example.com");
+		toCreate2.setName("foo2");
+
+		service.saveAccount(toCreate1);
+		service.saveAccount(toCreate2);
+
+		assertNull(service.getIdByName("none"));
+		assertNull(service.getIdByEmail("none"));
+
+		//check first element by name
+		assertEquals(toCreate1.getId(), service.getIdByName("foo"));
+		assertFalse(toCreate1.getId().equals(service.getIdByName("foo2")));
+		assertFalse(toCreate1.getId().equals(service.getIdByName("foo@example.com")));
+
+		//check first element by email
+		assertEquals(toCreate1.getId(), service.getIdByEmail("foo@example.com"));
+		assertFalse(toCreate1.getId().equals(service.getIdByEmail("foo2")));
+		assertFalse(toCreate1.getId().equals(service.getIdByEmail("foo")));
+		assertFalse(toCreate1.getId().equals(service.getIdByEmail("foo2@example.com")));
+
+		//test for empty spaces.
+		Account toCreate3 = createAccountTemplate();
+		toCreate3.setEmail("foo bar@example.com");
+		toCreate3.setName("foo bar");
+		service.saveAccount(toCreate3);
+		assertEquals(toCreate3.getId(), service.getIdByName("foo bar"));
+		assertEquals(toCreate3.getId(), service.getIdByEmail("foo bar@example.com"));
+
 	}
 }

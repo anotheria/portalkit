@@ -31,5 +31,9 @@ public class JDBCAccountPersistenceServiceImplH2Test extends JDBCAccountPersiste
 		testAccountFields(getService(H2));
 	}
 
+	@Test public void testGetByEmailOrName() throws Exception{
+		testGetByEmailAndGetByName(getService(H2));
+	}
+
 
 }

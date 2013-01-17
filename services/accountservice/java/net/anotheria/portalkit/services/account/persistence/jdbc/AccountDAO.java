@@ -154,4 +154,23 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		delete.setString(1, id.getInternalId());
 		delete.executeUpdate();
 	}
+
+	public AccountId getIdByName(Connection connection, String name) throws SQLException, DAOException{
+		return getIdByField(connection, "name", name);
+	}
+
+	public AccountId getIdByEmail(Connection connection, String email) throws SQLException, DAOException{
+		return getIdByField(connection, "email", email);
+	}
+
+	private AccountId getIdByField(Connection connection, String fieldName, String fieldValue) throws SQLException, DAOException{
+		String sql = "SELECT id FROM "+TABLE_NAME+" WHERE "+fieldName+" = ?";
+		PreparedStatement select = connection.prepareStatement(sql);
+		select.setString(1, fieldValue);
+		ResultSet result = select.executeQuery();
+		if (!result.next())
+			return null;
+		return new AccountId(result.getString(1));
+	}
+
 }
