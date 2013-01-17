@@ -27,6 +27,9 @@ public class JDBCAccountPersistenceServiceImplH2Test extends JDBCAccountPersiste
 	@Test public void testEditAccountWithH2() throws Exception{
 		testEditAccount(getService(H2));
 	}
+	@Test public void testAccountFieldsWithH2() throws Exception{
+		testAccountFields(getService(H2));
+	}
 
 
 }
