@@ -3,7 +3,7 @@ package net.anotheria.portalkit.services.account.persistence;
 import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceServiceException;
 
 /**
- * TODO comment this class
+ * Base exception class for exceptions in accountpersistenceservice.
  *
  * @author lrosenberg
  * @since 12.12.12 11:41

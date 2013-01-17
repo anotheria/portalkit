@@ -8,9 +8,15 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author lrosenberg
  * @since 14.12.12 09:10
  */
-public class NullAccount extends Account{
+public final class NullAccount extends Account{
+	/**
+	 * The one and only instance.
+	 */
 	static final NullAccount INSTANCE = new NullAccount();
 
+	/**
+	 * Not instantiateable.
+	 */
 	private NullAccount(){}
 
 	@Override public boolean equals(Object o){

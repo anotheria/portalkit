@@ -19,18 +19,42 @@ import java.util.List;
  */
 public class AccountServiceImpl implements AccountService{
 
+	/**
+	 * Config.
+	 */
 	private AccountServiceConfig config;
 
+	/**
+	 * Persistence service.
+	 */
 	private AccountPersistenceService persistenceService;
 
+	/**
+	 * AccountId id->account cache.
+	 */
 	private Cache<AccountId, Account> cache;
+	/**
+	 * Cache for not existing accounts, contains null account objects.
+	 */
 	private Cache<AccountId, Account> nonExistingAccountCache;
+	/**
+	 * Cache for name 2 id mapping.
+	 */
 	private Cache<String, AccountId> name2idCache;
+	/**
+	 * Cache for email 2 id mapping.
+	 */
 	private Cache<String, AccountId> email2idCache;
 
+	/**
+	 * Instance of null account that is used internally.
+	 */
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
 
+	/**
+	 * Default constructor.
+	 */
 	public AccountServiceImpl(){
 		config = new AccountServiceConfig();
 
