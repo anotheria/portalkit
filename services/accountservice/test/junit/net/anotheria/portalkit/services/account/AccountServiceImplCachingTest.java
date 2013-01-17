@@ -68,13 +68,13 @@ public class AccountServiceImplCachingTest {
 		AccountId id = AccountId.generateNew();
 		try{
 			service.getAccount(id);
-			fail("exceptio nexpected");
+			fail("exception expected");
 		}catch(AccountNotFoundException e){
 			assertEquals(1, get);
 		}
 		try{
 			service.getAccount(id);
-			fail("exceptio nexpected");
+			fail("exception expected");
 		}catch(AccountNotFoundException e){
 			assertEquals("second call shouldn't produce a call to persistence", 1, get);
 		}
