@@ -7,5 +7,5 @@ package net.anotheria.portalkit.services.common;
  * @since 29.12.12 00:00
  */
 public interface AccountRelatedService {
-	boolean deleteAccountRelatedData(AccountId Id);
+	boolean deleteAccountRelatedData(AccountId id);
 }
