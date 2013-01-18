@@ -41,5 +41,22 @@ public class JDBCForeignIdPersistenceServiceImplTest {
 		AccountId accid = service.getAccountIdByForeignId(ForeignIdSources.FACEBOOK, "unknownfid");
 		Assert.assertNull(accid);
 	}
-
+	
+	@Test
+	public void testUnlink() throws Exception {
+		JDBCForeignIdPersistenceServiceImpl service = getService("hsqldb");
+		AccountId accid = AccountId.generateNew();
+		service.link(accid, ForeignIdSources.FACEBOOK, "foreignid3");
+		
+		AccountId accid1 = service.getAccountIdByForeignId(ForeignIdSources.FACEBOOK, "foreignid3");
+		Assert.assertNotNull(accid1);
+		Assert.assertEquals(accid.getInternalId(), accid1.getInternalId());
+		
+		service.unlink(accid, ForeignIdSources.FACEBOOK, "foreignid3");
+		
+		AccountId accid2 = service.getAccountIdByForeignId(ForeignIdSources.FACEBOOK, "foreignid3");
+		Assert.assertNull(accid2);
+		
+	}
+	
 }

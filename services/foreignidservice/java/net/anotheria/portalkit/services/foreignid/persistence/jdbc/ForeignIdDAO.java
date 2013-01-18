@@ -18,6 +18,9 @@ import org.apache.log4j.Logger;
 public class ForeignIdDAO extends AbstractDAO implements DAO {
 
 	public static final String TABLE_NAME = "foreignid";
+	public static final String ACCOUNTID_FIELD_NAME = "accid";
+	public static final String SOURCEID_FIELD_NAME = "sourceid";
+	public static final String FOREIGN_FIELD_NAME = "foreignid";
 
 	private static Logger log = Logger.getLogger(ForeignIdDAO.class);
 
@@ -27,8 +30,8 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	}
 
 	public void link(Connection connection, AccountId accId, int sid, String fid) throws DAOException, SQLException {
-		PreparedStatement insertStatement = connection.prepareStatement("insert into " + TABLE_NAME
-				+ " (accid, sourceid, foreignid) values (?, ?, ?);");
+		PreparedStatement insertStatement = connection.prepareStatement("insert into " + TABLE_NAME + " (" + ACCOUNTID_FIELD_NAME + ", "
+				+ SOURCEID_FIELD_NAME + ", " + FOREIGN_FIELD_NAME + ") values (?, ?, ?);");
 		insertStatement.setString(1, accId.getInternalId());
 		insertStatement.setInt(2, sid);
 		insertStatement.setString(3, fid);
@@ -37,7 +40,8 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	}
 
 	public AccountId getAccountIdByForeignId(Connection connection, int sid, String fid) throws DAOException, SQLException {
-		PreparedStatement stat = connection.prepareStatement("SELECT accid from " + TABLE_NAME + " WHERE sourceid = ? and foreignid = ?;");
+		PreparedStatement stat = connection.prepareStatement("SELECT " + ACCOUNTID_FIELD_NAME + " from " + TABLE_NAME + " WHERE "
+				+ SOURCEID_FIELD_NAME + " = ? and " + FOREIGN_FIELD_NAME + " = ?;");
 		stat.setInt(1, sid);
 		stat.setString(2, fid);
 		ResultSet result = stat.executeQuery();
@@ -49,14 +53,30 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	}
 
 	public List<ForeignId> getForeignIdsByAccountId(Connection connection, AccountId accId) throws DAOException, SQLException {
-		PreparedStatement stat = connection.prepareStatement("SELECT * from " + TABLE_NAME + " WHERE accid = ?;");
+		PreparedStatement stat = connection.prepareStatement("SELECT * from " + TABLE_NAME + " WHERE " + ACCOUNTID_FIELD_NAME + " = ?;");
 		stat.setString(1, accId.getInternalId());
 		ResultSet result = stat.executeQuery();
 		List<ForeignId> res = new ArrayList<ForeignId>();
 		while (result.next()) {
-			res.add(new ForeignId(new AccountId(result.getString("accid")), result.getInt("sourceid"), result.getString("foreignid")));
+			res.add(new ForeignId(new AccountId(result.getString(ACCOUNTID_FIELD_NAME)), result.getInt(SOURCEID_FIELD_NAME), result
+					.getString(FOREIGN_FIELD_NAME)));
 		}
 		return res;
+	}
+
+	public void unlink(Connection connection, AccountId accId, int sid, String fid) throws DAOException, SQLException {
+		PreparedStatement deleteStatement = connection.prepareStatement("delete from " + TABLE_NAME + " where " + ACCOUNTID_FIELD_NAME + " = ? and "
+				+ SOURCEID_FIELD_NAME + " = ? and " + FOREIGN_FIELD_NAME + " = ?;");
+		deleteStatement.setString(1, accId.getInternalId());
+		deleteStatement.setInt(2, sid);
+		deleteStatement.setString(3, fid);
+		int deleteResult = deleteStatement.executeUpdate();
+		System.out.println("DELETE: " + deleteResult);
+	}
+
+	public void unlink(Connection connection, int sid, String fid) throws DAOException, SQLException {
+		AccountId accid = getAccountIdByForeignId(connection, sid, fid);
+		unlink(connection, accid, sid, fid);
 	}
 
 }

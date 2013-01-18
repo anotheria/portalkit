@@ -15,7 +15,7 @@ import net.anotheria.portalkit.services.foreignid.ForeignId;
 public interface ForeignIdPersistenceService extends Service {
 
 	/**
-	 * Returns account ID by foreign ID.
+	 * Returns account ID by foreign ID. If foreign id does not exist - method returns null.
 	 * @param foreignId
 	 * @return
 	 * @throws ForeignIdPersistenceServiceException

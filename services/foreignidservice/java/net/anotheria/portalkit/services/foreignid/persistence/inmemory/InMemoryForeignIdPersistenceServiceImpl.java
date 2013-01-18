@@ -33,7 +33,7 @@ public class InMemoryForeignIdPersistenceServiceImpl implements ForeignIdPersist
 	public AccountId getAccountIdByForeignId(int sid, String fid) throws ForeignIdPersistenceServiceException {
 		ForeignId foreignId = foreignIdCache.get(getKey(sid, fid));
 		if (foreignId == null) {
-			throw new ForeignIdPersistenceServiceException("foreign id [sid=" + sid + ", fid=" + fid + "] does not exist.");
+			return null;
 		}
 		return foreignId.getAccountId();
 	}

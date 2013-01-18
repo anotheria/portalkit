@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX fid_sid_idx ON foreignid (sourceid, foreignid);

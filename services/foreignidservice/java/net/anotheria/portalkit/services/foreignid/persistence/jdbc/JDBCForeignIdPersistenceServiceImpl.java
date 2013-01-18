@@ -60,13 +60,25 @@ public class JDBCForeignIdPersistenceServiceImpl extends BasePersistenceServiceJ
 	}
 
 	@Override
-	public void unlink(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException {
-
+	public void unlink(AccountId accId, int sid, String fid) throws ForeignIdPersistenceServiceException {
+		try {
+			dao.unlink(getConnection(), accId, sid, fid);
+		} catch (DAOException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		} catch (SQLException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		}
 	}
 
 	@Override
 	public void unlink(int sid, String fid) throws ForeignIdPersistenceServiceException {
-
+		try {
+			dao.unlink(getConnection(), sid, fid);
+		} catch (DAOException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		} catch (SQLException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		}
 	}
 
 }
