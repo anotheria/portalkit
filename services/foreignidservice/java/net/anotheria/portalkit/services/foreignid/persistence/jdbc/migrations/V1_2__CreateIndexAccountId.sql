@@ -1,1 +1,0 @@
-CREATE INDEX accid_idx ON foreignid (accid);

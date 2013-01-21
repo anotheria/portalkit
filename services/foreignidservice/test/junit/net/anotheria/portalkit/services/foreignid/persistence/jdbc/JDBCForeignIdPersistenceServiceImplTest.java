@@ -19,14 +19,14 @@ public class JDBCForeignIdPersistenceServiceImplTest {
 
 	@Test
 	public void testLink() throws Exception {
-		JDBCForeignIdPersistenceServiceImpl service = getService("hsqldb");
+		JDBCForeignIdPersistenceServiceImpl service = getService("h2");
 		ForeignId fid = new ForeignId(new AccountId("accid1"), ForeignIdSources.FACEBOOK, "foreignid1");
 		service.link(fid.getAccountId(), fid.getSourceId(), fid.getId());
 	}
 
 	@Test
 	public void testGetAccountIdByForeignId() throws Exception {
-		JDBCForeignIdPersistenceServiceImpl service = getService("hsqldb");
+		JDBCForeignIdPersistenceServiceImpl service = getService("h2");
 		
 		service.link(new AccountId("accid1"), ForeignIdSources.FACEBOOK, "foreignid2");
 		
@@ -37,14 +37,14 @@ public class JDBCForeignIdPersistenceServiceImplTest {
 
 	@Test
 	public void testGetAccountIdByUnknownForeignId() throws Exception {
-		JDBCForeignIdPersistenceServiceImpl service = getService("hsqldb");
+		JDBCForeignIdPersistenceServiceImpl service = getService("h2");
 		AccountId accid = service.getAccountIdByForeignId(ForeignIdSources.FACEBOOK, "unknownfid");
 		Assert.assertNull(accid);
 	}
 	
 	@Test
 	public void testUnlink() throws Exception {
-		JDBCForeignIdPersistenceServiceImpl service = getService("hsqldb");
+		JDBCForeignIdPersistenceServiceImpl service = getService("h2");
 		AccountId accid = AccountId.generateNew();
 		service.link(accid, ForeignIdSources.FACEBOOK, "foreignid3");
 		
