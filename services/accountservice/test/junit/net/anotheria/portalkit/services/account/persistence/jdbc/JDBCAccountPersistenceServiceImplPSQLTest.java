@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -10,7 +9,6 @@ import org.junit.Test;
  * @author lrosenberg
  * @since 15.01.13 10:02
  */
-@Ignore
 public class JDBCAccountPersistenceServiceImplPSQLTest extends JDBCAccountPersistenceServiceImplTest{
 	public static final String PSQL = "psql";
 
@@ -34,5 +32,10 @@ public class JDBCAccountPersistenceServiceImplPSQLTest extends JDBCAccountPersis
 	@Test public void testAccountFieldsWithPSQL() throws Exception{
 		testAccountFields(getService(PSQL));
 	}
+
+	@Test public void testGetByEmailOrName() throws Exception{
+		testGetByEmailAndGetByName(getService(PSQL));
+	}
+
 
 }
