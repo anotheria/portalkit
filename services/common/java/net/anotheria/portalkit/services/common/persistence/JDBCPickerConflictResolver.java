@@ -13,7 +13,7 @@ import java.util.Collection;
 public class JDBCPickerConflictResolver implements OnTheFlyConflictResolver {
 	@Override
 	public <T> Class<? extends T> resolveConflict(Collection<Class<? extends T>> classes) {
-		for (Class <? extends T> clazz : classes){
+		for (Class<? extends T> clazz : classes){
 			if (clazz.getSimpleName().toLowerCase().indexOf("jdbc")!=-1)
 				return clazz;
 		}

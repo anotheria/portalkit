@@ -16,7 +16,7 @@ import java.sql.SQLException;
  */
 public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AuthenticationPersistenceService{
 
-	PasswordDAO passwordDAO = new PasswordDAO();
+	private PasswordDAO passwordDAO = new PasswordDAO();
 
 	public JDBCAuthenticationPersistenceServiceImpl(){
 		super("pk-jdbc-auth");
