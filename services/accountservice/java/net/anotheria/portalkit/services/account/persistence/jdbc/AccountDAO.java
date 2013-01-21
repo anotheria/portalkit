@@ -13,25 +13,55 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * TODO comment this class
+ * DAO class for account object.
  *
  * @author lrosenberg
  * @since 06.01.13 01:39
  */
 public class AccountDAO extends AbstractDAO implements DAO {
 
+	/**
+	 * Name of the table in the database.
+	 */
 	public static final String TABLE_NAME = "account";
 
+	/**
+	 * Logger
+	 */
 	private static Logger log = Logger.getLogger(AccountDAO.class);
 
+	/**
+	 * Position of the id field in insert/update statements.
+	 */
 	public static final int POS_ID = 1;
+	/**
+	 * Position of the name field in insert/update statements.
+	 */
 	public static final int POS_NAME = 2;
+	/**
+	 * Position of the email field in insert/update statements.
+	 */
 	public static final int POS_EMAIL = 3;
+	/**
+	 * Position of the type field in insert/update statements.
+	 */
 	public static final int POS_TYPE = 4;
+	/**
+	 * Position of the regtimestamp field in insert/update statements.
+	 */
 	public static final int POS_REG = 5;
+	/**
+	 * Position of the status field in insert/update statements.
+	 */
 	public static final int POS_STATUS = 6;
+	/**
+	 * Max value of the position field.
+	 */
 	public static final int MAX_POS = POS_STATUS;
 
+	/**
+	 * Internal create account operation.
+	 */
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException{
 		String insert = "INSERT INTO account (id, name, email, type, regts, status, "+ATT_DAO_CREATED+"," + ATT_DAO_UPDATED+") "+
 				"SELECT ?,?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM "+TABLE_NAME+" WHERE id = ? );";
@@ -56,6 +86,9 @@ public class AccountDAO extends AbstractDAO implements DAO {
 
 	}
 
+	/**
+	 * Internal update operation.
+	 */
 	private boolean updateAccount(Connection connection, Account toSave) throws SQLException ,DAOException{
 		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, status = ?, "+ATT_DAO_UPDATED+" = ? WHERE id = ?";
 
@@ -142,7 +175,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		return acc;
 	}
 
-	protected String[] getTableNames(){
+	@Override protected String[] getTableNames(){
 		return new String[]{TABLE_NAME};
 	}
 

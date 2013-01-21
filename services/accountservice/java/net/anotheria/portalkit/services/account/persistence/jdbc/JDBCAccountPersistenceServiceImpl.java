@@ -12,15 +12,21 @@ import java.sql.SQLException;
 
 
 /**
- * TODO comment this class
+ * JDBC Based implementation of the account persistence service.
  *
  * @author lrosenberg
  * @since 06.01.13 01:09
  */
 public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AccountPersistenceService{
 
+	/**
+	 * Instance of the account dao.
+	 */
 	private AccountDAO dao;
 
+	/**
+	 * Constructor.
+	 */
 	public JDBCAccountPersistenceServiceImpl(){
 		super("pk-jdbc-account");
 

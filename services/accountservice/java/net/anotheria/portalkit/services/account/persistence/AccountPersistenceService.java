@@ -5,7 +5,7 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
- * TODO comment this class
+ * Interface for the persistence service for the account service.
  *
  * @author lrosenberg
  * @since 12.12.12 11:41

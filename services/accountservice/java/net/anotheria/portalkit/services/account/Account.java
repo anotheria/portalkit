@@ -97,6 +97,12 @@ public class Account {
 		this.registrationTimestamp = registrationTimestamp;
 	}
 
+	/**
+	 * Creates a new account from account pattern. Copies all fields (except id) from the pattern account.
+	 * Use to properly create new account objects with preset attributes.
+	 * @param pattern
+	 * @return
+	 */
 	public static final Account newAccountFromPattern(Account pattern){
 		Account ret = new Account(AccountId.generateNew());
 		ret.copyFrom(pattern);
@@ -137,10 +143,19 @@ public class Account {
 		this.status = status;
 	}
 
+	/**
+	 * Adds aditional status (sets bit) to the internal status bitmap.
+	 * @param aStatus
+	 */
 	public void addStatus(long aStatus){
 		status |= aStatus;
 	}
 
+	/**
+	 * Returns true if the submitted status bit is set.
+	 * @param aStatus
+	 * @return
+	 */
 	public boolean hasStatus(long aStatus){
 		return (status & aStatus) == aStatus;
 	}

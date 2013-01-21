@@ -6,7 +6,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import java.util.List;
 
 /**
- * TODO comment this class
+ * This interface describes the account service, where all system accounts are managed.
  *
  * @author lrosenberg
  * @since 14.10.12 21:56
@@ -21,10 +21,27 @@ public interface AccountService extends Service {
 	 */
 	Account getAccount(AccountId id) throws AccountServiceException;
 
+	/**
+	 * Returns some accounts.
+	 * @param ids ids of accounts to retrieve.
+	 * @return
+	 * @throws AccountServiceException
+	 */
 	List<Account> getAccounts(List<AccountId> ids) throws AccountServiceException;
 
+	/**
+	 * Deletes an account.
+	 * @param id
+	 * @throws AccountServiceException
+	 */
 	void deleteAccount(AccountId id) throws AccountServiceException;
 
+	/**
+	 * Updates existing account.
+	 * @param toUpdate
+	 * @return
+	 * @throws AccountServiceException
+	 */
 	Account updateAccount(Account toUpdate) throws AccountServiceException;
 
 	/**
@@ -38,12 +55,19 @@ public interface AccountService extends Service {
 	 * Returns accountid for given (login) name. Account name can also be the email adress of the user, or whatever you want
 	 * to use for login purposes.
 	 * This method returns accountid instead of account object for better scaleability (mod distribution).
-	 * @param accountName
+	 * @param accountName a value of the name field.
 	 * @return
 	 * @throws AccountServiceException
 	 */
 	AccountId getAccountIdByName(String accountName) throws AccountServiceException;
 
-	AccountId getAccountIdByEmail(String accountName) throws AccountServiceException;
+	/**
+	 * Returns account id by email.
+	 * This method returns accountid instead of account object for better scaleability (mod distribution).
+	 * @param accountEmail exact email address.
+	 * @return
+	 * @throws AccountServiceException
+	 */
+	AccountId getAccountIdByEmail(String accountEmail) throws AccountServiceException;
 
 }
