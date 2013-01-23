@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.common.persistence.jdbc;
 
 import com.googlecode.flyway.core.Flyway;
-import com.googlecode.flyway.core.api.MigrationInfo;
 import com.googlecode.flyway.core.api.MigrationInfoService;
 import net.anotheria.util.StringUtils;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -83,7 +82,6 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		JDBCConfig config = new JDBCConfig();
 		ConfigurationManager.INSTANCE.configureAs(config, configName);
 		log.info("Using config: " + config);
-		System.out.println("Using config: "+config);
 
 		newDataSource.setDriverClassName(config.getDriver());
 		newDataSource.setUrl(config.getUrl());
@@ -104,14 +102,14 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		flyway.setInitOnMigrate(true);
 		flyway.migrate();
 		MigrationInfoService flywayInfo =  flyway.info();
-		System.out.println("FLYWAY: ");
-		for (MigrationInfo mi : flywayInfo.applied()){
-			System.out.println("Applied: "+mi.getVersion());
-		}
-		for (MigrationInfo mi : flywayInfo.pending()){
-			System.out.println("Pending: "+mi.getVersion());
-		}
-		System.out.println("Current: "+ flywayInfo.current().getVersion());
+		//System.out.println("FLYWAY: ");
+		//for (MigrationInfo mi : flywayInfo.applied()){
+		//	System.out.println("Applied: "+mi.getVersion());
+		//}
+		//for (MigrationInfo mi : flywayInfo.pending()){
+		//	System.out.println("Pending: "+mi.getVersion());
+		//}
+		log.info("Flyway current version:"+flywayInfo.current().getVersion());
 
 	}
 
