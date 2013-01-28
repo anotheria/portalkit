@@ -95,7 +95,7 @@ public final class MongoClientConfig implements Serializable {
 	 * Maximum auto connection retry timeout.
 	 */
 	@Configure
-	private long autoConnectRectryMaxTimeout = 0;
+	private long autoConnectRetryMaxTimeout = 0;
 
 	/**
 	 * Read concern type.
@@ -365,12 +365,12 @@ public final class MongoClientConfig implements Serializable {
 		this.autoConnectRetry = aAutoConnectRetry;
 	}
 
-	public long getAutoConnectRectryMaxTimeout() {
-		return autoConnectRectryMaxTimeout;
+	public long getAutoConnectRetryMaxTimeout() {
+		return autoConnectRetryMaxTimeout;
 	}
 
-	public void setAutoConnectRectryMaxTimeout(final long aAutoConnectRectryMaxTimeout) {
-		this.autoConnectRectryMaxTimeout = aAutoConnectRectryMaxTimeout;
+	public void setAutoConnectRetryMaxTimeout(final long aAutoConnectRetryMaxTimeout) {
+		this.autoConnectRetryMaxTimeout = aAutoConnectRetryMaxTimeout;
 	}
 
 	public ReadConcernType getReadConcernType() {
@@ -448,8 +448,8 @@ public final class MongoClientConfig implements Serializable {
 		builder.append(socketKeepAlive);
 		builder.append(",\n\t autoConnectRetry=");
 		builder.append(autoConnectRetry);
-		builder.append(", autoConnectRectryMaxTimeout=");
-		builder.append(autoConnectRectryMaxTimeout);
+		builder.append(", autoConnectRetryMaxTimeout=");
+		builder.append(autoConnectRetryMaxTimeout);
 		builder.append(",\n\t readConcernType=");
 		builder.append(readConcernType);
 		builder.append(",\n\t writeConcernType=");

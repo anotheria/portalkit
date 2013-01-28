@@ -95,7 +95,7 @@ public class MongoClientConfigTest {
 		Assert.assertEquals("Socket timeout should be the same", 0, configuration.getSocketTimeout());
 		Assert.assertEquals("Socket keep alive should be enabled", true, configuration.isSocketKeepAlive());
 		Assert.assertEquals("Auto connect retry should be enabled", true, configuration.isAutoConnectRetry());
-		Assert.assertEquals("Auto connect retry timout should be the same", 1000, configuration.getAutoConnectRectryMaxTimeout());
+		Assert.assertEquals("Auto connect retry timout should be the same", 1000, configuration.getAutoConnectRetryMaxTimeout());
 		Assert.assertEquals("Read concern type should be the same", ReadConcernType.NEAREST, configuration.getReadConcernType());
 		Assert.assertEquals("Write concern type should be the same", WriteConcernType.CUSTOM, configuration.getWriteConcernType());
 		Assert.assertEquals("Write strategy should be the same", 1, configuration.getWriteConcernWriteStrategy());
