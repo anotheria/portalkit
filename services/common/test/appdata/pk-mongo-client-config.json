@@ -19,7 +19,7 @@
 		"socketTimeout": 0,
 		"socketKeepAlive": true,
 		"autoConnectRetry": true,
-		"autoConnectRectryMaxTimeout": 1000,
+		"autoConnectRetryMaxTimeout": 1000,
 		"readConcernType": "NEAREST",
 		"writeConcernType": "CUSTOM",
 		"writeConcernWriteStrategy": 1,		
