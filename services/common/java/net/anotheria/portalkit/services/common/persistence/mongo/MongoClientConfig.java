@@ -71,13 +71,13 @@ public final class MongoClientConfig implements Serializable {
 	 * Maximum connection timeout.
 	 */
 	@Configure
-	private long connectionTimeout = 1000 * 10;
+	private int connectionTimeout = 1000 * 10;
 
 	/**
 	 * Maximum socket timeout.
 	 */
 	@Configure
-	private long socketTimeout = 0;
+	private int socketTimeout = 0;
 
 	/**
 	 * Socket keep alive option.
@@ -151,7 +151,7 @@ public final class MongoClientConfig implements Serializable {
 	 * @param configuration
 	 *            configuration name
 	 */
-	public MongoClientConfig(final String configuration, final Environment environment) {
+	private MongoClientConfig(final String configuration, final Environment environment) {
 		try {
 			if (configuration == null || configuration.trim().isEmpty()) {
 				ConfigurationManager.INSTANCE.configure(this, environment);
@@ -333,19 +333,19 @@ public final class MongoClientConfig implements Serializable {
 		this.connectionsPerHost = aConnectionsPerHost;
 	}
 
-	public long getConnectionTimeout() {
+	public int getConnectionTimeout() {
 		return connectionTimeout;
 	}
 
-	public void setConnectionTimeout(final long aConnectionTimeout) {
+	public void setConnectionTimeout(final int aConnectionTimeout) {
 		this.connectionTimeout = aConnectionTimeout;
 	}
 
-	public long getSocketTimeout() {
+	public int getSocketTimeout() {
 		return socketTimeout;
 	}
 
-	public void setSocketTimeout(final long aSocketTimeout) {
+	public void setSocketTimeout(final int aSocketTimeout) {
 		this.socketTimeout = aSocketTimeout;
 	}
 
