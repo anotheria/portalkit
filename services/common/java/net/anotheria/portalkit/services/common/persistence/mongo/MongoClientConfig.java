@@ -159,7 +159,8 @@ public final class MongoClientConfig implements Serializable {
 				ConfigurationManager.INSTANCE.configureAs(this, environment, configuration, Format.JSON);
 			}
 		} catch (RuntimeException e) {
-			LOGGER.warn("MongoClientConfig(" + configuration + ") Configuration fail[" + e.getMessage() + "]. Relaying on defaults.");
+			LOGGER.warn("MongoClientConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
+					+ "]. Relaying on defaults.");
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug(e);
 
@@ -167,7 +168,7 @@ public final class MongoClientConfig implements Serializable {
 			this.hosts = new Host[] { new Host(ServerAddress.defaultHost(), ServerAddress.defaultPort()) };
 		}
 
-		LOGGER.info("MongoClientConfig(" + configuration + ") Configured with[" + this.toString() + "]");
+		LOGGER.info("MongoClientConfig(conf:" + configuration + ", env: " + environment + ") Configured with[" + this.toString() + "]");
 	}
 
 	/**
@@ -217,7 +218,7 @@ public final class MongoClientConfig implements Serializable {
 
 			synchronized (LOCK) {
 				if (instance == null)
-					instance = new MongoClientConfig(null, null);
+					instance = new MongoClientConfig(null, ConfigurationManager.INSTANCE.getDefaultEnvironment());
 			}
 
 			return instance;
