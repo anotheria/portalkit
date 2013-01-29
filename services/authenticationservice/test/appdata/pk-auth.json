@@ -1,0 +1,10 @@
+{
+    "passwordAlgorithm": "net.anotheria.portalkit.services.authentication.encryptors.BlowfishPasswordEncryptionAlgorithm",
+    "passwordKey": "PORTALKITFOREVER",
+    //auth token encryptors config. Each element should have authenticationAlgorithm.SHORTCUT + authenticationKey.SHORTCUT
+    //since the shortcut will be transmitted as part of the auth link, don#t use long names here.
+    "authenticationAlgorithm.P":"net.anotheria.portalkit.services.authentication.encryptors.PlanAuthTokenEncryptionAlgorithm",
+    "authenticationKey.P":"this-is-ignored-anyway-for-plain-authentication",
+    "authenticationAlgorithm.B":"net.anotheria.portalkit.services.authentication.encryptors.BlowfishAuthTokenEncryptionAlgorithm",
+    "authenticationKey.B":"PORTALKITFORBLOWFISH"
+}

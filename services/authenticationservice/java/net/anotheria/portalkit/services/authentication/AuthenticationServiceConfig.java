@@ -1,6 +1,6 @@
 package net.anotheria.portalkit.services.authentication;
 
-import net.anotheria.portalkit.services.authentication.passwordencryptors.BlowfishPasswordEncryptionAlgorithm;
+import net.anotheria.portalkit.services.authentication.encryptors.BlowfishPasswordEncryptionAlgorithm;
 import org.configureme.annotations.ConfigureMe;
 
 /**
@@ -9,7 +9,7 @@ import org.configureme.annotations.ConfigureMe;
  * @author lrosenberg
  * @since 12.12.12 23:17
  */
-@ConfigureMe (allfields = true)
+@ConfigureMe (allfields = true, name="pk-auth")
 public class AuthenticationServiceConfig {
 	private String passwordKey = "PORTALKITFOREVER";
 	private String passwordAlgorithm = BlowfishPasswordEncryptionAlgorithm.class.getName();

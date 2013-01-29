@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.authentication.passwordencryptors;
+package net.anotheria.portalkit.services.authentication.encryptors;
 
 import net.anotheria.portalkit.services.authentication.PasswordEncryptionAlgorithm;
 import net.anotheria.util.crypt.CryptTool;
