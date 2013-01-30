@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -18,70 +19,135 @@ import java.util.Set;
 public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AuthenticationPersistenceService{
 
 	private PasswordDAO passwordDAO = new PasswordDAO();
+	private AuthTokenDAO authTokenDAO = new AuthTokenDAO();
 
 	public JDBCAuthenticationPersistenceServiceImpl(){
 		super("pk-jdbc-auth");
 
 		passwordDAO = new PasswordDAO();
-		addDaos(passwordDAO);
+		authTokenDAO = new AuthTokenDAO();
+
+		addDaos(passwordDAO, authTokenDAO);
 	}
 
 	@Override
 	public void saveEncryptedPassword(AccountId id, String password) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
 		try{
-			passwordDAO.savePassword(getConnection(), id, password);
+			con = getConnection();
+			passwordDAO.savePassword(con, id, password);
 		}catch(SQLException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
 		}
 	}
 
 	@Override
 	public String getEncryptedPassword(AccountId id) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
 		try{
-			return passwordDAO.getPassword(getConnection(), id);
+			con = getConnection();
+			return passwordDAO.getPassword(con, id);
 		}catch(SQLException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
 		}
 	}
 
 	@Override
 	public void deleteEncryptedPassword(AccountId id) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
 		try{
-			passwordDAO.deletePassword(getConnection(), id);
+			con = getConnection();
+			passwordDAO.deletePassword(con, id);
 		}catch(SQLException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
 		}
 	}
 
 
 	@Override
 	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		Connection con = null;
+		try{
+			con = getConnection();
+			authTokenDAO.saveAuthToken(con, owner, encryptedToken);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
+		}
 	}
 
 	@Override
 	public Set<String> getAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		Connection con = null;
+		try{
+			con = getConnection();
+			return authTokenDAO.getAuthTokens(con, owner);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
+		}
 	}
 
 	@Override
 	public boolean authTokenExists(String encryptedToken) throws AuthenticationPersistenceServiceException {
-		return false;  //To change body of implemented methods use File | Settings | File Templates.
+		Connection con = null;
+		try{
+			con = getConnection();
+			return authTokenDAO.authTokenExists(con, encryptedToken);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
+		}
 	}
 
 	@Override
 	public void deleteAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		Connection con = null;
+		try{
+			con = getConnection();
+			authTokenDAO.deleteAuthTokens(con, owner);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
+		}
 	}
 
 	@Override
 	public void deleteAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		Connection con = null;
+		try{
+			con = getConnection();
+			authTokenDAO.deleteAuthToken(con, owner, encryptedToken);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			release(con);
+		}
 	}
 }

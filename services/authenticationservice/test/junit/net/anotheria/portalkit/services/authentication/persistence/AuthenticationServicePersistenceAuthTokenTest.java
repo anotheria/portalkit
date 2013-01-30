@@ -3,7 +3,10 @@ package net.anotheria.portalkit.services.authentication.persistence;
 import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthTokenEncryptors;
 import net.anotheria.portalkit.services.authentication.persistence.inmemory.InMemoryAuthenticationPersistenceServiceImpl;
+import net.anotheria.portalkit.services.authentication.persistence.jdbc.JDBCAuthenticationPersistenceServiceImpl;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.configureme.ConfigurationManager;
+import org.configureme.environments.DynamicEnvironment;
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -20,6 +23,14 @@ public class AuthenticationServicePersistenceAuthTokenTest {
 	@Test
 	public void testCreateGetDeleteTokenInMemory() throws AuthenticationPersistenceServiceException{
 		testCreateGetDeleteToken(new InMemoryAuthenticationPersistenceServiceImpl());
+	}
+
+	@Test
+	public void testCreateGetDeleteTokenJDBC() throws AuthenticationPersistenceServiceException, Exception{
+		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
+		JDBCAuthenticationPersistenceServiceImpl service = new JDBCAuthenticationPersistenceServiceImpl();
+		service.cleanupFromUnitTests();
+		testCreateGetDeleteToken(service);
 	}
 
 	private void testCreateGetDeleteToken(AuthenticationPersistenceService service) throws AuthenticationPersistenceServiceException{

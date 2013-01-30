@@ -98,7 +98,6 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		flyway.setDataSource(getDataSource());
 		flyway.setLocations(getClass().getPackage().getName() + ".migrations");
 		flyway.setTable(getTableNameForMigration());
-		System.out.println("TN FOR MIGRTATION: "+getTableNameForMigration());
 		flyway.setInitOnMigrate(true);
 		flyway.migrate();
 		MigrationInfoService flywayInfo =  flyway.info();
