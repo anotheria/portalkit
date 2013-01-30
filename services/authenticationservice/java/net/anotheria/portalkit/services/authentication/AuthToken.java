@@ -153,7 +153,7 @@ public class AuthToken implements Serializable, Cloneable {
 		try{
 			return super.clone();
 		}catch(CloneNotSupportedException e){
-			throw new AssertionError("Clone is not supported? ", e);
+			throw new AssertionError("Clone is not supported? ");
 		}
 	}
 }
