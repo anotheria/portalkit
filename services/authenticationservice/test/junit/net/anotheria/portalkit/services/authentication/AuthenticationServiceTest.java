@@ -10,8 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.UUID;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -56,12 +54,5 @@ public class AuthenticationServiceTest {
 		assertNotNull(persistenceService.getEncryptedPassword(id));
 		assertNull(persistenceService.getEncryptedPassword(new AccountId("xxx")));
 
-
-
-	}
-
-	@Test public void test(){
-		UUID uuid = UUID.randomUUID();
-		System.out.println(uuid);
 	}
 }

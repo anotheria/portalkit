@@ -7,6 +7,7 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceS
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 
 import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * TODO comment this class
@@ -56,5 +57,31 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}
+	}
+
+
+	@Override
+	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public Set<String> getAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public boolean authTokenExists(String encryptedToken) throws AuthenticationPersistenceServiceException {
+		return false;  //To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void deleteAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	public void deleteAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
+		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

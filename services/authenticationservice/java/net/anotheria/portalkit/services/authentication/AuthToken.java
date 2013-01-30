@@ -2,13 +2,15 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.portalkit.services.common.AccountId;
 
+import java.io.Serializable;
+
 /**
  * TODO comment this class
  *
  * @author lrosenberg
  * @since 11.12.12 13:24
  */
-public class AuthToken {
+public class AuthToken implements Serializable, Cloneable {
 
 
 	/**
@@ -42,27 +44,12 @@ public class AuthToken {
 	 */
 	private AccountId accountId;
 
-	/**
-	 * Used internally to distinguish between generation of the code.
-	 */
-	private AuthTokenEncryptionAlgorithm algorithm;
-
 	public AuthToken(){
 		expiryTimestamp = Long.MAX_VALUE;
 		multiUse = false;
 		exclusive = false;
 		exclusiveInType = false;
 		type = AuthTokenTypes.APPLICATION_LOGIN;
-	}
-
-	/**
-	 * This method should return an authentication code that is usable from external source (mail, cookie etc).
-	 * @return
-	 */
-	public String getEncodedAuthString(){
-		if (algorithm==null)
-			throw new IllegalStateException("Can't encrypt auth token without algorithm");
-		return algorithm.encryptAuthToken(this);
 	}
 
 	//we use deep equals method. Actually we only need equals for unit testing ;-)
@@ -145,14 +132,6 @@ public class AuthToken {
 		this.accountId = accountId;
 	}
 
-	public AuthTokenEncryptionAlgorithm getAlgorithm() {
-		return algorithm;
-	}
-
-	public void setAlgorithm(AuthTokenEncryptionAlgorithm algorithm) {
-		this.algorithm = algorithm;
-	}
-
 	public boolean isExpired(){
 		return expiryTimestamp<System.currentTimeMillis();
 	}
@@ -166,7 +145,15 @@ public class AuthToken {
 				", exclusiveInType=" + exclusiveInType +
 				", type=" + type +
 				", accountId=" + accountId +
-				", algorithm=" + algorithm +
 				'}';
+	}
+
+	@Override
+	protected Object clone(){
+		try{
+			return super.clone();
+		}catch(CloneNotSupportedException e){
+			throw new AssertionError("Clone is not supported? ", e);
+		}
 	}
 }

@@ -2,9 +2,13 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
+import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.apache.log4j.Logger;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Implementation of the AuthenticationService.
@@ -15,8 +19,9 @@ import net.anotheria.portalkit.services.common.AccountId;
 public class AuthenticationServiceImpl implements AuthenticationService{
 
 	private PasswordEncryptionAlgorithm passwordAlgorithm;
-
 	private AuthenticationPersistenceService persistenceService;
+
+	private static Logger log = Logger.getLogger(AuthenticationServiceImpl.class);
 
 	public AuthenticationServiceImpl(){
 		AuthenticationServiceConfig config = new AuthenticationServiceConfig();
@@ -64,11 +69,84 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 	@Override
 	public AccountId authenticateByEncryptedToken(String token) throws AuthenticationServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		try{
+			boolean tokenExists = persistenceService.authTokenExists(token);
+			if (!tokenExists)
+				throw new AuthTokenNotFoundException();
+		}catch(AuthenticationPersistenceServiceException e){
+			throw new AuthenticationServiceException(e);
+		}
+
+		AuthToken authToken = decrypt(token);
+
+		if (authToken.isExpired())
+			throw new AuthTokenExpiredException();
+
+		if (!authToken.isMultiUse()){
+			try{
+				persistenceService.deleteAuthToken(authToken.getAccountId(), token);
+			}catch(AuthenticationPersistenceServiceException e){
+				log.warn("Couldn't delete used auth token "+token+" for "+authToken.getAccountId());
+			}
+		}
+
+		return authToken.getAccountId();
 	}
 
 	@Override
-	public AuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+	public boolean canAuthenticateByEncryptedToken(String token) throws AuthenticationServiceException {
+		try{
+			boolean tokenExists = persistenceService.authTokenExists(token);
+			if (!tokenExists)
+				return false;
+		}catch(AuthenticationPersistenceServiceException e){
+			throw new AuthenticationServiceException(e);
+		}
+
+		AuthToken authToken = decrypt(token);
+		return !authToken.isExpired();
+
+	}
+
+	private AuthToken decrypt(String token){
+		return AuthTokenEncryptors.decrypt(token);
+	}
+
+
+
+	@Override
+	public EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
+
+		AuthToken newToken = (AuthToken)prefilledToken.clone();
+		String encryption = AuthTokenEncryptors.encrypt(newToken);
+
+		EncryptedAuthToken encToken = new EncryptedAuthToken();
+		encToken.setAuthToken(newToken);
+		encToken.setEncryptedVersion(encryption);
+
+		try{
+			if (newToken.isExclusive())
+				persistenceService.deleteAuthTokens(accountId);
+
+			if (!newToken.isExclusive() && newToken.isExclusiveInType()){
+				//this is maybe suboptimal, but no other chance to fix it otherways for now
+				Set<String> tokens = persistenceService.getAuthTokens(newToken.getAccountId());
+				for (Iterator<String> it = tokens.iterator(); it.hasNext(); ){
+					String storedToken = it.next();
+					AuthToken t = AuthTokenEncryptors.decrypt(storedToken);
+					if (t.getType()==newToken.getType())
+						persistenceService.deleteAuthToken(newToken.getAccountId(), storedToken);
+				}
+			}
+
+
+			persistenceService.saveAuthToken(accountId, encryption);
+		}catch(AuthenticationPersistenceServiceException e){
+			throw new AuthenticationServiceException(e);
+		}
+
+
+
+		return encToken;
 	}
 }

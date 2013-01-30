@@ -37,6 +37,14 @@ public interface AuthenticationService extends Service {
 	 */
 	AccountId authenticateByEncryptedToken(String token) throws AuthenticationServiceException;
 
+	/**
+	 * Returns if the user can by authenticate by the token. The difference is that this call doesn't reduce the usability of the token.
+	 * Use for administration perposses.
+	 * @param token
+	 * @return
+	 * @throws AuthenticationServiceException
+	 */
+	boolean canAuthenticateByEncryptedToken(String token) throws AuthenticationServiceException;
 
 	/**
 	 * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
@@ -46,6 +54,6 @@ public interface AuthenticationService extends Service {
 	 * @return
 	 * @throws AuthenticationServiceException
 	 */
-	AuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
+	EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
 }
