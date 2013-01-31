@@ -27,12 +27,33 @@ import java.util.Random;
  */
 public class AuthTokenEncryptors {
 
+	/**
+	 * Constant for accountid parameter.
+	 */
 	public static final String P_ACCOUNTID = "accId";
+	/**
+	 * Constant for expiry timestamp parameter.
+	 */
 	public static final String P_EXPIRYTS = "expTs";
+	/**
+	 * Constant for multiuse parameter.
+	 */
 	public static final String P_MULTIUSE = "mu";
+	/**
+	 * Constant for exclusive parameter.
+	 */
 	public static final String P_EXCLUSIVE = "exl";
+	/**
+	 * Constant for exclusive in type parameter.
+	 */
 	public static final String P_EXCLUSIVE_IN_TYPE = "exlt";
+	/**
+	 * Constant for type parameter.
+	 */
 	public static final String P_TYPE = "t";
+	/**
+	 * Constant for random parameter.
+	 */
 	public static final String P_RANDOM = "R";
 
 	/**
@@ -179,6 +200,11 @@ public class AuthTokenEncryptors {
 		return defaultEncryptionAlgorithm+":"+getDefaultEncryptionAlgorithm().encryptAuthToken(token);
 	}
 
+	/**
+	 * Decrypts an encrypted authentication token.
+	 * @param encryptedString the encrypted token including algorithm description (shortcut).
+	 * @return
+	 */
 	public static AuthToken decrypt(String encryptedString){
 		String[] tokens = StringUtils.tokenize(encryptedString, ':');
 		String alg = tokens[0];
@@ -186,10 +212,19 @@ public class AuthTokenEncryptors {
 		return getEncryptionAlgorithm(alg).decryptAuthToken(enc);
 	}
 
+	/**
+	 * Helper class for configuration. Uses pk-auth config file.
+	 */
 	@ConfigureMe (name="pk-auth", allfields = true, watch = true)
 	public static class AuthTokenEncryptorsConfig{
+		/**
+		 * Default authentication algorithm shortcut.
+		 */
 		@Configure private String authenticationAlgorithm;
 
+		/**
+		 * Authentication algorithms.
+		 */
 		@Configure private AuthenticationAlgorithmConfig[] authenticationAlgorithms;
 
 		public AuthenticationAlgorithmConfig[] getAuthenticationAlgorithms() {
@@ -218,10 +253,22 @@ public class AuthTokenEncryptors {
 
 	}
 
+	/**
+	 * Helper class for holding configuration objects for authentication algorithms.
+	 */
 	@ConfigureMe(allfields = true)
 	public static class AuthenticationAlgorithmConfig{
+		/**
+		 * Name of the clazz.
+		 */
 		@Configure private String clazz;
+		/**
+		 * Shortcut.
+		 */
 		@Configure private String shortcut;
+		/**
+		 * Key aka configuration parameter for the algorithm.
+		 */
 		@Configure private String key;
 
 		public String getClazz() {

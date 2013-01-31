@@ -18,9 +18,18 @@ import java.util.Set;
  */
 public class AuthenticationServiceImpl implements AuthenticationService{
 
+	/**
+	 * The currently used password enhashing algorithm.
+	 */
 	private PasswordEncryptionAlgorithm passwordAlgorithm;
+	/**
+	 * The persistence service.
+	 */
 	private AuthenticationPersistenceService persistenceService;
 
+	/**
+	 * Logger.
+	 */
 	private static Logger log = Logger.getLogger(AuthenticationServiceImpl.class);
 
 	public AuthenticationServiceImpl(){
@@ -108,6 +117,11 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 	}
 
+	/**
+	 * Internal helper abstraction.
+	 * @param token token to decrypt.
+	 * @return decrypted AuthToken.
+	 */
 	private AuthToken decrypt(String token){
 		return AuthTokenEncryptors.decrypt(token);
 	}
