@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.common;
 
-import java.io.Serializable;
-
 import net.anotheria.portalkit.services.common.id.IdGenerator;
 import net.anotheria.util.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * Account unique identifier.
@@ -65,7 +65,12 @@ public class AccountId implements Serializable, Cloneable {
 
 	@Override
 	public AccountId clone() {
-		return new AccountId(internalId);
+		try{
+			return (AccountId) super.clone();
+		}catch(CloneNotSupportedException e){
+			throw new AssertionError("Clone not supported but it should be in AccountId");
+		}
+
 	}
 
 }
