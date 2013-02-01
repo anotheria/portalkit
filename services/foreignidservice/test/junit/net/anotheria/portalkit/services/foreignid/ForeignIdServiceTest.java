@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
  * @author lrosenberg
  * @since 21.01.13 15:55
  */
-// @Ignore
 public class ForeignIdServiceTest {
 
 	@Before

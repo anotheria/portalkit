@@ -36,7 +36,6 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		insertStatement.setInt(2, sid);
 		insertStatement.setString(3, fid);
 		int insertResult = insertStatement.executeUpdate();
-		System.out.println("INSERT: " + insertResult);
 	}
 
 	public AccountId getAccountIdByForeignId(Connection connection, int sid, String fid) throws DAOException, SQLException {
@@ -71,7 +70,6 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		deleteStatement.setInt(2, sid);
 		deleteStatement.setString(3, fid);
 		int deleteResult = deleteStatement.executeUpdate();
-		System.out.println("DELETE: " + deleteResult);
 	}
 
 	public void unlink(Connection connection, int sid, String fid) throws DAOException, SQLException {
