@@ -18,7 +18,7 @@ public class GenericMongoServiceTest {
 	/**
 	 * {@link Logger} instance.
 	 */
-	protected static final Logger LOGGER = Logger.getLogger(GenericMongoServiceTest.class);
+	private static final Logger LOGGER = Logger.getLogger(GenericMongoServiceTest.class);
 
 	/**
 	 * For development purposes.
@@ -27,7 +27,7 @@ public class GenericMongoServiceTest {
 	 * @throws InterruptedException
 	 */
 	public static void main(String... args) throws InterruptedException {
-		GenericMongoService service = new GenericMongoService();
+		GenericMongoServiceImpl service = new GenericMongoServiceImpl();
 
 		DB database = service.getMongoClient().getDB(service.getDBName());
 		for (String collectionName : database.getCollectionNames()) {
