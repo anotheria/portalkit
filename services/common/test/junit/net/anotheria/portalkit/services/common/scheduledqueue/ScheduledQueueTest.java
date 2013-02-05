@@ -59,7 +59,7 @@ public class ScheduledQueueTest {
 		queue.setMode(ProcessingMode.SYNC);
 		queue.schedule(1L);
 
-		Thread.sleep(150L);
+		Thread.sleep(300L);
 		Assert.assertEquals("Loaded and processed elements amount should be the same.", loader.getLoaded(), processor.getProcessed());
 	}
 
