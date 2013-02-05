@@ -8,7 +8,7 @@ package net.anotheria.portalkit.services.account;
  */
 public class AccountServiceConfig {
 	/**
-	 * If true only one account with same email adress is allowed. Default true.
+	 * If true only one account with same email address is allowed. Default true.
 	 */
 	private boolean exclusiveMail = true;
 	/**
