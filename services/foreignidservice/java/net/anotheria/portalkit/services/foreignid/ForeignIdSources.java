@@ -15,7 +15,7 @@ public class ForeignIdSources {
 	public static final int CUSTOM_ID_OFFSET = 1000;
 
 	public static final int FACEBOOK = 1;
-	public static final int GPLUS = 2;
+	public static final int GOOGLEPLUS = 2;
 	public static final int LINKEDIN = 3;
 	public static final int TWITTER = 4;
 	public static final int XING = 5;
