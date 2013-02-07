@@ -51,6 +51,18 @@ public final class GenericMongoServiceConfig implements Serializable {
 	private String databaseName;
 
 	/**
+	 * Collection name.
+	 */
+	@Configure
+	private String collectionName;
+
+	/**
+	 * Entity key field name.
+	 */
+	@Configure
+	private String entityKeyFieldName;
+
+	/**
 	 * Default constructor.
 	 * 
 	 * @param configuration
@@ -144,11 +156,31 @@ public final class GenericMongoServiceConfig implements Serializable {
 		this.databaseName = aDatabaseName;
 	}
 
+	public String getCollectionName() {
+		return collectionName != null ? collectionName : "";
+	}
+
+	public void setCollectionName(final String aCollectionName) {
+		this.collectionName = aCollectionName;
+	}
+
+	public String getEntityKeyFieldName() {
+		return entityKeyFieldName != null ? entityKeyFieldName : "";
+	}
+
+	public void setEntityKeyFieldName(final String aEntityKeyFieldName) {
+		this.entityKeyFieldName = aEntityKeyFieldName;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("\n\tGenericMongoServiceConfig [\n\t databaseName=");
 		builder.append(databaseName);
+		builder.append(", collectionName=");
+		builder.append(collectionName);
+		builder.append(", entityKeyFieldName=");
+		builder.append(entityKeyFieldName);
 		builder.append("\n\t]\n");
 		return builder.toString();
 	}
