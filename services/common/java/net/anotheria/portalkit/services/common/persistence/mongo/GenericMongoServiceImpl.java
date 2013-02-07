@@ -186,7 +186,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		} catch (IOException e) {
 			throw new StorageException(e);
 		} catch (MongoException e) {
-			throw new StorageException("Can't create entity[" + toCreate + "]", e);
+			throw new StorageException("Can't create entity[" + toCreate + "].", e);
 		}
 
 		return read(uid);
@@ -214,7 +214,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		} catch (IOException e) {
 			throw new StorageException(e);
 		} catch (MongoException e) {
-			throw new StorageException("Can't create entity[" + toUpdate + "]", e);
+			throw new StorageException("Can't create entity[" + toUpdate + "].", e);
 		}
 
 		// reading updated entity
@@ -312,7 +312,13 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	public List<T> findAll() throws StorageException {
 		List<T> result = new ArrayList<T>();
 
-		DBCursor rawResult = getCollection().find();
+		DBCursor rawResult;
+		try {
+			rawResult = getCollection().find();
+		} catch (MongoException e) {
+			throw new StorageException("Can't exequte query: find all entities.", e);
+		}
+
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
