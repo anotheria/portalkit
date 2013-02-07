@@ -118,7 +118,13 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (uid == null || uid.trim().isEmpty())
 			throw new IllegalArgumentException("uid argument is empty.");
 
-		DBObject obj = getCollection().findOne(MongoUtil.queryGetEntity(uid));
+		DBObject obj;
+		try {
+			obj = getCollection().findOne(MongoUtil.queryGetEntity(uid));
+		} catch (MongoException e) {
+			throw new StorageException("Can't read entity[" + uid + "].", e);
+		}
+
 		if (obj == null)
 			throw new EntityNotFoundStorageException(uid);
 
@@ -224,7 +230,11 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	@Override
 	public T delete(final String uid) throws StorageException {
 		T result = read(uid);
-		getCollection().remove(MongoUtil.queryGetEntity(uid));
+		try {
+			getCollection().remove(MongoUtil.queryGetEntity(uid));
+		} catch (MongoException e) {
+			throw new StorageException("Can't delete entity[" + uid + "].", e);
+		}
 		return result;
 	}
 
