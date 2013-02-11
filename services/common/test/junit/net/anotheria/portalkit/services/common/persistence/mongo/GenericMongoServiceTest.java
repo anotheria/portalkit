@@ -83,23 +83,26 @@ public class GenericMongoServiceTest {
 		LOGGER.info("---> Find all: " + service.findAll());
 
 		// reading entities by query
-		Query query = QueryBuilder.create().add(EqualQuery.create("intValue", 123)).build();
+		// simple query1
+		Query query1 = QueryBuilder.create().add(EqualQuery.create("intValue", 123)).build();
 		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+		LOGGER.info("---> Find by query[" + query1 + "]: " + service.find(query1));
 
-		EqualQuery equalQuery = EqualQuery.create("intValue", 321);
-		SortingQuery sorting = SortingQuery.create("booleanValue");
-		query = QueryBuilder.create().add(equalQuery).setLimit(1).setOffset(0).setSorting(sorting).build();
+		// simple query2
+		EqualQuery equalQuery2 = EqualQuery.create("intValue", 321);
+		SortingQuery sorting2 = SortingQuery.create("booleanValue");
+		Query query2 = QueryBuilder.create().add(equalQuery2).setLimit(1).setOffset(0).setSorting(sorting2).build();
 		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+		LOGGER.info("---> Find by query[" + query2 + "]: " + service.find(query2));
 
-		equalQuery = EqualQuery.create("intValue", 321);
-		EqualQuery equalQuery2 = EqualQuery.create("intValue", 654);
-		sorting = SortingQuery.create("booleanValue");
-		CompositeQuery query2 = CompositeQuery.create(CompositeModifier.OR, equalQuery, equalQuery2);
-		query = QueryBuilder.create().add(query2).setLimit(1).setOffset(0).setSorting(sorting).build();
+		// simple query3
+		EqualQuery equalQuery31 = EqualQuery.create("intValue", 321);
+		EqualQuery equalQuery32 = EqualQuery.create("intValue", 654);
+		SortingQuery sorting3 = SortingQuery.create("booleanValue");
+		CompositeQuery compositeQuery = CompositeQuery.create(CompositeModifier.OR, equalQuery31, equalQuery32);
+		Query query3 = QueryBuilder.create().add(compositeQuery).setLimit(1).setOffset(0).setSorting(sorting3).build();
 		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+		LOGGER.info("---> Find by query[" + query3 + "]: " + service.find(query3));
 
 		// removing entity
 		LOGGER.info("");
