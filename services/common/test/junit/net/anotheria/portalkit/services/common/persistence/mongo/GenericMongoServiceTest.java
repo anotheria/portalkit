@@ -4,6 +4,12 @@ import java.util.UUID;
 
 import net.anotheria.portalkit.services.common.persistence.mongo.exception.StorageException;
 import net.anotheria.portalkit.services.common.persistence.mongo.shared.TestVO;
+import net.anotheria.portalkit.services.common.query.CompositeModifier;
+import net.anotheria.portalkit.services.common.query.CompositeQuery;
+import net.anotheria.portalkit.services.common.query.EqualQuery;
+import net.anotheria.portalkit.services.common.query.Query;
+import net.anotheria.portalkit.services.common.query.QueryBuilder;
+import net.anotheria.portalkit.services.common.query.SortingQuery;
 
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
@@ -51,6 +57,7 @@ public class GenericMongoServiceTest {
 		toCreate.setId(UUID.randomUUID().toString());
 		toCreate.setIntValue(123);
 		toCreate.setBooleanValue(true);
+		LOGGER.info("");
 		LOGGER.info("Created: " + service.create(toCreate));
 
 		// reading all entities
@@ -58,6 +65,7 @@ public class GenericMongoServiceTest {
 
 		// updating entity
 		toCreate.setIntValue(321);
+		LOGGER.info("");
 		LOGGER.info("Updated: " + service.update(toCreate));
 
 		// reading all entities
@@ -68,12 +76,33 @@ public class GenericMongoServiceTest {
 		subObject.setId(UUID.randomUUID().toString());
 		subObject.setIntValue(456);
 		toCreate.setSubObject(subObject);
+		LOGGER.info("");
 		LOGGER.info("Saved: " + service.save(toCreate));
 
 		// reading all entities
 		LOGGER.info("---> Find all: " + service.findAll());
 
+		// reading entities by query
+		Query query = QueryBuilder.create().add(EqualQuery.create("intValue", 123)).build();
+		LOGGER.info("");
+		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+
+		EqualQuery equalQuery = EqualQuery.create("intValue", 321);
+		SortingQuery sorting = SortingQuery.create("booleanValue");
+		query = QueryBuilder.create().add(equalQuery).setLimit(1).setOffset(0).setSorting(sorting).build();
+		LOGGER.info("");
+		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+
+		equalQuery = EqualQuery.create("intValue", 321);
+		EqualQuery equalQuery2 = EqualQuery.create("intValue", 654);
+		sorting = SortingQuery.create("booleanValue");
+		CompositeQuery query2 = CompositeQuery.create(CompositeModifier.OR, equalQuery, equalQuery2);
+		query = QueryBuilder.create().add(query2).setLimit(1).setOffset(0).setSorting(sorting).build();
+		LOGGER.info("");
+		LOGGER.info("---> Find by query[" + query + "]: " + service.find(query));
+
 		// removing entity
+		LOGGER.info("");
 		LOGGER.info("Deleted: " + service.delete(toCreate.getId()));
 
 		// reading all entities

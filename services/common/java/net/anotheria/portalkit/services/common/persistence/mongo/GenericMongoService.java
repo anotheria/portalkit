@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import net.anotheria.portalkit.services.common.persistence.mongo.exception.StorageException;
-import net.anotheria.portalkit.services.common.persistence.mongo.query.Query;
+import net.anotheria.portalkit.services.common.query.BasicQueryStorageService;
 
 /**
  * Generic mongo service definition.
@@ -13,7 +13,7 @@ import net.anotheria.portalkit.services.common.persistence.mongo.query.Query;
  * 
  * @param <T>
  */
-public interface GenericMongoService<T extends Serializable> {
+public interface GenericMongoService<T extends Serializable> extends BasicQueryStorageService<T> {
 
 	/**
 	 * Read entity.
@@ -114,23 +114,5 @@ public interface GenericMongoService<T extends Serializable> {
 	 * @throws StorageException
 	 */
 	List<T> delete(List<String> uidList) throws StorageException;
-
-	/**
-	 * Find all entities.
-	 * 
-	 * @return {@link List} of <T>
-	 * @throws StorageException
-	 */
-	List<T> findAll() throws StorageException;
-
-	/**
-	 * Find entities by given query.
-	 * 
-	 * @param query
-	 *            query
-	 * @return {@link List} of <T>
-	 * @throws StorageException
-	 */
-	List<T> find(Query<T> query) throws StorageException;
 
 }

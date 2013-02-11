@@ -9,9 +9,11 @@ import net.anotheria.portalkit.services.common.persistence.mongo.exception.Entit
 import net.anotheria.portalkit.services.common.persistence.mongo.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.common.persistence.mongo.exception.StorageException;
 import net.anotheria.portalkit.services.common.persistence.mongo.exception.StorageRuntimeException;
-import net.anotheria.portalkit.services.common.persistence.mongo.query.Query;
 import net.anotheria.portalkit.services.common.persistence.mongo.util.MongoConstants;
 import net.anotheria.portalkit.services.common.persistence.mongo.util.MongoUtil;
+import net.anotheria.portalkit.services.common.query.LimitQuery;
+import net.anotheria.portalkit.services.common.query.OffsetQuery;
+import net.anotheria.portalkit.services.common.query.Query;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -20,6 +22,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
@@ -322,17 +325,14 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	public List<T> findAll() throws StorageException {
 		List<T> result = new ArrayList<T>();
 
-		DBCursor rawResult;
+		DBCursor rawResult = null;
 		try {
 			rawResult = getCollection().find();
-		} catch (MongoException e) {
-			throw new StorageException("Can't exequte query: find all entities.", e);
-		}
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+
 			while (rawResult.hasNext()) {
 				DBObject obj = rawResult.next();
 				try {
@@ -345,20 +345,65 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 					throw new StorageException(e);
 				}
 			}
-		} finally {
-			rawResult.close();
-		}
 
-		return result;
+			return result;
+		} catch (MongoException e) {
+			throw new StorageException("Can't exequte query: find all entities.", e);
+		} finally {
+			if (rawResult != null)
+				rawResult.close();
+		}
 	}
 
 	@Override
-	public List<T> find(final Query<T> query) throws StorageException {
+	public List<T> find(final Query query) throws StorageException {
 		List<T> result = new ArrayList<T>();
 
-		// TODO Implement me
+		BasicDBObject mongoQuery = MongoQueryMapper.map(query);
+		if (mongoQuery == null)
+			return result;
 
-		return result;
+		DBCursor rawResult = null;
+		try {
+			rawResult = getCollection().find(mongoQuery);
+
+			BasicDBObject sorting = MongoQueryMapper.getSorting(query);
+			if (sorting != null)
+				rawResult.sort(sorting);
+
+			OffsetQuery offset = MongoQueryMapper.getOffset(query);
+			if (offset != null)
+				rawResult.skip(offset.getQueryValue().getValue());
+
+			LimitQuery limit = MongoQueryMapper.getLimit(query);
+			if (limit != null)
+				rawResult.limit(limit.getQueryValue().getValue());
+
+			// processing results
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+
+			while (rawResult.hasNext()) {
+				DBObject obj = rawResult.next();
+				try {
+					result.add(objectMapper.readValue(obj.toString(), entityClass));
+				} catch (JsonParseException e) {
+					throw new StorageException("Can't parse entity[" + obj + "].", e);
+				} catch (JsonMappingException e) {
+					throw new StorageException("Can't map entity[" + obj + "].", e);
+				} catch (IOException e) {
+					throw new StorageException(e);
+				}
+			}
+
+			return result;
+		} catch (MongoException e) {
+			throw new StorageException("Can't exequte query[" + query + "].", e);
+		} finally {
+			if (rawResult != null)
+				rawResult.close();
+		}
 	}
 
 }
