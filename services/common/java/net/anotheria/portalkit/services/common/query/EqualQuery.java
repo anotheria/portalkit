@@ -10,7 +10,7 @@ import net.anotheria.portalkit.services.common.query.value.StringValue;
  * 
  * @author Alexandr Bolbat
  */
-public class EqualQuery extends AbstractQuery implements Query {
+public final class EqualQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.

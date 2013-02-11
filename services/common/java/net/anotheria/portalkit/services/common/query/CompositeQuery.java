@@ -1,7 +1,5 @@
 package net.anotheria.portalkit.services.common.query;
 
-import java.util.List;
-
 import net.anotheria.portalkit.services.common.query.value.QueryCompositeValue;
 import net.anotheria.portalkit.services.common.query.value.QueryValue;
 
@@ -87,7 +85,7 @@ public class CompositeQuery implements Query, QueryValue {
 	 * Create instance of {@link CompositeQuery}.
 	 * 
 	 * @param queries
-	 *            {@link List} of {@link Query}
+	 *            list of {@link Query}
 	 * @return {@link CompositeQuery}
 	 */
 	public static CompositeQuery create(final Query... queries) {
@@ -100,7 +98,7 @@ public class CompositeQuery implements Query, QueryValue {
 	 * @param aModifier
 	 *            {@link CompositeModifier}
 	 * @param queries
-	 *            {@link List} of {@link Query}
+	 *            list of {@link Query}
 	 * @return {@link CompositeQuery}
 	 */
 	public static CompositeQuery create(final CompositeModifier aModifier, final Query... queries) {

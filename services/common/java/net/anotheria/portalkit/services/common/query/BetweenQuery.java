@@ -3,14 +3,13 @@ package net.anotheria.portalkit.services.common.query;
 import net.anotheria.portalkit.services.common.query.value.IntegerValue;
 import net.anotheria.portalkit.services.common.query.value.LongValue;
 import net.anotheria.portalkit.services.common.query.value.PairValues;
-import net.anotheria.portalkit.services.common.query.value.QueryValue;
 
 /**
  * {@link BetweenQuery}.
  * 
  * @author Alexandr Bolbat
  */
-public class BetweenQuery extends AbstractQuery implements Query {
+public final class BetweenQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.
@@ -38,7 +37,7 @@ public class BetweenQuery extends AbstractQuery implements Query {
 	}
 
 	/**
-	 * Get {@link QueryValue} as {@link PairValues}.
+	 * Get query value as {@link PairValues}.
 	 * 
 	 * @return {@link PairValues}
 	 */

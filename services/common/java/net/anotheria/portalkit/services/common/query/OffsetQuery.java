@@ -7,7 +7,7 @@ import net.anotheria.portalkit.services.common.query.value.IntegerValue;
  * 
  * @author Alexandr Bolbat
  */
-public class OffsetQuery implements Query {
+public final class OffsetQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.

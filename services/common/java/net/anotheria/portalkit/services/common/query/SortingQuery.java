@@ -7,7 +7,7 @@ import net.anotheria.portalkit.services.common.query.value.QuerySortingValue;
  * 
  * @author Alexandr Bolbat
  */
-public class SortingQuery implements Query {
+public final class SortingQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.

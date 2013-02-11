@@ -7,7 +7,7 @@ import net.anotheria.portalkit.services.common.query.value.IntegerValue;
  * 
  * @author Alexandr Bolbat
  */
-public class LimitQuery implements Query {
+public final class LimitQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.

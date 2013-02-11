@@ -9,7 +9,7 @@ import net.anotheria.portalkit.services.common.query.value.QueryValue;
  * 
  * @author Alexandr Bolbat
  */
-public class LessThenQuery extends AbstractQuery implements Query {
+public final class LessThenQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Generated SerialVersionUID.
