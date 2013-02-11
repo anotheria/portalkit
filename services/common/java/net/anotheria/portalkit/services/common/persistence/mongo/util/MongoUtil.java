@@ -44,7 +44,7 @@ public final class MongoUtil {
 	 * @return unique identifier
 	 * @throws StorageException
 	 */
-	public static final String getEntityUID(Serializable entity, GenericMongoServiceConfig configuration) throws StorageException {
+	public static String getEntityUID(Serializable entity, GenericMongoServiceConfig configuration) throws StorageException {
 		String entityKeyFieldName = configuration.getEntityKeyFieldName();
 		if (entityKeyFieldName == null || entityKeyFieldName.trim().isEmpty())
 			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.");

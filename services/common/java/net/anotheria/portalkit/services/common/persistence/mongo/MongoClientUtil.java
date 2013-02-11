@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.common.persistence.mongo;
 
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +8,13 @@ import net.anotheria.portalkit.services.common.persistence.mongo.MongoClientConf
 import net.anotheria.portalkit.services.common.persistence.mongo.MongoClientConfig.ReadConcernType;
 import net.anotheria.portalkit.services.common.persistence.mongo.MongoClientConfig.WriteConcernType;
 
-import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
 
 /**
- * Utility for {@link MongoClient}.
+ * Utility for mongo client.
  * 
  * @author Alexandr Bolbat
  */
@@ -30,12 +28,11 @@ public final class MongoClientUtil {
 	}
 
 	/**
-	 * Get configured addresses for {@link MongoClient}.
+	 * Get configured addresses for mongo client.
 	 * 
 	 * @param configuration
 	 *            mongo client configuration
 	 * @return {@link List} of {@link ServerAddress}
-	 * @throws UnknownHostException
 	 */
 	public static List<ServerAddress> getAddresses(final MongoClientConfig configuration) {
 		List<ServerAddress> result = new ArrayList<ServerAddress>();
@@ -47,7 +44,7 @@ public final class MongoClientUtil {
 	}
 
 	/**
-	 * Get {@link MongoClientOptions} for {@link MongoClient}.
+	 * Get {@link MongoClientOptions} for mongo client.
 	 * 
 	 * @param configuration
 	 *            mongo client configuration
@@ -82,6 +79,8 @@ public final class MongoClientUtil {
 			case NEAREST:
 				optionsBuilder.readPreference(ReadPreference.nearest());
 				break;
+			default:
+				throw new UnsupportedOperationException("ReadConcernType[" + readConcernType + "] is unsupported.");
 			}
 
 			WriteConcernType writeConcernType = configuration.getWriteConcernType() != null ? configuration.getWriteConcernType() : WriteConcernType.DEFAULT;
@@ -115,6 +114,8 @@ public final class MongoClientUtil {
 				boolean continueOnErrors = configuration.isWriteConcernContinueOnInsertError();
 				optionsBuilder.writeConcern(new WriteConcern(strategy, timeout, forceFsync, waitGroupCommit, continueOnErrors));
 				break;
+			default:
+				throw new UnsupportedOperationException("WriteConcernType[" + writeConcernType + "] is unsupported.");
 			}
 
 			return optionsBuilder.build();

@@ -116,6 +116,11 @@ public abstract class AbstractMongoService {
 		return mongoClientConfiguration;
 	}
 
+	/**
+	 * Get {@link MongoClient}.
+	 * 
+	 * @return {@link MongoClient}
+	 */
 	protected MongoClient getMongoClient() {
 		if (!serviceInitialized.get())
 			throw new IllegalStateException("Mongo client not initialized.");

@@ -38,7 +38,7 @@ public final class AbstractMongoServiceConfig implements Serializable {
 	private static final Object LOCK = new Object();
 
 	/**
-	 * {@link AbstractMongoServiceConfig} instance
+	 * {@link AbstractMongoServiceConfig} instance.
 	 */
 	@DontConfigure
 	private static AbstractMongoServiceConfig instance;
@@ -113,7 +113,7 @@ public final class AbstractMongoServiceConfig implements Serializable {
 	}
 
 	/**
-	 * get configured instance of {@link AbstractMongoServiceConfig}
+	 * Get configured instance of {@link AbstractMongoServiceConfig}.
 	 * 
 	 * @param configuration
 	 *            configuration name, can be <code>null</code> or empty

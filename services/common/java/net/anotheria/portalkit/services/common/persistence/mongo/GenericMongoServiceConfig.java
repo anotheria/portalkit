@@ -39,7 +39,7 @@ public final class GenericMongoServiceConfig implements Serializable {
 	private static final Object LOCK = new Object();
 
 	/**
-	 * {@link GenericMongoServiceConfig} instance
+	 * {@link GenericMongoServiceConfig} instance.
 	 */
 	@DontConfigure
 	private static GenericMongoServiceConfig instance;
@@ -120,7 +120,7 @@ public final class GenericMongoServiceConfig implements Serializable {
 	}
 
 	/**
-	 * get configured instance of {@link GenericMongoServiceConfig}
+	 * Get configured instance of {@link GenericMongoServiceConfig}.
 	 * 
 	 * @param configuration
 	 *            configuration name, can be <code>null</code> or empty

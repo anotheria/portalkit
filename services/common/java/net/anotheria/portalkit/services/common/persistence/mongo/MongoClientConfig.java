@@ -16,6 +16,11 @@ import org.configureme.sources.ConfigurationSourceKey.Format;
 
 import com.mongodb.ServerAddress;
 
+/**
+ * Mongo client configuration.
+ * 
+ * @author Alexandr Bolbat
+ */
 @ConfigureMe(name = "pk-mongo-client-config", allfields = false)
 public final class MongoClientConfig implements Serializable {
 
@@ -38,7 +43,7 @@ public final class MongoClientConfig implements Serializable {
 	private static final Object LOCK = new Object();
 
 	/**
-	 * {@link MongoClientConfig} instance
+	 * {@link MongoClientConfig} instance.
 	 */
 	@DontConfigure
 	private static MongoClientConfig instance;
@@ -203,7 +208,7 @@ public final class MongoClientConfig implements Serializable {
 	}
 
 	/**
-	 * get configured instance of {@link MongoClientConfig}
+	 * Get configured instance of {@link MongoClientConfig}.
 	 * 
 	 * @param configuration
 	 *            configuration name, can be <code>null</code> or empty
@@ -796,7 +801,7 @@ public final class MongoClientConfig implements Serializable {
 		/**
 		 * Default {@link WriteConcernType}.
 		 */
-		public static WriteConcernType DEFAULT = ACKNOWLEDGED;
+		public static final WriteConcernType DEFAULT = ACKNOWLEDGED;
 
 	}
 
