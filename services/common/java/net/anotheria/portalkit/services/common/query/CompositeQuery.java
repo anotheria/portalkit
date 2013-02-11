@@ -8,7 +8,7 @@ import net.anotheria.portalkit.services.common.query.value.QueryValue;
  * 
  * @author Alexandr Bolbat
  */
-public class CompositeQuery implements Query, QueryValue {
+public final class CompositeQuery implements Query, QueryValue {
 
 	/**
 	 * Generated SerialVersionUID.
