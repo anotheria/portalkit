@@ -3,7 +3,6 @@ package net.anotheria.portalkit.services.storage.mongo;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import net.anotheria.portalkit.services.storage.StorageService;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
 import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.DB;
 
@@ -14,7 +13,7 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 
 /**
- * Abstract {@link StorageService} implementation for Mongo.
+ * Abstract storage service implementation for Mongo.
  * 
  * @author Alexandr Bolbat
  */
