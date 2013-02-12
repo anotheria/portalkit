@@ -1,72 +1,117 @@
 package net.anotheria.portalkit.services.storage.inmemory;
 
+import java.util.List;
 import java.util.UUID;
 
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
 
-import org.apache.log4j.Logger;
-import org.junit.Ignore;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * {@link GenericInMemoryServiceTest} test.
  * 
  * @author Alexandr Bolbat
  */
-@Ignore
 public class GenericInMemoryServiceTest {
 
 	/**
-	 * {@link Logger} instance.
+	 * {@link GenericInMemoryService} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GenericInMemoryServiceTest.class);
+	private GenericInMemoryService<TestVO> storage;
 
 	/**
-	 * For development purposes.
+	 * Clean-up.
+	 */
+	@Before
+	public void before() {
+		this.storage = new GenericInMemoryServiceImpl<TestVO>("id");
+	}
+
+	/**
+	 * Initialization.
+	 */
+	@After
+	public void after() {
+		this.storage = null;
+	}
+
+	/**
+	 * Complex test.
 	 * 
-	 * @param args
-	 * @throws InterruptedException
 	 * @throws StorageException
 	 */
-	public static void main(String... args) throws InterruptedException, StorageException {
-		GenericInMemoryServiceImpl<TestVO> service = new GenericInMemoryServiceImpl<TestVO>("id");
-
-		// creating new entity
-		TestVO toCreate = new TestVO();
-		toCreate.setId(UUID.randomUUID().toString());
+	@Test
+	public void complexTest() throws StorageException {
+		// preparing new entity
+		TestVO toCreate = new TestVO(UUID.randomUUID().toString());
 		toCreate.setIntValue(123);
 		toCreate.setBooleanValue(true);
-		LOGGER.info("");
-		LOGGER.info("Created: " + service.create(toCreate));
+
+		// creating new entity
+		TestVO created = storage.create(toCreate);
+		validateEntity(toCreate, created);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(created, storage.findAll());
 
 		// updating entity
-		toCreate.setIntValue(321);
-		LOGGER.info("");
-		LOGGER.info("Updated: " + service.update(toCreate));
+		TestVO toUpdate = created;
+		toUpdate.setIntValue(321);
+		TestVO updated = storage.update(toUpdate);
+		validateEntity(created, updated);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(updated, storage.findAll());
 
 		// saving entity
-		TestVO subObject = new TestVO();
-		subObject.setId(UUID.randomUUID().toString());
+		TestVO subObject = new TestVO(UUID.randomUUID().toString());
 		subObject.setIntValue(456);
-		toCreate.setSubObject(subObject);
-		LOGGER.info("");
-		LOGGER.info("Saved: " + service.save(toCreate));
+		toUpdate = updated;
+		toUpdate.setSubObject(subObject);
+		updated = storage.save(toUpdate);
+		validateEntity(toUpdate, updated);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(updated, storage.findAll());
 
 		// removing entity
-		LOGGER.info("");
-		LOGGER.info("Deleted: " + service.delete(toCreate.getId()));
+		TestVO deleted = storage.delete(toCreate.getId());
+		validateEntity(updated, deleted);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(null, storage.findAll());
+	}
+
+	/**
+	 * Validating two entities between each other.
+	 * 
+	 * @param original
+	 * @param toValidate
+	 */
+	private static void validateEntity(final TestVO original, final TestVO toValidate) {
+		Assert.assertNotNull("Can't be null.", toValidate);
+		Assert.assertNotSame("Can't be the same.", original, toValidate);
+		Assert.assertEquals("Id should be the same.", original.getId(), toValidate.getId());
+		Assert.assertEquals("intValue should be the same.", original.getIntValue(), toValidate.getIntValue());
+		Assert.assertEquals("booleanValue should be the same.", original.isBooleanValue(), toValidate.isBooleanValue());
+		Assert.assertEquals("subObject should be the same.", original.getSubObject(), toValidate.getSubObject());
+	}
+
+	/**
+	 * Validate all entities.
+	 * 
+	 * @param original
+	 * @param entities
+	 */
+	private static void validateAll(final TestVO original, final List<TestVO> entities) {
+		Assert.assertNotNull("Can't be null.", entities);
+		Assert.assertEquals("Results amount should be the same.", original != null ? 1 : 0, entities.size());
+		if (original != null)
+			validateEntity(original, entities.get(0));
 	}
 
 }
