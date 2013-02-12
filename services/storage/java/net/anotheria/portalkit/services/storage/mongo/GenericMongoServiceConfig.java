@@ -42,7 +42,7 @@ public final class GenericMongoServiceConfig implements Serializable {
 	 * {@link GenericMongoServiceConfig} instance.
 	 */
 	@DontConfigure
-	private static GenericMongoServiceConfig instance;
+	private static volatile GenericMongoServiceConfig instance;
 
 	/**
 	 * Database name.

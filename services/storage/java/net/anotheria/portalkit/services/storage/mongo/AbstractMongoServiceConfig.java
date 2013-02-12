@@ -41,7 +41,7 @@ public final class AbstractMongoServiceConfig implements Serializable {
 	 * {@link AbstractMongoServiceConfig} instance.
 	 */
 	@DontConfigure
-	private static AbstractMongoServiceConfig instance;
+	private static volatile AbstractMongoServiceConfig instance;
 
 	/**
 	 * Maximum service initialization time in milliseconds.

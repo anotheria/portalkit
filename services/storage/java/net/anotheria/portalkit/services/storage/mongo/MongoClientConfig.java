@@ -46,7 +46,7 @@ public final class MongoClientConfig implements Serializable {
 	 * {@link MongoClientConfig} instance.
 	 */
 	@DontConfigure
-	private static MongoClientConfig instance;
+	private static volatile MongoClientConfig instance;
 
 	/**
 	 * Mongo client configuration description.
@@ -286,7 +286,7 @@ public final class MongoClientConfig implements Serializable {
 	}
 
 	public void setHosts(final Host[] aHosts) {
-		this.hosts = aHosts;
+		this.hosts = aHosts != null ? aHosts.clone() : null;
 	}
 
 	/**
@@ -329,7 +329,7 @@ public final class MongoClientConfig implements Serializable {
 	}
 
 	public void setDatabases(final DB[] aDatabases) {
-		this.databases = aDatabases;
+		this.databases = aDatabases != null ? aDatabases.clone() : null;
 	}
 
 	public int getConnectionsPerHost() {
