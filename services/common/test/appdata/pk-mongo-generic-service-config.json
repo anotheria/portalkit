@@ -1,5 +1,0 @@
-{
-	"databaseName": "test_database",
-	"collectionName": "test_collection",
-	"entityKeyFieldName": "id"
-}
