@@ -1,0 +1,10 @@
+This is the explanation for the model of the record service.
+One Record represents one piece of data.
+ - It belongs to someone, aka has an owner (which can be an account, but not necessarly).
+ - It belongs to a collection, which is a named set of records.
+ - It has an id.
+
+ All Records > All Records By Owner > All Records By Owner And Collection > Specific Record of an Owner in a Collection.
+
+ A RecordSet is a Runtime representation of some records. Usually it will be a set of records from the same owner and
+ collection.
