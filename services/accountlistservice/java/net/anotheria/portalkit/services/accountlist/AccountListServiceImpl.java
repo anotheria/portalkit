@@ -28,16 +28,11 @@ public class AccountListServiceImpl implements AccountListService {
 
 	private IdBasedLockManager<AccountId> lockManager = new SafeIdBasedLockManager<AccountId>();
 
-	// cache of the account lists for each owner where stored targets
 	private Cache<AccountId, AccountListData> accountLists;
-
-//	// cache of users where they are as targets in list of other users
-//	private Cache<String, List<AccountId>> reverseAccountLists;
 
 	public AccountListServiceImpl() {
 
 		accountLists = Caches.createHardwiredCache("accountlistservice-cacheaccountlists");
-//		reverseAccountLists = Caches.createHardwiredCache("accountlistservice-cachereverseaccountlists");
 
 		try {
 			persistenceService = MetaFactory.get(AccountListPersistenceService.class);

@@ -3,12 +3,13 @@ package net.anotheria.portalkit.services.accountlist;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
- * Account list representation class.
+ * Represents list of accounts for specified account list.
  * 
  * @author dagafonov
  * 
@@ -16,7 +17,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 public class AccountList {
 
 	/**
-	 * List name (like favourites, contacts, visited, visits...).
+	 * Name of the list (like favourites, contacts, visited, visits...).
 	 */
 	private String listName;
 
@@ -24,36 +25,37 @@ public class AccountList {
 	 * Involved accounts.
 	 */
 	private List<AccountId> targets;
+	
+	public AccountList(String listName) {
+		this.listName = listName;
+	}
 
 	public String getListName() {
 		return listName;
 	}
 
-	public void setListName(String listName) {
-		this.listName = listName;
-	}
-	
 	public List<AccountId> getTargets() {
 		if (targets == null) {
 			targets = Collections.synchronizedList(new ArrayList<AccountId>());
 		}
 		return targets;
 	}
-	
+
+	/**
+	 * Adds values to the targets list. Only new account ids will be added.
+	 * 
+	 * @param targets
+	 */
 	public void addAll(Collection<AccountId> targets) {
-		getTargets().addAll(targets);
+		HashSet<AccountId> set = new HashSet<AccountId>(getTargets());
+		getTargets().clear();
+		
+		set.addAll(targets);
+		getTargets().addAll(set);
 	}
-	
+
 	public void removeAll(Collection<AccountId> targets) {
 		getTargets().removeAll(targets);
-	}
-
-	public void addTarget(AccountId target) {
-		getTargets().add(target);
-	}
-
-	public void removeTarget(AccountId target) {
-		getTargets().remove(target);
 	}
 
 	@Override
@@ -81,6 +83,9 @@ public class AccountList {
 		return true;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "AccountList [listName=" + listName + ", targets=" + targets + "]";
+	}
 
 }

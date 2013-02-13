@@ -10,10 +10,22 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 
+/**
+ * JDBC implementation of AccountListPersistence service.
+ * 
+ * @author dagafonov
+ * 
+ */
 public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AccountListPersistenceService {
 
+	/**
+	 * DAO definition.
+	 */
 	private AccountListDAO accountlistDAO;
 
+	/**
+	 * Default constructor.
+	 */
 	public JDBCAccountListPersistenceServiceImpl() {
 		super("pk-jdbc-accountlist");
 		accountlistDAO = new AccountListDAO();
@@ -41,7 +53,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
 		}
 	}
-	
+
 	@Override
 	public boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
 		try {
@@ -52,7 +64,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
 		}
 	}
-	
+
 	@Override
 	public List<AccountId> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
 		try {

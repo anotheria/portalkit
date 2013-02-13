@@ -7,34 +7,53 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
- * Represent of account with list of accounts.
+ * Represents account with list of linked accounts through the lists like
+ * categories.
  * 
  * @author dagafonov
  * 
  */
 public class AccountListData {
 
+	/**
+	 * Account id of the user.
+	 */
 	private AccountId accountId;
 
+	/**
+	 * Hash map of lists.
+	 */
 	private Map<String, AccountList> lists;
 
+	/**
+	 * Constructs object just with accountId value.
+	 * 
+	 * @param owner
+	 */
 	public AccountListData(AccountId owner) {
 		this.accountId = owner;
 	}
-	
-	public AccountListData(AccountId owner, String listName, Collection<AccountId>  targets) {
+
+	/**
+	 * Constructs object with all information.
+	 * 
+	 * @param owner
+	 * @param listName
+	 * @param targets
+	 */
+	public AccountListData(AccountId owner, String listName, Collection<AccountId> targets) {
 		this.accountId = owner;
-		AccountList accL = new AccountList();
+		AccountList accL = new AccountList(listName);
 		accL.addAll(targets);
-		getLists().put(listName, accL);
+		getLists().put(accL.getListName(), accL);
 	}
 
+	/**
+	 * Get account id.
+	 * @return
+	 */
 	public AccountId getAccountId() {
 		return accountId;
-	}
-
-	public void setAccountId(AccountId accountId) {
-		this.accountId = accountId;
 	}
 
 	public Map<String, AccountList> getLists() {
@@ -44,18 +63,21 @@ public class AccountListData {
 		return lists;
 	}
 
-	public void setLists(Map<String, AccountList> lists) {
-		this.lists = lists;
-	}
-
 	public void addAll(String listName, Collection<AccountId> targets) {
 		AccountList accList = getLists().get(listName);
 		if (accList == null) {
-			accList = new AccountList();
+			accList = new AccountList(listName);
 			accList.addAll(targets);
-			getLists().put(listName, accList);
+			getLists().put(accList.getListName(), accList);
 		} else {
 			accList.addAll(targets);
+		}
+	}
+
+	public void removeAll(String listName, Collection<AccountId> targets) {
+		AccountList accList = getLists().get(listName);
+		if (accList != null) {
+			accList.removeAll(targets);
 		}
 	}
 
@@ -82,6 +104,11 @@ public class AccountListData {
 		} else if (!accountId.equals(other.accountId))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "AccountListData [accountId=" + accountId + ", lists=" + lists + "]";
 	}
 
 }

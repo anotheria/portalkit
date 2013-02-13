@@ -1,41 +1,23 @@
 package net.anotheria.portalkit.services.accountlist;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Arrays;
 import java.util.List;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.accountlist.AccountListService;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
 
-import org.configureme.ConfigurationManager;
-import org.configureme.environments.DynamicEnvironment;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
-public class AccountListServiceTest {
+public abstract class AbstractAccountListServiceTest {
 
 	private AccountListService service;
 
-	@Before
-	@After
-	public void reset() {
-		
-		System.out.println("**************************************************");
-		
-		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
-		MetaFactory.reset();
-		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
-
-		try {
-			service = MetaFactory.get(AccountListService.class);
-		} catch (MetaFactoryException e) {
-			throw new RuntimeException(e);
-		}
-
+	public void setService(AccountListService service) {
+		this.service = service;
 	}
 
 	@Test
@@ -44,6 +26,7 @@ public class AccountListServiceTest {
 		AccountId accId = AccountId.generateNew();
 
 		List<AccountId> accIdList = service.getList(accId, "visited");
+//		System.out.println("got " + accIdList.size() + " records...");
 		assertNotNull(accIdList);
 		assertTrue(accIdList.isEmpty());
 	}
@@ -54,9 +37,11 @@ public class AccountListServiceTest {
 		AccountId accId = AccountId.generateNew();
 
 		boolean res = service.addToList(accId, "contacts", AccountId.generateNew(), AccountId.generateNew(), AccountId.generateNew());
+//		System.out.println("got " + res + " after insert...");
 		assertTrue(res);
 
 		List<AccountId> accIdList = service.getList(accId, "contacts");
+//		System.out.println("got " + accIdList.size() + " records after insert...");
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
@@ -73,29 +58,31 @@ public class AccountListServiceTest {
 		assertTrue(res);
 
 		List<AccountId> accIdList = service.getList(accId, "favourites");
-		System.out.println("got "+accIdList.size()+" records after insert...");
+//		System.out.println("got " + accIdList.size() + " records after insert...");
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
 		res = service.removeFromList(accId, "favourites", Arrays.asList(accList));
+//		System.out.println("got " + res + " after removing...");
 		assertTrue(res);
-		
+
 		accIdList = service.getList(accId, "favourites");
+//		System.out.println("got " + accIdList.size() + " records after remove...");
 		assertNotNull(accIdList);
 		assertEquals(1, accIdList.size());
 
 	}
-	
+
 	@Test
 	public void testReverseList() throws Exception {
 
 		AccountId accId = AccountId.generateNew();
-		
+
 		AccountId reverseAccId = AccountId.generateNew();
 
 		boolean res = service.addToList(accId, "visits", AccountId.generateNew(), AccountId.generateNew(), reverseAccId, AccountId.generateNew());
 		assertTrue(res);
-		
+
 		AccountId accId2 = AccountId.generateNew();
 		res = service.addToList(accId2, "visits", AccountId.generateNew(), AccountId.generateNew(), reverseAccId, AccountId.generateNew());
 		assertTrue(res);
@@ -103,10 +90,11 @@ public class AccountListServiceTest {
 		List<AccountId> accIdList = service.getList(accId, "visits");
 		assertNotNull(accIdList);
 		assertEquals(4, accIdList.size());
-		
+
 		accIdList = service.reverseLookup(reverseAccId, "visits");
 		assertNotNull(accIdList);
 		assertEquals(2, accIdList.size());
 
 	}
+
 }

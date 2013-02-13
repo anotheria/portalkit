@@ -13,6 +13,12 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 
+/**
+ * Account list DAO implementation.
+ * 
+ * @author dagafonov
+ * 
+ */
 public class AccountListDAO extends AbstractDAO implements DAO {
 
 	private static final String TABLE_NAME = "accountlist";
@@ -31,8 +37,11 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	}
 
 	/**
-	 * Gets list of accounts that belongs to specified account ant account list. Never returs null value.
+	 * Gets list of accounts that belongs to specified account ant account list.
+	 * Never returs null value.
+	 * 
 	 * @param connection
+	 *            current connection to DB.
 	 * @param owner
 	 * @param listName
 	 * @return
@@ -41,25 +50,34 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 */
 	public List<AccountId> getList(Connection connection, AccountId owner, String listName) throws DAOException, SQLException {
 		List<AccountId> res = new ArrayList<AccountId>();
-		PreparedStatement stat = connection.prepareStatement(String.format("SELECT %s from %s WHERE %s=? and %s=?", TARGET_ID, TABLE_NAME, OWNER_ID, LIST_NAME));
-
-		System.out.println("searching for " + owner.getInternalId() + " in list '" + listName+"'");
-
+		PreparedStatement stat = connection.prepareStatement(String.format("SELECT %s from %s WHERE %s=? and %s=?", TARGET_ID, TABLE_NAME, OWNER_ID,
+				LIST_NAME));
 		stat.setString(1, owner.getInternalId());
 		stat.setString(2, listName);
 		ResultSet result = stat.executeQuery();
 		while (result.next()) {
-			System.out.println("found " + result.getString(TARGET_ID));
 			res.add(new AccountId(result.getString(TARGET_ID)));
 		}
 		return res;
 	}
 
-	public boolean addToList(Connection connection, AccountId owner, String listName, Collection<AccountId> targets) throws DAOException, SQLException {
+	/**
+	 * Adds targets into specified list of accounts for specified account.
+	 * 
+	 * @param connection
+	 *            current connection to DB.
+	 * @param owner
+	 * @param listName
+	 * @param targets
+	 * @return
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public boolean addToList(Connection connection, AccountId owner, String listName, Collection<AccountId> targets) throws DAOException,
+			SQLException {
 		String prefSQL = String.format("insert into %s (%s, %s, %s) values (?, ?, ?)", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME);
 		PreparedStatement insertStatement = connection.prepareStatement(prefSQL);
 		for (AccountId accId : targets) {
-			System.out.println("inserting owner=" + owner.getInternalId() + ", listname=" + listName + ", target=" + accId.getInternalId());
 			insertStatement.setString(1, owner.getInternalId());
 			insertStatement.setString(2, accId.getInternalId());
 			insertStatement.setString(3, listName);
@@ -69,11 +87,23 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 		return true;
 	}
 
-	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountId> targets) throws DAOException, SQLException {
+	/**
+	 * Removes targets from specified list of accounts for specified account.
+	 * 
+	 * @param connection
+	 *            current connection to DB.
+	 * @param owner
+	 * @param listName
+	 * @param targets
+	 * @return
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
+	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountId> targets) throws DAOException,
+			SQLException {
 		String prefSQL = String.format("delete from %s where %s=? and %s=? and %s=? ;", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME);
 		PreparedStatement insertStatement = connection.prepareStatement(prefSQL);
 		for (AccountId accId : targets) {
-			System.out.println("deleting owner=" + owner.getInternalId() + ", listname=" + listName + ", target=" + accId.getInternalId());
 			insertStatement.setString(1, owner.getInternalId());
 			insertStatement.setString(2, accId.getInternalId());
 			insertStatement.setString(3, listName);
@@ -83,17 +113,25 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 		return true;
 	}
 
+	/**
+	 * Gets list of accounts where I am in the specified list of specified
+	 * account.
+	 * 
+	 * @param connection
+	 * @param target
+	 * @param listName
+	 * @return
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
 	public List<AccountId> getReverseList(Connection connection, AccountId target, String listName) throws DAOException, SQLException {
 		List<AccountId> res = new ArrayList<AccountId>();
-		PreparedStatement stat = connection.prepareStatement(String.format("SELECT %s from %s WHERE %s=? and %s=?", OWNER_ID, TABLE_NAME, TARGET_ID, LIST_NAME));
-
-		System.out.println("searching for " + target.getInternalId() + " in list '" + listName+"'");
-
+		PreparedStatement stat = connection.prepareStatement(String.format("SELECT %s from %s WHERE %s=? and %s=?", OWNER_ID, TABLE_NAME, TARGET_ID,
+				LIST_NAME));
 		stat.setString(1, target.getInternalId());
 		stat.setString(2, listName);
 		ResultSet result = stat.executeQuery();
 		while (result.next()) {
-			System.out.println("found " + result.getString(OWNER_ID));
 			res.add(new AccountId(result.getString(OWNER_ID)));
 		}
 		return res;
