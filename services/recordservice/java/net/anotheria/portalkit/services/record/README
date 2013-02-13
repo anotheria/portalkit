@@ -2,9 +2,15 @@ This is the explanation for the model of the record service.
 One Record represents one piece of data.
  - It belongs to someone, aka has an owner (which can be an account, but not necessarly).
  - It belongs to a collection, which is a named set of records.
- - It has an id.
+ - It has an id, which distinguishes it from other records in the same collection entity. The id of a record is
+ rather a type description, like age or price. There can be only one record with same id in the same collection entity.
 
  All Records > All Records By Owner > All Records By Owner And Collection > Specific Record of an Owner in a Collection.
 
  A RecordSet is a Runtime representation of some records. Usually it will be a set of records from the same owner and
  collection.
+
+ Examples for tuples of OwnerId, CollectionId, RecordId:
+ d2ccab57-e919-4810-89c8-496c453d72f0, default, 34
+ d2ccab57-e919-4810-89c8-496c453d72f0, profile, age
+ catalog, wares, price
