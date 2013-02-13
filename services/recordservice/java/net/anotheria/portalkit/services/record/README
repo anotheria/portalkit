@@ -14,3 +14,21 @@ One Record represents one piece of data.
  d2ccab57-e919-4810-89c8-496c453d72f0, default, 34
  d2ccab57-e919-4810-89c8-496c453d72f0, profile, age
  catalog, wares, price
+
+ Of course Records also have values:
+
+ (d2ccab57-e919-4810-89c8-496c453d72f0, profile, age) = 34
+ (bbbbbbbb-e919-4810-89c8-496c453d72f0, profile, age) = 42
+ (aaaaaaaa-e919-4810-89c8-496c453d72f0, profile, age) = 42
+
+
+ (samsung-galaxy-s2, catalog, price) = 39900
+ (samsung-galaxy-s3, catalog, price) = 89900
+ (apple-iphone-4s, catalog, price) = 37900
+
+
+==== OPEN QUESTIONS ====
+Should record id be
+  a) a string
+  b) an integer (less readable, less memory)
+  c) an object
