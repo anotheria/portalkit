@@ -1,18 +1,22 @@
 package net.anotheria.portalkit.services.account.persistence;
 
+import java.util.Collection;
+
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * Interface for the persistence service for the account service.
- *
+ * 
  * @author lrosenberg
  * @since 12.12.12 11:41
  */
 public interface AccountPersistenceService extends Service {
+
 	/**
 	 * Returns the account with that account id.
+	 * 
 	 * @param id
 	 * @return
 	 * @throws AccountPersistenceServiceException
@@ -21,6 +25,7 @@ public interface AccountPersistenceService extends Service {
 
 	/**
 	 * Saves the account.
+	 * 
 	 * @param account
 	 * @throws AccountPersistenceServiceException
 	 */
@@ -28,6 +33,7 @@ public interface AccountPersistenceService extends Service {
 
 	/**
 	 * Deletes the account with submitted id.
+	 * 
 	 * @param id
 	 * @throws AccountPersistenceServiceException
 	 */
@@ -35,6 +41,7 @@ public interface AccountPersistenceService extends Service {
 
 	/**
 	 * Returns the id of the account with the given name.
+	 * 
 	 * @param name
 	 * @return
 	 * @throws AccountPersistenceServiceException
@@ -43,10 +50,19 @@ public interface AccountPersistenceService extends Service {
 
 	/**
 	 * Returns the id of the account with the given email.
+	 * 
 	 * @param email
 	 * @return
 	 * @throws AccountPersistenceServiceException
 	 */
 	AccountId getIdByEmail(String email) throws AccountPersistenceServiceException;
+
+	/**
+	 * Get all account id's.
+	 * 
+	 * @return {@link Collection} of {@link AccountId}
+	 * @throws AccountPersistenceServiceException
+	 */
+	Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException;
 
 }

@@ -18,7 +18,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 12.12.12 11:28
  */
-public class AccountServiceImpl implements AccountService, AccountAdminService{
+public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 	/**
 	 * Config.
@@ -34,14 +34,17 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 	 * AccountId id->account cache.
 	 */
 	private Cache<AccountId, Account> cache;
+	
 	/**
 	 * Cache for not existing accounts, contains null account objects.
 	 */
 	private Cache<AccountId, Account> nonExistingAccountCache;
+	
 	/**
 	 * Cache for name 2 id mapping.
 	 */
 	private Cache<String, AccountId> name2idCache;
+	
 	/**
 	 * Cache for email 2 id mapping.
 	 */
@@ -51,7 +54,6 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 	 * Instance of null account that is used internally.
 	 */
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
-
 
 	/**
 	 * Default constructor.
@@ -120,12 +122,16 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 	@Override
 	public void deleteAccount(AccountId id) throws AccountServiceException {
+		Account oldAccount = getAccountInternally(id);		
 		try{
 			persistenceService.deleteAccount(id);
 			cache.remove(id);
 		}catch(AccountPersistenceServiceException e){
 			throw new AccountServiceException(e);
 		}
+		
+		name2idCache.remove(oldAccount.getName());
+		email2idCache.remove(oldAccount.getEmail());		
 	}
 
 	private void saveAccount(Account toSave) throws AccountServiceException{
@@ -167,7 +173,6 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 	@Override
 	public Account createAccount(Account toCreate) throws AccountServiceException {
-
 		if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName())!=null)
 			throw new AccountAlreadyExistsException("name", toCreate.getName());
 		if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail())!=null)
@@ -227,6 +232,11 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 	@Override
 	public Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		try {
+			return persistenceService.getAllAccountIds();
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountAdminServiceException(e);
+		}
 	}
+	
 }

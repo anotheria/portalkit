@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.account;
 
+import java.io.Serializable;
+
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
@@ -8,7 +10,11 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author lrosenberg
  * @since 11.12.12 11:08
  */
-public class Account {
+public class Account implements Serializable {
+	/**
+	 * Basic serialVersionUID variable.
+	 */
+	private static final long serialVersionUID = -2199455445180759484L;
 	/**
 	 * The account id.
 	 */
@@ -158,6 +164,6 @@ public class Account {
 	 */
 	public boolean hasStatus(long aStatus){
 		return (status & aStatus) == aStatus;
-	}
+	}	
 
 }

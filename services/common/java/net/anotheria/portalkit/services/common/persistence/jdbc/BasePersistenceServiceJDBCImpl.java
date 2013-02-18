@@ -1,13 +1,5 @@
 package net.anotheria.portalkit.services.common.persistence.jdbc;
 
-import com.googlecode.flyway.core.Flyway;
-import com.googlecode.flyway.core.api.MigrationInfoService;
-import net.anotheria.util.StringUtils;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.log4j.Logger;
-import org.configureme.ConfigurationManager;
-
-import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +18,17 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.sql.DataSource;
+
+import net.anotheria.util.StringUtils;
+
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.Logger;
+import org.configureme.ConfigurationManager;
+
+import com.googlecode.flyway.core.Flyway;
+import com.googlecode.flyway.core.api.MigrationInfoService;
 
 /**
  * Base persistence service.
@@ -77,7 +80,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	 */
 	public void init() {
 		BasicDataSource newDataSource = new BasicDataSource();
-		if (configName==null)
+		if (configName == null)
 			throw new IllegalStateException("Config not set");
 		JDBCConfig config = new JDBCConfig();
 		ConfigurationManager.INSTANCE.configureAs(config, configName);
@@ -88,48 +91,48 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		newDataSource.setUsername(config.getUsername());
 		newDataSource.setPassword(config.getPassword());
 
-		if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections()>0)
+		if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections() > 0)
 			newDataSource.setMaxActive(config.getMaxConnections());
 
 		this.dataSource = newDataSource;
 
-		//prepare db.
+		// prepare db.
 		Flyway flyway = new Flyway();
 		flyway.setDataSource(getDataSource());
 		flyway.setLocations(getClass().getPackage().getName() + ".migrations");
 		flyway.setTable(getTableNameForMigration());
 		flyway.setInitOnMigrate(true);
 		flyway.migrate();
-		MigrationInfoService flywayInfo =  flyway.info();
-		//System.out.println("FLYWAY: ");
-		//for (MigrationInfo mi : flywayInfo.applied()){
-		//	System.out.println("Applied: "+mi.getVersion());
-		//}
-		//for (MigrationInfo mi : flywayInfo.pending()){
-		//	System.out.println("Pending: "+mi.getVersion());
-		//}
-		log.info("Flyway current version:"+flywayInfo.current().getVersion());
+		MigrationInfoService flywayInfo = flyway.info();
+		// System.out.println("FLYWAY: ");
+		// for (MigrationInfo mi : flywayInfo.applied()){
+		// System.out.println("Applied: "+mi.getVersion());
+		// }
+		// for (MigrationInfo mi : flywayInfo.pending()){
+		// System.out.println("Pending: "+mi.getVersion());
+		// }
+		log.info("Flyway current version:" + flywayInfo.current().getVersion());
 
 	}
 
-	private String getTableNameForMigration(){
+	private String getTableNameForMigration() {
 		String[] commonPackage = StringUtils.tokenize(BasePersistenceServiceJDBCImpl.class.getPackage().getName(), '.');
 		String[] customPackage = StringUtils.tokenize(getClass().getPackage().getName(), '.');
 		HashSet<String> parts = new HashSet<String>();
-		for (String p : customPackage){
+		for (String p : customPackage) {
 			parts.add(p);
 		}
-		for (String p : commonPackage){
+		for (String p : commonPackage) {
 			parts.remove(p);
 		}
 
 		StringBuilder name = new StringBuilder();
-		for (Iterator<String> it = parts.iterator(); it.hasNext();){
-			if (name.length()>0)
+		for (Iterator<String> it = parts.iterator(); it.hasNext();) {
+			if (name.length() > 0)
 				name.append('_');
 			name.append(it.next());
 		}
-		return "flyway_"+name.toString();
+		return "flyway_" + name.toString();
 	}
 
 	/**
@@ -150,13 +153,13 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		}
 	}
 
-	protected DataSource getDataSource(){
+	protected DataSource getDataSource() {
 		return dataSource;
 	}
 
 	/**
 	 * Close {@link java.sql.Connection} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
+	 * 
 	 * @param conn
 	 *            - {@link java.sql.Connection} object
 	 */
@@ -170,7 +173,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Close {@link java.sql.Statement} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
+	 * 
 	 * @param st
 	 *            - {@link java.sql.Statement} object
 	 */
@@ -184,8 +187,9 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Close {@link java.sql.ResultSet} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
-	 * @param rs - {@link java.sql.ResultSet} object
+	 * 
+	 * @param rs
+	 *            - {@link java.sql.ResultSet} object
 	 */
 	protected void close(ResultSet rs) {
 		try {
@@ -197,7 +201,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Close {@link java.sql.Connection} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
+	 * 
 	 * @param conn
 	 *            - {@link java.sql.Connection} object
 	 */
@@ -207,7 +211,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Close {@link java.sql.Statement} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
+	 * 
 	 * @param st
 	 *            - {@link java.sql.Statement} object
 	 */
@@ -217,7 +221,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Close {@link java.sql.ResultSet} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 *
+	 * 
 	 * @param rs
 	 *            - {@link java.sql.ResultSet} object
 	 */
@@ -227,7 +231,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 
 	/**
 	 * Check exception for connection exception type and throw named runtime exception.
-	 *
+	 * 
 	 * @param error
 	 *            - {@link Throwable}
 	 * @throws JDBCConnectionException
@@ -309,15 +313,20 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		}
 	}
 
-	protected void addDaos(DAO ... someDaos){
-		if (someDaos!=null)
+	protected void addDaos(DAO... someDaos) {
+		if (someDaos != null)
 			for (DAO d : someDaos)
 				daos.add(d);
 	}
 
 	public void cleanupFromUnitTests() throws Exception {
-		for (DAO d : daos)
-			d.cleanupFromUnitTests(getConnection());
+		Connection conn = getConnection();
+		try {
+			for (DAO d : daos)
+				d.cleanupFromUnitTests(conn);
+		} finally {
+			release(conn);
+		}
 	}
 
 }

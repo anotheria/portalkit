@@ -1,31 +1,36 @@
 package net.anotheria.portalkit.services.account.persistence.inmemory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import org.apache.commons.lang.SerializationUtils;
 
 /**
  * TODO comment this class
- *
+ * 
  * @author lrosenberg
  * @since 20.12.12 09:56
  */
-public class InMemoryAccountPersistenceServiceImpl implements AccountPersistenceService{
+public class InMemoryAccountPersistenceServiceImpl implements AccountPersistenceService {
 
 	private ConcurrentMap<AccountId, Account> storage = new ConcurrentHashMap<AccountId, Account>();
 
 	@Override
 	public Account getAccount(AccountId id) throws AccountPersistenceServiceException {
-		return storage.get(id);
+		return Account.class.cast(SerializationUtils.clone(storage.get(id)));
 	}
 
 	@Override
 	public void saveAccount(Account account) throws AccountPersistenceServiceException {
-		storage.put(account.getId(), account);
+		storage.put(account.getId().clone(), Account.class.cast(SerializationUtils.clone(account)));
 	}
 
 	@Override
@@ -35,20 +40,31 @@ public class InMemoryAccountPersistenceServiceImpl implements AccountPersistence
 
 	@Override
 	public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
-		for (Account acc : storage.values()){
-			System.out.println("checking "+name+" in "+acc);
+		for (Account acc : storage.values()) {
+			System.out.println("checking " + name + " in " + acc);
 			if (acc.getName().equals(name))
-				return acc.getId();
+				return acc.getId().clone();
 		}
 		return null;
 	}
+
 	@Override
 	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
-		for (Account acc : storage.values()){
-			System.out.println("checking "+email+" in "+acc);
+		for (Account acc : storage.values()) {
+			System.out.println("checking " + email + " in " + acc);
 			if (acc.getEmail().equals(email))
-				return acc.getId();
+				return acc.getId().clone();
 		}
 		return null;
 	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException {
+		List<AccountId> result = new ArrayList<AccountId>();
+		for (AccountId accountId : storage.keySet())
+			result.add(accountId.clone());
+
+		return result;
+	}
+
 }
