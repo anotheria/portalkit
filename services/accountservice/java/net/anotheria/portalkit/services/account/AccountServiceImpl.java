@@ -9,6 +9,7 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 12.12.12 11:28
  */
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 	/**
 	 * Config.
@@ -208,5 +209,10 @@ public class AccountServiceImpl implements AccountService{
 		}catch(AccountPersistenceServiceException e){
 			throw new AccountServiceException(e);
 		}
+	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException {
+		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 }
