@@ -131,6 +131,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 	private void saveAccount(Account toSave) throws AccountServiceException{
 		if (toSave.getId()==null)
 			throw new IllegalArgumentException("Not account id set, impossible to save "+toSave);
+		Account oldAccount = getAccountInternally(toSave.getId());
 		try{
 			persistenceService.saveAccount(toSave);
 		}catch(AccountPersistenceServiceException e){
@@ -139,7 +140,18 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 		//we try to
 		try{
-			cache.put(toSave.getId(), persistenceService.getAccount(toSave.getId()));
+			Account fromPersistence = persistenceService.getAccount(toSave.getId());
+			cache.put(toSave.getId(), fromPersistence);
+			if (oldAccount!=NULL_ACCOUNT){
+				if (!oldAccount.getEmail().equals(fromPersistence.getEmail())){
+					email2idCache.remove(oldAccount.getEmail());
+					email2idCache.put(fromPersistence.getEmail(), fromPersistence.getId());
+				}
+				if (!oldAccount.getName().equals(fromPersistence.getName())){
+					name2idCache.remove(oldAccount.getName());
+					name2idCache.put(fromPersistence.getName(), fromPersistence.getId());
+				}
+			}
 		}catch(AccountPersistenceServiceException e){
 			//ensure obsolete objects aren't staying in cache.
 			cache.remove(toSave.getId());
@@ -158,6 +170,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService{
 
 		if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName())!=null)
 			throw new AccountAlreadyExistsException("name", toCreate.getName());
+		if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail())!=null)
+			throw new AccountAlreadyExistsException("email", toCreate.getEmail());
 
 		Account newAccount = Account.newAccountFromPattern(toCreate);
 		saveAccount(newAccount);
