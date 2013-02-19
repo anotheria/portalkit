@@ -37,6 +37,7 @@
 		<module>messagingservice</module>
 		<module>paymentservice</module>
 		<module>foreignidservice</module>
+		<module>approvalservice</module>
 	</modules>
 
 </project>

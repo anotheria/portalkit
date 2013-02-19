@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.common.persistence.jdbc;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.googlecode.flyway.core.util.jdbc.JdbcUtils;
 
@@ -59,5 +60,5 @@ public abstract class AbstractDAO implements DAO {
 		statement.setLong(pos + 1, System.currentTimeMillis()); // DAO_CREATED
 		statement.setLong(pos + 2, 0L); // DAO_UPDATED
 	}
-
+	
 }

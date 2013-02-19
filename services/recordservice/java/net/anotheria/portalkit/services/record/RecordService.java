@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * The record service.
  * The record service is used to store different type of data. Every method allows to work with accountId or ownerId;
- * using accoundId will implicitely associate the record collection with an account.
+ * using accoundId will implicitly associate the record collection with an account.
  *
  * @author lrosenberg
  * @since 11.12.12 17:37

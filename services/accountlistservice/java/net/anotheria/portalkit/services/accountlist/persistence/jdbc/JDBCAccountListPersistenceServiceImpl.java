@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountlist.persistence.jdbc;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +10,7 @@ import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersi
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
+import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 /**
  * JDBC implementation of AccountListPersistence service.
@@ -34,45 +36,61 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 
 	@Override
 	public List<AccountId> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {
+		Connection conn = null;
 		try {
-			return accountlistDAO.getList(getConnection(), owner, listName);
+			conn = getConnection();
+			return accountlistDAO.getList(conn, owner, listName);
 		} catch (DAOException e) {
 			throw new AccountListPersistenceServiceException("accountlistDAO.getList failed", e);
 		} catch (SQLException e) {
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
+		} finally {
+			JDBCUtil.close(conn);
 		}
 	}
 
 	@Override
 	public boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+		Connection conn = null;
 		try {
-			return accountlistDAO.addToList(getConnection(), owner, listName, targets);
+			conn = getConnection();
+			return accountlistDAO.addToList(conn, owner, listName, targets);
 		} catch (DAOException e) {
 			throw new AccountListPersistenceServiceException("accountlistDAO.addToList failed", e);
 		} catch (SQLException e) {
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
+		} finally {
+			JDBCUtil.close(conn);
 		}
 	}
 
 	@Override
 	public boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+		Connection conn = null;
 		try {
-			return accountlistDAO.removeFromList(getConnection(), owner, listName, targets);
+			conn = getConnection();
+			return accountlistDAO.removeFromList(conn, owner, listName, targets);
 		} catch (DAOException e) {
 			throw new AccountListPersistenceServiceException("accountlistDAO.removeFromList failed", e);
 		} catch (SQLException e) {
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
+		} finally {
+			JDBCUtil.close(conn);
 		}
 	}
 
 	@Override
 	public List<AccountId> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
+		Connection conn = null;
 		try {
-			return accountlistDAO.getReverseList(getConnection(), target, listName);
+			conn = getConnection();
+			return accountlistDAO.getReverseList(conn, target, listName);
 		} catch (DAOException e) {
 			throw new AccountListPersistenceServiceException("accountlistDAO.getReverseList failed", e);
 		} catch (SQLException e) {
 			throw new AccountListPersistenceServiceException("getConnection failed", e);
+		} finally {
+			JDBCUtil.close(conn);
 		}
 	}
 

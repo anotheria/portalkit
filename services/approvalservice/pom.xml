@@ -7,9 +7,9 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>services-foreignidservice</artifactId>
-	<name>services - foreign id service</name>
-	<description>Services: ForeignId Service. This service is used to store references to another internet services like g+, fb, twitter etc, and to connect accounts to foreign services.</description>
+	<artifactId>services-approvalservice</artifactId>
+	<name>services - approval service</name>
+	<description>Services: Approval Service.</description>
 
 
 	<dependencies>
