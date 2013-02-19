@@ -5,6 +5,7 @@ import net.anotheria.portalkit.services.authentication.persistence.Authenticatio
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
+import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -41,7 +42,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -56,7 +57,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -71,7 +72,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -87,7 +88,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -102,7 +103,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -117,7 +118,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -132,7 +133,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -147,7 +148,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		}catch(DAOException e){
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}finally{
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 }

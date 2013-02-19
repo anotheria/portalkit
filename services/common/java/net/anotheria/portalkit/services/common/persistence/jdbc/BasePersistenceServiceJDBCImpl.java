@@ -158,78 +158,6 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	}
 
 	/**
-	 * Close {@link java.sql.Connection} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param conn
-	 *            - {@link java.sql.Connection} object
-	 */
-	protected void close(Connection conn) {
-		try {
-			if (conn != null && !conn.isClosed())
-				conn.close();
-		} catch (SQLException e) {
-		}
-	}
-
-	/**
-	 * Close {@link java.sql.Statement} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param st
-	 *            - {@link java.sql.Statement} object
-	 */
-	protected void close(Statement st) {
-		try {
-			if (st != null)
-				st.close();
-		} catch (SQLException e) {
-		}
-	}
-
-	/**
-	 * Close {@link java.sql.ResultSet} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param rs
-	 *            - {@link java.sql.ResultSet} object
-	 */
-	protected void close(ResultSet rs) {
-		try {
-			if (rs != null)
-				rs.close();
-		} catch (SQLException e) {
-		}
-	}
-
-	/**
-	 * Close {@link java.sql.Connection} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param conn
-	 *            - {@link java.sql.Connection} object
-	 */
-	protected void release(Connection conn) {
-		close(conn);
-	}
-
-	/**
-	 * Close {@link java.sql.Statement} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param st
-	 *            - {@link java.sql.Statement} object
-	 */
-	protected void release(Statement st) {
-		close(st);
-	}
-
-	/**
-	 * Close {@link java.sql.ResultSet} if it opened. If {@link java.sql.SQLException} happen on closing it will be logged.
-	 * 
-	 * @param rs
-	 *            - {@link java.sql.ResultSet} object
-	 */
-	protected void release(ResultSet rs) {
-		close(rs);
-	}
-
-	/**
 	 * Check exception for connection exception type and throw named runtime exception.
 	 * 
 	 * @param error
@@ -325,7 +253,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 			for (DAO d : daos)
 				d.cleanupFromUnitTests(conn);
 		} finally {
-			release(conn);
+			JDBCUtil.close(conn);
 		}
 	}
 

@@ -13,8 +13,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
-
-import com.googlecode.flyway.core.util.jdbc.JdbcUtils;
+import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 /**
  * DAO class for account object.
@@ -83,7 +82,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			System.out.println("INSERT: " + insertResult);
 			return insertResult == 1;
 		} finally {
-			JdbcUtils.closeStatement(insertStatement);
+			JDBCUtil.close(insertStatement);
 		}
 	}
 
@@ -114,7 +113,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 
 			return updateResult == 1;
 		} finally {
-			JdbcUtils.closeStatement(updateStatement);
+			JDBCUtil.close(updateStatement);
 		}
 	}
 
@@ -143,8 +142,8 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			acc.setStatus(result.getLong(POS_STATUS));
 			return acc;
 		} finally {
-			JdbcUtils.closeResultSet(result);
-			JdbcUtils.closeStatement(stat);
+			JDBCUtil.close(result);
+			JDBCUtil.close(stat);
 		}
 	}
 
@@ -161,8 +160,8 @@ public class AccountDAO extends AbstractDAO implements DAO {
 
 			return result;
 		} finally {
-			JdbcUtils.closeResultSet(rs);
-			JdbcUtils.closeStatement(st);
+			JDBCUtil.close(rs);
+			JDBCUtil.close(st);
 		}
 	}
 
@@ -178,7 +177,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			delete.setString(1, id.getInternalId());
 			delete.executeUpdate();
 		} finally {
-			JdbcUtils.closeStatement(delete);
+			JDBCUtil.close(delete);
 		}
 	}
 
@@ -203,8 +202,8 @@ public class AccountDAO extends AbstractDAO implements DAO {
 				return null;
 			return new AccountId(result.getString(1));
 		} finally {
-			JdbcUtils.closeResultSet(result);
-			JdbcUtils.closeStatement(select);
+			JDBCUtil.close(result);
+			JDBCUtil.close(select);
 		}
 	}
 

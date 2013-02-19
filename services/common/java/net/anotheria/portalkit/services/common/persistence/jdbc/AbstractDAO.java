@@ -51,7 +51,7 @@ public abstract class AbstractDAO implements DAO {
 				statement = connection.prepareStatement("DELETE FROM " + table);
 				statement.executeUpdate();
 			} finally {
-				JdbcUtils.closeStatement(statement);
+				JDBCUtil.close(statement);
 			}
 	}
 

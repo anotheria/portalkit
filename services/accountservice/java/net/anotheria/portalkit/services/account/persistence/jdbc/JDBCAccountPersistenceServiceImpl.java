@@ -10,6 +10,7 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
+import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 /**
  * JDBC Based implementation of the account persistence service.
@@ -45,7 +46,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -60,7 +61,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -75,7 +76,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -90,7 +91,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -105,7 +106,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
@@ -120,7 +121,7 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		} catch (SQLException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
-			release(con);
+			JDBCUtil.close(con);
 		}
 	}
 
