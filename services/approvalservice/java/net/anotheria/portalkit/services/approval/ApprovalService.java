@@ -44,14 +44,14 @@ public interface ApprovalService extends Service {
 	 * 
 	 * @throws ApprovalServiceException
 	 */
-	void approveTicket() throws ApprovalServiceException;
+	void approveTicket(Ticket ticket) throws ApprovalServiceException;
 
 	/**
 	 * Disapprove ticket.
 	 * 
 	 * @throws ApprovalServiceException
 	 */
-	void disapproveTicket() throws ApprovalServiceException;
+	void disapproveTicket(Ticket ticket) throws ApprovalServiceException;
 
 	/**
 	 * Reserves tickets ticketsToReserve on reservationObject.
