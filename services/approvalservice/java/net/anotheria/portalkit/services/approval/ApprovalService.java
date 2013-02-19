@@ -1,9 +1,8 @@
 package net.anotheria.portalkit.services.approval;
 
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.Ticket;
+
+import java.util.Collection;
 
 /**
  * Approval service interface.
@@ -30,6 +29,7 @@ public interface ApprovalService extends Service {
 	 */
 	void deleteTicket(Ticket ticket) throws ApprovalServiceException;
 
+	void deleteTicket(String ticketId) throws ApprovalServiceException;
 	/**
 	 * Gets ticket by internal ID.
 	 * 
@@ -45,6 +45,7 @@ public interface ApprovalService extends Service {
 	 * @throws ApprovalServiceException
 	 */
 	void approveTicket(Ticket ticket) throws ApprovalServiceException;
+	void approveTickets(Collection<Ticket> tickets) throws ApprovalServiceException;
 
 	/**
 	 * Disapprove ticket.
@@ -52,6 +53,9 @@ public interface ApprovalService extends Service {
 	 * @throws ApprovalServiceException
 	 */
 	void disapproveTicket(Ticket ticket) throws ApprovalServiceException;
+	void disapproveTickets(Collection<Ticket> ticket) throws ApprovalServiceException;
+
+	void proceedTickets(Collection<Ticket> toApprove, Collection<Ticket> toDisapprove);
 
 	/**
 	 * Reserves tickets ticketsToReserve on reservationObject.
@@ -60,6 +64,11 @@ public interface ApprovalService extends Service {
 	 * @param ticketsToReserve
 	 * @throws ApprovalServiceException
 	 */
-	void reserveTickets(List<Ticket> ticketsToReserve, String reservationObject) throws ApprovalServiceException;
+
+	Collection<Ticket> getAndReserveTickets(String reservationObject, int number, int referenceType) throws  ApprovalServiceException;
+
+	void unReserveTickets(String reservationObject) throws ApprovalServiceException;
+
+	Collection<Ticket> getReservedTickets(String reservationObject) throws ApprovalServiceException;
 	
 }

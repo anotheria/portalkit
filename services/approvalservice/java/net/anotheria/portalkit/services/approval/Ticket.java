@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.common;
+package net.anotheria.portalkit.services.approval;
 
 import java.io.Serializable;
 
@@ -26,6 +26,8 @@ public class Ticket implements Serializable {
 	 * External ID.
 	 */
 	private String referenceId;
+
+	private long referenceClass;
 
 	public String getTicketId() {
 		return ticketId;

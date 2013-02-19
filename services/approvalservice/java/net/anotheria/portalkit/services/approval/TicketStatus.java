@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.common;
+package net.anotheria.portalkit.services.approval;
 
 /**
  * Describes states of tickets.
