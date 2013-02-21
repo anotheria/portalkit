@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import net.anotheria.portalkit.services.common.AccountId;
-
 /**
  * Represents list of accounts for specified account list.
  * 
