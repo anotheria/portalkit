@@ -41,7 +41,7 @@ public class AccountListData {
 	 * @param listName
 	 * @param targets
 	 */
-	public AccountListData(AccountId owner, String listName, Collection<AccountId> targets) {
+	public AccountListData(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
 		this.accountId = owner;
 		AccountList accL = new AccountList(listName);
 		accL.addAll(targets);
@@ -63,7 +63,7 @@ public class AccountListData {
 		return lists;
 	}
 
-	public void addAll(String listName, Collection<AccountId> targets) {
+	public void addAll(String listName, Collection<AccountIdAdditionalInfo> targets) {
 		AccountList accList = getLists().get(listName);
 		if (accList == null) {
 			accList = new AccountList(listName);
@@ -74,7 +74,7 @@ public class AccountListData {
 		}
 	}
 
-	public void removeAll(String listName, Collection<AccountId> targets) {
+	public void removeAll(String listName, Collection<AccountIdAdditionalInfo> targets) {
 		AccountList accList = getLists().get(listName);
 		if (accList != null) {
 			accList.removeAll(targets);

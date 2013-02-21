@@ -25,8 +25,8 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId accId = AccountId.generateNew();
 
-		List<AccountId> accIdList = service.getList(accId, "visited");
-//		System.out.println("got " + accIdList.size() + " records...");
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "visited");
+		// System.out.println("got " + accIdList.size() + " records...");
 		assertNotNull(accIdList);
 		assertTrue(accIdList.isEmpty());
 	}
@@ -36,12 +36,14 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId accId = AccountId.generateNew();
 
-		boolean res = service.addToList(accId, "contacts", AccountId.generateNew(), AccountId.generateNew(), AccountId.generateNew());
-//		System.out.println("got " + res + " after insert...");
+		boolean res = service.addToList(accId, "contacts", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"),
+				new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"));
+		// System.out.println("got " + res + " after insert...");
 		assertTrue(res);
 
-		List<AccountId> accIdList = service.getList(accId, "contacts");
-//		System.out.println("got " + accIdList.size() + " records after insert...");
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "contacts");
+		// System.out.println("got " + accIdList.size() +
+		// " records after insert...");
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
@@ -52,22 +54,19 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId accId = AccountId.generateNew();
 
-		AccountId[] accList = new AccountId[] { AccountId.generateNew(), AccountId.generateNew() };
+		AccountIdAdditionalInfo[] accList = new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second") };
 
-		boolean res = service.addToList(accId, "favourites", AccountId.generateNew(), accList);
+		boolean res = service.addToList(accId, "favourites", new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), accList);
 		assertTrue(res);
 
-		List<AccountId> accIdList = service.getList(accId, "favourites");
-//		System.out.println("got " + accIdList.size() + " records after insert...");
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "favourites");
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
 		res = service.removeFromList(accId, "favourites", Arrays.asList(accList));
-//		System.out.println("got " + res + " after removing...");
 		assertTrue(res);
 
 		accIdList = service.getList(accId, "favourites");
-//		System.out.println("got " + accIdList.size() + " records after remove...");
 		assertNotNull(accIdList);
 		assertEquals(1, accIdList.size());
 
@@ -80,14 +79,14 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId reverseAccId = AccountId.generateNew();
 
-		boolean res = service.addToList(accId, "visits", AccountId.generateNew(), AccountId.generateNew(), reverseAccId, AccountId.generateNew());
+		boolean res = service.addToList(accId, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(reverseAccId, ""));
 		assertTrue(res);
 
 		AccountId accId2 = AccountId.generateNew();
-		res = service.addToList(accId2, "visits", AccountId.generateNew(), AccountId.generateNew(), reverseAccId, AccountId.generateNew());
+		res = service.addToList(accId2, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(reverseAccId, ""));
 		assertTrue(res);
 
-		List<AccountId> accIdList = service.getList(accId, "visits");
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "visits");
 		assertNotNull(accIdList);
 		assertEquals(4, accIdList.size());
 

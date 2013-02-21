@@ -24,7 +24,7 @@ public class AccountList {
 	/**
 	 * Involved accounts.
 	 */
-	private List<AccountId> targets;
+	private List<AccountIdAdditionalInfo> targets;
 	
 	public AccountList(String listName) {
 		this.listName = listName;
@@ -34,9 +34,9 @@ public class AccountList {
 		return listName;
 	}
 
-	public List<AccountId> getTargets() {
+	public List<AccountIdAdditionalInfo> getTargets() {
 		if (targets == null) {
-			targets = Collections.synchronizedList(new ArrayList<AccountId>());
+			targets = Collections.synchronizedList(new ArrayList<AccountIdAdditionalInfo>());
 		}
 		return targets;
 	}
@@ -46,15 +46,15 @@ public class AccountList {
 	 * 
 	 * @param targets
 	 */
-	public void addAll(Collection<AccountId> targets) {
-		HashSet<AccountId> set = new HashSet<AccountId>(getTargets());
+	public void addAll(Collection<AccountIdAdditionalInfo> targets) {
+		HashSet<AccountIdAdditionalInfo> set = new HashSet<AccountIdAdditionalInfo>(getTargets());
 		getTargets().clear();
 		
 		set.addAll(targets);
 		getTargets().addAll(set);
 	}
 
-	public void removeAll(Collection<AccountId> targets) {
+	public void removeAll(Collection<AccountIdAdditionalInfo> targets) {
 		getTargets().removeAll(targets);
 	}
 

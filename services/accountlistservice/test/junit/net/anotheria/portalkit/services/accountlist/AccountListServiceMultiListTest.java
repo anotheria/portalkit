@@ -43,16 +43,16 @@ public class AccountListServiceMultiListTest {
 		assertNotNull(service.getList(owner, "friend"));
 		assertNotNull(service.getList(owner, "foe"));
 
-		service.addToList(owner, "friend", friend);
-		service.addToList(owner, "foe", foe);
+		service.addToList(owner, "friend", new AccountIdAdditionalInfo(friend, "friend"));
+		service.addToList(owner, "foe", new AccountIdAdditionalInfo(foe, "foe"));
 
 		assertNotNull(service.getList(owner, "friend"));
 		assertNotNull(service.getList(owner, "foe"));
 		assertEquals(1, service.getList(owner, "friend").size());
 		assertEquals(1, service.getList(owner, "foe").size());
 
-		service.addToList(owner, "friend", friend2);
-		service.addToList(owner, "foe", foe2);
+		service.addToList(owner, "friend", new AccountIdAdditionalInfo(friend2, "friend2"));
+		service.addToList(owner, "foe", new AccountIdAdditionalInfo(foe2, "foe2"));
 
 		assertNotNull(service.getList(owner, "friend"));
 		assertNotNull(service.getList(owner, "foe"));

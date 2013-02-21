@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.anotheria.portalkit.services.accountlist.AccountIdAdditionalInfo;
 import net.anotheria.portalkit.services.accountlist.AccountList;
 import net.anotheria.portalkit.services.accountlist.AccountListData;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceService;
@@ -24,7 +25,7 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 	private ConcurrentHashMap<AccountId, AccountListData> reverseStorage = new ConcurrentHashMap<AccountId, AccountListData>();
 
 	@Override
-	public boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
 		AccountListData accListData = storage.get(owner);
 		if (accListData == null) {
 			accListData = new AccountListData(owner, listName, targets);
@@ -44,8 +45,8 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 	}
 
 	@Override
-	public List<AccountId> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {
-		List<AccountId> accIdList = new ArrayList<AccountId>();
+	public List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {
+		List<AccountIdAdditionalInfo> accIdList = new ArrayList<AccountIdAdditionalInfo>();
 		AccountListData accListData = storage.get(owner);
 		if (accListData != null) {
 			AccountList accList = accListData.getLists().get(listName);
@@ -57,7 +58,7 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 	}
 
 	@Override
-	public boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+	public boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
 		AccountListData accListData = storage.get(owner);
 		if (accListData != null) {
 			AccountList accList = accListData.getLists().get(listName);
@@ -69,30 +70,30 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 		return true;
 	}
 
-	private void addReverseStorage(AccountId owner, String listName, Collection<AccountId> targets) {
-		for (AccountId target : targets) {
-			AccountListData accListData = reverseStorage.get(target);
+	private void addReverseStorage(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
+		for (AccountIdAdditionalInfo target : targets) {
+			AccountListData accListData = reverseStorage.get(target.getAccountId());
 			if (accListData != null) {
-				accListData.addAll(listName, Arrays.asList(new AccountId[] { owner }));
+				accListData.addAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
 			} else {
-				accListData = new AccountListData(target, listName, Arrays.asList(new AccountId[] { owner }));
-				reverseStorage.put(target, accListData);
+				accListData = new AccountListData(target.getAccountId(), listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
+				reverseStorage.put(target.getAccountId(), accListData);
 			}
 		}
 	}
 
-	private void removeReverseStorage(AccountId owner, String listName, Collection<AccountId> targets) {
-		for (AccountId target : targets) {
-			AccountListData accListData = reverseStorage.get(target);
+	private void removeReverseStorage(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
+		for (AccountIdAdditionalInfo target : targets) {
+			AccountListData accListData = reverseStorage.get(target.getAccountId());
 			if (accListData != null) {
-				accListData.removeAll(listName, Arrays.asList(new AccountId[] { owner }));
+				accListData.removeAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
 			}
 		}
 	}
 
 	@Override
-	public List<AccountId> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
-		List<AccountId> accIdList = new ArrayList<AccountId>();
+	public List<AccountIdAdditionalInfo> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
+		List<AccountIdAdditionalInfo> accIdList = new ArrayList<AccountIdAdditionalInfo>();
 		AccountListData accListData = reverseStorage.get(target);
 		if (accListData != null) {
 			AccountList accList = accListData.getLists().get(listName);

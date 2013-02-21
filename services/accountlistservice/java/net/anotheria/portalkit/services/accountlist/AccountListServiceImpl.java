@@ -42,7 +42,7 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListServiceException {
+	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException {
 		IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
 		try {
 			lock.lock();
@@ -65,8 +65,8 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public boolean addToList(AccountId owner, String listName, AccountId firstTarget, AccountId... moreTargets) throws AccountListServiceException {
-		List<AccountId> targets = new ArrayList<AccountId>();
+	public boolean addToList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets) throws AccountListServiceException {
+		List<AccountIdAdditionalInfo> targets = new ArrayList<AccountIdAdditionalInfo>();
 		targets.add(firstTarget);
 		if (moreTargets != null && moreTargets.length > 0) {
 			targets.addAll(Arrays.asList(moreTargets));
@@ -75,7 +75,7 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public List<AccountId> getList(AccountId owner, String listName) throws AccountListServiceException {
+	public List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListServiceException {
 		AccountListData fromCache = accountLists.get(owner);
 		if (fromCache != null) {
 			AccountList accList = fromCache.getLists().get(listName);
@@ -86,7 +86,7 @@ public class AccountListServiceImpl implements AccountListService {
 		IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
 		try {
 			lock.lock();
-			List<AccountId> fromPersistence = persistenceService.getList(owner, listName);
+			List<AccountIdAdditionalInfo> fromPersistence = persistenceService.getList(owner, listName);
 			AccountListData accListData = new AccountListData(owner, listName, fromPersistence);
 			accountLists.put(owner, accListData);
 			return fromPersistence;
@@ -98,9 +98,9 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public boolean removeFromList(AccountId owner, String listName, AccountId firstTarget, AccountId... moreTargets)
+	public boolean removeFromList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets)
 			throws AccountListServiceException {
-		List<AccountId> targets = new ArrayList<AccountId>();
+		List<AccountIdAdditionalInfo> targets = new ArrayList<AccountIdAdditionalInfo>();
 		targets.add(firstTarget);
 		if (moreTargets != null && moreTargets.length > 0) {
 			targets.addAll(Arrays.asList(moreTargets));
@@ -109,7 +109,7 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListServiceException {
+	public boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException {
 		IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
 		try {
 			lock.lock();
@@ -134,12 +134,12 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	@Override
-	public List<AccountId> reverseLookup(AccountId target, String listName) throws AccountListServiceException {
-		List<AccountId> res = null;
+	public List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException {
+		List<AccountIdAdditionalInfo> res = null;
 		try {
 			res = persistenceService.getReverseList(target, listName);
 			if (res == null) {
-				res = new ArrayList<AccountId>();
+				res = new ArrayList<AccountIdAdditionalInfo>();
 			}
 			return res;
 		} catch (AccountListPersistenceServiceException e) {

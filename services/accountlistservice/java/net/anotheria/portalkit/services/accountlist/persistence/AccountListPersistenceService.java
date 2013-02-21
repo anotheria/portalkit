@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.portalkit.services.accountlist.AccountIdAdditionalInfo;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
@@ -22,7 +23,7 @@ public interface AccountListPersistenceService extends Service {
 	 * @return
 	 * @throws AccountListPersistenceServiceException
 	 */
-	List<AccountId> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException;
+	List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException;
 
 	/**
 	 * Adds list of involved accounts into specified list of owner account.
@@ -33,7 +34,7 @@ public interface AccountListPersistenceService extends Service {
 	 * @return
 	 * @throws AccountListPersistenceServiceException
 	 */
-	boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException;
+	boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException;
 
 	/**
 	 * Removes list of involved accounts into specified list of owner account.
@@ -44,7 +45,8 @@ public interface AccountListPersistenceService extends Service {
 	 * @return
 	 * @throws AccountListPersistenceServiceException
 	 */
-	boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException;
+	boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
+			throws AccountListPersistenceServiceException;
 
 	/**
 	 * Gets list of owners that have list where target account is involved.
@@ -54,6 +56,6 @@ public interface AccountListPersistenceService extends Service {
 	 * @return
 	 * @throws AccountListPersistenceServiceException
 	 */
-	List<AccountId> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException;
+	List<AccountIdAdditionalInfo> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException;
 
 }

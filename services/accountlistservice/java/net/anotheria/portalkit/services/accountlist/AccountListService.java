@@ -16,7 +16,7 @@ public interface AccountListService extends Service {
 
 	/**
 	 * Adds an account to the specified list of the owner. If the target account
-	 * is already on the list, the operation does nothing.
+	 * is already in the list, the operation does nothing.
 	 * 
 	 * @param owner
 	 * @param listName
@@ -25,7 +25,7 @@ public interface AccountListService extends Service {
 	 * @return
 	 * @throws AccountListServiceException
 	 */
-	boolean addToList(AccountId owner, String listName, AccountId firstTarget, AccountId... moreTargets) throws AccountListServiceException;
+	boolean addToList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets) throws AccountListServiceException;
 
 	/**
 	 * Adds collection of accounts to the specified list of the owner. If the
@@ -36,7 +36,7 @@ public interface AccountListService extends Service {
 	 * @param target
 	 * @throws AccountListServiceException
 	 */
-	boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListServiceException;
+	boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
 
 	/**
 	 * Removes collection of accounts from list.
@@ -46,7 +46,7 @@ public interface AccountListService extends Service {
 	 * @param target
 	 * @throws AccountListServiceException
 	 */
-	boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListServiceException;
+	boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
 
 	/**
 	 * Removes one or multiple accounts from list.
@@ -58,7 +58,7 @@ public interface AccountListService extends Service {
 	 * @return
 	 * @throws AccountListServiceException
 	 */
-	boolean removeFromList(AccountId owner, String listName, AccountId firstTarget, AccountId... moreTarget) throws AccountListServiceException;
+	boolean removeFromList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTarget) throws AccountListServiceException;
 
 	/**
 	 * Returns the account list with given name.
@@ -68,7 +68,7 @@ public interface AccountListService extends Service {
 	 * @return
 	 * @throws AccountListServiceException
 	 */
-	List<AccountId> getList(AccountId owner, String listName) throws AccountListServiceException;
+	List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListServiceException;
 
 	/**
 	 * Returns the list of ownerIds that have added this account in lists with
@@ -79,6 +79,6 @@ public interface AccountListService extends Service {
 	 * @return
 	 * @throws AccountListServiceException
 	 */
-	List<AccountId> reverseLookup(AccountId target, String listName) throws AccountListServiceException;
+	List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException;
 
 }

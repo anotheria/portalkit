@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
+import net.anotheria.portalkit.services.accountlist.AccountIdAdditionalInfo;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceService;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -35,7 +36,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 	}
 
 	@Override
-	public List<AccountId> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {
+	public List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {
 		Connection conn = null;
 		try {
 			conn = getConnection();
@@ -50,7 +51,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 	}
 
 	@Override
-	public boolean addToList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
 		Connection conn = null;
 		try {
 			conn = getConnection();
@@ -65,7 +66,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 	}
 
 	@Override
-	public boolean removeFromList(AccountId owner, String listName, Collection<AccountId> targets) throws AccountListPersistenceServiceException {
+	public boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
 		Connection conn = null;
 		try {
 			conn = getConnection();
@@ -80,7 +81,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 	}
 
 	@Override
-	public List<AccountId> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
+	public List<AccountIdAdditionalInfo> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException {
 		Connection conn = null;
 		try {
 			conn = getConnection();
