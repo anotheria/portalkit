@@ -1,0 +1,27 @@
+{
+	//"driver": "org.postgresql.Driver",
+	//"url": "jdbc:postgresql://localhost/pk_test",
+	//"username": "another",
+
+	"test": {
+
+		"h2": {
+			"driver": "org.h2.jdbcx.JdbcDataSource",
+			"url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
+			"username": "another"
+
+		},
+
+		"psql": {
+			"driver": "org.postgresql.Driver",
+			"url": "jdbc:postgresql://localhost/pk_test",
+			"username": "another"
+		},
+
+		"hsqldb": {
+			"driver": "org.hsqldb.jdbcDriver",
+			"url": "jdbc:hsqldb:file:db/pk_test;shutdown=true",
+			"username": "SA"
+		}
+	}
+}

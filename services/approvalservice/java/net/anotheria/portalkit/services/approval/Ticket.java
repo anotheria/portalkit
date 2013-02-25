@@ -21,13 +21,17 @@ public class Ticket implements Serializable {
 	 * Ticket status.
 	 */
 	private TicketStatus status;
-	
+
 	/**
 	 * External ID.
 	 */
 	private String referenceId;
 
-	private long referenceClass;
+	/**
+	 * Reference type.
+	 */
+	// private ReferenceType referenceType;
+	private long referenceType;
 
 	public String getTicketId() {
 		return ticketId;
@@ -53,12 +57,28 @@ public class Ticket implements Serializable {
 		this.referenceId = referenceId;
 	}
 
+	// public ReferenceType getReferenceType() {
+	// return referenceType;
+	// }
+	//
+	// public void setReferenceType(ReferenceType referenceType) {
+	// this.referenceType = referenceType;
+	// }
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((ticketId == null) ? 0 : ticketId.hashCode());
 		return result;
+	}
+
+	public long getReferenceType() {
+		return referenceType;
+	}
+
+	public void setReferenceType(long referenceType) {
+		this.referenceType = referenceType;
 	}
 
 	@Override
@@ -80,7 +100,7 @@ public class Ticket implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ticket [ticketId=" + ticketId + ", status=" + status + ", referenceId=" + referenceId + "]";
+		return "Ticket [ticketId=" + ticketId + ", status=" + status + ", referenceId=" + referenceId + ", referenceType=" + referenceType + "]";
 	}
 
 }

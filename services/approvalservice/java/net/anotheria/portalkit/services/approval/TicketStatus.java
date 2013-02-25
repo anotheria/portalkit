@@ -1,13 +1,22 @@
 package net.anotheria.portalkit.services.approval;
 
 /**
- * Describes states of tickets.
+ * Describes statuses of tickets.
  * 
  * @author dagafonov
  * 
  */
 public enum TicketStatus {
 
-	APPROVED, DISAPPROVED, IN_APPROVAL;
+	NONE, APPROVED, DISAPPROVED, IN_APPROVAL;
+
+	public static TicketStatus find(String s) {
+		for (TicketStatus ts : values()) {
+			if (ts.name().equalsIgnoreCase(s)) {
+				return ts;
+			}
+		}
+		return NONE;
+	}
 
 }
