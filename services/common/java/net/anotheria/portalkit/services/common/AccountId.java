@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.common;
 
+import java.io.Serializable;
+
 import net.anotheria.portalkit.services.common.id.IdGenerator;
 import net.anotheria.util.StringUtils;
-
-import java.io.Serializable;
 
 /**
  * Account unique identifier.
@@ -24,6 +24,12 @@ public class AccountId implements Serializable, Cloneable {
 
 	/**
 	 * Default constructor.
+	 */
+	public AccountId() {
+	}
+
+	/**
+	 * Default constructor.
 	 * 
 	 * @param aInternalId
 	 *            internal id
@@ -32,7 +38,14 @@ public class AccountId implements Serializable, Cloneable {
 		if (StringUtils.isEmpty(aInternalId))
 			throw new IllegalArgumentException("aInternalId is empty.");
 
-		internalId = aInternalId;
+		this.internalId = aInternalId;
+	}
+
+	public void setInternalId(final String aInternalId) {
+		if (StringUtils.isEmpty(aInternalId))
+			throw new IllegalArgumentException("aInternalId is empty.");
+
+		this.internalId = aInternalId;
 	}
 
 	public String getInternalId() {
@@ -65,9 +78,9 @@ public class AccountId implements Serializable, Cloneable {
 
 	@Override
 	public AccountId clone() {
-		try{
+		try {
 			return (AccountId) super.clone();
-		}catch(CloneNotSupportedException e){
+		} catch (CloneNotSupportedException e) {
 			throw new AssertionError("Clone not supported but it should be in AccountId");
 		}
 
