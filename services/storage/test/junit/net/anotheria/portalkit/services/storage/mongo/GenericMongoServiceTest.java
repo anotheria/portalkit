@@ -1,8 +1,19 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import net.anotheria.anoprise.metafactory.MetaFactory;
+import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.storage.AbstractStorageServiceTest;
+import net.anotheria.portalkit.services.storage.StorageService;
+import net.anotheria.portalkit.services.storage.StorageServiceFactory;
+import net.anotheria.portalkit.services.storage.StorageType;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
+import net.anotheria.portalkit.services.storage.inmemory.GenericInMemoryService;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
@@ -11,88 +22,101 @@ import net.anotheria.portalkit.services.storage.query.QueryBuilder;
 import net.anotheria.portalkit.services.storage.query.SortingQuery;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
 
-import org.apache.log4j.Logger;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Ignore;
-
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import org.junit.Test;
 
 /**
  * {@link GenericMongoService} test.
  * 
  * @author Alexandr Bolbat
  */
-@Ignore
-public class GenericMongoServiceTest {
+public class GenericMongoServiceTest extends AbstractStorageServiceTest {
 
 	/**
-	 * {@link Logger} instance.
+	 * {@link GenericInMemoryService} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GenericMongoServiceTest.class);
+	private StorageService<TestVO> storage;
 
 	/**
-	 * For development purposes.
+	 * Clean-up.
 	 * 
-	 * @param args
+	 * @throws MetaFactoryException
+	 */
+	@SuppressWarnings("unchecked")
+	@Before
+	public void before() throws MetaFactoryException {
+		Map<String, Serializable> factoryParameters = new HashMap<String, Serializable>();
+		factoryParameters.put(StorageServiceFactory.PARAMETER_STORAGE_TYPE, StorageType.NOSQL_MONGO_GENERIC);
+		factoryParameters.put(GenericMongoServiceFactory.PARAMETER_ENTITY_CLASS, TestVO.class);
+		String extension = "MongoPersistence";
+
+		MetaFactory.addParameterizedFactoryClass(StorageService.class, extension, StorageServiceFactory.class, factoryParameters);
+
+		this.storage = MetaFactory.get(StorageService.class, extension);
+	}
+
+	/**
+	 * Initialization.
+	 */
+	@After
+	public void after() {
+		this.storage = null;
+	}
+
+	/**
+	 * Complex test.
+	 * 
 	 * @throws StorageException
 	 */
-	public static void main(String... args) throws StorageException {
-		GenericMongoServiceImpl<TestVO> service = new GenericMongoServiceImpl<TestVO>(TestVO.class);
-
-		// retrieving meta information
-		DB database = service.getMongoClient().getDB(service.getDBName());
-		for (String collectionName : database.getCollectionNames()) {
-			DBCollection collection = database.getCollection(collectionName);
-			LOGGER.info(collectionName + "[" + collection.getCount() + "]");
-			DBCursor cursor = collection.find();
-			while (cursor.hasNext()) {
-				LOGGER.info("\t" + cursor.next());
-			}
-		}
-
-		// creating new entity
-		TestVO toCreate = new TestVO();
-		toCreate.setId(UUID.randomUUID().toString());
+	@Test
+	@Ignore
+	public void complexTest() throws StorageException {
+		// preparing new entity
+		TestVO toCreate = new TestVO(UUID.randomUUID().toString());
 		toCreate.setIntValue(123);
 		toCreate.setBooleanValue(true);
-		LOGGER.info("");
-		LOGGER.info("Created: " + service.create(toCreate));
+
+		// creating new entity
+		TestVO created = storage.create(toCreate);
+		validateEntity(toCreate, created);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(created, storage.findAll());
 
 		// updating entity
-		toCreate.setIntValue(321);
-		LOGGER.info("");
-		LOGGER.info("Updated: " + service.update(toCreate));
+		TestVO toUpdate = created;
+		toUpdate.setIntValue(321);
+		TestVO updated = storage.update(toUpdate);
+		validateEntity(created, updated);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(updated, storage.findAll());
 
 		// saving entity
-		TestVO subObject = new TestVO();
-		subObject.setId(UUID.randomUUID().toString());
+		TestVO subObject = new TestVO(UUID.randomUUID().toString());
 		subObject.setIntValue(456);
-		toCreate.setSubObject(subObject);
-		LOGGER.info("");
-		LOGGER.info("Saved: " + service.save(toCreate));
+		toUpdate = updated;
+		toUpdate.setSubObject(subObject);
+		updated = storage.save(toUpdate);
+		validateEntity(toUpdate, updated);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(updated, storage.findAll());
 
 		// reading entities by query
 		// simple query1
 		Query query1 = QueryBuilder.create().add(EqualQuery.create("intValue", 123)).build();
-		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query1 + "]: " + service.find(query1));
+		List<TestVO> queryResult1 = storage.find(query1);
+		validateAll(null, queryResult1);
 
 		// simple query2
 		EqualQuery equalQuery2 = EqualQuery.create("intValue", 321);
 		SortingQuery sorting2 = SortingQuery.create("booleanValue");
 		Query query2 = QueryBuilder.create().add(equalQuery2).setLimit(1).setOffset(0).setSorting(sorting2).build();
-		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query2 + "]: " + service.find(query2));
+		List<TestVO> queryResult2 = storage.find(query2);
+		validateAll(updated, queryResult2);
 
 		// simple query3
 		EqualQuery equalQuery31 = EqualQuery.create("intValue", 321);
@@ -100,15 +124,14 @@ public class GenericMongoServiceTest {
 		SortingQuery sorting3 = SortingQuery.create("booleanValue");
 		CompositeQuery compositeQuery = CompositeQuery.create(CompositeModifier.OR, equalQuery31, equalQuery32);
 		Query query3 = QueryBuilder.create().add(compositeQuery).setLimit(1).setOffset(0).setSorting(sorting3).build();
-		LOGGER.info("");
-		LOGGER.info("---> Find by query[" + query3 + "]: " + service.find(query3));
+		List<TestVO> queryResult3 = storage.find(query3);
+		validateAll(updated, queryResult3);
 
 		// removing entity
-		LOGGER.info("");
-		LOGGER.info("Deleted: " + service.delete(toCreate.getId()));
+		TestVO deleted = storage.delete(toCreate.getId());
+		validateEntity(updated, deleted);
 
 		// reading all entities
-		LOGGER.info("---> Find all: " + service.findAll());
+		validateAll(null, storage.findAll());
 	}
-
 }

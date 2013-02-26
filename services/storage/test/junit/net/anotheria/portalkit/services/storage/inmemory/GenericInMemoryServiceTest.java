@@ -1,13 +1,20 @@
 package net.anotheria.portalkit.services.storage.inmemory;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import net.anotheria.anoprise.metafactory.MetaFactory;
+import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.storage.AbstractStorageServiceTest;
+import net.anotheria.portalkit.services.storage.StorageService;
+import net.anotheria.portalkit.services.storage.StorageServiceFactory;
+import net.anotheria.portalkit.services.storage.StorageType;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,19 +23,29 @@ import org.junit.Test;
  * 
  * @author Alexandr Bolbat
  */
-public class GenericInMemoryServiceTest {
+public class GenericInMemoryServiceTest extends AbstractStorageServiceTest {
 
 	/**
 	 * {@link GenericInMemoryService} instance.
 	 */
-	private GenericInMemoryService<TestVO> storage;
+	private StorageService<TestVO> storage;
 
 	/**
 	 * Clean-up.
+	 * 
+	 * @throws MetaFactoryException
 	 */
+	@SuppressWarnings("unchecked")
 	@Before
-	public void before() {
-		this.storage = new GenericInMemoryServiceImpl<TestVO>("id");
+	public void before() throws MetaFactoryException {
+		Map<String, Serializable> factoryParameters = new HashMap<String, Serializable>();
+		factoryParameters.put(StorageServiceFactory.PARAMETER_STORAGE_TYPE, StorageType.IN_MEMORY_GENERIC);
+		factoryParameters.put(GenericInMemoryServiceFactory.PARAMETER_ENTITY_KEY_FIELD_NAME, "id");
+		String extension = "InMemoryService";
+
+		MetaFactory.addParameterizedFactoryClass(StorageService.class, extension, StorageServiceFactory.class, factoryParameters);
+
+		this.storage = MetaFactory.get(StorageService.class, extension);
 	}
 
 	/**
@@ -84,34 +101,6 @@ public class GenericInMemoryServiceTest {
 
 		// reading all entities
 		validateAll(null, storage.findAll());
-	}
-
-	/**
-	 * Validating two entities between each other.
-	 * 
-	 * @param original
-	 * @param toValidate
-	 */
-	private static void validateEntity(final TestVO original, final TestVO toValidate) {
-		Assert.assertNotNull("Can't be null.", toValidate);
-		Assert.assertNotSame("Can't be the same.", original, toValidate);
-		Assert.assertEquals("Id should be the same.", original.getId(), toValidate.getId());
-		Assert.assertEquals("intValue should be the same.", original.getIntValue(), toValidate.getIntValue());
-		Assert.assertEquals("booleanValue should be the same.", original.isBooleanValue(), toValidate.isBooleanValue());
-		Assert.assertEquals("subObject should be the same.", original.getSubObject(), toValidate.getSubObject());
-	}
-
-	/**
-	 * Validate all entities.
-	 * 
-	 * @param original
-	 * @param entities
-	 */
-	private static void validateAll(final TestVO original, final List<TestVO> entities) {
-		Assert.assertNotNull("Can't be null.", entities);
-		Assert.assertEquals("Results amount should be the same.", original != null ? 1 : 0, entities.size());
-		if (original != null)
-			validateEntity(original, entities.get(0));
 	}
 
 }

@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.storage;
 
 import java.io.Serializable;
 
+import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.storage.query.BasicQueryStorageService;
 
 /**
@@ -12,6 +13,6 @@ import net.anotheria.portalkit.services.storage.query.BasicQueryStorageService;
  * @param <T>
  */
 public interface StorageService<T extends Serializable> extends BasicOperationsStorageService<T>, BasicListOperationsStorageService<T>,
-		BasicQueryStorageService<T> {
+		BasicQueryStorageService<T>, Service {
 
 }
