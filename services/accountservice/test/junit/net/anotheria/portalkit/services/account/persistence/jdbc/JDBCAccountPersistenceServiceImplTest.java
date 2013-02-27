@@ -18,8 +18,6 @@ import static org.junit.Assert.assertNull;
  */
 abstract class JDBCAccountPersistenceServiceImplTest {
 
-	public static final String HSQL = "hsqldb";
-
 	protected JDBCAccountPersistenceServiceImpl getService(String environment) throws Exception{
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", environment));
 		JDBCAccountPersistenceServiceImpl service = new JDBCAccountPersistenceServiceImpl();
