@@ -16,4 +16,16 @@ public final class EmptyRecord extends Record {
 	public boolean isEmpty() {
 		return true;
 	}
+
+	@Override
+	public String getValueAsString() {
+		return "";
+	}
+
+	//TODO this is actually to be discussed, because returning different type from expected in a number of cases.
+	//however, actually asking type of a non existing element is already an error ;-).
+	@Override
+	public RecordType getType() {
+		return RecordType.NONE;
+	}
 }

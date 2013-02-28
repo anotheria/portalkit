@@ -38,7 +38,7 @@ public class RecordServiceImpl implements RecordService{
 				//TODO retrieve from service
 
 				//TODO ok for now just to create in-cache-version
-				RecordCollection newCollection = new RecordCollection();
+				RecordCollection newCollection = new RecordCollection(collectionId);
 				recordCollectionCache.put(ck, newCollection);
 				collection = newCollection;
 			}
@@ -47,6 +47,20 @@ public class RecordServiceImpl implements RecordService{
 			lock.unlock();
 		}
 	}
+
+	private void saveRecordCollection(String ownerId, RecordCollection collection) {
+		CacheKey ck = new CacheKey(ownerId, collection.getCollectionId());
+		IdBasedLock lock = idBasedLockManager.obtainLock(ck);
+		lock.lock();
+		try{
+			//...save to service
+			//overwrite cache.. (needed?).
+			recordCollectionCache.put(ck, collection);
+		}finally{
+			lock.unlock();
+		}
+	}
+
 
 	@Override
 	public Record getRecord(String ownerId, String collectionId, String recordId) throws RecordServiceException {
@@ -61,32 +75,37 @@ public class RecordServiceImpl implements RecordService{
 
 	@Override
 	public RecordSet getRecordSet(String ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		RecordCollection collection = getRecordCollection(ownerId, collectionId);
+		return collection.getRecordSet(recordIds);
 	}
 
 	@Override
 	public RecordSet getRecordSet(AccountId ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException {
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return getRecordSet(ownerId.getInternalId(), collectionId, recordIds);
 	}
 
 	@Override
 	public void setRecord(String ownerId, String collectionId, Record record) throws RecordServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		RecordCollection collection = getRecordCollection(ownerId, collectionId);
+		collection.setRecord(record);
+		saveRecordCollection(ownerId, collection);
 	}
 
 	@Override
 	public void setRecord(AccountId ownerId, String collectionId, Record record) throws RecordServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		setRecord(ownerId.getInternalId(), collectionId, record);
 	}
 
 	@Override
 	public void setRecords(AccountId ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		setRecords(ownerId.getInternalId(), collectionId, recordSet);
 	}
 
 	@Override
 	public void setRecords(String ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException {
-		//To change body of implemented methods use File | Settings | File Templates.
+		RecordCollection collection = getRecordCollection(ownerId, collectionId);
+		collection.setRecords(recordSet.getRecords());
+		saveRecordCollection(ownerId, collection);
 	}
 
 	@Override
@@ -138,6 +157,10 @@ public class RecordServiceImpl implements RecordService{
 			int result = ownerId.hashCode();
 			result = 31 * result + collectionId.hashCode();
 			return result;
+		}
+
+		@Override public String toString(){
+			return ownerId+"#"+collectionId;
 		}
 	}
 }
