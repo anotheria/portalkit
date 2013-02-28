@@ -248,12 +248,13 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	}
 
 	public void cleanupFromUnitTests() throws Exception {
-		Connection conn = getConnection();
-		try {
-			for (DAO d : daos)
+		for (DAO d : daos) {
+			Connection conn = getConnection();
+			try {
 				d.cleanupFromUnitTests(conn);
-		} finally {
-			JDBCUtil.close(conn);
+			} finally {
+				JDBCUtil.close(conn);
+			}
 		}
 	}
 
