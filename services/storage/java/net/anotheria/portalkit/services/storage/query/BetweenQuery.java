@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.storage.query;
 
-import net.anotheria.portalkit.services.storage.query.value.IntegerValue;
-import net.anotheria.portalkit.services.storage.query.value.LongValue;
+import net.anotheria.portalkit.services.storage.query.value.NumberValue;
 import net.anotheria.portalkit.services.storage.query.value.PairValues;
+import net.anotheria.portalkit.services.storage.util.NumberUtils;
 
 /**
  * {@link BetweenQuery}.
@@ -50,7 +50,7 @@ public final class BetweenQuery extends AbstractQuery implements Query {
 	}
 
 	/**
-	 * Create new instance of {@link BetweenQuery} with {@link Integer} values.
+	 * Create new instance of {@link BetweenQuery} with {@link Number} values.
 	 * 
 	 * @param fieldName
 	 *            field name
@@ -60,12 +60,12 @@ public final class BetweenQuery extends AbstractQuery implements Query {
 	 *            second value
 	 * @return {@link BetweenQuery}
 	 */
-	public static BetweenQuery create(final String fieldName, final Integer firstValue, final Integer secondValue) {
+	public static BetweenQuery create(final String fieldName, final Number firstValue, final Integer secondValue) {
 		return create(fieldName, firstValue, secondValue, BetweenModifier.DEFAULT);
 	}
 
 	/**
-	 * Create new instance of {@link BetweenQuery} with {@link Integer} values.
+	 * Create new instance of {@link BetweenQuery} with {@link Number} values.
 	 * 
 	 * @param fieldName
 	 *            field name
@@ -77,41 +77,11 @@ public final class BetweenQuery extends AbstractQuery implements Query {
 	 *            query modifier
 	 * @return {@link BetweenQuery}
 	 */
-	public static BetweenQuery create(final String fieldName, final Integer firstValue, final Integer secondValue, final BetweenModifier aModifier) {
-		PairValues value = PairValues.create(IntegerValue.create(firstValue), IntegerValue.create(secondValue));
-		return new BetweenQuery(fieldName, value, aModifier);
-	}
+	public static BetweenQuery create(final String fieldName, final Number firstValue, final Number secondValue, final BetweenModifier aModifier) {
+		if (NumberUtils.compare(firstValue, secondValue) == 1)
+			throw new IllegalArgumentException("firstValue[" + firstValue + "] can't be more than secondValue[" + secondValue + "].");
 
-	/**
-	 * Create new instance of {@link BetweenQuery} with {@link Long} values.
-	 * 
-	 * @param fieldName
-	 *            field name
-	 * @param firstValue
-	 *            first value
-	 * @param secondValue
-	 *            second value
-	 * @return {@link BetweenQuery}
-	 */
-	public static BetweenQuery create(final String fieldName, final Long firstValue, final Long secondValue) {
-		return create(fieldName, firstValue, secondValue, BetweenModifier.DEFAULT);
-	}
-
-	/**
-	 * Create new instance of {@link BetweenQuery} with {@link Long} values.
-	 * 
-	 * @param fieldName
-	 *            field name
-	 * @param firstValue
-	 *            first value
-	 * @param secondValue
-	 *            second value
-	 * @param aModifier
-	 *            query modifier
-	 * @return {@link BetweenQuery}
-	 */
-	public static BetweenQuery create(final String fieldName, final Long firstValue, final Long secondValue, final BetweenModifier aModifier) {
-		PairValues value = PairValues.create(LongValue.create(firstValue), LongValue.create(secondValue));
+		PairValues value = PairValues.create(NumberValue.create(firstValue), NumberValue.create(secondValue));
 		return new BetweenQuery(fieldName, value, aModifier);
 	}
 

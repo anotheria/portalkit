@@ -7,15 +7,16 @@ import net.anotheria.portalkit.services.storage.query.BetweenQuery;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
-import net.anotheria.portalkit.services.storage.query.LessThenModifier;
-import net.anotheria.portalkit.services.storage.query.LessThenQuery;
+import net.anotheria.portalkit.services.storage.query.LessThanModifier;
+import net.anotheria.portalkit.services.storage.query.LessThanQuery;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
-import net.anotheria.portalkit.services.storage.query.MoreThenModifier;
-import net.anotheria.portalkit.services.storage.query.MoreThenQuery;
+import net.anotheria.portalkit.services.storage.query.MoreThanModifier;
+import net.anotheria.portalkit.services.storage.query.MoreThanQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.SortingQuery;
 import net.anotheria.portalkit.services.storage.query.SortingType;
+import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -75,11 +76,11 @@ public final class MongoQueryMapper {
 		if (query instanceof EqualQuery)
 			return map(EqualQuery.class.cast(query));
 
-		if (query instanceof MoreThenQuery)
-			return map(MoreThenQuery.class.cast(query));
+		if (query instanceof MoreThanQuery)
+			return map(MoreThanQuery.class.cast(query));
 
-		if (query instanceof LessThenQuery)
-			return map(LessThenQuery.class.cast(query));
+		if (query instanceof LessThanQuery)
+			return map(LessThanQuery.class.cast(query));
 
 		if (query instanceof BetweenQuery)
 			return map(BetweenQuery.class.cast(query));
@@ -104,32 +105,32 @@ public final class MongoQueryMapper {
 	}
 
 	/**
-	 * Map {@link MoreThenQuery} to mongo query format.
+	 * Map {@link MoreThanQuery} to mongo query format.
 	 * 
 	 * @param query
-	 *            {@link MoreThenQuery}, can't be <code>null</code>
+	 *            {@link MoreThanQuery}, can't be <code>null</code>
 	 * @return {@link BasicDBObject}
 	 */
-	public static BasicDBObject map(final MoreThenQuery query) {
+	public static BasicDBObject map(final MoreThanQuery query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");
 
-		String modifier = query.getModifier() == MoreThenModifier.MORE ? QueryOperators.GT : QueryOperators.GTE;
+		String modifier = query.getModifier() == MoreThanModifier.MORE ? QueryOperators.GT : QueryOperators.GTE;
 		return new BasicDBObject(query.getFieldName(), new BasicDBObject(modifier, query.getQueryValue().getValue()));
 	}
 
 	/**
-	 * Map {@link LessThenQuery} to mongo query format.
+	 * Map {@link LessThanQuery} to mongo query format.
 	 * 
 	 * @param query
-	 *            {@link LessThenQuery}, can't be <code>null</code>
+	 *            {@link LessThanQuery}, can't be <code>null</code>
 	 * @return {@link BasicDBObject}
 	 */
-	public static BasicDBObject map(final LessThenQuery query) {
+	public static BasicDBObject map(final LessThanQuery query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");
 
-		String modifier = query.getModifier() == LessThenModifier.LESS ? QueryOperators.LT : QueryOperators.LTE;
+		String modifier = query.getModifier() == LessThanModifier.LESS ? QueryOperators.LT : QueryOperators.LTE;
 		return new BasicDBObject(query.getFieldName(), new BasicDBObject(modifier, query.getQueryValue().getValue()));
 	}
 
@@ -167,66 +168,15 @@ public final class MongoQueryMapper {
 	}
 
 	/**
-	 * Get {@link OffsetQuery} from {@link Query}.
+	 * Get Mongo sorting query in {@link BasicDBObject} representation from {@link Query}.
 	 * 
 	 * @param query
 	 *            {@link Query}
-	 * @return {@link OffsetQuery} or <code>null</code>
-	 */
-	public static OffsetQuery getOffset(final Query query) {
-		if (query instanceof OffsetQuery)
-			return OffsetQuery.class.cast(query);
-
-		if (query instanceof CompositeQuery) {
-			CompositeQuery compositeQuery = CompositeQuery.class.cast(query);
-			for (Query innerQuery : compositeQuery.getQueryValue().getQueries())
-				if (innerQuery instanceof OffsetQuery)
-					return OffsetQuery.class.cast(innerQuery);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get {@link LimitQuery} from {@link Query}.
-	 * 
-	 * @param query
-	 *            {@link Query}
-	 * @return {@link LimitQuery} or <code>null</code>
-	 */
-	public static LimitQuery getLimit(final Query query) {
-		if (query instanceof LimitQuery)
-			return LimitQuery.class.cast(query);
-
-		if (query instanceof CompositeQuery) {
-			CompositeQuery compositeQuery = CompositeQuery.class.cast(query);
-			for (Query innerQuery : compositeQuery.getQueryValue().getQueries())
-				if (innerQuery instanceof LimitQuery)
-					return LimitQuery.class.cast(innerQuery);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Get {@link SortingQuery} from {@link Query}.
-	 * 
-	 * @param query
-	 *            {@link Query}
-	 * @return {@link SortingQuery} or <code>null</code>
+	 * @return {@link BasicDBObject} or <code>null</code>
 	 */
 	public static BasicDBObject getSorting(final Query query) {
-		if (query instanceof SortingQuery)
-			return map(SortingQuery.class.cast(query));
-
-		if (query instanceof CompositeQuery) {
-			CompositeQuery compositeQuery = CompositeQuery.class.cast(query);
-			for (Query innerQuery : compositeQuery.getQueryValue().getQueries())
-				if (innerQuery instanceof SortingQuery)
-					return map(SortingQuery.class.cast(innerQuery));
-		}
-
-		return null;
+		SortingQuery sortingQuery = QueryUtils.getSorting(query);
+		return sortingQuery != null ? map(sortingQuery) : null;
 	}
 
 }

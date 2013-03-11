@@ -1,5 +1,5 @@
 /**
- * Query interface: values implementation.
+ * Query values interface and general implementation.
  * 
  * @author Alexandr Bolbat
  */

@@ -14,6 +14,7 @@ import net.anotheria.portalkit.services.storage.mongo.util.MongoUtil;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
+import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -36,7 +37,6 @@ import com.mongodb.util.JSON;
  * 
  * @param <T>
  */
-// TODO Right logging should be added later
 public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMongoService implements GenericMongoService<T> {
 
 	/**
@@ -180,7 +180,8 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			if (entity != null)
 				throw new EntityAlreadyExistStorageException(uid);
 		} catch (EntityNotFoundStorageException e) {
-			// ignored
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("create(" + toCreate + ") expected exception. Message[" + e.getMessage() + "].");
 		}
 
 		try {
@@ -251,7 +252,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				result.add(read(uid));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("read('uidList') skipping read(" + uid + ").", e);
 			}
 
 		return result;
@@ -267,7 +268,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				result.add(save(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("save('toSaveList') skipping save(" + entity + ").", e);
 			}
 
 		return result;
@@ -283,7 +284,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				result.add(create(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("create('toCreateList') skipping create(" + entity + ").", e);
 			}
 
 		return result;
@@ -299,7 +300,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				result.add(update(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("update('toUpdateList') skipping update(" + entity + ").", e);
 			}
 
 		return result;
@@ -315,7 +316,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				result.add(delete(uid));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("delete('uidList') skipping delete(" + uid + ").", e);
 			}
 
 		return result;
@@ -374,11 +375,11 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			if (sorting != null)
 				rawResult.sort(sorting);
 
-			OffsetQuery offset = MongoQueryMapper.getOffset(query);
+			OffsetQuery offset = QueryUtils.getOffset(query);
 			if (offset != null)
 				rawResult.skip(offset.getQueryValue().getValue());
 
-			LimitQuery limit = MongoQueryMapper.getLimit(query);
+			LimitQuery limit = QueryUtils.getLimit(query);
 			if (limit != null)
 				rawResult.limit(limit.getQueryValue().getValue());
 

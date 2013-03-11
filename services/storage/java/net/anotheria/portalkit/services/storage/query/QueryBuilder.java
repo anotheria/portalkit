@@ -73,13 +73,13 @@ public final class QueryBuilder {
 	}
 
 	/**
-	 * Add {@link LessThenQuery}.
+	 * Add {@link LessThanQuery}.
 	 * 
 	 * @param query
-	 *            {@link LessThenQuery}, can't be null
+	 *            {@link LessThanQuery}, can't be null
 	 * @return {@link QueryBuilder}
 	 */
-	public QueryBuilder add(final LessThenQuery query) {
+	public QueryBuilder add(final LessThanQuery query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");
 
@@ -88,13 +88,13 @@ public final class QueryBuilder {
 	}
 
 	/**
-	 * Add {@link MoreThenQuery}.
+	 * Add {@link MoreThanQuery}.
 	 * 
 	 * @param query
-	 *            {@link MoreThenQuery}, can't be null
+	 *            {@link MoreThanQuery}, can't be null
 	 * @return {@link QueryBuilder}
 	 */
-	public QueryBuilder add(final MoreThenQuery query) {
+	public QueryBuilder add(final MoreThanQuery query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");
 
@@ -152,12 +152,12 @@ public final class QueryBuilder {
 	 * Set results limit.
 	 * 
 	 * @param limit
-	 *            result entities limit, can't be less then 0
+	 *            result entities limit, can't be less than 0
 	 * @return {@link QueryBuilder}
 	 */
 	public QueryBuilder setLimit(final int limit) {
 		if (limit < 0)
-			throw new IllegalArgumentException("limit argument can't be less then 0.");
+			throw new IllegalArgumentException("limit argument can't be less than 0.");
 
 		rootQuery.add(LimitQuery.create(limit));
 		return this;
@@ -167,12 +167,12 @@ public final class QueryBuilder {
 	 * Set results offset.
 	 * 
 	 * @param offset
-	 *            result entities offset, can't be less then 0
+	 *            result entities offset, can't be less than 0
 	 * @return {@link QueryBuilder}
 	 */
 	public QueryBuilder setOffset(final int offset) {
 		if (offset < 0)
-			throw new IllegalArgumentException("offset argument can't be less then 0.");
+			throw new IllegalArgumentException("offset argument can't be less than 0.");
 
 		rootQuery.add(OffsetQuery.create(offset));
 		return this;

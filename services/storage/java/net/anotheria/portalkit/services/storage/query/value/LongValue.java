@@ -5,17 +5,12 @@ package net.anotheria.portalkit.services.storage.query.value;
  * 
  * @author Alexandr Bolbat
  */
-public class LongValue implements QueryValue {
+public class LongValue extends NumberValue {
 
 	/**
 	 * Generated SerialVersionUID.
 	 */
 	private static final long serialVersionUID = -7671714214567119935L;
-
-	/**
-	 * Value.
-	 */
-	private final Long value;
 
 	/**
 	 * Default constructor.
@@ -24,12 +19,12 @@ public class LongValue implements QueryValue {
 	 *            value
 	 */
 	public LongValue(final Long aValue) {
-		this.value = aValue;
+		super(aValue);
 	}
 
 	@Override
 	public Long getValue() {
-		return value;
+		return Long.class.cast(super.getValue());
 	}
 
 	/**
@@ -45,7 +40,7 @@ public class LongValue implements QueryValue {
 
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(getValue());
 	}
 
 }

@@ -1,17 +1,10 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.storage.AbstractStorageServiceTest;
 import net.anotheria.portalkit.services.storage.StorageService;
-import net.anotheria.portalkit.services.storage.StorageServiceFactory;
-import net.anotheria.portalkit.services.storage.StorageType;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.inmemory.GenericInMemoryService;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
@@ -24,7 +17,6 @@ import net.anotheria.portalkit.services.storage.shared.TestVO;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -32,7 +24,7 @@ import org.junit.Test;
  * 
  * @author Alexandr Bolbat
  */
-public class GenericMongoServiceTest extends AbstractStorageServiceTest {
+public class GenericMongoServiceTestIntegration extends AbstractStorageServiceTest {
 
 	/**
 	 * {@link GenericInMemoryService} instance.
@@ -41,20 +33,10 @@ public class GenericMongoServiceTest extends AbstractStorageServiceTest {
 
 	/**
 	 * Clean-up.
-	 * 
-	 * @throws MetaFactoryException
 	 */
-	@SuppressWarnings("unchecked")
 	@Before
-	public void before() throws MetaFactoryException {
-		Map<String, Serializable> factoryParameters = new HashMap<String, Serializable>();
-		factoryParameters.put(StorageServiceFactory.PARAMETER_STORAGE_TYPE, StorageType.NOSQL_MONGO_GENERIC);
-		factoryParameters.put(GenericMongoServiceFactory.PARAMETER_ENTITY_CLASS, TestVO.class);
-		String extension = "MongoPersistence";
-
-		MetaFactory.addParameterizedFactoryClass(StorageService.class, extension, StorageServiceFactory.class, factoryParameters);
-
-		this.storage = MetaFactory.get(StorageService.class, extension);
+	public void before() {
+		this.storage = new GenericMongoServiceImpl<TestVO>(TestVO.class);
 	}
 
 	/**
@@ -71,7 +53,6 @@ public class GenericMongoServiceTest extends AbstractStorageServiceTest {
 	 * @throws StorageException
 	 */
 	@Test
-	@Ignore
 	public void complexTest() throws StorageException {
 		// preparing new entity
 		TestVO toCreate = new TestVO(UUID.randomUUID().toString());
@@ -134,4 +115,5 @@ public class GenericMongoServiceTest extends AbstractStorageServiceTest {
 		// reading all entities
 		validateAll(null, storage.findAll());
 	}
+
 }

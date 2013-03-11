@@ -6,6 +6,7 @@ import net.anotheria.anoprise.metafactory.AbstractParameterizedServiceFactory;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
 import net.anotheria.portalkit.services.storage.inmemory.GenericInMemoryServiceFactory;
 import net.anotheria.portalkit.services.storage.mongo.GenericMongoServiceFactory;
+import net.anotheria.portalkit.services.storage.type.StorageType;
 
 /**
  * Parameterizable {@link StorageService} factory.<br>
@@ -39,7 +40,7 @@ public final class StorageServiceFactory<T extends Serializable> extends Abstrac
 			GenericInMemoryServiceFactory<T> inMemoryFactory = new GenericInMemoryServiceFactory<T>();
 			inMemoryFactory.setParameters(getParameters());
 			return inMemoryFactory.create();
-		case NOSQL_MONGO_GENERIC:
+		case NO_SQL_MONGO_GENERIC:
 			GenericMongoServiceFactory<T> mongoFactory = new GenericMongoServiceFactory<T>();
 			mongoFactory.setParameters(getParameters());
 			return mongoFactory.create();

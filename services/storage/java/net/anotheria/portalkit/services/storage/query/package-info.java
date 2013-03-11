@@ -1,5 +1,5 @@
 /**
- * Query interface: general implementation.
+ * Query interface  and general implementation.
  * 
  * @author Alexandr Bolbat
  */

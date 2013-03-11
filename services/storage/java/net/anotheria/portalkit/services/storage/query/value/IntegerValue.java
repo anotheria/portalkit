@@ -5,17 +5,12 @@ package net.anotheria.portalkit.services.storage.query.value;
  * 
  * @author Alexandr Bolbat
  */
-public class IntegerValue implements QueryValue {
+public class IntegerValue extends NumberValue {
 
 	/**
 	 * Generated SerialVersionUID.
 	 */
 	private static final long serialVersionUID = 4190221682782550536L;
-
-	/**
-	 * Value.
-	 */
-	private final Integer value;
 
 	/**
 	 * Default constructor.
@@ -24,12 +19,12 @@ public class IntegerValue implements QueryValue {
 	 *            value
 	 */
 	public IntegerValue(final Integer aValue) {
-		this.value = aValue;
+		super(aValue);
 	}
 
 	@Override
 	public Integer getValue() {
-		return value;
+		return Integer.class.cast(super.getValue());
 	}
 
 	/**
@@ -45,7 +40,7 @@ public class IntegerValue implements QueryValue {
 
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(getValue());
 	}
 
 }

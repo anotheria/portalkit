@@ -25,6 +25,16 @@ public class TestVO implements Serializable, Cloneable {
 	private int intValue;
 
 	/**
+	 * Some float value.
+	 */
+	private float floatValue;
+
+	/**
+	 * Some double value.
+	 */
+	private double doubleValue;
+
+	/**
 	 * Some boolean value.
 	 */
 	private boolean booleanValue;
@@ -66,6 +76,22 @@ public class TestVO implements Serializable, Cloneable {
 		this.intValue = aIntValue;
 	}
 
+	public float getFloatValue() {
+		return floatValue;
+	}
+
+	public void setFloatValue(final float aFloatValue) {
+		this.floatValue = aFloatValue;
+	}
+
+	public double getDoubleValue() {
+		return doubleValue;
+	}
+
+	public void setDoubleValue(final double aDoubleValue) {
+		this.doubleValue = aDoubleValue;
+	}
+
 	public boolean isBooleanValue() {
 		return booleanValue;
 	}
@@ -89,6 +115,10 @@ public class TestVO implements Serializable, Cloneable {
 		builder.append(id);
 		builder.append(", intValue=");
 		builder.append(intValue);
+		builder.append(", floatValue=");
+		builder.append(floatValue);
+		builder.append(", doubleValue=");
+		builder.append(doubleValue);
 		builder.append(", booleanValue=");
 		builder.append(booleanValue);
 		builder.append(", subObject=");

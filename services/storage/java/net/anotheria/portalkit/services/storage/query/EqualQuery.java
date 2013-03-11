@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.services.storage.query;
 
-import net.anotheria.portalkit.services.storage.query.value.IntegerValue;
-import net.anotheria.portalkit.services.storage.query.value.LongValue;
+import net.anotheria.portalkit.services.storage.query.value.BooleanValue;
+import net.anotheria.portalkit.services.storage.query.value.NumberValue;
 import net.anotheria.portalkit.services.storage.query.value.QueryValue;
 import net.anotheria.portalkit.services.storage.query.value.StringValue;
 
@@ -43,7 +43,7 @@ public final class EqualQuery extends AbstractQuery implements Query {
 	}
 
 	/**
-	 * Create new instance of {@link EqualQuery} with {@link Integer} value.
+	 * Create new instance of {@link EqualQuery} with {@link Number} value.
 	 * 
 	 * @param fieldName
 	 *            field name
@@ -51,12 +51,12 @@ public final class EqualQuery extends AbstractQuery implements Query {
 	 *            query value
 	 * @return {@link EqualQuery}
 	 */
-	public static EqualQuery create(final String fieldName, final Integer value) {
-		return new EqualQuery(fieldName, IntegerValue.create(value));
+	public static EqualQuery create(final String fieldName, final Number value) {
+		return new EqualQuery(fieldName, NumberValue.create(value));
 	}
 
 	/**
-	 * Create new instance of {@link EqualQuery} with {@link Long} value.
+	 * Create new instance of {@link EqualQuery} with {@link Boolean} value.
 	 * 
 	 * @param fieldName
 	 *            field name
@@ -64,8 +64,8 @@ public final class EqualQuery extends AbstractQuery implements Query {
 	 *            query value
 	 * @return {@link EqualQuery}
 	 */
-	public static EqualQuery create(final String fieldName, final Long value) {
-		return new EqualQuery(fieldName, LongValue.create(value));
+	public static EqualQuery create(final String fieldName, final Boolean value) {
+		return new EqualQuery(fieldName, BooleanValue.create(value));
 	}
 
 	@Override

@@ -1,16 +1,9 @@
 package net.anotheria.portalkit.services.storage.inmemory;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.storage.AbstractStorageServiceTest;
 import net.anotheria.portalkit.services.storage.StorageService;
-import net.anotheria.portalkit.services.storage.StorageServiceFactory;
-import net.anotheria.portalkit.services.storage.StorageType;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
 
@@ -32,20 +25,10 @@ public class GenericInMemoryServiceTest extends AbstractStorageServiceTest {
 
 	/**
 	 * Clean-up.
-	 * 
-	 * @throws MetaFactoryException
 	 */
-	@SuppressWarnings("unchecked")
 	@Before
-	public void before() throws MetaFactoryException {
-		Map<String, Serializable> factoryParameters = new HashMap<String, Serializable>();
-		factoryParameters.put(StorageServiceFactory.PARAMETER_STORAGE_TYPE, StorageType.IN_MEMORY_GENERIC);
-		factoryParameters.put(GenericInMemoryServiceFactory.PARAMETER_ENTITY_KEY_FIELD_NAME, "id");
-		String extension = "InMemoryService";
-
-		MetaFactory.addParameterizedFactoryClass(StorageService.class, extension, StorageServiceFactory.class, factoryParameters);
-
-		this.storage = MetaFactory.get(StorageService.class, extension);
+	public void before() {
+		this.storage = new GenericInMemoryServiceImpl<TestVO>("id");
 	}
 
 	/**

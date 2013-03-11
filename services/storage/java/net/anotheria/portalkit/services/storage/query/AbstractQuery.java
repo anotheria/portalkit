@@ -34,9 +34,9 @@ public abstract class AbstractQuery implements Query {
 	 */
 	protected AbstractQuery(final String aFieldName, final QueryValue aQueryValue) {
 		if (aFieldName == null || aFieldName.trim().isEmpty())
-			throw new IllegalArgumentException("aFieldName argument is empty");
+			throw new IllegalArgumentException("aFieldName argument is empty.");
 		if (aQueryValue == null)
-			throw new IllegalArgumentException("aQueryValue argument is empty");
+			throw new IllegalArgumentException("aQueryValue argument is empty.");
 
 		this.fieldName = aFieldName;
 		this.queryValue = aQueryValue;

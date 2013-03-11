@@ -8,12 +8,12 @@ package net.anotheria.portalkit.services.storage.query;
 public enum BetweenModifier {
 
 	/**
-	 * Value should be less then max value in query and more then min value in query.
+	 * Value should be less than max value in query and more than min value in query.
 	 */
 	EXCLUDING,
 
 	/**
-	 * Value should be less then or equal to max value in query and more then or equal to min value in query.
+	 * Value should be less than or equal to max value in query and more than or equal to min value in query.
 	 */
 	INCLUDING;
 

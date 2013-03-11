@@ -10,9 +10,11 @@ import java.util.Map;
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
+import net.anotheria.portalkit.services.storage.inmemory.query.InMemoryQueryProcessor;
 import net.anotheria.portalkit.services.storage.query.Query;
+import net.anotheria.portalkit.services.storage.util.SerializationUtils;
 
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.log4j.Logger;
 
 /**
  * {@link GenericInMemoryService} implementation.
@@ -23,6 +25,11 @@ import org.apache.commons.lang.SerializationUtils;
  *            entity type
  */
 public class GenericInMemoryServiceImpl<T extends Serializable> implements GenericInMemoryService<T> {
+
+	/**
+	 * {@link Logger} instance.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GenericInMemoryServiceImpl.class);
 
 	/**
 	 * In-Memory storage.
@@ -56,9 +63,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 		if (entity == null)
 			throw new EntityNotFoundStorageException(uid);
 
-		@SuppressWarnings("unchecked")
-		T clone = (T) SerializationUtils.clone(entity);
-		return clone;
+		return SerializationUtils.clone(entity);
 	}
 
 	@Override
@@ -68,13 +73,10 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 
 		String uid = getEntityUID(toSave);
 
-		@SuppressWarnings("unchecked")
-		T toSaveInt = (T) SerializationUtils.clone(toSave);
+		T toSaveInt = SerializationUtils.clone(toSave);
 		storage.put(uid, toSaveInt);
 
-		@SuppressWarnings("unchecked")
-		T clone = (T) SerializationUtils.clone(toSaveInt);
-		return clone;
+		return SerializationUtils.clone(toSaveInt);
 	}
 
 	@Override
@@ -88,16 +90,14 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			if (entity != null)
 				throw new EntityAlreadyExistStorageException(uid);
 		} catch (EntityNotFoundStorageException e) {
-			// ignored
+			if (LOGGER.isTraceEnabled())
+				LOGGER.trace("create(" + toCreate + ") expected exception. Message[" + e.getMessage() + "].");
 		}
 
-		@SuppressWarnings("unchecked")
-		T toCreateInt = (T) SerializationUtils.clone(toCreate);
+		T toCreateInt = SerializationUtils.clone(toCreate);
 		storage.put(uid, toCreateInt);
 
-		@SuppressWarnings("unchecked")
-		T clone = (T) SerializationUtils.clone(toCreateInt);
-		return clone;
+		return SerializationUtils.clone(toCreateInt);
 	}
 
 	@Override
@@ -110,13 +110,10 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 		// checking is entity exist
 		read(uid); // there EntityNotFoundStorageException can be thrown
 
-		@SuppressWarnings("unchecked")
-		T toUpdateInt = (T) SerializationUtils.clone(toUpdate);
+		T toUpdateInt = SerializationUtils.clone(toUpdate);
 		storage.put(uid, toUpdateInt);
 
-		@SuppressWarnings("unchecked")
-		T clone = (T) SerializationUtils.clone(toUpdateInt);
-		return clone;
+		return SerializationUtils.clone(toUpdateInt);
 	}
 
 	@Override
@@ -126,12 +123,9 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 
 		// checking is entity exist
 		T entity = read(uid); // there EntityNotFoundStorageException can be thrown
-
 		storage.remove(uid);
 
-		@SuppressWarnings("unchecked")
-		T clone = (T) SerializationUtils.clone(entity);
-		return clone;
+		return SerializationUtils.clone(entity);
 	}
 
 	@Override
@@ -144,7 +138,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			try {
 				result.add(read(uid));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("read('uidList') skipping read(" + uid + ").", e);
 			}
 
 		return result;
@@ -160,7 +154,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			try {
 				result.add(save(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("save('toSaveList') skipping save(" + entity + ").", e);
 			}
 
 		return result;
@@ -176,7 +170,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			try {
 				result.add(create(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("create('toCreateList') skipping create(" + entity + ").", e);
 			}
 
 		return result;
@@ -192,7 +186,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			try {
 				result.add(update(entity));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("update('toUpdateList') skipping update(" + entity + ").", e);
 			}
 
 		return result;
@@ -208,7 +202,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 			try {
 				result.add(delete(uid));
 			} catch (StorageException e) {
-				// ignoring entity
+				LOGGER.warn("delete('uidList') skipping delete(" + uid + ").", e);
 			}
 
 		return result;
@@ -216,22 +210,16 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 
 	@Override
 	public List<T> findAll() throws StorageException {
-		List<T> result = new ArrayList<T>();
-		for (T entity : storage.values()) {
-			@SuppressWarnings("unchecked")
-			T clone = (T) SerializationUtils.clone(entity);
-			result.add(clone);
-		}
-
-		return result;
+		return SerializationUtils.clone(storage.values());
 	}
 
 	@Override
-	public List<T> find(Query query) throws StorageException {
+	public List<T> find(final Query query) throws StorageException {
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");
 
-		throw new UnsupportedOperationException("Not implemented"); // TODO Implement me
+		List<T> internalResult = InMemoryQueryProcessor.execute(storage.values(), query);
+		return SerializationUtils.clone(internalResult);
 	}
 
 	/**
