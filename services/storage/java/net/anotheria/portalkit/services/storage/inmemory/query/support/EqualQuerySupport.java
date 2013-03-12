@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.storage.exception.QuerySupportExecutionE
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
+import net.anotheria.portalkit.services.storage.query.value.StringValue;
 
 /**
  * {@link EqualQuery} in-memory support.
@@ -27,7 +28,13 @@ public class EqualQuerySupport extends InMemoryQuerySupport {
 		if (beanValue == null && queryValue == null)
 			return true;
 
-		return queryValue != null && beanValue != null ? queryValue.equals(beanValue) : false;
+		if (queryValue == null)
+			return false;
+
+		if (equalQuery.getQueryValue() instanceof StringValue)
+			return queryValue.equals(String.valueOf(beanValue));
+
+		return queryValue.equals(beanValue);
 	}
 
 }
