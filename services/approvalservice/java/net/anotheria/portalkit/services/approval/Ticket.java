@@ -30,8 +30,9 @@ public class Ticket implements Serializable {
 	/**
 	 * Reference type.
 	 */
-	// private ReferenceType referenceType;
 	private long referenceType;
+
+	private long timestamp = System.currentTimeMillis();
 
 	public String getTicketId() {
 		return ticketId;
@@ -57,20 +58,12 @@ public class Ticket implements Serializable {
 		this.referenceId = referenceId;
 	}
 
-	// public ReferenceType getReferenceType() {
-	// return referenceType;
-	// }
-	//
-	// public void setReferenceType(ReferenceType referenceType) {
-	// this.referenceType = referenceType;
-	// }
+	public long getTimestamp() {
+		return timestamp;
+	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((ticketId == null) ? 0 : ticketId.hashCode());
-		return result;
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 
 	public long getReferenceType() {
@@ -79,6 +72,14 @@ public class Ticket implements Serializable {
 
 	public void setReferenceType(long referenceType) {
 		this.referenceType = referenceType;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ticketId == null) ? 0 : ticketId.hashCode());
+		return result;
 	}
 
 	@Override
@@ -100,7 +101,8 @@ public class Ticket implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ticket [ticketId=" + ticketId + ", status=" + status + ", referenceId=" + referenceId + ", referenceType=" + referenceType + "]";
+		return "Ticket [ticketId=" + ticketId + ", status=" + status + ", referenceId=" + referenceId + ", referenceType=" + referenceType
+				+ ", timestamp=" + timestamp + "]";
 	}
 
 }

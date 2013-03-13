@@ -8,20 +8,32 @@
 		"h2": {
 			"driver": "org.h2.jdbcx.JdbcDataSource",
 			"url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
-			"username": "another"
+			"username": "another",
+
+			"remote" : {
+				"driver": "org.h2.Driver",
+				"url": "jdbc:h2:tcp://localhost/~/test;IGNORECASE=TRUE",
+				"username": "sa",
+			},
 
 		},
-
+		
 		"psql": {
 			"driver": "org.postgresql.Driver",
 			"url": "jdbc:postgresql://localhost/pk_test",
-			"username": "another"
+			"username": "another",
 		},
 
 		"hsqldb": {
 			"driver": "org.hsqldb.jdbcDriver",
 			"url": "jdbc:hsqldb:file:db/pk_test;shutdown=true",
-			"username": "SA"
+			"username": "SA",
+			
+			"remote" : {
+				"driver": "org.hsqldb.jdbc.JDBCDriver",
+				"url": "jdbc:hsqldb:hsql://localhost:9001/testdb",
+				"username": "sa",
+			},
 		}
 	}
 }

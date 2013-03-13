@@ -1,10 +1,10 @@
-package net.anotheria.portalkit.services.approval.jdbc;
+package net.anotheria.portalkit.services.approval.inmemory;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.approval.AbstractApprovalServiceImplTest;
 import net.anotheria.portalkit.services.approval.ApprovalService;
-import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
+import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
@@ -13,15 +13,15 @@ import org.junit.Before;
 /**
  * 
  * @author dagafonov
- * 
+ *
  */
-public class JDBCApprovalServiceImplTest extends AbstractApprovalServiceImplTest {
+public class InMemoryApprovalServiceInMemoryTest extends AbstractApprovalServiceImplTest {
 
 	@Before
-	public void before() {
-		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
+	public void reset() {
+		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test"));
 		MetaFactory.reset();
-		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
+		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 		try {
 			setService(MetaFactory.get(ApprovalService.class));
 		} catch (MetaFactoryException e) {

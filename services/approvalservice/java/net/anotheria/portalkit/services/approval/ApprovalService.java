@@ -50,35 +50,35 @@ public interface ApprovalService extends Service {
 	 * 
 	 * @throws ApprovalServiceException
 	 */
-	void approveTicket(Ticket ticket) throws ApprovalServiceException;
+	void approveTicket(Ticket ticket, String reservationObject) throws ApprovalServiceException;
 
 	/**
 	 * 
 	 * @param tickets
 	 * @throws ApprovalServiceException
 	 */
-	void approveTickets(Collection<Ticket> tickets) throws ApprovalServiceException;
+	void approveTickets(Collection<Ticket> tickets, String reservationObject) throws ApprovalServiceException;
 
 	/**
 	 * Disapprove ticket.
 	 * 
 	 * @throws ApprovalServiceException
 	 */
-	void disapproveTicket(Ticket ticket) throws ApprovalServiceException;
+	void disapproveTicket(Ticket ticket, String reservationObject) throws ApprovalServiceException;
 
 	/**
 	 * 
 	 * @param ticket
 	 * @throws ApprovalServiceException
 	 */
-	void disapproveTickets(Collection<Ticket> ticket) throws ApprovalServiceException;
+	void disapproveTickets(Collection<Ticket> ticket, String reservationObject) throws ApprovalServiceException;
 
 	/**
 	 * 
 	 * @param toApprove
 	 * @param toDisapprove
 	 */
-	void proceedTickets(Collection<Ticket> toApprove, Collection<Ticket> toDisapprove) throws ApprovalServiceException;
+	void proceedTickets(Collection<Ticket> toApprove, Collection<Ticket> toDisapprove, String reservationObject) throws ApprovalServiceException;
 
 	/**
 	 * Reserves tickets ticketsToReserve for {@code reservationObject} and gets
@@ -96,15 +96,14 @@ public interface ApprovalService extends Service {
 	 * @param reservationObject
 	 * @throws ApprovalServiceException
 	 */
-	void unReserveTickets(String reservationObject) throws ApprovalServiceException;
+	void unreserveTickets(String reservationObject, long referenceType) throws ApprovalServiceException;
 
 	/**
 	 * Gets reserved tickets for reservationObject.
 	 * 
-	 * @param reservationObject
 	 * @return
 	 * @throws ApprovalServiceException
 	 */
-	Collection<Ticket> getReservedTickets(String reservationObject) throws ApprovalServiceException;
+	Collection<Ticket> getReservedTickets(String reservationObject, long referenceType) throws ApprovalServiceException;
 
 }
