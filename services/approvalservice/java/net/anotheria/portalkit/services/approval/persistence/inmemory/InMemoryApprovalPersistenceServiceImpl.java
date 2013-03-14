@@ -13,6 +13,7 @@ import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistence
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 
 /**
+ * InMemory implementation of ApprovalPersistenceService.
  * 
  * @author dagafonov
  * 

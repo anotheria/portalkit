@@ -15,6 +15,7 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 /**
+ * JDBC implementation of ApprovalPersistenceService.
  * 
  * @author dagafonov
  */
@@ -149,22 +150,26 @@ public class JDBCApprovalPersistenceServiceImpl extends BasePersistenceServiceJD
 		}
 	}
 
-//	@Override
-//	public void printStatistics(long referenceType) {
-//		Connection conn = null;
-//		try {
-//			conn = getConnection();
-//			List<Ticket> approved = approvalDAO.getTickets(conn, TicketStatus.APPROVED, referenceType);
-//			List<Ticket> disapproved = approvalDAO.getTickets(conn, TicketStatus.DISAPPROVED, referenceType);
-//			List<Ticket> inapproval = approvalDAO.getTickets(conn, TicketStatus.IN_APPROVAL, referenceType);
-//
-//			System.out.println("approved=" + approved.size() + ", disapproved=" + disapproved.size() + ", inapproval=" + inapproval.size());
-//
-//		} catch (SQLException ex) {
-//			ex.printStackTrace();
-//		} finally {
-//			JDBCUtil.close(conn);
-//		}
-//	}
-	
+	// @Override
+	// public void printStatistics(long referenceType) {
+	// Connection conn = null;
+	// try {
+	// conn = getConnection();
+	// List<Ticket> approved = approvalDAO.getTickets(conn,
+	// TicketStatus.APPROVED, referenceType);
+	// List<Ticket> disapproved = approvalDAO.getTickets(conn,
+	// TicketStatus.DISAPPROVED, referenceType);
+	// List<Ticket> inapproval = approvalDAO.getTickets(conn,
+	// TicketStatus.IN_APPROVAL, referenceType);
+	//
+	// System.out.println("approved=" + approved.size() + ", disapproved=" +
+	// disapproved.size() + ", inapproval=" + inapproval.size());
+	//
+	// } catch (SQLException ex) {
+	// ex.printStackTrace();
+	// } finally {
+	// JDBCUtil.close(conn);
+	// }
+	// }
+
 }

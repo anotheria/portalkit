@@ -37,11 +37,9 @@ public abstract class AbstractApprovalServiceImplTest {
 
 	@Test
 	public void testGetTicketByID() throws Exception {
-
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t = service.createTicket(refId, 1);
 		assertNotNull(t);
-
 		Ticket ticket = service.getTicketById(t.getTicketId());
 		assertNotNull(ticket);
 	}
@@ -172,10 +170,69 @@ public abstract class AbstractApprovalServiceImplTest {
 		}
 	}
 
+	private void createTickets(long referenceType, int number) throws Exception {
+		for (int i = 0; i < number; i++) {
+			String refId = IdCodeGenerator.generateCode(10);
+			service.createTicket(refId, referenceType);
+		}
+	}
+
+	@Test
+	public void testReserve32() throws Exception {
+		long referenceType = 10;
+		createTickets(referenceType, 32);
+		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 30, referenceType);
+		assertNotNull(reservedTickets);
+		assertEquals(30, reservedTickets.size());
+
+		Collection<Ticket> rt = service.getReservedTickets(RESERVATION_OBJECT, referenceType);
+		assertNotNull(rt);
+		assertEquals(30, rt.size());
+	}
+
+	@Test
+	public void testReserve28() throws Exception {
+		long referenceType = 11;
+		createTickets(referenceType, 28);
+		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 30, referenceType);
+		assertNotNull(reservedTickets);
+		assertEquals(28, reservedTickets.size());
+
+		Collection<Ticket> rt = service.getReservedTickets(RESERVATION_OBJECT, referenceType);
+		assertNotNull(rt);
+		assertEquals(28, rt.size());
+	}
+
+	@Test
+	public void testReserve122() throws Exception {
+		long referenceType = 12;
+		createTickets(referenceType, 122);
+		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 120, referenceType);
+		assertNotNull(reservedTickets);
+		assertEquals(120, reservedTickets.size());
+
+		Collection<Ticket> rt = service.getReservedTickets(RESERVATION_OBJECT, referenceType);
+		assertNotNull(rt);
+		assertEquals(120, rt.size());
+	}
+
+	@Test
+	public void testReserve118() throws Exception {
+		long referenceType = 13;
+		createTickets(referenceType, 118);
+		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 120, referenceType);
+		assertNotNull(reservedTickets);
+		assertEquals(118, reservedTickets.size());
+
+		Collection<Ticket> rt = service.getReservedTickets(RESERVATION_OBJECT, referenceType);
+		assertNotNull(rt);
+		assertEquals(118, rt.size());
+	}
+
 	@Test
 	public void testGetAndReserveTickets() throws Exception {
 
-		long referenceType = 2;
+		long referenceType = 21;
 
 		String refId;
 
@@ -240,7 +297,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	@Test
 	public void testGetAndReserveTickets2() throws Exception {
 
-		long referenceType = 4;
+		long referenceType = 20;
 
 		String refId;
 		System.out.println("------------------  create  -------------------");

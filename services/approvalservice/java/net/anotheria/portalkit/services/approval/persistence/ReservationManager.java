@@ -80,7 +80,7 @@ public abstract class ReservationManager<K, V, T> {
 			if (inApprovalCache.size() == 0) {
 				Set<T> set = new HashSet<T>(inApprovalCache);
 				set.addAll(cargo);
-				updateCache(key, new HashSet<T>(inApprovalCache), MAX_INAPPROVAL_TICKETS_IN_THE_CACHE);
+				updateCache(key, set, MAX_INAPPROVAL_TICKETS_IN_THE_CACHE);
 			}
 			if (number > inApprovalCache.size()) {
 				number = inApprovalCache.size();

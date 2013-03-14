@@ -65,8 +65,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			for (Ticket t : exclude) {
 				set.add(t.getTicketId());
 			}
-			List<Ticket> ticket = persistenceService.getTickets(set, number, key.getReferenceType());
-			updateCache(ticket);
+			List<Ticket> tickets = persistenceService.getTickets(set, number, key.getReferenceType());
+			updateCache(tickets);
 		}
 
 		@Override
@@ -288,7 +288,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			// }
 		}
 	}
-	
+
 	private class TicketReservationKey {
 
 		private long referenceType;
