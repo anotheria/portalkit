@@ -15,7 +15,7 @@ import org.junit.Before;
  * @author dagafonov
  *
  */
-public class InMemoryApprovalServiceInMemoryTest extends AbstractApprovalServiceImplTest {
+public class InMemoryApprovalServiceImplTest extends AbstractApprovalServiceImplTest {
 
 	@Before
 	public void reset() {
