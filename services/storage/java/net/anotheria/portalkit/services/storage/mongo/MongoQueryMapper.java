@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.storage.query.BetweenModifier;
 import net.anotheria.portalkit.services.storage.query.BetweenQuery;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
+import net.anotheria.portalkit.services.storage.query.ContainsQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.LessThanModifier;
 import net.anotheria.portalkit.services.storage.query.LessThanQuery;
@@ -85,6 +86,9 @@ public final class MongoQueryMapper {
 		if (query instanceof BetweenQuery)
 			return map(BetweenQuery.class.cast(query));
 
+		if (query instanceof ContainsQuery)
+			return map(ContainsQuery.class.cast(query));
+
 		// TODO Implement CustomQuery support
 
 		throw new StorageException("Not supported query[" + query + "].");
@@ -150,6 +154,21 @@ public final class MongoQueryMapper {
 		BasicDBObject betweenPart = new BasicDBObject(modifierGT, query.getPairValue().getFirstValue());
 		betweenPart.append(modifierLT, query.getPairValue().getSecondValue());
 		return new BasicDBObject(query.getFieldName(), betweenPart);
+	}
+
+	/**
+	 * Map {@link ContainsQuery} to mongo query format.
+	 * 
+	 * @param query
+	 *            {@link ContainsQuery}, can't be <code>null</code>
+	 * @return {@link BasicDBObject}
+	 */
+	public static BasicDBObject map(final ContainsQuery query) {
+		if (query == null)
+			throw new IllegalArgumentException("query argument in null.");
+
+		BasicDBObject containsPart = new BasicDBObject(QueryOperators.IN, query.getQueryValue().getValues());
+		return new BasicDBObject(query.getFieldName(), containsPart);
 	}
 
 	/**

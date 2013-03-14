@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.storage.shared;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Value object for testing purposes.
@@ -23,6 +24,16 @@ public class TestVO implements Serializable, Cloneable {
 	 * Some integer value.
 	 */
 	private int intValue;
+
+	/**
+	 * Some integer values.
+	 */
+	private List<Integer> intValues;
+
+	/**
+	 * Some integer values array.
+	 */
+	private int[] intValuesArray;
 
 	/**
 	 * Some float value.
@@ -76,6 +87,22 @@ public class TestVO implements Serializable, Cloneable {
 		this.intValue = aIntValue;
 	}
 
+	public List<Integer> getIntValues() {
+		return intValues;
+	}
+
+	public void setIntValues(final List<Integer> aIntValues) {
+		this.intValues = aIntValues;
+	}
+
+	public int[] getIntValuesArray() {
+		return intValuesArray;
+	}
+
+	public void setIntValuesArray(final int[] aIntValuesArray) {
+		this.intValuesArray = aIntValuesArray;
+	}
+
 	public float getFloatValue() {
 		return floatValue;
 	}
@@ -115,6 +142,8 @@ public class TestVO implements Serializable, Cloneable {
 		builder.append(id);
 		builder.append(", intValue=");
 		builder.append(intValue);
+		builder.append(", intValues=");
+		builder.append(intValues);
 		builder.append(", floatValue=");
 		builder.append(floatValue);
 		builder.append(", doubleValue=");

@@ -8,11 +8,13 @@ import java.util.List;
 
 import net.anotheria.portalkit.services.storage.inmemory.query.support.BetweenQuerySupport;
 import net.anotheria.portalkit.services.storage.inmemory.query.support.CompositeQuerySupport;
+import net.anotheria.portalkit.services.storage.inmemory.query.support.ContainsQuerySupport;
 import net.anotheria.portalkit.services.storage.inmemory.query.support.EqualQuerySupport;
 import net.anotheria.portalkit.services.storage.inmemory.query.support.LessThanQuerySupport;
 import net.anotheria.portalkit.services.storage.inmemory.query.support.MoreThanQuerySupport;
 import net.anotheria.portalkit.services.storage.query.BetweenQuery;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
+import net.anotheria.portalkit.services.storage.query.ContainsQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.LessThanQuery;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
@@ -48,6 +50,7 @@ public final class InMemoryQueryProcessor {
 		QuerySupportRegistry.configure(StorageType.IN_MEMORY_GENERIC, MoreThanQuery.class, new MoreThanQuerySupport());
 		QuerySupportRegistry.configure(StorageType.IN_MEMORY_GENERIC, BetweenQuery.class, new BetweenQuerySupport());
 		QuerySupportRegistry.configure(StorageType.IN_MEMORY_GENERIC, CompositeQuery.class, new CompositeQuerySupport());
+		QuerySupportRegistry.configure(StorageType.IN_MEMORY_GENERIC, ContainsQuery.class, new ContainsQuerySupport());
 	}
 
 	/**

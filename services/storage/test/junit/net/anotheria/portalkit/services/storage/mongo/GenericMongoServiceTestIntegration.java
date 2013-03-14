@@ -9,6 +9,7 @@ import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.inmemory.GenericInMemoryService;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
+import net.anotheria.portalkit.services.storage.query.ContainsQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.QueryBuilder;
@@ -16,6 +17,7 @@ import net.anotheria.portalkit.services.storage.query.SortingQuery;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -107,6 +109,24 @@ public class GenericMongoServiceTestIntegration extends AbstractStorageServiceTe
 		Query query3 = QueryBuilder.create().add(compositeQuery).setLimit(1).setOffset(0).setSorting(sorting3).build();
 		List<TestVO> queryResult3 = storage.find(query3);
 		validateAll(updated, queryResult3);
+
+		// contains query1
+		ContainsQuery containsQuery = ContainsQuery.create("intValue", 123);
+		List<TestVO> containsResult = storage.find(containsQuery);
+		Assert.assertNotNull(containsResult);
+		Assert.assertEquals(0, containsResult.size());
+		// contains query2
+		containsQuery = ContainsQuery.create("intValue", 321);
+		containsResult = storage.find(containsQuery);
+		Assert.assertNotNull(containsResult);
+		Assert.assertEquals(1, containsResult.size());
+		validateEntity(updated, containsResult.get(0));
+		// contains query3
+		containsQuery = ContainsQuery.create("intValue", 321, 123);
+		containsResult = storage.find(containsQuery);
+		Assert.assertNotNull(containsResult);
+		Assert.assertEquals(1, containsResult.size());
+		validateEntity(updated, containsResult.get(0));
 
 		// removing entity
 		TestVO deleted = storage.delete(toCreate.getId());

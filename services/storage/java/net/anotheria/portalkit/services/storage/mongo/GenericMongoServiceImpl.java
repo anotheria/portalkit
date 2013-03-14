@@ -369,6 +369,9 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 		DBCursor rawResult = null;
 		try {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("find(" + query + ") executing with mongo query[" + mongoQuery + "].");
+			
 			rawResult = getCollection().find(mongoQuery);
 
 			BasicDBObject sorting = MongoQueryMapper.getSorting(query);

@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.storage.query;
 
+import net.anotheria.portalkit.services.storage.query.support.QuerySupport;
+
 /**
  * Utility for simple {@link Query} construction.
  * 
@@ -118,8 +120,23 @@ public final class QueryBuilder {
 	}
 
 	/**
+	 * Add {@link ContainsQuery}.
+	 * 
+	 * @param query
+	 *            {@link ContainsQuery}, can't be null
+	 * @return {@link QueryBuilder}
+	 */
+	public QueryBuilder add(final ContainsQuery query) {
+		if (query == null)
+			throw new IllegalArgumentException("query argument is null.");
+
+		rootQuery.add(query);
+		return this;
+	}
+
+	/**
 	 * Add {@link CustomQuery}.<br>
-	 * Processor for {@link CustomQuery} type should be registered before it's execution or exception will be thrown.
+	 * {@link QuerySupport} for {@link CustomQuery} should be registered before it's execution.
 	 * 
 	 * @param query
 	 *            {@link CustomQuery}, can't be null
