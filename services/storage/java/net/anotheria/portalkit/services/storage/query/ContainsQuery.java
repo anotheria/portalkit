@@ -36,7 +36,7 @@ public final class ContainsQuery extends AbstractQuery implements Query {
 	 * 
 	 * @param fieldName
 	 *            field name
-	 * @param value
+	 * @param values
 	 *            query values
 	 * @return {@link ContainsQuery}
 	 */
@@ -49,7 +49,7 @@ public final class ContainsQuery extends AbstractQuery implements Query {
 	 * 
 	 * @param fieldName
 	 *            field name
-	 * @param value
+	 * @param values
 	 *            query values
 	 * @return {@link ContainsQuery}
 	 */
@@ -62,7 +62,7 @@ public final class ContainsQuery extends AbstractQuery implements Query {
 	 * 
 	 * @param fieldName
 	 *            field name
-	 * @param value
+	 * @param values
 	 *            query values
 	 * @return {@link ContainsQuery}
 	 */

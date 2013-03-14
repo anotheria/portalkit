@@ -18,7 +18,7 @@ public class ListValue implements QueryValue {
 	private static final long serialVersionUID = 8062983331885507538L;
 
 	/**
-	 * Values;
+	 * Values.
 	 */
 	private final List<Serializable> valuesList;
 
