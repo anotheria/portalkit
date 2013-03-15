@@ -6,12 +6,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.ScheduledExecutorService;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceServiceException;
+import net.anotheria.util.concurrency.IdBasedLock;
+import net.anotheria.util.concurrency.IdBasedLockManager;
+import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 
 /**
+ * Stores reservation information.
  * 
  * @author dagafonov
  * 
@@ -32,22 +37,30 @@ public abstract class ReservationManager<K, V, T> {
 	/**
 	 * Queue for cache.
 	 */
-	private BlockingQueue<T> inApprovalCache = new LinkedBlockingQueue<T>();
+	private BlockingQueue<T> inApprovalCache = new LinkedBlockingQueue<T>(MAX_INAPPROVAL_TICKETS_IN_THE_CACHE);
 
 	/**
-	 * Lock instance.
-	 */
-	private ReentrantLock reservationLock = new ReentrantLock();
-
-	/**
-	 * Reservation process. As key ticket id (String), as value
-	 * TicketReservationBean with reservation object and timestamp.
+	 * Reservation storage.
 	 */
 	private ConcurrentHashMap<K, V> reservation = new ConcurrentHashMap<K, V>();
 
+	/**
+	 * Lock per reservationObject.
+	 */
+	private IdBasedLockManager<K> lockManager = new SafeIdBasedLockManager<K>();
+
+	/**
+	 * Reserves value.
+	 * 
+	 * @param key
+	 * @param number
+	 * @return
+	 * @throws PortalKitPersistenceServiceException
+	 */
 	public V reserve(K key, int number) throws PortalKitPersistenceServiceException {
+		IdBasedLock<K> lock = lockManager.obtainLock(key);
 		try {
-			reservationLock.lock();
+			lock.lock();
 			V value = reservation.get(key);
 			if (value == null) {
 				List<T> cargo = new ArrayList<T>();
@@ -60,7 +73,7 @@ public abstract class ReservationManager<K, V, T> {
 			}
 			return value;
 		} finally {
-			reservationLock.unlock();
+			lock.unlock();
 		}
 	}
 
@@ -89,6 +102,12 @@ public abstract class ReservationManager<K, V, T> {
 		}
 	}
 
+	/**
+	 * Removes <T> from cache and fill
+	 * 
+	 * @param cargo
+	 * @param number
+	 */
 	private void fillCargo(List<T> cargo, int number) {
 		for (int i = 0; i < number; i++) {
 			T t = inApprovalCache.poll();
@@ -98,17 +117,30 @@ public abstract class ReservationManager<K, V, T> {
 		}
 	}
 
+	/**
+	 * Gets reservation value.
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public V getReserved(K key) {
 		return reservation.get(key);
 	}
 
+	/**
+	 * Unreserves full block.
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public V unreserve(K key) {
+		IdBasedLock<K> lock = lockManager.obtainLock(key);
 		try {
-			reservationLock.lock();
+			lock.lock();
 			V value = reservation.remove(key);
 			putBack(value);
 		} finally {
-			reservationLock.unlock();
+			lock.unlock();
 		}
 		return null;
 	}
@@ -119,15 +151,34 @@ public abstract class ReservationManager<K, V, T> {
 		}
 	}
 
-	public void free(K key, T v) {
+	/**
+	 * Unreserves one.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void unreserve(K key, T value) {
+		IdBasedLock<K> lock = lockManager.obtainLock(key);
 		try {
-			reservationLock.lock();
-			V value = reservation.get(key);
-			if (value != null) {
-				freeValue(value, v);
+			lock.lock();
+			V container = reservation.get(key);
+			if (container != null) {
+				freeValue(container, value);
 			}
 		} finally {
-			reservationLock.unlock();
+			lock.unlock();
+		}
+	}
+
+	public void checkReservation() {
+		for (K key : reservation.keySet()) {
+			IdBasedLock<K> lock = lockManager.obtainLock(key);
+			try {
+				lock.lock();
+				checkReservation(key, reservation.get(key));
+			} finally {
+				lock.unlock();
+			}
 		}
 	}
 
@@ -138,5 +189,7 @@ public abstract class ReservationManager<K, V, T> {
 	protected abstract V construct(K key, List<T> cargo);
 
 	protected abstract void putBack(V value);
+
+	protected abstract void checkReservation(K key, V v);
 
 }

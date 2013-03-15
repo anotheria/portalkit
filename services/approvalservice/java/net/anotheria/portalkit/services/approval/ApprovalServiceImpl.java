@@ -32,6 +32,11 @@ import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 public class ApprovalServiceImpl implements ApprovalService {
 
 	/**
+	 * Update time interval.
+	 */
+	protected static final long TICKET_RESERVATION_LIFETIME = 1000 * 60 * 3;
+
+	/**
 	 * Persistence service.
 	 */
 	private ApprovalPersistenceService persistenceService;
@@ -46,6 +51,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	 */
 	private IdBasedLockManager<String> ticketsLockManager = new SafeIdBasedLockManager<String>();
 
+	/**
+	 * 
+	 */
 	private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 	private ReservationManager<TicketReservationKey, TicketReservationBean, Ticket> approvalReservationManager = new ReservationManager<TicketReservationKey, TicketReservationBean, Ticket>() {
@@ -76,10 +84,20 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		@Override
 		protected void freeValue(TicketReservationBean value, Ticket v) {
+			if (value == null || value.getTickets() == null) {
+				return;
+			}
 			if (value.getTickets().size() > 0) {
 				value.getTickets().remove(v);
 			} else {
 				unreserve(new TicketReservationKey(value.getReservationObject(), value.getReferenceType()));
+			}
+		}
+
+		@Override
+		protected void checkReservation(TicketReservationKey key, TicketReservationBean value) {
+			if (System.currentTimeMillis() - value.getTimestamp() > TICKET_RESERVATION_LIFETIME) {
+				unreserve(key);
 			}
 		}
 
@@ -176,8 +194,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			lock.lock();
 			persistenceService.approveTicket(ticket);
 			cacheTickets.remove(ticket.getTicketId());
-
-			freeTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
+			unreserveTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("persistenceService.approveTicket failed.", e);
 		} finally {
@@ -206,7 +223,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			persistenceService.disapproveTicket(ticket);
 			cacheTickets.remove(ticket.getTicketId());
 
-			freeTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
+			unreserveTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("persistenceService.approveTicket failed.", e);
 		} finally {
@@ -259,33 +276,18 @@ public class ApprovalServiceImpl implements ApprovalService {
 		approvalReservationManager.unreserve(new TicketReservationKey(reservationObject, referenceType));
 	}
 
-	private void freeTicket(TicketReservationKey key, Ticket ticket) {
-		approvalReservationManager.free(key, ticket);
+	private void unreserveTicket(TicketReservationKey key, Ticket ticket) {
+		approvalReservationManager.unreserve(key, ticket);
 	}
 
+	/**
+	 * Reservation checker Thread.
+	 */
 	public class CheckReservationThread implements Runnable {
-
-		private static final long TICKET_RESERVATION_LIFETIME = 1000 * 60 * 3;
 
 		@Override
 		public void run() {
-			// for (String ticketId : reservationsByTicket.keySet()) {
-			// TicketReservationBean trb = reservationsByTicket.get(ticketId);
-			// if (System.currentTimeMillis() - trb.getTimestamp() >
-			// TICKET_RESERVATION_LIFETIME) {
-			// try {
-			// reservationLock.lock();
-			// Ticket ticket = getTicketById(ticketId);
-			// doFreeTicket(ticket);
-			// putBackUnUsedTicketToTheCache(Arrays.asList(new Ticket[] { ticket
-			// }));
-			// } catch (ApprovalServiceException ex) {
-			// ex.printStackTrace();
-			// } finally {
-			// reservationLock.unlock();
-			// }
-			// }
-			// }
+			approvalReservationManager.checkReservation();
 		}
 	}
 
@@ -293,13 +295,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		private long referenceType;
 		private String reservationObject;
-
-		/**
-		 * Default constructor.
-		 */
-		public TicketReservationKey() {
-			// do nothing.
-		}
 
 		/**
 		 * Default constructor with parameters.
@@ -316,16 +311,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			return referenceType;
 		}
 
-		public void setReferenceType(long referenceType) {
-			this.referenceType = referenceType;
-		}
-
 		public String getReservationObject() {
 			return reservationObject;
-		}
-
-		public void setReservationObject(String reservationObject) {
-			this.reservationObject = reservationObject;
 		}
 
 		@Override
@@ -380,10 +367,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		public long getTimestamp() {
 			return timestamp;
-		}
-
-		public void setTimestamp(long timestamp) {
-			this.timestamp = timestamp;
 		}
 
 		public List<Ticket> getTickets() {
