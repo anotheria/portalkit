@@ -28,6 +28,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	private static final String TARGET_ID = "target";
 	private static final String LIST_NAME = "listName";
 	private static final String ADDITIONAL_INFO = "additionalinfo";
+	private static final String CREATION_TIMESTAMP = "creationTimestamp";
 
 	@Override
 	protected String[] getTableNames() {
@@ -57,12 +58,15 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 		try {
 
 			List<AccountIdAdditionalInfo> res = new ArrayList<AccountIdAdditionalInfo>();
-			stmt = connection.prepareStatement(String.format("SELECT %s, %s from %s WHERE %s=? and %s=?", TARGET_ID, ADDITIONAL_INFO, TABLE_NAME, OWNER_ID, LIST_NAME));
+			stmt = connection.prepareStatement(String.format("SELECT %s, %s, %s from %s WHERE %s=? and %s=? order by %s asc", TARGET_ID, ADDITIONAL_INFO,
+					CREATION_TIMESTAMP, TABLE_NAME, OWNER_ID, LIST_NAME, CREATION_TIMESTAMP));
 			stmt.setString(1, owner.getInternalId());
 			stmt.setString(2, listName);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				res.add(new AccountIdAdditionalInfo(new AccountId(rs.getString(TARGET_ID)), rs.getString(ADDITIONAL_INFO)));
+				AccountIdAdditionalInfo aidai = new AccountIdAdditionalInfo(new AccountId(rs.getString(TARGET_ID)), rs.getString(ADDITIONAL_INFO));
+				aidai.setCreationTimestamp(rs.getLong(CREATION_TIMESTAMP));
+				res.add(aidai);
 			}
 			return res;
 		} finally {
@@ -83,17 +87,19 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public boolean addToList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException,
-			SQLException {
+	public boolean addToList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
+			throws DAOException, SQLException {
 		PreparedStatement insertStmt = null;
 		try {
-			String prefSQL = String.format("insert into %s (%s, %s, %s, %s) values (?, ?, ?, ?)", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME, ADDITIONAL_INFO);
+			String prefSQL = String.format("insert into %s (%s, %s, %s, %s, %s) values (?, ?, ?, ?, ?)", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME,
+					ADDITIONAL_INFO, CREATION_TIMESTAMP);
 			insertStmt = connection.prepareStatement(prefSQL);
 			for (AccountIdAdditionalInfo accId : targets) {
 				insertStmt.setString(1, owner.getInternalId());
 				insertStmt.setString(2, accId.getAccountId().getInternalId());
 				insertStmt.setString(3, listName);
 				insertStmt.setString(4, accId.getAdditionalInfo());
+				insertStmt.setLong(5, System.currentTimeMillis());
 				insertStmt.addBatch();
 			}
 			insertStmt.executeBatch();
@@ -115,8 +121,8 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
-	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException,
-			SQLException {
+	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
+			throws DAOException, SQLException {
 		PreparedStatement insertStmt = null;
 		try {
 			String prefSQL = String.format("delete from %s where %s=? and %s=? and %s=? ;", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME);
@@ -150,12 +156,15 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 		ResultSet rs = null;
 		try {
 			List<AccountIdAdditionalInfo> res = new ArrayList<AccountIdAdditionalInfo>();
-			stmt = connection.prepareStatement(String.format("SELECT %s, %s from %s WHERE %s=? and %s=?", OWNER_ID, ADDITIONAL_INFO, TABLE_NAME, TARGET_ID, LIST_NAME));
+			stmt = connection.prepareStatement(String.format("SELECT %s, %s, %s from %s WHERE %s=? and %s=? order by %s asc", OWNER_ID, ADDITIONAL_INFO, CREATION_TIMESTAMP, TABLE_NAME,
+					TARGET_ID, LIST_NAME, CREATION_TIMESTAMP));
 			stmt.setString(1, target.getInternalId());
 			stmt.setString(2, listName);
 			rs = stmt.executeQuery();
 			while (rs.next()) {
-				res.add(new AccountIdAdditionalInfo(new AccountId(rs.getString(OWNER_ID)), rs.getString(ADDITIONAL_INFO)));
+				AccountIdAdditionalInfo aidai = new AccountIdAdditionalInfo(new AccountId(rs.getString(OWNER_ID)), rs.getString(ADDITIONAL_INFO));
+				aidai.setCreationTimestamp(rs.getLong(CREATION_TIMESTAMP));
+				res.add(aidai);
 			}
 			return res;
 		} finally {

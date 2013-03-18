@@ -3,6 +3,7 @@ create table accountlist (
 	target varchar(128) NOT NULL,
 	listname varchar(256) NOT NULL,
 	additionalinfo varchar NULL,
+	creationTimestamp bigint not null,
 	primary key (owner, target, listname)
 );
 CREATE INDEX owner_list_idx ON accountlist (owner, listname);

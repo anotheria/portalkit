@@ -2,24 +2,23 @@ package net.anotheria.portalkit.services.accountlist;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * 
  * @author dagafonov
- *
+ * 
  */
 public class AccountIdAdditionalInfo implements Serializable {
 
-	private static final long serialVersionUID = -71577606200682851L;
-	
+	private static final long serialVersionUID = 6018520772456445957L;
+
 	private AccountId accountId;
 	private String additionalInfo;
-	
+	private long creationTimestamp;
+
 	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo) {
-		this.accountId  = accountId;
+		this.accountId = accountId;
 		this.additionalInfo = additionalInfo;
 	}
 
@@ -45,6 +44,14 @@ public class AccountIdAdditionalInfo implements Serializable {
 		int result = 1;
 		result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
 		return result;
+	}
+
+	public long getCreationTimestamp() {
+		return creationTimestamp;
+	}
+
+	public void setCreationTimestamp(long creationTimestamp) {
+		this.creationTimestamp = creationTimestamp;
 	}
 
 	@Override
