@@ -16,19 +16,14 @@ public class AccountListServiceInMemoryTest extends AbstractAccountListServiceTe
 	@Before
 	@After
 	public void reset() {
-
-//		System.out.println("**************************************************");
-
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test"));
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
-
 		try {
 			setService(MetaFactory.get(AccountListService.class));
 		} catch (MetaFactoryException e) {
 			throw new RuntimeException(e);
 		}
-
 	}
 
 }
