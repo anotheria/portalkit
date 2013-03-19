@@ -99,7 +99,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 				insertStmt.setString(2, accId.getAccountId().getInternalId());
 				insertStmt.setString(3, listName);
 				insertStmt.setString(4, accId.getAdditionalInfo());
-				insertStmt.setLong(5, System.currentTimeMillis());
+				insertStmt.setLong(5, accId.getCreationTimestamp());
 				insertStmt.addBatch();
 			}
 			insertStmt.executeBatch();
@@ -123,20 +123,20 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 */
 	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
 			throws DAOException, SQLException {
-		PreparedStatement insertStmt = null;
+		PreparedStatement deleteStmt = null;
 		try {
 			String prefSQL = String.format("delete from %s where %s=? and %s=? and %s=? ;", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME);
-			insertStmt = connection.prepareStatement(prefSQL);
+			deleteStmt = connection.prepareStatement(prefSQL);
 			for (AccountIdAdditionalInfo accId : targets) {
-				insertStmt.setString(1, owner.getInternalId());
-				insertStmt.setString(2, accId.getAccountId().getInternalId());
-				insertStmt.setString(3, listName);
-				insertStmt.addBatch();
+				deleteStmt.setString(1, owner.getInternalId());
+				deleteStmt.setString(2, accId.getAccountId().getInternalId());
+				deleteStmt.setString(3, listName);
+				deleteStmt.addBatch();
 			}
-			insertStmt.executeBatch();
+			deleteStmt.executeBatch();
 			return true;
 		} finally {
-			JDBCUtil.close(insertStmt);
+			JDBCUtil.close(deleteStmt);
 		}
 	}
 

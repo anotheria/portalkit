@@ -74,9 +74,9 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 		for (AccountIdAdditionalInfo target : targets) {
 			AccountListData accListData = reverseStorage.get(target.getAccountId());
 			if (accListData != null) {
-				accListData.addAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
+				accListData.addAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo(), target.getCreationTimestamp()) }));
 			} else {
-				accListData = new AccountListData(target.getAccountId(), listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
+				accListData = new AccountListData(target.getAccountId(), listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo(), target.getCreationTimestamp()) }));
 				reverseStorage.put(target.getAccountId(), accListData);
 			}
 		}

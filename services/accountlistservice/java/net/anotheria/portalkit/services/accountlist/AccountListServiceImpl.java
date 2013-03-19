@@ -47,6 +47,9 @@ public class AccountListServiceImpl implements AccountListService {
 		try {
 			lock.lock();
 			boolean res = false;
+			for (AccountIdAdditionalInfo t : targets) {
+				t.setCreationTimestamp(System.currentTimeMillis());
+			}
 			res = persistenceService.addToList(owner, listName, targets);
 			if (res) {
 				AccountListData results = accountLists.get(owner);

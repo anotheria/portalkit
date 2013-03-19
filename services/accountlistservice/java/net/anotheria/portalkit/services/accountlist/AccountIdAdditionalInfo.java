@@ -21,6 +21,11 @@ public class AccountIdAdditionalInfo implements Serializable {
 		this.accountId = accountId;
 		this.additionalInfo = additionalInfo;
 	}
+	
+	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo, long creationTimestamp) {
+		this(accountId, additionalInfo);
+		this.creationTimestamp = creationTimestamp;
+	}
 
 	public AccountId getAccountId() {
 		return accountId;
@@ -73,7 +78,8 @@ public class AccountIdAdditionalInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "AccountIdAdditionalInfo [accountId=" + accountId + ", additionalInfo=" + additionalInfo + "]";
+		return "AccountIdAdditionalInfo [accountId=" + accountId + ", additionalInfo=" + additionalInfo + ", creationTimestamp=" + creationTimestamp
+				+ "]";
 	}
 
 }

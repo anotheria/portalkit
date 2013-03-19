@@ -31,6 +31,12 @@ public abstract class AbstractAccountListServiceTest {
 		assertTrue(accIdList.isEmpty());
 	}
 
+	private void checkCreationTimeStamp(List<AccountIdAdditionalInfo> accIdList) {
+		for (AccountIdAdditionalInfo info : accIdList) {
+			assertTrue("creation timestamp is empty", info.getCreationTimestamp() != 0);
+		}
+	}
+
 	@Test
 	public void testAddTargetToList() throws Exception {
 
@@ -42,6 +48,8 @@ public abstract class AbstractAccountListServiceTest {
 		assertTrue(res);
 
 		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "contacts");
+		System.out.println(accIdList);
+		checkCreationTimeStamp(accIdList);
 		// System.out.println("got " + accIdList.size() +
 		// " records after insert...");
 		assertNotNull(accIdList);
@@ -54,12 +62,14 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId accId = AccountId.generateNew();
 
-		AccountIdAdditionalInfo[] accList = new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second") };
+		AccountIdAdditionalInfo[] accList = new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(AccountId.generateNew(), "first"),
+				new AccountIdAdditionalInfo(AccountId.generateNew(), "second") };
 
 		boolean res = service.addToList(accId, "favourites", new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), accList);
 		assertTrue(res);
 
 		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "favourites");
+		checkCreationTimeStamp(accIdList);
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
@@ -67,6 +77,7 @@ public abstract class AbstractAccountListServiceTest {
 		assertTrue(res);
 
 		accIdList = service.getList(accId, "favourites");
+		checkCreationTimeStamp(accIdList);
 		assertNotNull(accIdList);
 		assertEquals(1, accIdList.size());
 
@@ -79,18 +90,24 @@ public abstract class AbstractAccountListServiceTest {
 
 		AccountId reverseAccId = AccountId.generateNew();
 
-		boolean res = service.addToList(accId, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(reverseAccId, ""));
+		boolean res = service.addToList(accId, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(
+				AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(
+				reverseAccId, ""));
 		assertTrue(res);
 
 		AccountId accId2 = AccountId.generateNew();
-		res = service.addToList(accId2, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(reverseAccId, ""));
+		res = service.addToList(accId2, "visits", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"), new AccountIdAdditionalInfo(
+				AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), new AccountIdAdditionalInfo(
+				reverseAccId, ""));
 		assertTrue(res);
 
 		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "visits");
+		checkCreationTimeStamp(accIdList);
 		assertNotNull(accIdList);
 		assertEquals(4, accIdList.size());
 
 		accIdList = service.reverseLookup(reverseAccId, "visits");
+		checkCreationTimeStamp(accIdList);
 		assertNotNull(accIdList);
 		assertEquals(2, accIdList.size());
 
