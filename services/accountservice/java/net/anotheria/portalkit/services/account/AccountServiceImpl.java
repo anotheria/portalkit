@@ -173,6 +173,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 	@Override
 	public Account createAccount(Account toCreate) throws AccountServiceException {
+
 		if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName())!=null)
 			throw new AccountAlreadyExistsException("name", toCreate.getName());
 		if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail())!=null)
