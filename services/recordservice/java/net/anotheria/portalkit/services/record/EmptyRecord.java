@@ -8,6 +8,8 @@ package net.anotheria.portalkit.services.record;
  */
 public final class EmptyRecord extends Record {
 
+	private static final long serialVersionUID = 4215794916579677723L;
+
 	public EmptyRecord(String aRecordId){
 		super(aRecordId);
 	}

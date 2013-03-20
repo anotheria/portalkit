@@ -10,5 +10,14 @@ public enum RecordType {
 	NONE,
 	INT,
 	LONG,
-	STRING
+	STRING;
+	
+	public static RecordType find(int ordinal) {
+		for (RecordType v : values()) {
+			if (v.ordinal() == ordinal) {
+				return v;
+			}
+		}
+		return NONE;
+	}
 }

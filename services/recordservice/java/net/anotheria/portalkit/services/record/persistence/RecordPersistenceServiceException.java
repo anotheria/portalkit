@@ -4,11 +4,14 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceSe
 
 /**
  * TODO comment this class
- *
+ * 
  * @author lrosenberg
  * @since 14.02.13 00:26
  */
 public class RecordPersistenceServiceException extends PortalKitPersistenceServiceException {
+	
+	private static final long serialVersionUID = -7459347680953414047L;
+
 	public RecordPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);
 	}
