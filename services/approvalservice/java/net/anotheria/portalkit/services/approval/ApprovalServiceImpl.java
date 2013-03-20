@@ -144,8 +144,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			return ticket;
 		}
 		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticketId);
+		lock.lock();
 		try {
-			lock.lock();
 			ticket = persistenceService.getTicketById(ticketId);
 			if (ticket == null) {
 				throw new ApprovalPersistenceServiceException("ticket not found");
@@ -165,8 +165,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new IllegalArgumentException("ticket id does not set...");
 		}
 		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticketId);
+		lock.lock();
 		try {
-			lock.lock();
 			persistenceService.deleteTicket(ticketId);
 			cacheTickets.remove(ticketId);
 		} catch (ApprovalPersistenceServiceException e) {
@@ -190,8 +190,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new IllegalArgumentException("ticket is null...");
 		}
 		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticket.getTicketId());
+		lock.lock();
 		try {
-			lock.lock();
 			persistenceService.approveTicket(ticket);
 			cacheTickets.remove(ticket.getTicketId());
 			unreserveTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
@@ -218,8 +218,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new IllegalArgumentException("ticket is null...");
 		}
 		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticket.getTicketId());
+		lock.lock();
 		try {
-			lock.lock();
 			persistenceService.disapproveTicket(ticket);
 			cacheTickets.remove(ticket.getTicketId());
 

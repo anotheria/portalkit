@@ -59,8 +59,8 @@ public abstract class ReservationManager<K, V, T> {
 	 */
 	public V reserve(K key, int number) throws PortalKitPersistenceServiceException {
 		IdBasedLock<K> lock = lockManager.obtainLock(key);
+		lock.lock();
 		try {
-			lock.lock();
 			V value = reservation.get(key);
 			if (value == null) {
 				List<T> cargo = new ArrayList<T>();
@@ -135,8 +135,8 @@ public abstract class ReservationManager<K, V, T> {
 	 */
 	public V unreserve(K key) {
 		IdBasedLock<K> lock = lockManager.obtainLock(key);
+		lock.lock();
 		try {
-			lock.lock();
 			V value = reservation.remove(key);
 			putBack(value);
 		} finally {
@@ -159,8 +159,8 @@ public abstract class ReservationManager<K, V, T> {
 	 */
 	public void unreserve(K key, T value) {
 		IdBasedLock<K> lock = lockManager.obtainLock(key);
+		lock.lock();
 		try {
-			lock.lock();
 			V container = reservation.get(key);
 			if (container != null) {
 				freeValue(container, value);
@@ -173,8 +173,8 @@ public abstract class ReservationManager<K, V, T> {
 	public void checkReservation() {
 		for (K key : reservation.keySet()) {
 			IdBasedLock<K> lock = lockManager.obtainLock(key);
+			lock.lock();
 			try {
-				lock.lock();
 				checkReservation(key, reservation.get(key));
 			} finally {
 				lock.unlock();

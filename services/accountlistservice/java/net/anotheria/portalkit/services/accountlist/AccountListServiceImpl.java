@@ -30,9 +30,7 @@ public class AccountListServiceImpl implements AccountListService {
     private Cache<AccountId, AccountListData> accountLists;
 
     public AccountListServiceImpl() {
-
         accountLists = Caches.createHardwiredCache("accountlistservice-cacheaccountlists");
-
         try {
             persistenceService = MetaFactory.get(AccountListPersistenceService.class);
         } catch (MetaFactoryException e) {
@@ -45,7 +43,6 @@ public class AccountListServiceImpl implements AccountListService {
         IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
         lock.lock();
         try {
-            //lock.lock();  печалько :P
             for (AccountIdAdditionalInfo t : targets)
                 // just provides possibility to control property value from top lvl abstraction...
                 if (t.getCreationTimestamp() == 0)
@@ -90,7 +87,6 @@ public class AccountListServiceImpl implements AccountListService {
         IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
         lock.lock();
         try {
-            //lock.lock();  печалько :P
             List<AccountIdAdditionalInfo> fromPersistence = persistenceService.getList(owner, listName);
             AccountListData accListData = new AccountListData(owner, listName, fromPersistence);
             accountLists.put(owner, accListData);
@@ -118,7 +114,6 @@ public class AccountListServiceImpl implements AccountListService {
         IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
         lock.lock();
         try {
-            //lock.lock();  печалько :P
             boolean res = persistenceService.removeFromList(owner, listName, targets);
             if (res) {
                 AccountListData results = accountLists.get(owner);
@@ -144,7 +139,6 @@ public class AccountListServiceImpl implements AccountListService {
         try {
             List<AccountIdAdditionalInfo> res = persistenceService.getReverseList(target, listName);
             return (res == null) ? new ArrayList<AccountIdAdditionalInfo>() : res;
-
         } catch (AccountListPersistenceServiceException e) {
             throw new AccountListServiceException("persistenceService.getReverseList() failed", e);
         }
