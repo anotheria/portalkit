@@ -28,6 +28,10 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 	public Account createAccount(JDBCAccountPersistenceServiceImpl service) throws Exception{
 		Account newAcc = createAccountTemplate();
 		service.saveAccount(newAcc);
+
+        newAcc = service.getAccount(newAcc.getId() );
+        service.saveAccount(newAcc);
+
 		return newAcc;
 	}
 
