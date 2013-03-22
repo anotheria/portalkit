@@ -135,6 +135,9 @@ public class AccountListServiceImpl implements AccountListService {
 	}
 
 	private void updateCache(AccountId owner, String listName, List<AccountIdAdditionalInfo> targets) {
+		if (targets != null && targets.size() == 0) {
+			return;
+		}
 		AccountListData fromCache = accountListsCache.get(owner);
 		if (fromCache == null) {
 			fromCache = new AccountListData(owner);
