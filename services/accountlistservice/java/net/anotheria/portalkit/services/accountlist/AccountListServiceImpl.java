@@ -145,8 +145,8 @@ public class AccountListServiceImpl implements AccountListService {
 
 	private List<AccountIdAdditionalInfo> getListToUpdate(Set<AccountIdAdditionalInfo> existing, Collection<AccountIdAdditionalInfo> targets) {
 		List<AccountIdAdditionalInfo> res = new ArrayList<AccountIdAdditionalInfo>();
-		for (AccountIdAdditionalInfo t : existing) {
-			if (targets.contains(t)) {
+		for (AccountIdAdditionalInfo t : targets) {
+			if (existing.contains(t)) {
 				res.add(t);
 			}
 		}
