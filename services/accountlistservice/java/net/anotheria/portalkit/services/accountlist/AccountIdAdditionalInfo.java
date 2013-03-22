@@ -17,11 +17,16 @@ public class AccountIdAdditionalInfo implements Serializable {
 	private String additionalInfo;
 	private long creationTimestamp;
 
-	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo) {
+	public AccountIdAdditionalInfo(AccountId accountId) {
 		this.accountId = accountId;
-		this.additionalInfo = additionalInfo;
+		setAdditionalInfo("");
 	}
-	
+
+	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo) {
+		this(accountId);
+		setAdditionalInfo(additionalInfo);
+	}
+
 	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo, long creationTimestamp) {
 		this(accountId, additionalInfo);
 		this.creationTimestamp = creationTimestamp;
@@ -31,16 +36,16 @@ public class AccountIdAdditionalInfo implements Serializable {
 		return accountId;
 	}
 
-	public void setAccountId(AccountId accountId) {
-		this.accountId = accountId;
-	}
-
 	public String getAdditionalInfo() {
 		return additionalInfo;
 	}
 
 	public void setAdditionalInfo(String additionalInfo) {
-		this.additionalInfo = additionalInfo;
+		if (additionalInfo != null) {
+			this.additionalInfo = additionalInfo;
+		} else {
+			this.additionalInfo = "";
+		}
 	}
 
 	@Override

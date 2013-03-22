@@ -26,6 +26,19 @@ public interface AccountListService extends Service {
 	 * @throws AccountListServiceException
 	 */
 	boolean addToList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets) throws AccountListServiceException;
+	
+	/**
+	 * Updates an account in the specified list of the owner. If the target account
+	 * is already in the list, the operation does nothing.
+	 * 
+	 * @param owner
+	 * @param listName
+	 * @param firstTarget
+	 * @param moreTargets
+	 * @return
+	 * @throws AccountListServiceException
+	 */
+	boolean updateInList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
 
 	/**
 	 * Adds collection of accounts to the specified list of the owner. If the

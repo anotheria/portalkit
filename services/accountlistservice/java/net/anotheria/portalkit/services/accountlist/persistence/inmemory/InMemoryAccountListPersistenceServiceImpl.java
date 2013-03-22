@@ -43,6 +43,20 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 		addReverseStorage(owner, listName, targets);
 		return true;
 	}
+	
+	@Override
+	public boolean updateInList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
+			throws AccountListPersistenceServiceException {
+		AccountListData accListData = storage.get(owner);
+		if (accListData == null) {
+			accListData = new AccountListData(owner, listName, targets);
+			storage.put(owner, accListData);
+		} else {
+			accListData.addAll(listName, targets);
+		}
+		addReverseStorage(owner, listName, targets);
+		return true;
+	}
 
 	@Override
 	public List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListPersistenceServiceException {

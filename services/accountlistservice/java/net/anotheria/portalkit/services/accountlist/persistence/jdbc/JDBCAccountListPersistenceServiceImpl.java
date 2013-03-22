@@ -118,5 +118,25 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
             JDBCUtil.close(conn);
         }
     }
+    
+    @Override
+    public boolean updateInList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
+    		throws AccountListPersistenceServiceException {
+    	Connection conn = null;
+        try {
+            conn = getConnection();
+            return accountlistDAO.updateInList(conn, owner, listName, targets);
+        } catch (DAOException e) {
+            final String message = LOG_PREFIX + LogMessageUtil.failMsg(e, owner, listName, targets.size());
+            LOGGER.error(message, e);
+            throw new AccountListPersistenceServiceException(message, e);
+        } catch (SQLException e) {
+            final String message = LOG_PREFIX + LogMessageUtil.failMsg(e, owner, listName, targets.size());
+            LOGGER.error(message, e);
+            throw new AccountListPersistenceServiceException(message, e);
+        } finally {
+            JDBCUtil.close(conn);
+        }
+    }
 
 }

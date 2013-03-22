@@ -44,17 +44,53 @@ public abstract class AbstractAccountListServiceTest {
 
 		boolean res = service.addToList(accId, "contacts", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"),
 				new AccountIdAdditionalInfo(AccountId.generateNew(), "second"), new AccountIdAdditionalInfo(AccountId.generateNew(), "third"));
-		// System.out.println("got " + res + " after insert...");
 		assertTrue(res);
 
 		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "contacts");
-		System.out.println(accIdList);
+//		System.out.println(accIdList);
 		checkCreationTimeStamp(accIdList);
-		// System.out.println("got " + accIdList.size() +
-		// " records after insert...");
+
 		assertNotNull(accIdList);
 		assertEquals(3, accIdList.size());
 
+	}
+
+	@Test
+	public void testUpdateTargetToList() throws Exception {
+
+		AccountId accId = AccountId.generateNew();
+		
+		AccountIdAdditionalInfo before = new AccountIdAdditionalInfo(AccountId.generateNew(), "before");
+		
+		service.updateInList(accId, "visits", Arrays.asList(new AccountIdAdditionalInfo[] {new AccountIdAdditionalInfo(AccountId.generateNew()), before}));
+
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "visits");
+		checkCreationTimeStamp(accIdList);
+		
+		assertNotNull(accIdList);
+		assertEquals(2, accIdList.size());
+		
+		before.setCreationTimestamp(100L);
+		
+		boolean res = service.updateInList(accId, "visits", Arrays.asList(new AccountIdAdditionalInfo[] {
+				new AccountIdAdditionalInfo(AccountId.generateNew()), new AccountIdAdditionalInfo(AccountId.generateNew(), "second"),
+				new AccountIdAdditionalInfo(AccountId.generateNew(), "third"), before }));
+		
+		assertTrue(res);
+
+		accIdList = service.getList(accId, "visits");
+		System.out.println(accIdList);
+		checkCreationTimeStamp(accIdList);
+
+		assertNotNull(accIdList);
+		assertEquals(5, accIdList.size());
+
+		for (AccountIdAdditionalInfo info : accIdList) {
+			if (info.equals(before)) {
+				System.out.println("--------------");
+				assertEquals(100, info.getCreationTimestamp());
+			}
+		}
 	}
 
 	@Test

@@ -11,6 +11,11 @@ import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
 
+/**
+ * 
+ * @author dagafonov
+ *
+ */
 public class AccountListServiceInMemoryTest extends AbstractAccountListServiceTest {
 
 	@Before

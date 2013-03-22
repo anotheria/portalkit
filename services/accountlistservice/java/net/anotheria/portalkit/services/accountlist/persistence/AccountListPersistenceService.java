@@ -58,4 +58,14 @@ public interface AccountListPersistenceService extends Service {
 	 */
 	List<AccountIdAdditionalInfo> getReverseList(AccountId target, String listName) throws AccountListPersistenceServiceException;
 
+	/**
+	 * 
+	 * @param owner
+	 * @param listName
+	 * @param itemsToUpdate
+	 * @return
+	 * @throws AccountListPersistenceServiceException
+	 */
+	boolean updateInList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> itemsToUpdate) throws AccountListPersistenceServiceException;
+
 }

@@ -1,7 +1,9 @@
 package net.anotheria.portalkit.services.accountlist;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.anotheria.portalkit.services.common.AccountId;
@@ -65,12 +67,16 @@ public class AccountListData {
 
 	public void addAll(String listName, Collection<AccountIdAdditionalInfo> targets) {
 		AccountList accList = getLists().get(listName);
+		Set<AccountIdAdditionalInfo> unique = new HashSet<AccountIdAdditionalInfo>();
 		if (accList == null) {
 			accList = new AccountList(listName);
-			accList.addAll(targets);
+			unique.addAll(targets);
+			accList.addAll(unique);
 			getLists().put(accList.getListName(), accList);
 		} else {
-			accList.addAll(targets);
+			unique.addAll(accList.getTargets());
+			unique.addAll(targets);
+			accList.addAll(unique);
 		}
 	}
 
