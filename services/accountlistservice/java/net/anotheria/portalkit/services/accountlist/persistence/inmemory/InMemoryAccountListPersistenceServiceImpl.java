@@ -26,22 +26,25 @@ public class InMemoryAccountListPersistenceServiceImpl implements AccountListPer
 
 	@Override
 	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
-		AccountListData accListData = storage.get(owner);
-		if (accListData == null) {
-			accListData = new AccountListData(owner, listName, targets);
-			storage.put(owner, accListData);
-		} else {
-			AccountList accList = accListData.getLists().get(listName);
-			if (accList == null) {
-				accList = new AccountList(listName);
-				accList.addAll(targets);
-				accListData.getLists().put(listName, accList);
-			} else {
-				accList.addAll(targets);
-			}
-		}
-		addReverseStorage(owner, listName, targets);
-		return true;
+//		AccountListData accListData = storage.get(owner);
+//		if (accListData == null) {
+//			accListData = new AccountListData(owner, listName, targets);
+//			storage.put(owner, accListData);
+//		} else {
+//			AccountList accList = accListData.getLists().get(listName);
+//			if (accList == null) {
+//				accList = new AccountList(listName);
+//				accList.addAll(targets);
+//				accListData.getLists().put(listName, accList);
+//			} else {
+//				accList.addAll(targets);
+//			}
+//		}
+//		addReverseStorage(owner, listName, targets);
+//		return true;
+		
+		return updateInList(owner, listName, targets);
+		
 	}
 	
 	@Override
