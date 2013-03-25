@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountlist;
 
+import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
@@ -29,6 +30,9 @@ public class AccountListServiceMultiListTest {
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
+		
+		MetaFactory.addFactoryClass(AccountListService.class, Extension.LOCAL, AccountListServiceFactory.class);
+		MetaFactory.addAlias(AccountListService.class, Extension.LOCAL);
 
 	}
 

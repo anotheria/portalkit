@@ -1,10 +1,12 @@
 package net.anotheria.portalkit.services.accountlist;
 
-import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
-
 import java.util.Collection;
 import java.util.List;
+
+import org.distributeme.annotation.DistributeMe;
+
+import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * AccountList service interface.
@@ -12,6 +14,7 @@ import java.util.List;
  * @author lrosenberg
  * 
  */
+@DistributeMe()
 public interface AccountListService extends Service {
 
 	/**

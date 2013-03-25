@@ -1,21 +1,23 @@
 package net.anotheria.portalkit.services.foreignid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
 import net.anotheria.util.IdCodeGenerator;
+
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 /**
  * TODO comment this class
@@ -32,6 +34,9 @@ public class ForeignIdServiceTest {
 		MetaFactory.reset();
 		// use jdbc for persistence
 		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
+		
+		MetaFactory.addFactoryClass(ForeignIdService.class, Extension.LOCAL, ForeignIdServiceFactory.class);
+		MetaFactory.addAlias(ForeignIdService.class, Extension.LOCAL);
 	}
 
 	@Test

@@ -1,9 +1,11 @@
 package net.anotheria.portalkit.services.record;
 
+import java.util.Collection;
+
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.util.Collection;
+import org.distributeme.annotation.DistributeMe;
 
 /**
  * The record service. The record service is used to store different type of
@@ -13,6 +15,7 @@ import java.util.Collection;
  * @author lrosenberg
  * @since 11.12.12 17:37
  */
+@DistributeMe()
 public interface RecordService extends Service {
 	
 	/**

@@ -1,9 +1,11 @@
 package net.anotheria.portalkit.services.account;
 
+import java.util.List;
+
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.util.List;
+import org.distributeme.annotation.DistributeMe;
 
 /**
  * This interface describes the account service, where all system accounts are managed.
@@ -11,6 +13,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 14.10.12 21:56
  */
+@DistributeMe()
 public interface AccountService extends Service {
 
 	/**

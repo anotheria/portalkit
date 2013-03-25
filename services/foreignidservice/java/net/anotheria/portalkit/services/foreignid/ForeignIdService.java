@@ -1,9 +1,11 @@
 package net.anotheria.portalkit.services.foreignid;
 
+import java.util.List;
+
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.util.List;
+import org.distributeme.annotation.DistributeMe;
 
 /**
  * TODO comment this class
@@ -11,6 +13,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 28.12.12 23:44
  */
+@DistributeMe()
 public interface ForeignIdService extends Service {
 	/**
 	 * Creates a new association between our account and another account.

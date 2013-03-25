@@ -1,19 +1,20 @@
 package net.anotheria.portalkit.services.authentication;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
-import org.configureme.ConfigurationManager;
-import org.configureme.environments.DynamicEnvironment;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import net.anotheria.anoprise.metafactory.Extension;
+import net.anotheria.anoprise.metafactory.MetaFactory;
+import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
+
+import org.configureme.ConfigurationManager;
+import org.configureme.environments.DynamicEnvironment;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * This is the test for the auth token handling part of the authentication service.
@@ -28,6 +29,11 @@ public class AuthenticationServiceAuthTokenTest {
 	public void setup(){
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
+		
+		MetaFactory.addFactoryClass(AuthenticationService.class, Extension.LOCAL, AuthenticationServiceFactory.class);
+		MetaFactory.addAlias(AuthenticationService.class, Extension.LOCAL);
+		
+		
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
 	}
 

@@ -1,19 +1,21 @@
 package net.anotheria.portalkit.services.account;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import net.anotheria.anoprise.metafactory.Extension;
+import net.anotheria.anoprise.metafactory.MetaFactory;
+import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * TODO comment this class
@@ -27,6 +29,9 @@ public class AccountServiceTest {
 	@Before public void setup(){
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
+		
+		MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);
+		MetaFactory.addAlias(AccountService.class, Extension.LOCAL);
 	}
 
 	//this test will be removed later, for now it 'tests' the new metafactory functionality, instantiation of service

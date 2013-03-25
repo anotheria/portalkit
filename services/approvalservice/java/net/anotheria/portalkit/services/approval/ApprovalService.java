@@ -1,8 +1,10 @@
 package net.anotheria.portalkit.services.approval;
 
+import java.util.Collection;
+
 import net.anotheria.anoprise.metafactory.Service;
 
-import java.util.Collection;
+import org.distributeme.annotation.DistributeMe;
 
 /**
  * Approval service interface.
@@ -10,6 +12,7 @@ import java.util.Collection;
  * @author dagafonov
  * 
  */
+@DistributeMe()
 public interface ApprovalService extends Service {
 
 	/**

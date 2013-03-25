@@ -3,12 +3,15 @@ package net.anotheria.portalkit.services.authentication;
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import org.distributeme.annotation.DistributeMe;
+
 /**
  * TODO comment this class
  *
  * @author lrosenberg
  * @since 11.12.12 15:56
  */
+@DistributeMe()
 public interface AuthenticationService extends Service {
 
 	/**

@@ -1,9 +1,11 @@
 package net.anotheria.portalkit.services.accountlist.persistence.jdbc;
 
+import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.accountlist.AbstractAccountListServiceTest;
 import net.anotheria.portalkit.services.accountlist.AccountListService;
+import net.anotheria.portalkit.services.accountlist.AccountListServiceFactory;
 import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
 
 import org.configureme.ConfigurationManager;
@@ -23,6 +25,10 @@ public class AccountListServiceJDBCTest extends AbstractAccountListServiceTest {
 	public void reset() {
 		ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
 		MetaFactory.reset();
+		
+		MetaFactory.addFactoryClass(AccountListService.class, Extension.LOCAL, AccountListServiceFactory.class);
+		MetaFactory.addAlias(AccountListService.class, Extension.LOCAL);
+		
 		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
 		try {
 			setService(MetaFactory.get(AccountListService.class));

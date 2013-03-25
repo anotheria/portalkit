@@ -53,14 +53,14 @@ public class AccountListServiceImpl implements AccountListService {
 	 */
 	private Cache<AccountId, AccountListData> accountListsCache;
 
-//	private Cache<AccountId, AccountListData> reverseAccountListsCache;
+	private Cache<AccountId, AccountListData> reverseAccountListsCache;
 
 	/**
 	 * Constructor.
 	 */
 	public AccountListServiceImpl() {
 		accountListsCache = Caches.createHardwiredCache("accountlistservice-cacheaccountlists");
-//		reverseAccountListsCache = Caches.createHardwiredCache("reverseaccountlistservice-cacheaccountlists");
+		reverseAccountListsCache = Caches.createHardwiredCache("reverseaccountlistservice-cacheaccountlists");
 		try {
 			persistenceService = MetaFactory.get(AccountListPersistenceService.class);
 		} catch (MetaFactoryException e) {
@@ -153,6 +153,27 @@ public class AccountListServiceImpl implements AccountListService {
 		}
 		fromCache.addAll(listName, targets);
 		// TODO reverseAccountListsCache
+	}
+	
+	private void addReverseStorage(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
+		for (AccountIdAdditionalInfo target : targets) {
+			AccountListData accListData = reverseAccountListsCache.get(target.getAccountId());
+			if (accListData != null) {
+				accListData.addAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo(), target.getCreationTimestamp()) }));
+			} else {
+				accListData = new AccountListData(target.getAccountId(), listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo(), target.getCreationTimestamp()) }));
+				reverseAccountListsCache.put(target.getAccountId(), accListData);
+			}
+		}
+	}
+	
+	private void removeReverseStorage(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
+		for (AccountIdAdditionalInfo target : targets) {
+			AccountListData accListData = reverseAccountListsCache.get(target.getAccountId());
+			if (accListData != null) {
+				accListData.removeAll(listName, Arrays.asList(new AccountIdAdditionalInfo[] { new AccountIdAdditionalInfo(owner, target.getAdditionalInfo()) }));
+			}
+		}
 	}
 	
 	private void updateRemoveCaches(AccountId owner, String listName, List<AccountIdAdditionalInfo> targets) {
@@ -266,20 +287,20 @@ public class AccountListServiceImpl implements AccountListService {
 	@Override
 	public List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException {
 		// todo : incoming parameters validation ???
-//		AccountListData fromCache = reverseAccountListsCache.get(target);
-//		if (fromCache != null) {
-//			AccountList accList = fromCache.getLists().get(listName);
-//			if (accList != null && !accList.getTargets().isEmpty()) {
-//				return accList.getTargets();
-//			}
-//		}
+		AccountListData fromCache = reverseAccountListsCache.get(target);
+		if (fromCache != null) {
+			AccountList accList = fromCache.getLists().get(listName);
+			if (accList != null && !accList.getTargets().isEmpty()) {
+				return accList.getTargets();
+			}
+		}
 		try {
 			List<AccountIdAdditionalInfo> res = persistenceService.getReverseList(target, listName);
 			if (res == null) {
 				res = new ArrayList<AccountIdAdditionalInfo>();
 			}
 			AccountListData ald = new AccountListData(target, listName, res);
-//			reverseAccountListsCache.put(target, ald);
+			reverseAccountListsCache.put(target, ald);
 			return ald.getLists().get(listName).getTargets();
 		} catch (AccountListPersistenceServiceException e) {
 			final String message = LogMessageUtil.failMsg(e, target, listName);
