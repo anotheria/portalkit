@@ -188,8 +188,8 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	public List<AccountIdAdditionalInfo> getReverseList(Connection connection, AccountId target, String listName) throws DAOException, SQLException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
+		List<AccountIdAdditionalInfo> res = new ArrayList<AccountIdAdditionalInfo>();
 		try {
-			List<AccountIdAdditionalInfo> res = new ArrayList<AccountIdAdditionalInfo>();
 			stmt = connection.prepareStatement(String.format("SELECT %s, %s, %s from %s WHERE %s=? and %s=? order by %s asc", OWNER_ID,
 					ADDITIONAL_INFO, CREATION_TIMESTAMP, TABLE_NAME, TARGET_ID, LIST_NAME, CREATION_TIMESTAMP));
 			stmt.setString(1, target.getInternalId());

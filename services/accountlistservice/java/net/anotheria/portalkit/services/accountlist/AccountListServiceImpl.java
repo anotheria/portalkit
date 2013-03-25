@@ -18,6 +18,7 @@ import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -52,11 +53,14 @@ public class AccountListServiceImpl implements AccountListService {
 	 */
 	private Cache<AccountId, AccountListData> accountListsCache;
 
+//	private Cache<AccountId, AccountListData> reverseAccountListsCache;
+
 	/**
 	 * Constructor.
 	 */
 	public AccountListServiceImpl() {
 		accountListsCache = Caches.createHardwiredCache("accountlistservice-cacheaccountlists");
+//		reverseAccountListsCache = Caches.createHardwiredCache("reverseaccountlistservice-cacheaccountlists");
 		try {
 			persistenceService = MetaFactory.get(AccountListPersistenceService.class);
 		} catch (MetaFactoryException e) {
@@ -67,38 +71,42 @@ public class AccountListServiceImpl implements AccountListService {
 	@Override
 	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException {
 		return updateInList(owner, listName, targets);
-//		IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
-//		lock.lock();
-//		try {
-//			// reading current entries
-//			Set<AccountIdAdditionalInfo> contacts = new HashSet<AccountIdAdditionalInfo>(getListInternally(owner, listName));
-//			List<AccountIdAdditionalInfo> itemsToCreate = new ArrayList<AccountIdAdditionalInfo>();
-//
-//			for (AccountIdAdditionalInfo itemToCreate : targets) {
-//				// to prevent Duplicate entries!
-//				if (contacts.contains(itemToCreate)) {
-//					addDebugMessage(itemToCreate, true);
-//					continue;
-//				}
-//				itemsToCreate.add(itemToCreate);
-//				// just provides possibility to control property value from top
-//				// lvl abstraction...
-//				if (itemToCreate.getCreationTimestamp() == 0)
-//					itemToCreate.setCreationTimestamp(System.currentTimeMillis());
-//			}
-//
-//			final boolean res = persistenceService.addToList(owner, listName, itemsToCreate);
-//			if (res) {
-//				updateCache(owner, listName, itemsToCreate);
-//			}
-//			return res;
-//		} catch (AccountListPersistenceServiceException e) {
-//			final String message = LogMessageUtil.failMsg(e, owner, listName, targets.size());
-//			LOGGER.error(message, e);
-//			throw new AccountListServiceException(message, e);
-//		} finally {
-//			lock.unlock();
-//		}
+		// IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
+		// lock.lock();
+		// try {
+		// // reading current entries
+		// Set<AccountIdAdditionalInfo> contacts = new
+		// HashSet<AccountIdAdditionalInfo>(getListInternally(owner, listName));
+		// List<AccountIdAdditionalInfo> itemsToCreate = new
+		// ArrayList<AccountIdAdditionalInfo>();
+		//
+		// for (AccountIdAdditionalInfo itemToCreate : targets) {
+		// // to prevent Duplicate entries!
+		// if (contacts.contains(itemToCreate)) {
+		// addDebugMessage(itemToCreate, true);
+		// continue;
+		// }
+		// itemsToCreate.add(itemToCreate);
+		// // just provides possibility to control property value from top
+		// // lvl abstraction...
+		// if (itemToCreate.getCreationTimestamp() == 0)
+		// itemToCreate.setCreationTimestamp(System.currentTimeMillis());
+		// }
+		//
+		// final boolean res = persistenceService.addToList(owner, listName,
+		// itemsToCreate);
+		// if (res) {
+		// updateCache(owner, listName, itemsToCreate);
+		// }
+		// return res;
+		// } catch (AccountListPersistenceServiceException e) {
+		// final String message = LogMessageUtil.failMsg(e, owner, listName,
+		// targets.size());
+		// LOGGER.error(message, e);
+		// throw new AccountListServiceException(message, e);
+		// } finally {
+		// lock.unlock();
+		// }
 	}
 
 	@Override
@@ -118,11 +126,11 @@ public class AccountListServiceImpl implements AccountListService {
 
 			boolean resUpdate = persistenceService.updateInList(owner, listName, itemsToUpdate);
 			if (resUpdate) {
-				updateCache(owner, listName, itemsToUpdate);
+				updateAddCaches(owner, listName, itemsToUpdate);
 			}
 			boolean resCreate = persistenceService.addToList(owner, listName, itemsToCreate);
 			if (resCreate) {
-				updateCache(owner, listName, itemsToCreate);
+				updateAddCaches(owner, listName, itemsToCreate);
 			}
 			return resUpdate && resCreate;
 		} catch (AccountListPersistenceServiceException e) {
@@ -134,7 +142,7 @@ public class AccountListServiceImpl implements AccountListService {
 		}
 	}
 
-	private void updateCache(AccountId owner, String listName, List<AccountIdAdditionalInfo> targets) {
+	private void updateAddCaches(AccountId owner, String listName, List<AccountIdAdditionalInfo> targets) {
 		if (targets == null || targets.size() == 0) {
 			return;
 		}
@@ -144,6 +152,18 @@ public class AccountListServiceImpl implements AccountListService {
 			accountListsCache.put(owner, fromCache);
 		}
 		fromCache.addAll(listName, targets);
+		// TODO reverseAccountListsCache
+	}
+	
+	private void updateRemoveCaches(AccountId owner, String listName, List<AccountIdAdditionalInfo> targets) {
+		if (targets == null || targets.size() == 0) {
+			return;
+		}
+		AccountListData fromCache = accountListsCache.get(owner);
+		if (fromCache != null) {
+			fromCache.removeAll(listName, targets);
+		}
+		// TODO reverseAccountListsCache
 	}
 
 	private List<AccountIdAdditionalInfo> getListToUpdate(Set<AccountIdAdditionalInfo> existing, Collection<AccountIdAdditionalInfo> targets) {
@@ -170,7 +190,9 @@ public class AccountListServiceImpl implements AccountListService {
 	public boolean addToList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets)
 			throws AccountListServiceException {
 		List<AccountIdAdditionalInfo> targets = new ArrayList<AccountIdAdditionalInfo>();
-		targets.add(firstTarget);
+		if (firstTarget != null) {
+			targets.add(firstTarget);
+		}
 		if (moreTargets != null && moreTargets.length > 0) {
 			targets.addAll(Arrays.asList(moreTargets));
 		}
@@ -182,7 +204,7 @@ public class AccountListServiceImpl implements AccountListService {
 		AccountListData fromCache = accountListsCache.get(owner);
 		if (fromCache != null) {
 			AccountList accList = fromCache.getLists().get(listName);
-			if (accList != null && accList.getTargets().size() > 0) {
+			if (accList != null && !accList.getTargets().isEmpty()) {
 				return accList.getTargets();
 			}
 		}
@@ -199,7 +221,9 @@ public class AccountListServiceImpl implements AccountListService {
 	public boolean removeFromList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets)
 			throws AccountListServiceException {
 		List<AccountIdAdditionalInfo> targets = new ArrayList<AccountIdAdditionalInfo>();
-		targets.add(firstTarget);
+		if (firstTarget != null) {
+			targets.add(firstTarget);
+		}
 		if (moreTargets != null && moreTargets.length > 0) {
 			targets.addAll(Arrays.asList(moreTargets));
 		}
@@ -212,25 +236,22 @@ public class AccountListServiceImpl implements AccountListService {
 		lock.lock();
 		try {
 			// reading current entries
-			Set<AccountIdAdditionalInfo> contacts = new HashSet<AccountIdAdditionalInfo>(getListInternally(owner, listName));
-			List<AccountIdAdditionalInfo> itemsToRemove = new ArrayList<AccountIdAdditionalInfo>();
-
+			Set<AccountIdAdditionalInfo> existing = new HashSet<AccountIdAdditionalInfo>(getListInternally(owner, listName));
+			List<AccountIdAdditionalInfo> itemsToRemove = new ArrayList<AccountIdAdditionalInfo>(targets);
+			
+			// clearing deletion list, skip only existing items
 			for (AccountIdAdditionalInfo itemToRemove : targets) {
 				// to prevent Duplicate entries!
-				if (!contacts.contains(itemToRemove)) {
+				if (!existing.contains(itemToRemove)) {
 					addDebugMessage(itemToRemove, false);
 					continue;
 				}
 				itemsToRemove.add(itemToRemove);
-
 			}
 
 			boolean res = persistenceService.removeFromList(owner, listName, itemsToRemove);
 			if (res) {
-				AccountListData results = accountListsCache.get(owner);
-				if (results != null) {
-					results.removeAll(listName, targets);
-				}
+				updateRemoveCaches(owner, listName, itemsToRemove);
 			}
 			return res;
 		} catch (AccountListPersistenceServiceException e) {
@@ -245,9 +266,21 @@ public class AccountListServiceImpl implements AccountListService {
 	@Override
 	public List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException {
 		// todo : incoming parameters validation ???
+//		AccountListData fromCache = reverseAccountListsCache.get(target);
+//		if (fromCache != null) {
+//			AccountList accList = fromCache.getLists().get(listName);
+//			if (accList != null && !accList.getTargets().isEmpty()) {
+//				return accList.getTargets();
+//			}
+//		}
 		try {
 			List<AccountIdAdditionalInfo> res = persistenceService.getReverseList(target, listName);
-			return (res == null) ? new ArrayList<AccountIdAdditionalInfo>() : res;
+			if (res == null) {
+				res = new ArrayList<AccountIdAdditionalInfo>();
+			}
+			AccountListData ald = new AccountListData(target, listName, res);
+//			reverseAccountListsCache.put(target, ald);
+			return ald.getLists().get(listName).getTargets();
 		} catch (AccountListPersistenceServiceException e) {
 			final String message = LogMessageUtil.failMsg(e, target, listName);
 			LOGGER.error(message, e);
