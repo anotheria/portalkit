@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.record;
 
-import java.io.Serializable;
 
 /**
  * TODO comment this class
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * @author lrosenberg
  * @since 27.02.13 19:59
  */
-public class StringRecord extends Record implements Serializable {
+public class StringRecord extends Record {
 
 	private static final long serialVersionUID = 1L;
 

@@ -11,8 +11,11 @@ import java.io.Serializable;
  */
 public abstract class Record implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5751378823225754158L;
+	
 	/**
 	 * Id of the record.
 	 */

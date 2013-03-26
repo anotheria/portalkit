@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountlist;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,7 +16,12 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author dagafonov
  * 
  */
-public class AccountListData {
+public class AccountListData implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -206790452804778000L;
 
 	/**
 	 * Account id of the user.

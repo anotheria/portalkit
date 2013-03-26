@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.record;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -10,8 +11,16 @@ import java.util.concurrent.ConcurrentMap;
  * @author lrosenberg
  * @since 04.01.13 15:20
  */
-public class RecordSet {
+public class RecordSet implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3152621373008889484L;
+	
+	/**
+	 * 
+	 */
 	private ConcurrentMap<String, Record> recordMap;
 
 	public RecordSet(){

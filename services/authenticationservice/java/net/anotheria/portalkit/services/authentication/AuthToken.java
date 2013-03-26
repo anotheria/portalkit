@@ -12,6 +12,10 @@ import java.io.Serializable;
  */
 public class AuthToken implements Serializable, Cloneable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7467251656767498719L;
 
 	/**
 	 * Timestamp at which this token expires.
@@ -27,7 +31,6 @@ public class AuthToken implements Serializable, Cloneable {
 	 * If exclusive, creation of new token will lead to erasure of ALL other tokens.
 	 */
 	private boolean exclusive;
-
 
 	/**
 	 * If true, creation of new token of this type will lead to erasure of ALL tokens of the same type.

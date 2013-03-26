@@ -5,16 +5,32 @@ import java.io.Serializable;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
+ * Container for addition information like creation time stamp and anything that
+ * can be transformed into string value.
  * 
  * @author dagafonov
  * 
  */
 public class AccountIdAdditionalInfo implements Serializable {
 
-	private static final long serialVersionUID = 6018520772456445957L;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5791442539361096897L;
 
+	/**
+	 * 
+	 */
 	private AccountId accountId;
+
+	/**
+	 * 
+	 */
 	private String additionalInfo;
+
+	/**
+	 * 
+	 */
 	private long creationTimestamp;
 
 	public AccountIdAdditionalInfo(AccountId accountId) {

@@ -1,11 +1,9 @@
 package net.anotheria.portalkit.services.record;
 
-import java.io.Serializable;
-
 /**
  * @author dagafonov
  */
-public class LongRecord extends Record implements Serializable {
+public class LongRecord extends Record {
 
 	private static final long serialVersionUID = 1L;
 

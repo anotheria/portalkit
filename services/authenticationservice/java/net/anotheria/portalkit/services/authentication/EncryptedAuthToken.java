@@ -1,13 +1,28 @@
 package net.anotheria.portalkit.services.authentication;
 
+import java.io.Serializable;
+
 /**
  * TODO comment this class
- *
+ * 
  * @author lrosenberg
  * @since 29.01.13 16:40
  */
-public class EncryptedAuthToken {
+public class EncryptedAuthToken implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3339612481447472867L;
+
+	/**
+	 * 
+	 */
 	private AuthToken authToken;
+
+	/**
+	 * 
+	 */
 	private String encryptedVersion;
 
 	public AuthToken getAuthToken() {
@@ -26,7 +41,8 @@ public class EncryptedAuthToken {
 		this.encryptedVersion = encryptedVersion;
 	}
 
-	@Override public String toString(){
-		return "AT: "+authToken+" = "+encryptedVersion;
+	@Override
+	public String toString() {
+		return "AT: " + authToken + " = " + encryptedVersion;
 	}
 }
