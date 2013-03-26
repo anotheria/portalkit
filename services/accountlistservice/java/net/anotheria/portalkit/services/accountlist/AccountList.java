@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountlist;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,7 +13,12 @@ import java.util.List;
  * @author dagafonov
  * 
  */
-public class AccountList {
+public class AccountList implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1885982738152268139L;
 
 	/**
 	 * Name of the list (like favourites, contacts, visited, visits...).
