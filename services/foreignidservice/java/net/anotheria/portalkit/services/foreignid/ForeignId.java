@@ -5,12 +5,17 @@ import net.anotheria.portalkit.services.common.AccountId;
 import java.io.Serializable;
 
 /**
- * TODO comment this class
+ * ForeignId bean.
  * 
  * @author lrosenberg
  * @since 28.12.12 23:31
  */
 public class ForeignId implements Serializable {
+
+	/**
+	 * Generated serialVersionUID.
+	 */
+	private static final long serialVersionUID = -3724518051843205604L;
 
 	/**
 	 * The source id, this is dependent on the concrete source.
@@ -24,17 +29,24 @@ public class ForeignId implements Serializable {
 	private int sourceId;
 
 	/**
-	 * The account id in our system
+	 * The account id in our system.
 	 */
 	private AccountId accountId;
 
 	/**
-	 * Default constructor
+	 * Default constructor.
 	 */
 	public ForeignId() {
 
 	}
 
+	/**
+	 * Additional constructor that fills needed fields.
+	 * 
+	 * @param accountId
+	 * @param sourceId
+	 * @param id
+	 */
 	public ForeignId(AccountId accountId, int sourceId, String id) {
 		this.accountId = accountId;
 		this.sourceId = sourceId;

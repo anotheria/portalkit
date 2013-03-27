@@ -13,12 +13,15 @@ import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersisten
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceServiceException;
 
 /**
- * 
+ * JDBC implementation for ForeignId persistence service.
  * @author dagafonov
  * 
  */
 public class JDBCForeignIdPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements ForeignIdPersistenceService {
 
+	/**
+	 * {@link ForeignIdDAO} instance.
+	 */
 	private ForeignIdDAO dao;
 
 	public JDBCForeignIdPersistenceServiceImpl() {

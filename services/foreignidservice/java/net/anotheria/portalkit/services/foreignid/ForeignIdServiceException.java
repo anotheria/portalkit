@@ -11,16 +11,32 @@ import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersisten
  */
 public class ForeignIdServiceException extends PortalKitServiceException {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Generated serialVersionUID.
+	 */
+	private static final long serialVersionUID = 2236640256265161980L;
 
+	/**
+	 * Constructor with message.
+	 * @param message
+	 */
 	public ForeignIdServiceException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Constructor with message and {@link Throwable}.
+	 * @param message
+	 * @param cause
+	 */
 	public ForeignIdServiceException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 * Constructor that transform message from persistence exception to the current.
+	 * @param exception
+	 */
 	public ForeignIdServiceException(ForeignIdPersistenceServiceException exception) {
 		super("Persistence failure", exception);
 	}

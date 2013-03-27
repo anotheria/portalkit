@@ -9,6 +9,7 @@ import java.util.List;
 
 import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
+import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.JDBCPickerConflictResolver;
 import net.anotheria.util.IdCodeGenerator;
@@ -40,7 +41,7 @@ public class ForeignIdServiceTest {
 	}
 
 	@Test
-	public void testLinkUnlink() throws Exception {
+	public void testLinkUnlink() throws ForeignIdServiceException, MetaFactoryException {
 		ForeignIdService service = MetaFactory.get(ForeignIdService.class);
 
 		AccountId acc = AccountId.generateNew();
@@ -70,7 +71,7 @@ public class ForeignIdServiceTest {
 	}
 
 	@Test
-	public void testForeignIdUniqueness() throws Exception {
+	public void testForeignIdUniqueness() throws ForeignIdServiceException, MetaFactoryException {
 		ForeignIdService service = MetaFactory.get(ForeignIdService.class);
 		AccountId acc1 = AccountId.generateNew();
 		AccountId acc2 = AccountId.generateNew();

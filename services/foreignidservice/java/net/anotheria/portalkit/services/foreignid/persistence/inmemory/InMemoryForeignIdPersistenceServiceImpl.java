@@ -20,9 +20,19 @@ import net.anotheria.util.concurrency.SafeIdBasedLockManager;
  */
 public class InMemoryForeignIdPersistenceServiceImpl implements ForeignIdPersistenceService {
 
+	/**
+	 * Storage instance.
+	 */
 	private ConcurrentHashMap<AccountId, List<ForeignId>> storage = new ConcurrentHashMap<AccountId, List<ForeignId>>();
+	
+	/**
+	 * Cache of foreign id's.
+	 */
 	private ConcurrentHashMap<String, ForeignId> foreignIdCache = new ConcurrentHashMap<String, ForeignId>();
 
+	/**
+	 * Lock manager.
+	 */
 	private final IdBasedLockManager<AccountId> lockManager = new SafeIdBasedLockManager<AccountId>();
 
 	private String getKey(int sid, String fid) {
