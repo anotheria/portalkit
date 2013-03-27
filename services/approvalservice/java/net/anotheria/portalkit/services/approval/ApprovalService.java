@@ -19,7 +19,7 @@ public interface ApprovalService extends Service {
 	 * Creates a ticket.
 	 * 
 	 * @param ticketReferenceId
-	 * @return
+	 * @return {@link Ticket}
 	 * @throws ApprovalServiceException
 	 */
 	Ticket createTicket(String ticketReferenceId, long referenceType) throws ApprovalServiceException;
@@ -43,7 +43,7 @@ public interface ApprovalService extends Service {
 	 * Gets ticket by internal ID.
 	 * 
 	 * @param ticketId
-	 * @return
+	 * @return {@link Ticket}
 	 * @throws ApprovalServiceException
 	 */
 	Ticket getTicketById(String ticketId) throws ApprovalServiceException;
@@ -89,6 +89,7 @@ public interface ApprovalService extends Service {
 	 * 
 	 * @param reservationObject
 	 * @param ticketsToReserve
+	 * @return {@link Collection<Ticket>}
 	 * @throws ApprovalServiceException
 	 */
 	Collection<Ticket> getAndReserveTickets(String reservationObject, int number, long referenceType) throws ApprovalServiceException;
@@ -104,7 +105,7 @@ public interface ApprovalService extends Service {
 	/**
 	 * Gets reserved tickets for reservationObject.
 	 * 
-	 * @return
+	 * @return {@link Collection<Ticket>}
 	 * @throws ApprovalServiceException
 	 */
 	Collection<Ticket> getReservedTickets(String reservationObject, long referenceType) throws ApprovalServiceException;

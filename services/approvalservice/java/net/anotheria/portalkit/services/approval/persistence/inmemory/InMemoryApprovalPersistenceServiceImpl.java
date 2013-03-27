@@ -20,6 +20,9 @@ import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistence
  */
 public class InMemoryApprovalPersistenceServiceImpl implements ApprovalPersistenceService {
 
+	/**
+	 * Storage instance.
+	 */
 	private Map<String, Ticket> storage = new HashMap<String, Ticket>();
 
 	@Override

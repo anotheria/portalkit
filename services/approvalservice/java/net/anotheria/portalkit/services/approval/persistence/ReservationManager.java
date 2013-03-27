@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceServiceException;
 import net.anotheria.util.concurrency.IdBasedLock;
@@ -54,7 +52,7 @@ public abstract class ReservationManager<K, V, T> {
 	 * 
 	 * @param key
 	 * @param number
-	 * @return
+	 * @return {@link V}
 	 * @throws PortalKitPersistenceServiceException
 	 */
 	public V reserve(K key, int number) throws PortalKitPersistenceServiceException {

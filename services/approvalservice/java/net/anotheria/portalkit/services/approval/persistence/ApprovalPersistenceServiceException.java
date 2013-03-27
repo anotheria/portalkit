@@ -10,12 +10,24 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceSe
  */
 public class ApprovalPersistenceServiceException extends PortalKitPersistenceServiceException {
 
+	/**
+	 * Generated serialVersionUID.
+	 */
 	private static final long serialVersionUID = 2237340710234910195L;
 
+	/**
+	 * Constructor with message.
+	 * @param message
+	 */
 	public ApprovalPersistenceServiceException(String message) {
 		super(message);
 	}
 
+	/**
+	 * Constructor with message and {@link Throwable}.
+	 * @param message
+	 * @param cause
+	 */
 	public ApprovalPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);
 	}

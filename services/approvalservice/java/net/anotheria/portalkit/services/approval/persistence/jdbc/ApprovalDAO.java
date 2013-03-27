@@ -17,19 +17,40 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 /**
+ * Approval DAO.
  * 
  * @author dagafonov
  * 
  */
 public class ApprovalDAO extends AbstractDAO implements DAO {
 
+	/**
+	 * 
+	 */
 	private static final String TABLE_NAME = "ticketsapproval";
+	/**
+	 * 
+	 */
 	private static final String TICKET_ID_COLUMN_NAME = "ticketid";
+	/**
+	 * 
+	 */
 	private static final String STATUS_COLUMN_NAME = "status";
+	/**
+	 * 
+	 */
 	private static final String REFERENCE_ID_COLUMN_NAME = "referenceid";
+	/**
+	 * 
+	 */
 	private static final String REFERENCE_TYPE_COLUMN_NAME = "referencetype";
+	/**
+	 * 
+	 */
 	private static final String TIMESTAMP_COLUMN_NAME = "ts";
-
+	/**
+	 * 
+	 */
 	private static final String UPDATE_STATUS_SQL = "update %s set %s=? where %s=?;";
 
 	@Override
@@ -42,6 +63,13 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		return new String[] { TABLE_NAME };
 	}
 
+	/**
+	 * Creates {@link Ticket}.
+	 * @param conn
+	 * @param ticket
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public void createTicket(Connection conn, Ticket ticket) throws SQLException, DAOException {
 		PreparedStatement stmt = null;
 		try {
@@ -62,6 +90,14 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Gets {@link Ticket} by id.
+	 * @param conn
+	 * @param ticketId
+	 * @return {@link Ticket}
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public Ticket getTicketById(Connection conn, String ticketId) throws SQLException, DAOException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -86,6 +122,14 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Updates {@link Ticket}.
+	 * @param conn
+	 * @param ticket
+	 * @param newStatus
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public void updateStatusOne(Connection conn, Ticket ticket, TicketStatus newStatus) throws SQLException, DAOException {
 		PreparedStatement stmt = null;
 		try {
@@ -101,6 +145,14 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * 
+	 * @param conn
+	 * @param tickets
+	 * @param newStatus
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public void updateStatusMany(Connection conn, Collection<Ticket> tickets, TicketStatus newStatus) throws SQLException, DAOException {
 		PreparedStatement stmt = null;
 		try {
@@ -116,6 +168,13 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * Deletes {@link Ticket} by id.
+	 * @param conn
+	 * @param ticketId
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public void deleteTicket(Connection conn, String ticketId) throws SQLException, DAOException {
 		PreparedStatement stmt = null;
 		try {
@@ -130,6 +189,16 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * 
+	 * @param conn
+	 * @param ticketsIds
+	 * @param number
+	 * @param referenceType
+	 * @return {@link List<Ticket>}
+	 * @throws SQLException
+	 * @throws DAOException
+	 */
 	public List<Ticket> getTicketsByNumberReferenceType(Connection conn, Set<String> ticketsIds, int number, long referenceType) throws SQLException,
 			DAOException {
 		StringBuilder b = new StringBuilder();
@@ -183,13 +252,21 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 		}
 	}
 
-	public List<Ticket> getTickets(Connection conn, TicketStatus status, long referenceType) {
+	/**
+	 * 
+	 * @param conn
+	 * @param status
+	 * @param referenceType
+	 * @return {@link List<Ticket>}
+	 */
+	public List<Ticket> getTickets(Connection conn, TicketStatus status, long referenceType) throws SQLException {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		List<Ticket> result = new ArrayList<Ticket>();
 		try {
-			stmt = conn.prepareStatement(String.format("select %s, %s, %s, %s, %s from %s where %s=? and %s=?", TICKET_ID_COLUMN_NAME, STATUS_COLUMN_NAME,
-					REFERENCE_ID_COLUMN_NAME, REFERENCE_TYPE_COLUMN_NAME, TIMESTAMP_COLUMN_NAME, TABLE_NAME, STATUS_COLUMN_NAME, REFERENCE_TYPE_COLUMN_NAME));
+			stmt = conn.prepareStatement(String.format("select %s, %s, %s, %s, %s from %s where %s=? and %s=?", TICKET_ID_COLUMN_NAME,
+					STATUS_COLUMN_NAME, REFERENCE_ID_COLUMN_NAME, REFERENCE_TYPE_COLUMN_NAME, TIMESTAMP_COLUMN_NAME, TABLE_NAME, STATUS_COLUMN_NAME,
+					REFERENCE_TYPE_COLUMN_NAME));
 			stmt.setString(1, status.name());
 			stmt.setLong(2, referenceType);
 			rs = stmt.executeQuery();
@@ -202,8 +279,6 @@ public class ApprovalDAO extends AbstractDAO implements DAO {
 				ticket.setTimestamp(rs.getLong(TIMESTAMP_COLUMN_NAME));
 				result.add(ticket);
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		} finally {
 			JDBCUtil.close(rs);
 			JDBCUtil.close(stmt);

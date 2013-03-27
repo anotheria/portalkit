@@ -56,6 +56,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	 */
 	private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
+	/**
+	 * Approval reservation manager.
+	 */
 	private ReservationManager<TicketReservationKey, TicketReservationBean, Ticket> approvalReservationManager = new ReservationManager<TicketReservationKey, TicketReservationBean, Ticket>() {
 
 		@Override
@@ -291,9 +294,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 	}
 
+	/**
+	 * TicketReservationKey class.
+	 */
 	private class TicketReservationKey {
 
+		/**
+		 * 
+		 */
 		private long referenceType;
+		
+		/**
+		 * 
+		 */
 		private String reservationObject;
 
 		/**
@@ -350,11 +363,29 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	}
 
+	/**
+	 * TicketReservationBean
+	 */
 	private class TicketReservationBean {
 
+		/**
+		 * 
+		 */
 		private List<Ticket> tickets;
+		
+		/**
+		 * 
+		 */
 		private long referenceType;
+		
+		/**
+		 * 
+		 */
 		private String reservationObject;
+		
+		/**
+		 * 
+		 */
 		private long timestamp = System.currentTimeMillis();
 
 		public String getReservationObject() {

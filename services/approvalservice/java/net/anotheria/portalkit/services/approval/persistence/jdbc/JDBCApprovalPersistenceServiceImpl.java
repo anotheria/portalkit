@@ -21,8 +21,14 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
  */
 public class JDBCApprovalPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements ApprovalPersistenceService {
 
+	/**
+	 * {@link ApprovalDAO} instance.
+	 */
 	private ApprovalDAO approvalDAO;
 
+	/**
+	 * Default constructor.
+	 */
 	public JDBCApprovalPersistenceServiceImpl() {
 		super("pk-jdbc-approval");
 		approvalDAO = new ApprovalDAO();

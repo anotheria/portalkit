@@ -20,8 +20,14 @@ import org.junit.Test;
  */
 public abstract class AbstractApprovalServiceImplTest {
 
+	/**
+	 * Destination service instance.
+	 */
 	private ApprovalService service;
 
+	/**
+	 * Default reservation object.
+	 */
 	private static final String RESERVATION_OBJECT = "r.o.";
 
 	public void setService(ApprovalService service) {
@@ -29,14 +35,14 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testCreateTicket() throws Exception {
+	public void testCreateTicket() throws ApprovalServiceException {
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t = service.createTicket(refId, 1);
 		assertNotNull(t);
 	}
 
 	@Test
-	public void testGetTicketByID() throws Exception {
+	public void testGetTicketByID() throws ApprovalServiceException {
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t = service.createTicket(refId, 1);
 		assertNotNull(t);
@@ -45,7 +51,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test(expected = ApprovalServiceException.class)
-	public void testGetTicketByIDWrongTicketId() throws Exception {
+	public void testGetTicketByIDWrongTicketId() throws ApprovalServiceException {
 
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t = service.createTicket(refId, 1);
@@ -56,12 +62,12 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testCreateReferenceIdIsEmpty() throws Exception {
+	public void testCreateReferenceIdIsEmpty() throws ApprovalServiceException {
 		service.createTicket(null, 1);
 	}
 
 	@Test
-	public void testApproveTicket() throws Exception {
+	public void testApproveTicket() throws ApprovalServiceException {
 
 		// creating ticket
 		String refId = IdCodeGenerator.generateCode(10);
@@ -80,7 +86,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testApproveTickets() throws Exception {
+	public void testApproveTickets() throws ApprovalServiceException {
 
 		// creating tickets
 		String refId = IdCodeGenerator.generateCode(10);
@@ -100,7 +106,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testDisapproveTicket() throws Exception {
+	public void testDisapproveTicket() throws ApprovalServiceException {
 
 		// creating ticket
 		String refId = IdCodeGenerator.generateCode(10);
@@ -119,7 +125,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testDisapproveTickets() throws Exception {
+	public void testDisapproveTickets() throws ApprovalServiceException {
 
 		// creating tickets
 		String refId = IdCodeGenerator.generateCode(10);
@@ -139,7 +145,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testProceedTickets() throws Exception {
+	public void testProceedTickets() throws ApprovalServiceException {
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t1 = service.createTicket(refId, 1);
 
@@ -157,7 +163,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testDeleteTicket() throws Exception {
+	public void testDeleteTicket() throws ApprovalServiceException {
 		String refId = IdCodeGenerator.generateCode(10);
 		Ticket t = service.createTicket(refId, 1);
 
@@ -170,7 +176,7 @@ public abstract class AbstractApprovalServiceImplTest {
 		}
 	}
 
-	private void createTickets(long referenceType, int number) throws Exception {
+	private void createTickets(long referenceType, int number) throws ApprovalServiceException {
 		for (int i = 0; i < number; i++) {
 			String refId = IdCodeGenerator.generateCode(10);
 			service.createTicket(refId, referenceType);
@@ -178,7 +184,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testReserve32() throws Exception {
+	public void testReserve32() throws ApprovalServiceException {
 		long referenceType = 10;
 		createTickets(referenceType, 32);
 		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 30, referenceType);
@@ -191,7 +197,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testReserve28() throws Exception {
+	public void testReserve28() throws ApprovalServiceException {
 		long referenceType = 11;
 		createTickets(referenceType, 28);
 		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 30, referenceType);
@@ -204,7 +210,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testReserve122() throws Exception {
+	public void testReserve122() throws ApprovalServiceException {
 		long referenceType = 12;
 		createTickets(referenceType, 122);
 		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 120, referenceType);
@@ -217,7 +223,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testReserve118() throws Exception {
+	public void testReserve118() throws ApprovalServiceException {
 		long referenceType = 13;
 		createTickets(referenceType, 118);
 		Collection<Ticket> reservedTickets = service.getAndReserveTickets(RESERVATION_OBJECT, 120, referenceType);
@@ -230,7 +236,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testGetAndReserveTickets() throws Exception {
+	public void testGetAndReserveTickets() throws ApprovalServiceException {
 
 		long referenceType = 21;
 
@@ -295,7 +301,7 @@ public abstract class AbstractApprovalServiceImplTest {
 	}
 
 	@Test
-	public void testGetAndReserveTickets2() throws Exception {
+	public void testGetAndReserveTickets2() throws ApprovalServiceException {
 
 		long referenceType = 20;
 

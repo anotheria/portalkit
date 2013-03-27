@@ -10,6 +10,9 @@ import java.io.Serializable;
  */
 public class Ticket implements Serializable {
 
+	/**
+	 * Generated serialVersionUID.
+	 */
 	private static final long serialVersionUID = -7979396779386190431L;
 
 	/**
@@ -32,6 +35,9 @@ public class Ticket implements Serializable {
 	 */
 	private long referenceType;
 
+	/**
+	 * Timestamp of created ticket.
+	 */
 	private long timestamp = System.currentTimeMillis();
 
 	public String getTicketId() {
