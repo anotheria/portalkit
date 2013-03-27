@@ -60,6 +60,9 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	 */
 	private String configName;
 
+	/**
+	 * List of registered DAO's.
+	 */
 	private ArrayList<DAO> daos = new ArrayList<DAO>();
 
 	/**
@@ -69,6 +72,11 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		this(null);
 	}
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param aConfigName
+	 */
 	protected BasePersistenceServiceJDBCImpl(String aConfigName) {
 		configName = aConfigName;
 		proxyFactory = new GenericReconnectionProxyFactory();
@@ -158,7 +166,8 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	}
 
 	/**
-	 * Check exception for connection exception type and throw named runtime exception.
+	 * Check exception for connection exception type and throw named runtime
+	 * exception.
 	 * 
 	 * @param error
 	 *            - {@link Throwable}
@@ -183,19 +192,45 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	}
 
 	/**
-	 * Factory for creating PROXY for some JDBC layer implementations for handling JDBC connection exceptions and reloading data source.
+	 * Factory for creating PROXY for some JDBC layer implementations for
+	 * handling JDBC connection exceptions and reloading data source.
 	 */
 	private class GenericReconnectionProxyFactory {
 
+		/**
+		 * 
+		 */
 		public static final String CREATE_STATEMENT = "createStatement";
+		/**
+		 * 
+		 */
 		public static final String PREPARE_STATEMENT = "prepareStatement";
+		/**
+		 * 
+		 */
 		public static final String PREPARE_CALL = "prepareCall";
+		/**
+		 * 
+		 */
 		public static final String META_DATA = "getMetaData";
+		/**
+		 * 
+		 */
 		public static final String CLOSE = "close";
+		/**
+		 * 
+		 */
 		public static final String IS_CLOSED = "isClosed";
 
-		public final Set<String> methodNames = new HashSet<String>();
-		public final Set<String> classNames = new HashSet<String>();
+		/**
+		 * Set of method names.
+		 */
+		private final Set<String> methodNames = new HashSet<String>();
+		
+		/**
+		 * Set of class names.
+		 */
+		private final Set<String> classNames = new HashSet<String>();
 
 		public GenericReconnectionProxyFactory() {
 			methodNames.add(CREATE_STATEMENT);
@@ -241,13 +276,21 @@ public abstract class BasePersistenceServiceJDBCImpl {
 		}
 	}
 
+	/**
+	 * 
+	 * @param someDaos
+	 */
 	protected void addDaos(DAO... someDaos) {
 		if (someDaos != null)
 			for (DAO d : someDaos)
 				daos.add(d);
 	}
 
-	public void cleanupFromUnitTests() throws Exception {
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void cleanupFromUnitTests() throws SQLException, DAOException {
 		for (DAO d : daos) {
 			Connection conn = getConnection();
 			try {

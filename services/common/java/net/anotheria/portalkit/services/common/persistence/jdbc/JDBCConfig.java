@@ -3,17 +3,38 @@ package net.anotheria.portalkit.services.common.persistence.jdbc;
 import org.configureme.annotations.ConfigureMe;
 
 /**
- * TODO comment this class
- *
+ * JDBC configuration class.
+ * 
  * @author lrosenberg
  * @since 08.01.13 00:31
  */
-@ConfigureMe(allfields=true)
+@ConfigureMe(allfields = true)
 public class JDBCConfig {
+
+	/**
+	 * Connection URL.
+	 */
 	private String url;
+
+	/**
+	 * DB driver class name.
+	 */
 	private String driver;
+
+	/**
+	 * User name to DB.
+	 */
 	private String username;
+
+	/**
+	 * Password to {@code username}.
+	 */
 	private String password;
+
+	/**
+	 * Max opened connections.
+	 */
+	private int maxConnections;
 
 	public int getMaxConnections() {
 		return maxConnections;
@@ -22,8 +43,6 @@ public class JDBCConfig {
 	public void setMaxConnections(int maxConnections) {
 		this.maxConnections = maxConnections;
 	}
-
-	private int maxConnections;
 
 	public String getUrl() {
 		return url;
@@ -57,7 +76,8 @@ public class JDBCConfig {
 		this.password = password;
 	}
 
-	@Override public String toString(){
-		return getDriver()+", "+getUrl()+", "+getUsername();
+	@Override
+	public String toString() {
+		return getDriver() + ", " + getUrl() + ", " + getUsername();
 	}
 }
