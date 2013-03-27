@@ -22,11 +22,33 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
  */
 public class AccountListDAO extends AbstractDAO implements DAO {
 
+	/**
+	 * 
+	 */
 	private static final String TABLE_NAME = "accountlist";
+	
+	/**
+	 * 
+	 */
 	private static final String OWNER_ID = "owner";
+	/**
+	 * 
+	 */
 	private static final String TARGET_ID = "target";
+	
+	/**
+	 * 
+	 */
 	private static final String LIST_NAME = "listName";
+	
+	/**
+	 * 
+	 */
 	private static final String ADDITIONAL_INFO = "additionalinfo";
+	
+	/**
+	 * 
+	 */
 	private static final String CREATION_TIMESTAMP = "creationTimestamp";
 
 	@Override
@@ -47,7 +69,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 *            current connection to DB.
 	 * @param owner
 	 * @param listName
-	 * @return
+	 * @return {@link List<AccountIdAdditionalInfo>}
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
@@ -82,7 +104,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * @param owner
 	 * @param listName
 	 * @param targets
-	 * @return
+	 * @return boolean
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
@@ -136,7 +158,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * @param owner
 	 * @param listName
 	 * @param targets
-	 * @return
+	 * @return boolean
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
@@ -181,7 +203,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * @param connection
 	 * @param target
 	 * @param listName
-	 * @return
+	 * @return boolean
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
@@ -207,6 +229,16 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	/**
+	 * updateInList
+	 * @param connection
+	 * @param owner
+	 * @param listName
+	 * @param targets
+	 * @return boolean
+	 * @throws DAOException
+	 * @throws SQLException
+	 */
 	public boolean updateInList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException, SQLException {
 		PreparedStatement updateStmt = null;
 		try {

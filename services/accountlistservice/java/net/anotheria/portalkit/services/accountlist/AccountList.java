@@ -29,7 +29,12 @@ public class AccountList implements Serializable {
 	 * Involved accounts.
 	 */
 	private List<AccountIdAdditionalInfo> targets;
-	
+
+	/**
+	 * Default constructor.
+	 * 
+	 * @param listName
+	 */
 	public AccountList(String listName) {
 		this.listName = listName;
 	}
@@ -38,6 +43,11 @@ public class AccountList implements Serializable {
 		return listName;
 	}
 
+	/**
+	 * Gets list of stored targets.
+	 * 
+	 * @return
+	 */
 	public List<AccountIdAdditionalInfo> getTargets() {
 		if (targets == null) {
 			targets = Collections.synchronizedList(new ArrayList<AccountIdAdditionalInfo>());
@@ -48,18 +58,23 @@ public class AccountList implements Serializable {
 	/**
 	 * Adds values to the targets list. Only new account ids will be added.
 	 * 
-	 * @param targets
+	 * @param items
 	 */
-	public void addAll(Collection<AccountIdAdditionalInfo> targets) {
+	public void addAll(Collection<AccountIdAdditionalInfo> items) {
 		HashSet<AccountIdAdditionalInfo> set = new HashSet<AccountIdAdditionalInfo>(getTargets());
 		getTargets().clear();
-		
-		set.addAll(targets);
+
+		set.addAll(items);
 		getTargets().addAll(set);
 	}
 
-	public void removeAll(Collection<AccountIdAdditionalInfo> targets) {
-		getTargets().removeAll(targets);
+	/**
+	 * Removes all targets from stored items.
+	 * 
+	 * @param targets
+	 */
+	public void removeAll(Collection<AccountIdAdditionalInfo> items) {
+		getTargets().removeAll(items);
 	}
 
 	@Override

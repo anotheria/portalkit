@@ -26,13 +26,6 @@ import org.apache.log4j.Logger;
  * 
  * @author dagafonov
  * 
- * @todo : curent implementation does not provides update functionality... It's
- *       important for ( visitS - last visit time update for example) Seems we
- *       need to remove create, and add save method!
- * 
- * @todo : last changes were done - to prevent Unique key violation errors -
- *       which was possible .. Added as Temp solution! - but when SAVE will be
- *       provided - last changes should be simply rolled back!
  */
 public class AccountListServiceImpl implements AccountListService {
 
@@ -53,8 +46,14 @@ public class AccountListServiceImpl implements AccountListService {
 	 */
 	private Cache<AccountId, AccountListData> accountListsCache;
 
+	/**
+	 * reverseAccountListsCache.
+	 */
 	private Cache<AccountId, AccountListData> reverseAccountListsCache;
 
+	/**
+	 * {@link AccountListServiceAnnouncer} instance.
+	 */
 	private AccountListServiceAnnouncer announcer;
 
 	/**

@@ -4,12 +4,16 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceSe
 
 /**
  * Base exception class for exceptions in accountlistpersistenceservice.
+ * 
  * @author dagafonov
- *
+ * 
  */
 public class AccountListPersistenceServiceException extends PortalKitPersistenceServiceException {
-	
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Default serialVersionUID.
+	 */
+	private static final long serialVersionUID = -1988354362895314565L;
 
 	/**
 	 * Creates a new AccountListPersistenceServiceException with a message.

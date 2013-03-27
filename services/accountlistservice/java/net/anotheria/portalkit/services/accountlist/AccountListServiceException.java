@@ -10,7 +10,10 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceExcept
  */
 public class AccountListServiceException extends PortalKitServiceException {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Default serialVersionUID.
+	 */
+	private static final long serialVersionUID = -5404446770589391304L;
 
 	/**
 	 * Creates a new exception.

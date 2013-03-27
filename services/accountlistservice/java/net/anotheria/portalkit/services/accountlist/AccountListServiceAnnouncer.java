@@ -6,13 +6,16 @@ import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushSupplier;
 import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
-import net.anotheria.anoprise.sessiondistributor.DistributedSessionVO;
-import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEvent;
 import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEventAnnouncer;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author dagafonov
+ * 
+ */
 public class AccountListServiceAnnouncer implements EventServicePushSupplier {
 
 	/**
@@ -40,6 +43,9 @@ public class AccountListServiceAnnouncer implements EventServicePushSupplier {
 	 */
 	private static final Logger LOG = Logger.getLogger(SDCacheEventAnnouncer.class);
 
+	/**
+	 * 
+	 */
 	public AccountListServiceAnnouncer() {
 		EventChannel eventChannel = EventServiceFactory.createEventService().obtainEventChannel(EVENT_CHANNEL_NAME, this);
 		boolean unitTesting = Boolean.valueOf(System.getProperty(JUNITTEST, String.valueOf(false)));
@@ -52,36 +58,33 @@ public class AccountListServiceAnnouncer implements EventServicePushSupplier {
 	}
 
 	/**
-	 * Save session.
+	 * Create event type.
 	 * 
-	 * @param nodeId
-	 *            id of node
-	 * @param session
-	 *            {@link DistributedSessionVO}
+	 * @param owner
+	 * @param target
+	 * @param listName
 	 */
 	public void accountListCreate(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.create(owner, target, listName));
 	}
 
 	/**
-	 * Save session.
+	 * Update event type.
 	 * 
-	 * @param nodeId
-	 *            id of node
-	 * @param session
-	 *            {@link DistributedSessionVO}
+	 * @param owner
+	 * @param target
+	 * @param listName
 	 */
 	public void accountListUpdate(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.update(owner, target, listName));
 	}
 
 	/**
-	 * Delete session.
+	 * Delete event type.
 	 * 
-	 * @param nodeId
-	 *            id of node
-	 * @param session
-	 *            {@link DistributedSessionVO}
+	 * @param owner
+	 * @param target
+	 * @param listName
 	 */
 	public void accountListDelete(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.delete(owner, target, listName));
@@ -91,7 +94,7 @@ public class AccountListServiceAnnouncer implements EventServicePushSupplier {
 	 * Internal method that delivers the events into the channel.
 	 * 
 	 * @param eventData
-	 *            {@link SDCacheEvent}
+	 *            {@link AccountListEvent}
 	 */
 	private void deliver(AccountListEvent eventData) {
 		Event event = new Event(eventData);

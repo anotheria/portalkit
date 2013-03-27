@@ -12,14 +12,57 @@ import net.anotheria.portalkit.services.common.AccountId;
  */
 public class AccountListEvent implements Serializable {
 
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = -8574571454881155640L;
 
+	/**
+	 * Who created event.
+	 */
 	private AccountId ownerId;
+
+	/**
+	 * With who linked account list record.
+	 */
 	private AccountId target;
+
+	/**
+	 * List name.
+	 */
 	private String listName;
+
+	/**
+	 * Event type.
+	 */
 	private AccountListEventType eventType;
+
+	/**
+	 * Event creation time.
+	 */
 	private long eventCreationTime;
-	
+
+	/**
+	 * Describes operation types.
+	 */
+	public static enum AccountListEventType {
+		
+		/**
+		 * Create event operation.
+		 */
+		CREATE, 
+		
+		/**
+		 * Update event operation.
+		 */
+		UPDATE, 
+		 
+		 /**
+		  * Delete event operation.
+		  */
+		 DELETE;
+	}
+
 	public AccountId getOwnerId() {
 		return ownerId;
 	}
@@ -65,7 +108,7 @@ public class AccountListEvent implements Serializable {
 		return "AccountListEvent [ownerId=" + ownerId + ", target=" + target + ", listName=" + listName + ", eventType=" + eventType
 				+ ", eventCreationTime=" + eventCreationTime + "]";
 	}
-	
+
 	private static AccountListEvent instance(AccountId owner, AccountId target, String listName, AccountListEventType eventType) {
 		AccountListEvent result = new AccountListEvent();
 		result.setOwnerId(owner);
@@ -76,14 +119,35 @@ public class AccountListEvent implements Serializable {
 		return result;
 	}
 
+	/**
+	 * Creates instance for create event operation.
+	 * @param owner
+	 * @param target
+	 * @param listName
+	 * @return {@link AccountListEvent}
+	 */
 	public static AccountListEvent create(AccountId owner, AccountId target, String listName) {
 		return instance(owner, target, listName, AccountListEventType.CREATE);
 	}
 
+	/**
+	 * Updates instance for create event operation.
+	 * @param owner
+	 * @param target
+	 * @param listName
+	 * @return {@link AccountListEvent}
+	 */
 	public static AccountListEvent update(AccountId owner, AccountId target, String listName) {
 		return instance(owner, target, listName, AccountListEventType.UPDATE);
 	}
 
+	/**
+	 * Deletes instance for create event operation.
+	 * @param owner
+	 * @param target
+	 * @param listName
+	 * @return {@link AccountListEvent}
+	 */
 	public static AccountListEvent delete(AccountId owner, AccountId target, String listName) {
 		return instance(owner, target, listName, AccountListEventType.DELETE);
 	}

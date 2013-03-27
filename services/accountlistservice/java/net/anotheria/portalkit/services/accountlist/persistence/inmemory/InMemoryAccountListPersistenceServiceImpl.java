@@ -21,30 +21,19 @@ import net.anotheria.portalkit.services.common.AccountId;
  */
 public class InMemoryAccountListPersistenceServiceImpl implements AccountListPersistenceService {
 
+	/**
+	 * Storage hash map.
+	 */
 	private ConcurrentHashMap<AccountId, AccountListData> storage = new ConcurrentHashMap<AccountId, AccountListData>();
+	
+	/**
+	 * Reverse storage hash map.
+	 */
 	private ConcurrentHashMap<AccountId, AccountListData> reverseStorage = new ConcurrentHashMap<AccountId, AccountListData>();
 
 	@Override
 	public boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListPersistenceServiceException {
-//		AccountListData accListData = storage.get(owner);
-//		if (accListData == null) {
-//			accListData = new AccountListData(owner, listName, targets);
-//			storage.put(owner, accListData);
-//		} else {
-//			AccountList accList = accListData.getLists().get(listName);
-//			if (accList == null) {
-//				accList = new AccountList(listName);
-//				accList.addAll(targets);
-//				accListData.getLists().put(listName, accList);
-//			} else {
-//				accList.addAll(targets);
-//			}
-//		}
-//		addReverseStorage(owner, listName, targets);
-//		return true;
-		
 		return updateInList(owner, listName, targets);
-		
 	}
 	
 	@Override
