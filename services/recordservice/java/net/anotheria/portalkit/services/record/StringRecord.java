@@ -1,22 +1,38 @@
 package net.anotheria.portalkit.services.record;
 
-
 /**
- * TODO comment this class
- *
+ * String implementation of a {@link Record}.
+ * 
  * @author lrosenberg
  * @since 27.02.13 19:59
  */
 public class StringRecord extends Record {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Generated serialVersionUID.
+	 */
+	private static final long serialVersionUID = -6257708618031821828L;
 
+	/**
+	 * Value.
+	 */
 	private String value;
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @param aRecordId
+	 */
 	public StringRecord(String aRecordId) {
 		this(aRecordId, "");
 	}
 
+	/**
+	 * Constructor with all fields.
+	 * 
+	 * @param aRecordId
+	 * @param aValue
+	 */
 	public StringRecord(String aRecordId, String aValue) {
 		super(aRecordId);
 		value = aValue;
@@ -32,7 +48,7 @@ public class StringRecord extends Record {
 		return getString();
 	}
 
-	public String getString(){
+	public String getString() {
 		return value;
 	}
 }

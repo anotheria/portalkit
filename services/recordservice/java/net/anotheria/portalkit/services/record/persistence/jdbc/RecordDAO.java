@@ -27,12 +27,30 @@ import net.anotheria.portalkit.services.record.StringRecord;
  */
 public class RecordDAO extends AbstractDAO implements DAO {
 
+	/**
+	 * 
+	 */
 	private static final String TABLE_NAME = "recordcollection";
 
+	/**
+	 * 
+	 */
 	private static final String OWNER_ID_COLUMN_NAME = "ownerid";
+	/**
+	 * 
+	 */
 	private static final String COLLECTION_ID_COLUMN_NAME = "collectionid";
+	/**
+	 * 
+	 */
 	private static final String RECORD_ID_COLUMN_NAME = "recordid";
+	/**
+	 * 
+	 */
 	private static final String RECORD_TYPE_COLUMN_NAME = "recordtype";
+	/**
+	 * 
+	 */
 	private static final String RECORD_VALUE_COLUMN_NAME = "recordvalue";
 
 	@Override
@@ -59,6 +77,8 @@ public class RecordDAO extends AbstractDAO implements DAO {
 			case NONE:
 				EmptyRecord er = new EmptyRecord(recordId);
 				return er;
+			default:
+				// nothing to do
 		}
 		return new EmptyRecord(recordId);
 	}
@@ -69,7 +89,7 @@ public class RecordDAO extends AbstractDAO implements DAO {
 	 * @param connection
 	 * @param ownerId
 	 * @param collectionId
-	 * @return
+	 * @return {@link Collection<Record>}
 	 * @throws DAOException
 	 * @throws SQLException
 	 */
@@ -103,7 +123,7 @@ public class RecordDAO extends AbstractDAO implements DAO {
 	 * @param ownerId
 	 * @param collectionId
 	 * @param recordId
-	 * @return
+	 * @return {@link Record}
 	 * @throws DAOException
 	 * @throws SQLException
 	 */

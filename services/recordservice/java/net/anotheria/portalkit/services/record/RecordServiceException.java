@@ -10,6 +10,9 @@ import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceExcept
  */
 public class RecordServiceException extends PortalKitServiceException {
 
+	/**
+	 * Generated serialVersionUID.
+	 */
 	private static final long serialVersionUID = -5062726737051705965L;
 
 	public RecordServiceException(String message) {

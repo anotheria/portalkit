@@ -14,14 +14,21 @@ import net.anotheria.portalkit.services.record.persistence.RecordPersistenceServ
 import net.anotheria.portalkit.services.record.persistence.RecordPersistenceServiceException;
 
 /**
+ * JDBC implementation of {@link RecordPersistenceService}.
  * 
  * @author dagafonov
  * 
  */
 public class JDBCRecordPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements RecordPersistenceService {
 
+	/**
+	 * {@link RecordDAO} instance.
+	 */
 	private RecordDAO recordDAO;
 
+	/**
+	 * Default constructor.
+	 */
 	public JDBCRecordPersistenceServiceImpl() {
 		super("pk-jdbc-records");
 		recordDAO = new RecordDAO();

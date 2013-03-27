@@ -12,6 +12,11 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Before;
 
+/**
+ * JDBC implementation of {@link AbstractRecordServiceTest}.
+ * @author dagafonov
+ *
+ */
 public class JDBCRecordServiceImplTest extends AbstractRecordServiceTest {
 
 	@Before

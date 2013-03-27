@@ -1,16 +1,21 @@
 package net.anotheria.portalkit.services.record;
 
-
 /**
- * TODO comment this class
- *
+ * {@link Integer} implementation of a {@link Record}.
+ * 
  * @author lrosenberg
  * @since 27.02.13 19:24
  */
 public class IntRecord extends Record {
 
-	private static final long serialVersionUID = 1L;
-
+	/**
+	 * Generated serialVersionUID.
+	 */
+	private static final long serialVersionUID = -3703098071575272870L;
+	
+	/**
+	 * Value
+	 */
 	private int value;
 
 	public IntRecord(String aRecordId) {
@@ -29,10 +34,10 @@ public class IntRecord extends Record {
 
 	@Override
 	public String getValueAsString() {
-		return ""+getInt();
+		return "" + getInt();
 	}
 
-	public int getInt(){
+	public int getInt() {
 		return value;
 	}
 }

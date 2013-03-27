@@ -12,9 +12,12 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 
-@Ignore
+/**
+ * InMemory implementation of {@link AbstractRecordServiceTest}.
+ * @author dagafonov
+ *
+ */
 public class InmemoryRecordServiceImplTest extends AbstractRecordServiceTest {
 
 	@Before

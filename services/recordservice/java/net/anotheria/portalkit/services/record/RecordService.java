@@ -17,14 +17,14 @@ import org.distributeme.annotation.DistributeMe;
  */
 @DistributeMe()
 public interface RecordService extends Service {
-	
+
 	/**
 	 * Returns a single record.
 	 * 
 	 * @param ownerId
 	 * @param collectionId
 	 * @param recordId
-	 * @return
+	 * @return {@link Record}
 	 * @throws RecordServiceException
 	 */
 	Record getRecord(String ownerId, String collectionId, String recordId) throws RecordServiceException;
@@ -35,7 +35,7 @@ public interface RecordService extends Service {
 	 * @param ownerId
 	 * @param collectionId
 	 * @param recordId
-	 * @return
+	 * @return {@link Record}
 	 * @throws RecordServiceException
 	 */
 	Record getRecord(AccountId ownerId, String collectionId, String recordId) throws RecordServiceException;
@@ -46,7 +46,7 @@ public interface RecordService extends Service {
 	 * 
 	 * @param ownerId
 	 * @param recordId
-	 * @return
+	 * @return {@link Record}
 	 * @throws RecordServiceException
 	 */
 	Record getRecord(AccountId ownerId, String recordId) throws RecordServiceException;
@@ -57,7 +57,7 @@ public interface RecordService extends Service {
 	 * @param ownerId
 	 * @param collectionId
 	 * @param recordIds
-	 * @return
+	 * @return {@link RecordSet}
 	 * @throws RecordServiceException
 	 */
 	RecordSet getRecordSet(String ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException;
@@ -68,7 +68,7 @@ public interface RecordService extends Service {
 	 * @param ownerId
 	 * @param collectionId
 	 * @param recordIds
-	 * @return
+	 * @return {@link RecordSet}
 	 * @throws RecordServiceException
 	 */
 	RecordSet getRecordSet(AccountId ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException;
@@ -78,20 +78,66 @@ public interface RecordService extends Service {
 	 * 
 	 * @param ownerId
 	 * @param recordIds
-	 * @return
+	 * @return {@link RecordSet}
 	 * @throws RecordServiceException
 	 */
 	RecordSet getRecordSet(AccountId ownerId, Collection<String> recordIds) throws RecordServiceException;
 
+	/**
+	 * Updates record.
+	 * 
+	 * @param ownerId
+	 * @param collectionId
+	 * @param record
+	 * @throws RecordServiceException
+	 */
 	void setRecord(String ownerId, String collectionId, Record record) throws RecordServiceException;
 
+	/**
+	 * Updates record.
+	 * 
+	 * @param ownerId
+	 * @param collectionId
+	 * @param record
+	 * @throws RecordServiceException
+	 */
 	void setRecord(AccountId ownerId, String collectionId, Record record) throws RecordServiceException;
 
+	/**
+	 * Updates records.
+	 * 
+	 * @param ownerId
+	 * @param collectionId
+	 * @param recordSet
+	 * @throws RecordServiceException
+	 */
 	void setRecords(AccountId ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException;
 
+	/**
+	 * Updates records.
+	 * 
+	 * @param ownerId
+	 * @param collectionId
+	 * @param recordSet
+	 * @throws RecordServiceException
+	 */
 	void setRecords(String ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException;
 
+	/**
+	 * Updates record.
+	 * 
+	 * @param ownerId
+	 * @param record
+	 * @throws RecordServiceException
+	 */
 	void setRecord(AccountId ownerId, Record record) throws RecordServiceException;
 
+	/**
+	 * Updates records.
+	 * 
+	 * @param ownerId
+	 * @param recordSet
+	 * @throws RecordServiceException
+	 */
 	void setRecords(AccountId ownerId, RecordSet recordSet) throws RecordServiceException;
 }

@@ -9,12 +9,15 @@ import net.anotheria.portalkit.services.record.persistence.RecordPersistenceServ
 import net.anotheria.portalkit.services.record.persistence.RecordPersistenceServiceException;
 
 /**
- * 
+ * InMemory implementation of {@link RecordPersistenceService}.
  * @author dagafonov
  * 
  */
 public class InMemoryRecordPersistenceServiceImpl implements RecordPersistenceService {
 
+	/**
+	 * Storage instance.
+	 */
 	private Map<OwnerCollectionKey, RecordCollection> storage = new ConcurrentHashMap<OwnerCollectionKey, RecordCollection>();
 
 	@Override
@@ -47,9 +50,19 @@ public class InMemoryRecordPersistenceServiceImpl implements RecordPersistenceSe
 		collection.setRecord(record);
 	}
 
+	/**
+	 * Key class.
+	 */
 	private class OwnerCollectionKey {
 
+		/**
+		 * 
+		 */
 		private String ownerId;
+		
+		/**
+		 * 
+		 */
 		private String collectionId;
 
 		public OwnerCollectionKey(String ownerId, String collectionId) {

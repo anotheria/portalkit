@@ -14,21 +14,36 @@ import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 
 /**
- * TODO comment this class
+ * {@link RecordService} default implementation.
  * 
  * @author lrosenberg
  * @since 27.02.13 09:13
  */
 public class RecordServiceImpl implements RecordService {
 
+	/**
+	 * Default collection name.
+	 */
 	public static final String DEFAULT_COLLECTION_ID = "account";
-	
+
+	/**
+	 * Persistence service instance.
+	 */
 	private RecordPersistenceService persistenceService;
 
+	/**
+	 * Cache of Record collections.
+	 */
 	private Cache<CacheKey, RecordCollection> recordCollectionCache;
 
+	/**
+	 * Lock manager.
+	 */
 	private IdBasedLockManager<CacheKey> idBasedLockManager = new SafeIdBasedLockManager<CacheKey>();
 
+	/**
+	 * Default constructor.
+	 */
 	public RecordServiceImpl() {
 		recordCollectionCache = Caches.createHardwiredCache("record-collection");
 		try {
@@ -50,7 +65,7 @@ public class RecordServiceImpl implements RecordService {
 				collection = newCollection;
 			}
 			return collection;
-		} catch(RecordPersistenceServiceException ex) {
+		} catch (RecordPersistenceServiceException ex) {
 			throw new RecordServiceException("persistenceService.getCollection failed.", ex);
 		} finally {
 			lock.unlock();
@@ -67,7 +82,7 @@ public class RecordServiceImpl implements RecordService {
 		try {
 			persistenceService.updateCollection(ownerId, collection.getCollectionId(), collection);
 			recordCollectionCache.put(ck, collection);
-		} catch(RecordPersistenceServiceException ex) {
+		} catch (RecordPersistenceServiceException ex) {
 			throw new RecordServiceException("persistenceService.updateCollection failed.", ex);
 		} finally {
 			lock.unlock();
@@ -140,11 +155,16 @@ public class RecordServiceImpl implements RecordService {
 		setRecords(ownerId, DEFAULT_COLLECTION_ID, recordSet);
 	}
 
+	/**
+	 * Cache key representation.
+	 */
 	private static class CacheKey {
+		
 		/**
 		 * The Profilecollection owner id.
 		 */
 		private String ownerId;
+		
 		/**
 		 * The id of the collection.
 		 */

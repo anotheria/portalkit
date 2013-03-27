@@ -13,14 +13,23 @@ import net.anotheria.portalkit.services.common.AccountId;
 
 import org.junit.Test;
 
+/**
+ * Abstract {@link RecordService} Test.
+ * 
+ * @author dagafonov
+ * 
+ */
 public abstract class AbstractRecordServiceTest {
-	
+
+	/**
+	 * Destination service instance.
+	 */
 	private RecordService service;
 
 	public void setService(RecordService service) {
 		this.service = service;
 	}
-	
+
 	@Test
 	public void testSingleRecordReadWrite() throws MetaFactoryException, RecordServiceException {
 		// Record rec = new Record();
