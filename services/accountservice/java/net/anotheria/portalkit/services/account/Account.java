@@ -45,10 +45,17 @@ public class Account implements Serializable {
 	 */
 	private long registrationTimestamp;
 
+	/**
+	 * Default constructor.
+	 */
 	public Account(){
 		registrationTimestamp = System.currentTimeMillis();
 	}
 
+	/**
+	 * Constructor with existing {@link AccountId}
+	 * @param anId
+	 */
 	public Account(AccountId anId){
 		this();
 		id = anId;
@@ -107,7 +114,7 @@ public class Account implements Serializable {
 	 * Creates a new account from account pattern. Copies all fields (except id) from the pattern account.
 	 * Use to properly create new account objects with preset attributes.
 	 * @param pattern
-	 * @return
+	 * @return {@link Account}
 	 */
 	public static final Account newAccountFromPattern(Account pattern){
 		Account ret = new Account(AccountId.generateNew());
@@ -160,7 +167,7 @@ public class Account implements Serializable {
 	/**
 	 * Returns true if the submitted status bit is set.
 	 * @param aStatus
-	 * @return
+	 * @return boolean
 	 */
 	public boolean hasStatus(long aStatus){
 		return (status & aStatus) == aStatus;

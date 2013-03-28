@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.accountlist;
+package net.anotheria.portalkit.services.accountlist.events;
 
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventChannel;
@@ -6,7 +6,6 @@ import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushSupplier;
 import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
-import net.anotheria.anoprise.sessiondistributor.cache.events.SDCacheEventAnnouncer;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import org.apache.log4j.Logger;
@@ -16,7 +15,7 @@ import org.apache.log4j.Logger;
  * @author dagafonov
  * 
  */
-public class AccountListServiceAnnouncer implements EventServicePushSupplier {
+public class AccountListServiceEventAnnouncer implements EventServicePushSupplier {
 
 	/**
 	 * Channel name.
@@ -41,12 +40,12 @@ public class AccountListServiceAnnouncer implements EventServicePushSupplier {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(SDCacheEventAnnouncer.class);
+	private static final Logger LOG = Logger.getLogger(AccountListServiceEventAnnouncer.class);
 
 	/**
 	 * 
 	 */
-	public AccountListServiceAnnouncer() {
+	public AccountListServiceEventAnnouncer() {
 		EventChannel eventChannel = EventServiceFactory.createEventService().obtainEventChannel(EVENT_CHANNEL_NAME, this);
 		boolean unitTesting = Boolean.valueOf(System.getProperty(JUNITTEST, String.valueOf(false)));
 		eventSender = new QueuedEventSender(EVENT_CHANNEL_NAME + "-sender", eventChannel, LOG);

@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.accountlist;
+package net.anotheria.portalkit.services.accountlist.events;
 
 import java.io.Serializable;
 

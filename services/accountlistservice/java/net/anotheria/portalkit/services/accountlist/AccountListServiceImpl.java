@@ -11,6 +11,7 @@ import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.accountlist.events.AccountListServiceEventAnnouncer;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceService;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -52,9 +53,9 @@ public class AccountListServiceImpl implements AccountListService {
 	private Cache<AccountId, AccountListData> reverseAccountListsCache;
 
 	/**
-	 * {@link AccountListServiceAnnouncer} instance.
+	 * {@link AccountListServiceEventAnnouncer} instance.
 	 */
-	private AccountListServiceAnnouncer announcer;
+	private AccountListServiceEventAnnouncer announcer;
 
 	/**
 	 * Constructor.
@@ -67,7 +68,7 @@ public class AccountListServiceImpl implements AccountListService {
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
-		announcer = new AccountListServiceAnnouncer();
+		announcer = new AccountListServiceEventAnnouncer();
 	}
 
 	@Override
