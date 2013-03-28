@@ -11,6 +11,8 @@ import java.sql.Connection;
  * @since 06.01.13 01:12
  */
 public class V1_4__CreateIndexOnName_Inactive implements JdbcMigration {
+
+	@Override
 	public void migrate(Connection connection) throws Exception {
 /*		PreparedStatement statement = connection.prepareStatement("CREATE UNIQUE INDEX name_idx ON account (name);");
 		try {

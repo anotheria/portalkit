@@ -14,13 +14,16 @@ import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
- * TODO comment this class
+ * InMemoryAccountPersistenceServiceImpl.
  * 
  * @author lrosenberg
  * @since 20.12.12 09:56
  */
 public class InMemoryAccountPersistenceServiceImpl implements AccountPersistenceService {
 
+	/**
+	 * Storage instance.
+	 */
 	private ConcurrentMap<AccountId, Account> storage = new ConcurrentHashMap<AccountId, Account>();
 
 	@Override

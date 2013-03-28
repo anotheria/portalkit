@@ -18,54 +18,60 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * TODO comment this class
- *
+ * AccountServiceTest.
+ * 
  * @author lrosenberg
  * @since 12.12.12 22:36
  */
 public class AccountServiceTest {
 
 	@After
-	@Before public void setup(){
+	@Before
+	public void setup() {
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
-		
+
 		MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);
 		MetaFactory.addAlias(AccountService.class, Extension.LOCAL);
 	}
 
-	//this test will be removed later, for now it 'tests' the new metafactory functionality, instantiation of service
-	//without a factory
+	// this test will be removed later, for now it 'tests' the new metafactory
+	// functionality, instantiation of service
+	// without a factory
 	@Test
-	public void createAccountService() throws MetaFactoryException{
+	public void createAccountService() throws MetaFactoryException {
 		AccountService service = MetaFactory.get(AccountService.class);
 		assertNotNull(service);
 	}
 
-	@Test public void testNotExistingAccount() throws Exception{
+	@Test
+	public void testNotExistingAccount() throws MetaFactoryException, AccountServiceException {
 		AccountId newAccountId = AccountId.generateNew();
 		AccountService service = MetaFactory.get(AccountService.class);
-		try{
+		try {
 			Account existing = service.getAccount(newAccountId);
 			fail("Exception expected");
-		}catch(AccountNotFoundException e){
-			//this exception is expected
+		} catch (AccountNotFoundException e) {
+			// this exception is expected
 		}
 	}
 
-	@Test public void testGetAccounts() throws Exception{
+	@Test
+	public void testGetAccounts() throws MetaFactoryException, AccountServiceException {
 		AccountId first, second, third;
 		first = AccountId.generateNew();
 		second = AccountId.generateNew();
 		third = AccountId.generateNew();
 
 		ArrayList<AccountId> accountIds = new ArrayList<AccountId>();
-		accountIds.add(first);accountIds.add(second);accountIds.add(third);
+		accountIds.add(first);
+		accountIds.add(second);
+		accountIds.add(third);
 
 		AccountService service = MetaFactory.get(AccountService.class);
 		List<Account> accounts1 = service.getAccounts(accountIds);
 		assertNotNull(accounts1);
-		for (Account acc : accounts1){
+		for (Account acc : accounts1) {
 			assertSame(NullAccount.INSTANCE, acc);
 		}
 
@@ -74,19 +80,20 @@ public class AccountServiceTest {
 
 		List<Account> accounts2 = service.getAccounts(accountIds);
 		assertNotNull(accounts2);
-		//counting the accounts in the list, first 3 are null accounts, last isnt.
+		// counting the accounts in the list, first 3 are null accounts, last
+		// isnt.
 		int counter = 0;
-		for (Account acc : accounts2){
-			if (counter++==3){
+		for (Account acc : accounts2) {
+			if (counter++ == 3) {
 				assertSame(newAccount, acc);
-			}else{
+			} else {
 				assertSame(NullAccount.INSTANCE, acc);
 			}
 		}
 	}
 
 	@Test
-	public void testGetByName() throws AccountServiceException, MetaFactoryException{
+	public void testGetByName() throws AccountServiceException, MetaFactoryException {
 		AccountService service = MetaFactory.get(AccountService.class);
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
@@ -95,10 +102,10 @@ public class AccountServiceTest {
 		AccountId pId = service.getAccountIdByName("petrov");
 		assertNotNull(pId);
 
-		try{
+		try {
 			service.getAccountIdByName("sidorov");
 			fail("Exception expected");
-		}catch(AccountNotFoundException e){
+		} catch (AccountNotFoundException e) {
 
 		}
 	}

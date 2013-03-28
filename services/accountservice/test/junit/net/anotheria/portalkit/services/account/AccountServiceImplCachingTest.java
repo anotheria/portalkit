@@ -15,20 +15,24 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 /**
- * TODO comment this class
- *
+ * AccountServiceImplCachingTest.
+ * 
  * @author lrosenberg
  * @since 21.12.12 14:23
  */
 public class AccountServiceImplCachingTest {
 
-	private int get,save,delete,getbyname,getbyemail;
+	/**
+	 * 
+	 */
+	private int get, save, delete, getbyname, getbyemail;
 
-	@Before @After
-	public void reset(){
+	@Before
+	@After
+	public void reset() {
 		get = save = delete = getbyname = getbyemail = 0;
 		MetaFactory.reset();
-		MetaFactory.createOnTheFlyFactory(AccountPersistenceService.class, Extension.NONE, new InMemoryAccountPersistenceServiceImpl(){
+		MetaFactory.createOnTheFlyFactory(AccountPersistenceService.class, Extension.NONE, new InMemoryAccountPersistenceServiceImpl() {
 
 			@Override
 			public Account getAccount(AccountId id) throws AccountPersistenceServiceException {
@@ -63,25 +67,25 @@ public class AccountServiceImplCachingTest {
 	}
 
 	@Test
-	public void testNotExistingCache() throws AccountServiceException{
+	public void testNotExistingCache() throws AccountServiceException {
 		AccountServiceImpl service = new AccountServiceImpl();
 		AccountId id = AccountId.generateNew();
-		try{
+		try {
 			service.getAccount(id);
 			fail("exception expected");
-		}catch(AccountNotFoundException e){
+		} catch (AccountNotFoundException e) {
 			assertEquals(1, get);
 		}
-		try{
+		try {
 			service.getAccount(id);
 			fail("exception expected");
-		}catch(AccountNotFoundException e){
+		} catch (AccountNotFoundException e) {
 			assertEquals("second call shouldn't produce a call to persistence", 1, get);
 		}
 	}
 
 	@Test
-	public void testGetByNameCache() throws AccountServiceException{
+	public void testGetByNameCache() throws AccountServiceException {
 		AccountServiceImpl service = new AccountServiceImpl();
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
@@ -91,10 +95,9 @@ public class AccountServiceImplCachingTest {
 		assertNotNull(pId);
 		assertEquals(2, getbyname);
 		pId = service.getAccountIdByName("petrov");
-		//this should have produced no call to persistence.
+		// this should have produced no call to persistence.
 		assertEquals(2, getbyname);
 
 	}
-
 
 }

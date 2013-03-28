@@ -4,14 +4,17 @@ import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
- * TODO comment this class
+ * V1_0__CreateStructure.
  *
  * @author lrosenberg
  * @since 06.01.13 01:12
  */
 public class V1_0__CreateStructure implements JdbcMigration {
+
+	@Override
 	public void migrate(Connection connection) throws Exception {
 		PreparedStatement statement = connection.prepareStatement(
 			"CREATE TABLE account ("+
@@ -25,7 +28,7 @@ public class V1_0__CreateStructure implements JdbcMigration {
 			);
 		try {
 			statement.execute();
-		} catch(Exception e){
+		} catch(SQLException e){
 			e.printStackTrace();
 		}finally {
 			statement.close();
