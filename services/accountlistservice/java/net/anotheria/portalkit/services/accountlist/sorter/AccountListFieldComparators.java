@@ -22,7 +22,7 @@ public enum AccountListFieldComparators implements FieldComparator<AccountIdAddi
 			return new Comparator<AccountIdAdditionalInfo>() {
 				@Override
 				public int compare(AccountIdAdditionalInfo left, AccountIdAdditionalInfo right) {
-					return Long.compare(left.getCreationTimestamp(), right.getCreationTimestamp());
+					return Long.valueOf(left.getCreationTimestamp()).compareTo(Long.valueOf(right.getCreationTimestamp()));
 				}
 			};
 		}
