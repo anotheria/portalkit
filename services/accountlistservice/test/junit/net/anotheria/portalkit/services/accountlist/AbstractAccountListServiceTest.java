@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -15,6 +16,9 @@ import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
 import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
 import net.anotheria.portalkit.services.accountlist.events.AccountListEvent;
 import net.anotheria.portalkit.services.accountlist.events.AccountListServiceEventAnnouncer;
+import net.anotheria.portalkit.services.accountlist.sorter.AccountListFieldComparators;
+import net.anotheria.portalkit.services.accountlist.sorter.Pager;
+import net.anotheria.portalkit.services.accountlist.sorter.SortingDirection;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import org.junit.Test;
@@ -165,7 +169,7 @@ public abstract class AbstractAccountListServiceTest {
 	}
 
 	@Test
-	public void testAnnouncer() throws AccountListServiceException {
+	public void testAnnouncer() throws AccountListServiceException, InterruptedException {
 
 		final AccountId accId = AccountId.generateNew();
 		final CountDownLatch cdl = new CountDownLatch(1);
@@ -194,12 +198,41 @@ public abstract class AbstractAccountListServiceTest {
 
 		service.addToList(accId, "announcer", new AccountIdAdditionalInfo(AccountId.generateNew(), "first"));
 
-		try {
-			cdl.await();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
+		cdl.await();
+
+	}
+	
+	@Test
+	public void testGetListWithSorter() throws AccountListServiceException {
+		AccountId accId = AccountId.generateNew();
+		
+		List<AccountIdAdditionalInfo> tobecreated = new ArrayList<AccountIdAdditionalInfo>();
+		for (int i=0; i< 30; i++) {
+			tobecreated.add(new AccountIdAdditionalInfo(AccountId.generateNew(), "first"));
 		}
 
+		boolean res = service.addToList(accId, "friends", tobecreated);
+		assertTrue(res);
+
+		List<AccountIdAdditionalInfo> accIdList = service.getList(accId, "friends");
+		checkCreationTimeStamp(accIdList);
+
+		assertNotNull(accIdList);
+		assertEquals(30, accIdList.size());
+		
+		AccountListFilter filter = new AccountListFilter(AccountListFieldComparators.CREATION_TIMESTAMP, SortingDirection.DESC, new Pager(2, 11));
+		
+		List<AccountIdAdditionalInfo> accIdListPaged = service.getList(accId, "friends", filter).getSliceData();
+		checkCreationTimeStamp(accIdListPaged);
+
+		assertNotNull(accIdListPaged);
+		assertEquals(11, accIdListPaged.size());
+		
+		accIdList = service.getList(accId, "friends");
+		checkCreationTimeStamp(accIdList);
+
+		assertNotNull(accIdList);
+		assertEquals(30, accIdList.size());
 	}
 
 }

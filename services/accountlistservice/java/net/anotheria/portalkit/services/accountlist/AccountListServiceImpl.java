@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.accountlist;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,11 +15,18 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.accountlist.events.AccountListServiceEventAnnouncer;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceService;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceServiceException;
+import net.anotheria.portalkit.services.accountlist.sorter.AccountListFieldComparators;
+import net.anotheria.portalkit.services.accountlist.sorter.ComparatorContainer;
+import net.anotheria.portalkit.services.accountlist.sorter.Pager;
+import net.anotheria.portalkit.services.accountlist.sorter.SortingDirection;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
+import net.anotheria.util.slicer.Segment;
+import net.anotheria.util.slicer.Slice;
+import net.anotheria.util.slicer.Slicer;
 
 import org.apache.log4j.Logger;
 
@@ -58,6 +66,11 @@ public class AccountListServiceImpl implements AccountListService {
 	private AccountListServiceEventAnnouncer announcer;
 
 	/**
+	 * {@link ComparatorContainer} instance.
+	 */
+	private volatile ComparatorContainer<AccountIdAdditionalInfo> comparatorContainer = new ComparatorContainer<AccountIdAdditionalInfo>();
+
+	/**
 	 * Constructor.
 	 */
 	public AccountListServiceImpl() {
@@ -69,6 +82,8 @@ public class AccountListServiceImpl implements AccountListService {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
 		announcer = new AccountListServiceEventAnnouncer();
+
+		comparatorContainer.addComparator(AccountListFieldComparators.CREATION_TIMESTAMP);
 	}
 
 	@Override
@@ -195,17 +210,48 @@ public class AccountListServiceImpl implements AccountListService {
 
 	@Override
 	public List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListServiceException {
-		AccountListData fromCache = accountListsCache.get(owner);
-		if (fromCache != null) {
-			AccountList accList = fromCache.getLists().get(listName);
-			if (accList != null && !accList.getTargets().isEmpty()) {
-				return accList.getTargets();
-			}
-		}
+
+		// AccountListData fromCache = accountListsCache.get(owner);
+		// if (fromCache != null) {
+		// AccountList accList = fromCache.getLists().get(listName);
+		// if (accList != null && !accList.getTargets().isEmpty()) {
+		// return accList.getTargets();
+		// }
+		// }
+
+		AccountListFilter filter = new AccountListFilter();
+
+		filter.setOrderBy(SortingDirection.ASC);
+		filter.setPager(new Pager(1, Integer.MAX_VALUE));
+		filter.setSortBy(AccountListFieldComparators.CREATION_TIMESTAMP);
+
+		return getList(owner, listName, filter).getSliceData();
+	}
+
+	/**
+	 * 
+	 * @param owner
+	 * @param listName
+	 * @param filter
+	 * @return {@link List<AccountIdAdditionalInfo>}
+	 * @throws AccountListServiceException
+	 */
+	@Override
+	public Slice<AccountIdAdditionalInfo> getList(AccountId owner, String listName, AccountListFilter filter) throws AccountListServiceException {
 		IdBasedLock<AccountId> lock = lockManager.obtainLock(owner);
 		lock.lock();
 		try {
-			return getListInternally(owner, listName);
+			List<AccountIdAdditionalInfo> all = getListInternally(owner, listName);
+
+			Collections.sort(all, comparatorContainer.getComparator(filter.getSortBy()));
+			if (filter.getOrderBy().equals(SortingDirection.DESC)) {
+				Collections.reverse(all);
+			}
+
+			Pager p = filter.getPager();
+			Slice<AccountIdAdditionalInfo> slice = Slicer.slice(new Segment(p.getPageNumber(), p.getElementsPerPage()), all);
+
+			return slice;
 		} finally {
 			lock.unlock();
 		}
@@ -260,7 +306,31 @@ public class AccountListServiceImpl implements AccountListService {
 
 	@Override
 	public List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException {
-		// todo : incoming parameters validation ???
+		AccountListFilter filter = new AccountListFilter();
+
+		filter.setOrderBy(SortingDirection.ASC);
+		filter.setPager(new Pager(1, Integer.MAX_VALUE));
+		filter.setSortBy(AccountListFieldComparators.CREATION_TIMESTAMP);
+
+		return reverseLookup(target, listName, filter).getSliceData();
+	}
+
+	@Override
+	public Slice<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName, AccountListFilter filter)
+			throws AccountListServiceException {
+		List<AccountIdAdditionalInfo> all = reverseLookupInternally(target, listName);
+		Collections.sort(all, comparatorContainer.getComparator(filter.getSortBy()));
+		if (filter.getOrderBy().equals(SortingDirection.DESC)) {
+			Collections.reverse(all);
+		}
+
+		Pager p = filter.getPager();
+		Slice<AccountIdAdditionalInfo> slice = Slicer.slice(new Segment(p.getPageNumber(), p.getElementsPerPage()), all);
+
+		return slice;
+	}
+
+	private List<AccountIdAdditionalInfo> reverseLookupInternally(AccountId target, String listName) throws AccountListServiceException {
 		AccountListData fromCache = reverseAccountListsCache.get(target);
 		if (fromCache != null) {
 			AccountList accList = fromCache.getLists().get(listName);
@@ -270,10 +340,7 @@ public class AccountListServiceImpl implements AccountListService {
 		}
 		try {
 			List<AccountIdAdditionalInfo> res = persistenceService.getReverseList(target, listName);
-			if (res == null) {
-				res = new ArrayList<AccountIdAdditionalInfo>();
-			}
-			AccountListData ald = new AccountListData(target, listName, res);
+			AccountListData ald = new AccountListData(target, listName, res != null ? res : new ArrayList<AccountIdAdditionalInfo>());
 			reverseAccountListsCache.put(target, ald);
 			return ald.getLists().get(listName).getTargets();
 		} catch (AccountListPersistenceServiceException e) {
