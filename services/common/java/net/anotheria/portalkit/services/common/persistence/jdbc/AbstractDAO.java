@@ -74,4 +74,6 @@ public abstract class AbstractDAO implements DAO {
 		statement.setLong(pos + 2, 0L); // DAO_UPDATED
 	}
 
+
+
 }

@@ -18,6 +18,11 @@
 			<artifactId>services-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>portalkit</groupId>
+            <artifactId>services-storage</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 
 </project>
