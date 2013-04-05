@@ -137,6 +137,38 @@ public final class OnlineAccountReadCriteria implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OnlineAccountReadCriteria criteria = (OnlineAccountReadCriteria) o;
+
+        if (ascDirection != criteria.ascDirection) return false;
+        if (fromTime != criteria.fromTime) return false;
+        if (limit != criteria.limit) return false;
+        if (timeStamp != criteria.timeStamp) return false;
+        if (toTime != criteria.toTime) return false;
+        if (accounts != null ? !accounts.equals(criteria.accounts) : criteria.accounts != null) return false;
+        if (property != criteria.property) return false;
+        if (timeDirection != criteria.timeDirection) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accounts != null ? accounts.hashCode() : 0;
+        result = 31 * result + (property != null ? property.hashCode() : 0);
+        result = 31 * result + (ascDirection ? 1 : 0);
+        result = 31 * result + (int) (fromTime ^ (fromTime >>> 32));
+        result = 31 * result + (int) (toTime ^ (toTime >>> 32));
+        result = 31 * result + (int) (timeStamp ^ (timeStamp >>> 32));
+        result = 31 * result + (timeDirection != null ? timeDirection.hashCode() : 0);
+        result = 31 * result + limit;
+        return result;
+    }
+
     /**
      * Builder for {@link OnlineAccountReadCriteria}.
      */

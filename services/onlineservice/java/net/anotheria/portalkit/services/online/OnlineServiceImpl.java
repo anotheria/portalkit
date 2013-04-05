@@ -4,6 +4,7 @@ import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.core.stats.TimeUnit;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPersistenceServiceException;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceServiceException;
 import net.anotheria.portalkit.services.online.storage.OnlineStorage;
@@ -264,6 +265,8 @@ public class OnlineServiceImpl implements OnlineService {
                     throw new AssertionError(property + " is no supported");
             }
 
+        } catch (ActivityNotFoundInPersistenceServiceException e) {
+            throw new NoActivityDataFoundException(account, property.name());
         } catch (ActivityPersistenceServiceException e) {
             final String msg = LogMessageUtil.failMsg(e, account, property);
             LOG.error(msg, e);
