@@ -30,7 +30,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author h3llka
  */
-public class OnlineStorage implements Serializable {
+public class OnlineStorage {
+
     /**
      * {@link Logger} instance.
      */
@@ -58,7 +59,7 @@ public class OnlineStorage implements Serializable {
     /**
      * {@link OnlineServiceConfiguration} instance.
      */
-    private OnlineServiceConfiguration config;
+    private transient OnlineServiceConfiguration config;
 
 
     /**

@@ -174,7 +174,7 @@ public class InMemoryActivityPersistenceServiceImpl implements ActivityPersisten
     /**
      * Internal object for inMemory information storing.
      */
-    private final class InternalDataHolder implements Serializable {
+    private static final class InternalDataHolder implements Serializable {
 
         /**
          * Basic serial version UID.
