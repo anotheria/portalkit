@@ -22,6 +22,11 @@ public interface ScheduledQueue {
 	void resume() throws ScheduledQueueException;
 
 	/**
+	 * Is scheduler started.
+	 */
+	boolean isStarted() throws ScheduledQueueException;
+
+	/**
 	 * Configure scheduler with new schedule based on cron configuration, paused scheduler resume it's work with new schedule.
 	 * 
 	 * @param schedule

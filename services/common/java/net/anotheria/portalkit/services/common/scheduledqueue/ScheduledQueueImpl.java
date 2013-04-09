@@ -157,6 +157,17 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 	}
 
 	@Override
+	public boolean isStarted() throws ScheduledQueueException {
+		try {
+			return scheduler.isStarted();
+		} catch (SchedulerException e) {
+			String message = "isStarted() fail";
+			LOGGER.error(message, e);
+			throw new ScheduledQueueException(message, e);
+		}
+	}
+
+	@Override
 	public void schedule(final String schedule) throws ScheduledQueueException {
 		try {
 			if (scheduler.isShutdown())
