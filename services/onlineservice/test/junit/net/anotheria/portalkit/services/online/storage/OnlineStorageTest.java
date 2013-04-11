@@ -7,6 +7,7 @@ import net.anotheria.portalkit.services.online.AccountIsOfflineException;
 import net.anotheria.portalkit.services.online.AccountIsOnlineException;
 import net.anotheria.portalkit.services.online.OnlineAccountReadCriteria.Builder;
 import net.anotheria.portalkit.services.online.OnlineServiceConfiguration;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ import java.util.Random;
  * @author h3llka
  */
 public class OnlineStorageTest {
+
+    @BeforeClass
+    public static void before() {
+        System.setProperty("JUNITTEST", "true");
+    }
+
     @Test
     public void testLoginLogout() {
         OnlineStorage storage = new OnlineStorage();

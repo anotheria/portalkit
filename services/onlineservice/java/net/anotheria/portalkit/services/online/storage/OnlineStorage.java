@@ -8,12 +8,12 @@ import net.anotheria.portalkit.services.online.OnlineAccountReadCriteria;
 import net.anotheria.portalkit.services.online.OnlineAccountReadCriteria.SortProperty;
 import net.anotheria.portalkit.services.online.OnlineAccountReadCriteria.TimeBasedQueryDirection;
 import net.anotheria.portalkit.services.online.OnlineServiceConfiguration;
+import net.anotheria.portalkit.services.online.events.ActivityAnnouncer;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.apache.log4j.Logger;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,6 +60,10 @@ public class OnlineStorage {
      * {@link OnlineServiceConfiguration} instance.
      */
     private transient OnlineServiceConfiguration config;
+    /**
+     * {@link ActivityAnnouncer} instance.
+     */
+    private ActivityAnnouncer announcer;
 
 
     /**
@@ -71,6 +75,7 @@ public class OnlineStorage {
         lastActivityIndex = new ConcurrentSkipListMap<Long, AccountId>();
         lockManager = new SafeIdBasedLockManager<AccountId>();
         config = OnlineServiceConfiguration.getInstance();
+        announcer = new ActivityAnnouncer();
     }
 
 
@@ -118,6 +123,8 @@ public class OnlineStorage {
             //put to storage
             onlineUsers.put(account, new OnlineUserData(account, lastLogin, lastActivity));
 
+            //event announce
+            announcer.accountLoggedIn(account, TimeUnit.MILLISECONDS.transformNanos(lastLoginNanoTime));
         } finally {
             lock.unlock();
         }
@@ -151,6 +158,8 @@ public class OnlineStorage {
             long lastActivity = indexLastActivity(account, lastActivityNanoTime);
             data.setLastActivityNanoTime(lastActivity);
 
+            //event announce
+            announcer.accountActivityChange(account, TimeUnit.MILLISECONDS.transformNanos(lastActivityNanoTime));
         } finally {
             lock.unlock();
         }
@@ -163,6 +172,18 @@ public class OnlineStorage {
      * @throws AccountIsOfflineException in case when user can't be found among online ( inside storage).
      */
     public void notifyLogOut(final AccountId account) throws AccountIsOfflineException {
+        notifyLogOut(account, true);
+    }
+
+    /**
+     * {@inheritDoc #notifyLogOut(AccountId)}.
+     * Allow to select - is async event should be send, or not.
+     *
+     * @param account   {@link AccountId}
+     * @param sendEvent {@code true} if event should be send, false otherwise.
+     * @throws AccountIsOfflineException in case of error
+     */
+    private void notifyLogOut(final AccountId account, boolean sendEvent) throws AccountIsOfflineException {
         if (account == null)
             throw new IllegalArgumentException("not valid account passed");
 
@@ -180,6 +201,10 @@ public class OnlineStorage {
             lastLoginIndex.remove(data.getLastLoginNanoTime());
             //remove data
             onlineUsers.remove(account);
+
+            //event announce
+            if (sendEvent)
+                announcer.accountLoggedOut(account);
 
         } finally {
             lock.unlock();
@@ -408,13 +433,15 @@ public class OnlineStorage {
             return;
         for (AccountId acc : toCleanUp) {
             try {
-                notifyLogOut(acc);
+                notifyLogOut(acc, false);
                 successCounter++;
             } catch (AccountIsOfflineException e) {
                 if (LOG.isDebugEnabled())
                     LOG.debug("CleanUp failed for [" + acc + "], cause it's offline!", e);
             }
         }
+        //cleanUp announce!
+        announcer.cleanUp(toCleanUp);
 
         if (isInfoLoggingEnabled)
             LOG.info(successCounter + " inactive/expired accounts were cleaned up");

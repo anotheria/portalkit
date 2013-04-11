@@ -14,6 +14,16 @@ import org.configureme.annotations.DontConfigure;
  */
 @ConfigureMe(name = "pk-online-service-config")
 public final class OnlineServiceConfiguration {
+
+    /**
+     * Default  event channel queue size.
+     */
+    protected static final int DEFAULT_EVEN_CHANNEL_Q_SIZE = 5000;
+    /**
+     * Default  event channel queue sleep time.
+     */
+    protected static final long DEFAULT_EVEN_CHANNEL_Q_SLEEP_TIME = 300;
+
     /**
      * Interval between  'inactive-users' cleanUp operations, interval is defined to be used as time in millis!
      * <a> 5 minutes by default</a>.
@@ -27,6 +37,16 @@ public final class OnlineServiceConfiguration {
      */
     @Configure
     private long maxAccountInactivityInterval = TimeUnit.MINUTE.getMillis() * 10;
+    /**
+     * Event channel queue sleep time.
+     */
+    @Configure
+    private long eventChannelQueueSleepTime;
+    /**
+     * Event channel queue size.
+     */
+    @Configure
+    private int eventChannelQueueSize;
     /**
      * Instance const.
      */
@@ -43,6 +63,8 @@ public final class OnlineServiceConfiguration {
     private OnlineServiceConfiguration() {
         inactiveAccountsCleanUpInterval = TimeUnit.MINUTE.getMillis() * 5;
         maxAccountInactivityInterval = TimeUnit.MINUTE.getMillis() * 10;
+        eventChannelQueueSize = DEFAULT_EVEN_CHANNEL_Q_SIZE;
+        eventChannelQueueSleepTime = DEFAULT_EVEN_CHANNEL_Q_SLEEP_TIME;
     }
 
     /**
@@ -86,11 +108,29 @@ public final class OnlineServiceConfiguration {
         this.maxAccountInactivityInterval = maxAccountInactivityInterval;
     }
 
+    public long getEventChannelQueueSleepTime() {
+        return eventChannelQueueSleepTime;
+    }
+
+    public void setEventChannelQueueSleepTime(long eventChannelQueueSleepTime) {
+        this.eventChannelQueueSleepTime = eventChannelQueueSleepTime;
+    }
+
+    public int getEventChannelQueueSize() {
+        return eventChannelQueueSize;
+    }
+
+    public void setEventChannelQueueSize(int eventChannelQueueSize) {
+        this.eventChannelQueueSize = eventChannelQueueSize;
+    }
+
     @Override
     public String toString() {
         return "OnlineServiceConfiguration{" +
                 "inactiveAccountsCleanUpInterval=" + inactiveAccountsCleanUpInterval +
                 ", maxAccountInactivityInterval=" + maxAccountInactivityInterval +
+                ", eventChannelQueueSleepTime=" + eventChannelQueueSleepTime +
+                ", eventChannelQueueSize=" + eventChannelQueueSize +
                 '}';
     }
 }

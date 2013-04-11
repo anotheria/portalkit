@@ -42,6 +42,7 @@ public class OnlineServiceTest {
     @BeforeClass
     public static void before() {
         ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test"));
+        System.setProperty("JUNITTEST", "true");
     }
 
     /**
