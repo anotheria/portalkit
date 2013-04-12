@@ -10,6 +10,7 @@ import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +33,14 @@ public class ActivityDAO extends AbstractDAO implements DAO {
      * {@link IdBasedLockManager} instance.
      */
     private IdBasedLockManager<AccountId> lockManager = new SafeIdBasedLockManager<AccountId>();
+    /**
+     * Logging utility.
+     */
+    private static final Logger LOG = Logger.getLogger(ActivityDAO.class);
+    /**
+     * Log prefix.
+     */
+    private static final String DAO_PREFIX = "Activity-DAO :";
 
     @Override
     protected String[] getTableNames() {
@@ -60,7 +69,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
 
             return lastLoginTime;
         } catch (SQLException sqle) {
-            throw new DAOException(LogMessageUtil.failMsg(sqle, con, account, lastLoginTime), sqle);
+            final String msg = LogMessageUtil.failMsg(sqle, con, account, lastLoginTime);
+            LOG.error(DAO_PREFIX + msg, sqle);
+            throw new DAOException(msg, sqle);
         } finally {
             JDBCUtil.close(st);
             lock.unlock();
@@ -110,7 +121,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
             result.setString(4, account.getInternalId());
             return result;
         } catch (SQLException sqle) {
-            throw new DAOException(LogMessageUtil.failMsg(sqle, con, account, lastLogin), sqle);
+            final String msg = LogMessageUtil.failMsg(sqle, con, account, lastLogin);
+            LOG.error(DAO_PREFIX + msg, sqle);
+            throw new DAOException(msg, sqle);
         }
     }
 
@@ -141,7 +154,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
 
             return lastActivityTime;
         } catch (SQLException e) {
-            throw new DAOException(LogMessageUtil.failMsg(e, con, account, lastActivityTime));
+            final String msg = LogMessageUtil.failMsg(e, con, account, lastActivityTime);
+            LOG.error(DAO_PREFIX + msg, e);
+            throw new DAOException(msg);
         } finally {
             JDBCUtil.close(st);
             lock.unlock();
@@ -214,7 +229,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
             st.executeUpdate();
 
         } catch (SQLException sqle) {
-            throw new DAOException(LogMessageUtil.failMsg(sqle, con, accountId), sqle);
+            final String msg = LogMessageUtil.failMsg(sqle, con, accountId);
+            LOG.error(DAO_PREFIX + msg, sqle);
+            throw new DAOException(msg, sqle);
         } finally {
             JDBCUtil.close(st);
             lock.unlock();
@@ -260,7 +277,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
 
             throw new ActivityEntryNotFoundDAOException(accountId);
         } catch (SQLException e) {
-            throw new DAOException(LogMessageUtil.failMsg(e, con, accountId, property));
+            final String msg = LogMessageUtil.failMsg(e, con, accountId, property);
+            LOG.error(DAO_PREFIX + msg, e);
+            throw new DAOException(msg, e);
         } finally {
             JDBCUtil.close(rs);
             JDBCUtil.close(st);
@@ -294,7 +313,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
 
             return result;
         } catch (SQLException e) {
-            throw new DAOException(LogMessageUtil.failMsg(e, con, accounts.size(), property));
+            final String msg = LogMessageUtil.failMsg(e, con, accounts.size(), property);
+            LOG.error(DAO_PREFIX + msg, e);
+            throw new DAOException(msg, e);
         } finally {
             JDBCUtil.close(rs);
             JDBCUtil.close(st);
@@ -339,7 +360,9 @@ public class ActivityDAO extends AbstractDAO implements DAO {
             return rs.next() && rs.getInt(1) > 0;
 
         } catch (SQLException e) {
-            throw new DAOException(LogMessageUtil.failMsg(e, con, account));
+            final String msg = LogMessageUtil.failMsg(e, con, account);
+            LOG.error(DAO_PREFIX + msg, e);
+            throw new DAOException(msg, e);
         } finally {
             JDBCUtil.close(rs);
             JDBCUtil.close(st);
