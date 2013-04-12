@@ -782,15 +782,16 @@ public class OnlineStorageTest {
         // ####  Between
         //create Criteria!  - ASC  by last activity!!!
         Builder betweenLastLoginQuery = new Builder();
-        betweenLastLoginQuery.lastLoginBetween(intervalStart, intervalEND);
+        betweenLastLoginQuery.lastLoginBetween(TimeUnit.MILLISECONDS.transformNanos(intervalStart), TimeUnit.MILLISECONDS.transformNanos(intervalEND));
 
         List<AccountId> betweenQueryResult = storage.readOnlineUsers(betweenLastLoginQuery.build());
         Assert.assertNotNull(" IS NULL! ....", betweenQueryResult);
         for (AccountId result : betweenQueryResult) {
             final Long currentLastLogin = lastLoginTimeMap.get(result);
-
-            Assert.assertTrue("Current last login less then interval start ! start[" + intervalStart + "] current[" + currentLastLogin + "]", currentLastLogin > intervalStart);
-            Assert.assertTrue("Current last login greater then interval end ! end[" + intervalEND + "] current[" + currentLastLogin + "]", currentLastLogin < intervalEND);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(intervalStart));
+            long end = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(intervalEND));
+            Assert.assertTrue("Current last login less then interval start ! start[" + start + "] current[" + currentLastLogin + "]", currentLastLogin > start);
+            Assert.assertTrue("Current last login greater then interval end ! end[" + intervalEND + "] current[" + currentLastLogin + "]", currentLastLogin < end);
             //Assert.assertTrue(" Result item last login - is out of  interval start/end bound! start[" + intervalStart + "] end[" + intervalEND + "] current[" + currentLastLogin + "] ",
             //      currentLastLogin > intervalStart && currentLastLogin < intervalEND);
         }
@@ -810,13 +811,14 @@ public class OnlineStorageTest {
         //# AFTER start!!
         final long lessTime = intervalStart;
         Builder afterLAstLoginQuery = new Builder();
-        afterLAstLoginQuery.lastLoginGreaterThenTimestamp(lessTime);
+        afterLAstLoginQuery.lastLoginGreaterThenTimestamp(TimeUnit.MILLISECONDS.transformNanos(lessTime));
 
         List<AccountId> accountsLessThen = storage.readOnlineUsers(afterLAstLoginQuery.build());
         Assert.assertNotNull(" IS NULL! ....", accountsLessThen);
         for (AccountId result : accountsLessThen) {
             final Long currentLastLogin = lastLoginTimeMap.get(result);
-            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin > lessTime);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(lessTime));
+            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin > start);
         }
         //Check sorting!!
         previousLastLogin = 0;
@@ -834,13 +836,14 @@ public class OnlineStorageTest {
         //# BEFORE START
         final long gereaterTime = intervalEND;
         Builder beforeLastLoginQuery = new Builder();
-        beforeLastLoginQuery.lastLoginLessThenTimestamp(gereaterTime);
+        beforeLastLoginQuery.lastLoginLessThenTimestamp(TimeUnit.MILLISECONDS.transformNanos(gereaterTime));
 
         List<AccountId> accountsBefore = storage.readOnlineUsers(beforeLastLoginQuery.build());
         Assert.assertNotNull(" IS NULL! ....", accountsBefore);
         for (AccountId result : accountsBefore) {
             final Long currentLastLogin = lastLoginTimeMap.get(result);
-            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin < gereaterTime);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(gereaterTime));
+            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin < start);
         }
         //Check sorting!!
         previousLastLogin = 0;
@@ -883,15 +886,16 @@ public class OnlineStorageTest {
         // ####  Between
         //create Criteria!  - ASC  by last activity!!!
         Builder betweenLastActivityQuery = new Builder();
-        betweenLastActivityQuery.lastActivityBetween(intervalStart, intervalEND);
+        betweenLastActivityQuery.lastActivityBetween(TimeUnit.MILLISECONDS.transformNanos(intervalStart), TimeUnit.MILLISECONDS.transformNanos(intervalEND));
 
         List<AccountId> betweenQueryResult = storage.readOnlineUsers(betweenLastActivityQuery.build());
         Assert.assertNotNull(" IS NULL! ....", betweenQueryResult);
         for (AccountId result : betweenQueryResult) {
             final Long currentLastActivity = lastActivityTimeMap.get(result);
-
-            Assert.assertTrue("Current last activity less then interval start ! start[" + intervalStart + "] current[" + currentLastActivity + "]", currentLastActivity > intervalStart);
-            Assert.assertTrue("Current last activity greater then interval end ! end[" + intervalEND + "] current[" + currentLastActivity + "]", currentLastActivity < intervalEND);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(intervalStart));
+            long end = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(intervalEND));
+            Assert.assertTrue("Current last activity less then interval start ! start[" + start + "] current[" + currentLastActivity + "]", currentLastActivity > start);
+            Assert.assertTrue("Current last activity greater then interval end ! end[" + end + "] current[" + currentLastActivity + "]", currentLastActivity < end);
             //Assert.assertTrue(" Result item last login - is out of  interval start/end bound! start[" + intervalStart + "] end[" + intervalEND + "] current[" + currentLastLogin + "] ",
             //      currentLastLogin > intervalStart && currentLastLogin < intervalEND);
         }
@@ -911,13 +915,14 @@ public class OnlineStorageTest {
         //# AFTER start!!
         final long lessTime = intervalStart;
         Builder afterLastActivityQuery = new Builder();
-        afterLastActivityQuery.lastActivityGreaterThenTimestamp(lessTime);
+        afterLastActivityQuery.lastActivityGreaterThenTimestamp(TimeUnit.MILLISECONDS.transformNanos(lessTime));
 
         List<AccountId> accountsLessThen = storage.readOnlineUsers(afterLastActivityQuery.build());
         Assert.assertNotNull(" IS NULL! ....", accountsLessThen);
         for (AccountId result : accountsLessThen) {
             final Long currentLastLogin = lastActivityTimeMap.get(result);
-            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin > lessTime);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(lessTime));
+            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin >= start);
         }
         //Check sorting!!
         previousLastActivity = 0;
@@ -935,13 +940,14 @@ public class OnlineStorageTest {
         //# BEFORE START
         final long gereaterTime = intervalEND;
         Builder beforeLastActivityQuery = new Builder();
-        beforeLastActivityQuery.lastActivityLessThenTimestamp(gereaterTime);
+        beforeLastActivityQuery.lastActivityLessThenTimestamp(TimeUnit.MILLISECONDS.transformNanos(gereaterTime));
 
         List<AccountId> accountsBefore = storage.readOnlineUsers(beforeLastActivityQuery.build());
         Assert.assertNotNull(" IS NULL! ....", accountsBefore);
         for (AccountId result : accountsBefore) {
             final Long currentLastLogin = lastActivityTimeMap.get(result);
-            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin < gereaterTime);
+            long start = OnlineStorage.toNanoSeconds(TimeUnit.MILLISECONDS.transformNanos(gereaterTime));
+            Assert.assertTrue(" Result item last login - is out of  interval start/end bound!  ", currentLastLogin < start);
         }
         //Check sorting!!
         previousLastActivity = 0;
@@ -1014,7 +1020,7 @@ public class OnlineStorageTest {
     private Map<AccountId, Long> buildLastLoginData(List<AccountId> accounts) {
         Map<AccountId, Long> map = new HashMap<AccountId, Long>(accounts.size());
         for (AccountId account : accounts)
-            map.put(account, System.nanoTime() + new Random(System.currentTimeMillis()).nextLong());
+            map.put(account, Math.abs(System.nanoTime() + Math.abs(new Random(System.nanoTime()).nextLong()) + 2000000000));
 
         return map;
     }
@@ -1028,7 +1034,7 @@ public class OnlineStorageTest {
     private Map<AccountId, Long> buildLastActivityData(Map<AccountId, Long> lastLogin) {
         Map<AccountId, Long> map = new HashMap<AccountId, Long>(lastLogin.size());
         for (Map.Entry<AccountId, Long> entry : lastLogin.entrySet())
-            map.put(entry.getKey(), entry.getValue() + 1000000000);
+            map.put(entry.getKey(), Math.abs(entry.getValue() + 11000000000L));
 
         return map;
     }

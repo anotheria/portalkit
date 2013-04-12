@@ -56,9 +56,9 @@ public final class OnlineAccountReadCriteria implements Serializable {
      * @param aAccounts     {@link AccountId} collection for read
      * @param aProperty     {@link SortProperty} for read
      * @param aAscDirection is asc sort direction required
-     * @param aFromTime     between time interval start
-     * @param aToTime       between time interval end
-     * @param aTime         time interval
+     * @param aFromTime     between time interval start (millis)
+     * @param aToTime       between time interval end (millis)
+     * @param aTime         time interval (millis)
      * @param aDirection    time filtering type
      * @param aLimit        expected results amount
      */

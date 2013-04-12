@@ -370,14 +370,21 @@ public class OnlineStorage {
                             map = map.descendingMap();
                         return cutList(new ArrayList<AccountId>(map.values()), criteria.getLimit());
                     case BETWEEN:
-                        //between !  interval start/end exclusive ...  it's not required to check for desc direction! here
-                        return cutList(new ArrayList<AccountId>(map.subMap(criteria.getFromTime(), false, criteria.getToTime(), false).values()), criteria.getLimit());
+
+                        long fromTimeNanos = toNanoSeconds(criteria.getFromTime());
+                        long toTimeNanos = toNanoSeconds(criteria.getToTime());
+                        //between !  interval start/end inclusive ...  it's not required to check for desc direction! here
+                        return cutList(new ArrayList<AccountId>(map.subMap(fromTimeNanos, false, toTimeNanos, false).values()), criteria.getLimit());
                     case AFTER:
+                        //transorm to nanos
+                        long timeAfterNaos = toNanoSeconds(criteria.getTimeStamp());
                         //all elements which are greater then selected time stamp .. selected time  exclusive... it's not required to check for desc direction! here
-                        return cutList(new ArrayList<AccountId>(map.tailMap(criteria.getTimeStamp(), false).values()), criteria.getLimit());
+                        return cutList(new ArrayList<AccountId>(map.tailMap(timeAfterNaos, false).values()), criteria.getLimit());
                     case BEFORE:
+                        //transorm to nanos
+                        long timeBeforeNaos = toNanoSeconds(criteria.getTimeStamp());
                         //all elements which are less then selected time stamp .. selected time  exclusive...  it's not required to check for desc direction! here
-                        return cutList(new ArrayList<AccountId>(map.headMap(criteria.getTimeStamp(), false).values()), criteria.getLimit());
+                        return cutList(new ArrayList<AccountId>(map.headMap(timeBeforeNaos, false).values()), criteria.getLimit());
                     default:
                         throw new AssertionError(timingDirection + " as time-based-query direction is  not supported");
                 }
@@ -387,6 +394,16 @@ public class OnlineStorage {
         }
 
 
+    }
+
+    /**
+     * Convert time in millis to nano - value.
+     *
+     * @param millis time in millis
+     * @return converted time to nano-seconds.
+     */
+    protected static long toNanoSeconds(final long millis) {
+        return millis * NANO_SECONDS_IN_ONE_MILLI_SECOND;
     }
 
     /**
@@ -424,7 +441,7 @@ public class OnlineStorage {
     public void cleanUpInactiveAccounts() {
         final boolean isInfoLoggingEnabled = LOG.isInfoEnabled();
         //transforming to the nano's
-        final long nanoTimeExpirationInterval = config.getMaxAccountInactivityInterval() * NANO_SECONDS_IN_ONE_MILLI_SECOND;
+        final long nanoTimeExpirationInterval = toNanoSeconds(config.getMaxAccountInactivityInterval());
         List<AccountId> toCleanUp = getExpiredOnlineAccounts(nanoTimeExpirationInterval);
         if (isInfoLoggingEnabled)
             LOG.info("There are " + toCleanUp.size() + " of inactive accounts - which should be cleaned UP. InactivityInterval [" + TimeUnit.SECONDS.transformNanos(nanoTimeExpirationInterval) + "]sec.");
