@@ -17,7 +17,7 @@ public final class OnlineAPIConfiguration {
     /**
      * Instance property.
      */
-    private static OnlineAPIConfiguration instance;
+    private static volatile OnlineAPIConfiguration instance;
     /**
      * Monitor instance...
      */
@@ -77,6 +77,7 @@ public final class OnlineAPIConfiguration {
     public static OnlineAPIConfiguration getInstance() {
         if (instance != null)
             return instance;
+
         synchronized (lock) {
             if (instance != null)
                 return instance;

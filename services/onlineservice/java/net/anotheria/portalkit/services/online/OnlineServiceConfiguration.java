@@ -51,7 +51,7 @@ public final class OnlineServiceConfiguration {
      * Instance const.
      */
     @DontConfigure
-    private static OnlineServiceConfiguration instance;
+    private static volatile OnlineServiceConfiguration instance;
     /**
      * Sync monitor instance.
      */
