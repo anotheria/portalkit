@@ -89,8 +89,8 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
         observationAPI.unRegisterObserver(this, SUPPORTED_SUBJECTS.toArray(new String[SUPPORTED_SUBJECTS.size()]));
         observationAPI = null;
         config = null;
-        if (!processor.isStopped())
-            processor.stopImmediately();
+//        if (!processor.isStopped())
+//            processor.stopImmediately();
         processor = null;
     }
 
