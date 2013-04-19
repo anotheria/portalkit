@@ -10,7 +10,7 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author lrosenberg
  * @since 11.12.12 11:08
  */
-public class Account implements Serializable {
+public class Account implements Serializable, Cloneable {
 	/**
 	 * Basic serialVersionUID variable.
 	 */
@@ -171,6 +171,16 @@ public class Account implements Serializable {
 	 */
 	public boolean hasStatus(long aStatus){
 		return (status & aStatus) == aStatus;
-	}	
+	}
 
+
+    @SuppressWarnings("CloneDoesntDeclareCloneNotSupportedException")
+    @Override
+    protected Account clone() {
+        try {
+            return Account.class.cast(super.clone());
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Not cloneable? "+e.getMessage());
+        }
+    }
 }

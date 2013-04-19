@@ -81,7 +81,7 @@ public class AccountEvent implements Serializable {
 	public static AccountEvent create(Account account) {
 		AccountEvent event = new AccountEvent();
 		event.setAccount(account);
-		event.setEventType(AccountEventOperation.UPDATE);
+		event.setEventType(AccountEventOperation.CREATE);
 		return event;
 	}
 

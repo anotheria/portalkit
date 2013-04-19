@@ -87,7 +87,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		// first check if we have this account in the cache.
 		Account fromCache = cache.get(accountId);
 		if (fromCache != null)
-			return fromCache;
+			return fromCache.clone();
 		Account notExisting = nonExistingAccountCache.get(accountId);
 		if (notExisting != null)
 			return NULL_ACCOUNT;
@@ -97,7 +97,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 				nonExistingAccountCache.put(accountId, NULL_ACCOUNT);
 				return NULL_ACCOUNT;
 			}
-			cache.put(accountId, fromPersistence);
+			cache.put(accountId, fromPersistence.clone());
 			return fromPersistence;
 		} catch (AccountPersistenceServiceException e) {
 			throw new AccountServiceException(e);
@@ -157,7 +157,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		// we try to
 		try {
 			Account fromPersistence = persistenceService.getAccount(toSave.getId());
-			cache.put(toSave.getId(), fromPersistence);
+			cache.put(toSave.getId(), fromPersistence.clone());
 			if (oldAccount != NULL_ACCOUNT) {
 				if (!oldAccount.getEmail().equals(fromPersistence.getEmail())) {
 					email2idCache.remove(oldAccount.getEmail());
