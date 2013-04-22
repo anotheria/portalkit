@@ -382,9 +382,14 @@ public class OnlineStorage {
                         return cutList(new ArrayList<AccountId>(map.tailMap(timeAfterNaos, false).values()), criteria.getLimit());
                     case BEFORE:
                         //transorm to nanos
-                        long timeBeforeNaos = toNanoSeconds(criteria.getTimeStamp());
+                        long timeBeforeNanos = toNanoSeconds(criteria.getTimeStamp());
                         //all elements which are less then selected time stamp .. selected time  exclusive...  it's not required to check for desc direction! here
-                        return cutList(new ArrayList<AccountId>(map.headMap(timeBeforeNaos, false).values()), criteria.getLimit());
+                        //we should receive  first elements after providen timestamp.... so list cutting will be bit different
+                        List<AccountId> result = new ArrayList<AccountId>(map.headMap(timeBeforeNanos, false).values());
+                        if (result.size() > criteria.getLimit())
+                            result = result.subList(result.size() - criteria.getLimit(), result.size());
+                        return result;
+                    //return cutList(new ArrayList<AccountId>(map.headMap(timeBeforeNanos, false).values()), criteria.getLimit());
                     default:
                         throw new AssertionError(timingDirection + " as time-based-query direction is  not supported");
                 }

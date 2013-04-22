@@ -839,6 +839,15 @@ public class OnlineStorageTest {
         beforeLastLoginQuery.lastLoginLessThenTimestamp(TimeUnit.MILLISECONDS.transformNanos(gereaterTime));
 
         List<AccountId> accountsBefore = storage.readOnlineUsers(beforeLastLoginQuery.build());
+
+        beforeLastLoginQuery.withResultAmount(2);
+        List<AccountId> accountBeforeLimit2 = storage.readOnlineUsers(beforeLastLoginQuery.build());
+        Assert.assertEquals(2, accountBeforeLimit2.size());
+        Assert.assertTrue(lastLoginTimeMap.get(accountBeforeLimit2.get(0)) < lastLoginTimeMap.get(accountBeforeLimit2.get(1)));
+        Assert.assertTrue(accountsBefore.size() > accountBeforeLimit2.size());
+        Assert.assertFalse(accountsBefore.get(0).equals(accountBeforeLimit2.get(0)));
+
+
         Assert.assertNotNull(" IS NULL! ....", accountsBefore);
         for (AccountId result : accountsBefore) {
             final Long currentLastLogin = lastLoginTimeMap.get(result);
