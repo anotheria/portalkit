@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	 * Default constructor.
 	 */
 	public AccountServiceImpl() {
-		config = new AccountServiceConfig();
+		config = AccountServiceConfig.getInstance();
 
 		// TODO cache config
 		cache = Caches.createHardwiredCache("accountservice-cache");

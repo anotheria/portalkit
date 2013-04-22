@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import junit.framework.Assert;
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventChannel;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
@@ -93,12 +94,30 @@ public class AccountServiceTest {
 		int counter = 0;
 		for (Account acc : accounts2) {
 			if (counter++ == 3) {
-				assertSame(newAccount, acc);
+                checkPropertiesEquals(newAccount, acc);
 			} else {
 				assertSame(NullAccount.INSTANCE, acc);
 			}
 		}
 	}
+
+    /**
+     * Check that all properties of two incoming {@link Account} instance are equals.
+     * @param account {@link Account}
+     * @param secondAccount  {@link Account}
+     */
+    private void checkPropertiesEquals(final Account account, final Account secondAccount){
+        Assert.assertNotNull("account is null",account);
+        Assert.assertNotNull("secondAccount is null",secondAccount);
+
+        Assert.assertEquals("Ids are not equals", account.getId(), secondAccount.getId());
+        Assert.assertEquals("Emails are not equals", account.getEmail(), secondAccount.getEmail());
+        Assert.assertEquals("Names are not equals", account.getName(), secondAccount.getName());
+        Assert.assertEquals("Registration times  are not equals", account.getRegistrationTimestamp(), secondAccount.getRegistrationTimestamp());
+        Assert.assertEquals("Statuses  are not equals", account.getStatus(), secondAccount.getStatus());
+        Assert.assertEquals("Types  are not equals", account.getType(), secondAccount.getType());
+
+    }
 
 	@Test
 	public void testGetByName() throws AccountServiceException, MetaFactoryException {
