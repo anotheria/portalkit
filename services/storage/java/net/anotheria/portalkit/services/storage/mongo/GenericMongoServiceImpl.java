@@ -150,16 +150,16 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				final String name = field.getName();
 				final int order = field.getOrder();
 				final boolean hashed = field.isHashed();
-				fields.put(name, hashed ? "hashed" : order);
+				fields.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
 			}
 			BasicDBObject options = new BasicDBObject();
 			if (!StringUtils.isEmpty(index.getName())) // index name
-				options.put("name", index.getName());
+				options.put(Index.MONGO_INDEX_PROPERTY_NAME, index.getName());
 
-			options.put("unique", index.isUnique()); // unique constraint
-			options.put("dropDups", index.isDropDups()); // drop duplicates on creation, should be used very carefully
-			options.put("sparse", index.isSparse());
-			options.put("background", index.isBackground());
+			options.put(Index.MONGO_INDEX_PROPERTY_UNIQUE, index.isUnique()); // unique constraint
+			options.put(Index.MONGO_INDEX_PROPERTY_DROPDUPS, index.isDropDups()); // drop duplicates on creation, should be used very carefully
+			options.put(Index.MONGO_INDEX_PROPERTY_SPARSE, index.isSparse());
+			options.put(Index.MONGO_INDEX_PROPERTY_BACKGROUND, index.isBackground());
 
 			getCollection().ensureIndex(fields, options);
 		}

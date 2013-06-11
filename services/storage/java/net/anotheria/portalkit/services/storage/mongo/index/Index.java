@@ -22,6 +22,36 @@ public class Index implements Serializable {
 	private static final long serialVersionUID = 8533612629850711072L;
 
 	/**
+	 * Index 'name' property.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_PROPERTY_NAME = "name";
+
+	/**
+	 * Index 'unique' property.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_PROPERTY_UNIQUE = "unique";
+
+	/**
+	 * Index 'dropDups' property.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_PROPERTY_DROPDUPS = "dropDups";
+
+	/**
+	 * Index 'sparse' property.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_PROPERTY_SPARSE = "sparse";
+
+	/**
+	 * Index 'background' property.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_PROPERTY_BACKGROUND = "background";
+
+	/**
 	 * Index name.<br>
 	 * Will be generated automatically if empty.
 	 */

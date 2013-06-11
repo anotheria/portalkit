@@ -19,6 +19,12 @@ public class IndexField implements Serializable {
 	private static final long serialVersionUID = 7245618183926014804L;
 
 	/**
+	 * Index property for hashed field.
+	 */
+	@DontConfigure
+	public static final String MONGO_INDEX_FIELD_PROPERTY_HASHED = "hashed";
+
+	/**
 	 * Field name.
 	 */
 	@Configure
