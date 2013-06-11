@@ -1,5 +1,34 @@
 {
 	"databaseName": "test_database",
 	"collectionName": "test_collection",
-	"entityKeyFieldName": "id"
+	"entityKeyFieldName": "id",
+	"initializeIndexes": true,
+	"@indexes": [
+		{
+			"name": "testIndex",
+			"@fields": [
+				{
+					"name": "firstName",
+					"hashed" : true
+				}
+			],
+			"background": true
+		},
+		{
+			"name": "anotherIndex",
+			"@fields": [
+				{
+					"name": "age",
+				},
+				{
+					"name": "anotherField",
+					"order": -1,
+				}
+			],
+			"unique": true,
+			"dropDups": true,
+			"sparse": true,
+			"background": true
+		}
+	],
 }

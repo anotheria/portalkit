@@ -9,12 +9,15 @@ import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStor
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
+import net.anotheria.portalkit.services.storage.mongo.index.Index;
+import net.anotheria.portalkit.services.storage.mongo.index.IndexField;
 import net.anotheria.portalkit.services.storage.mongo.util.MongoConstants;
 import net.anotheria.portalkit.services.storage.mongo.util.MongoUtil;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
+import net.anotheria.util.StringUtils;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -93,6 +96,9 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		// and it should be initialized before general initialization, but after calling super constructor
 		initialize();
 
+		// indexes initialization
+		initializeIndexes();
+
 		// validating configured entity key field
 		String entityKeyFieldName = configuration.getEntityKeyFieldName();
 		if (entityKeyFieldName == null || entityKeyFieldName.trim().isEmpty())
@@ -104,6 +110,58 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
 		} catch (NoSuchFieldException e) {
 			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
+		}
+	}
+
+	/**
+	 * Indexes initialization.
+	 */
+	private void initializeIndexes() {
+		if (!configuration.isInitializeIndexes())
+			return;
+
+		List<Index> indexes = configuration.getIndexes();
+		if (indexes == null || indexes.isEmpty()) {
+			LOGGER.warn("Indexes configuration is empty. Skipping.");
+			return;
+		}
+
+		for (Index index : indexes) {
+			if (index == null) {
+				LOGGER.warn("Index[" + null + "] configuration is wrong. Skipping.");
+				continue;
+			}
+			if (index.getFields() == null || index.getFields().isEmpty()) {
+				LOGGER.warn("Index[" + index + "] configuration is wrong. No configured fields. Skipping.");
+				continue;
+			}
+
+			BasicDBObject fields = new BasicDBObject();
+			for (IndexField field : index.getFields()) {
+				if (field == null) {
+					LOGGER.warn("Index[" + index + "] field[" + null + "] configuration is wrong. Skipping.");
+					continue;
+				}
+				if (StringUtils.isEmpty(field.getName())) {
+					LOGGER.warn("Index[" + index + "] field[" + field + "] configuration is wrong. Empty field name. Skipping.");
+					continue;
+				}
+
+				final String name = field.getName();
+				final int order = field.getOrder();
+				final boolean hashed = field.isHashed();
+				fields.put(name, hashed ? "hashed" : order);
+			}
+			BasicDBObject options = new BasicDBObject();
+			if (!StringUtils.isEmpty(index.getName())) // index name
+				options.put("name", index.getName());
+
+			options.put("unique", index.isUnique()); // unique constraint
+			options.put("dropDups", index.isDropDups()); // drop duplicates on creation, should be used very carefully
+			options.put("sparse", index.isSparse());
+			options.put("background", index.isBackground());
+
+			getCollection().ensureIndex(fields, options);
 		}
 	}
 
@@ -371,7 +429,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		try {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("find(" + query + ") executing with mongo query[" + mongoQuery + "].");
-			
+
 			rawResult = getCollection().find(mongoQuery);
 
 			BasicDBObject sorting = MongoQueryMapper.getSorting(query);

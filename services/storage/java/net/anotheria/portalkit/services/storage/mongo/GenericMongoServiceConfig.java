@@ -1,6 +1,11 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.anotheria.portalkit.services.storage.mongo.index.Index;
 
 import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
@@ -61,6 +66,18 @@ public final class GenericMongoServiceConfig implements Serializable {
 	 */
 	@Configure
 	private String entityKeyFieldName;
+
+	/**
+	 * Initialize indexes during service initialization.
+	 */
+	@Configure
+	private boolean initializeIndexes = false;
+
+	/**
+	 * Collection indexes.
+	 */
+	@Configure
+	private Index[] indexes;
 
 	/**
 	 * Default constructor.
@@ -172,16 +189,81 @@ public final class GenericMongoServiceConfig implements Serializable {
 		this.entityKeyFieldName = aEntityKeyFieldName;
 	}
 
+	public boolean isInitializeIndexes() {
+		return initializeIndexes;
+	}
+
+	public void setInitializeIndexes(final boolean aInitializeIndexes) {
+		this.initializeIndexes = aInitializeIndexes;
+	}
+
+	/**
+	 * Get indexes configuration.
+	 * 
+	 * @return {@link List} of {@link Index}
+	 */
+	public List<Index> getIndexes() {
+		return indexes != null ? Arrays.asList(indexes) : new ArrayList<Index>();
+	}
+
+	/**
+	 * Set indexes configuration.
+	 * 
+	 * @param aIndexes
+	 *            indexes configuration
+	 */
+	public void setHosts(final List<Index> aIndexes) {
+		this.indexes = aIndexes != null ? aIndexes.toArray(new Index[aIndexes.size()]) : null;
+	}
+
+	public void setIndexes(final Index[] aIndexes) {
+		this.indexes = aIndexes != null ? aIndexes.clone() : null;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((collectionName == null) ? 0 : collectionName.hashCode());
+		result = prime * result + ((databaseName == null) ? 0 : databaseName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		GenericMongoServiceConfig other = (GenericMongoServiceConfig) obj;
+		if (collectionName == null) {
+			if (other.collectionName != null)
+				return false;
+		} else if (!collectionName.equals(other.collectionName))
+			return false;
+		if (databaseName == null) {
+			if (other.databaseName != null)
+				return false;
+		} else if (!databaseName.equals(other.databaseName))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("\n\tGenericMongoServiceConfig [\n\t databaseName=");
-		builder.append(databaseName);
-		builder.append(", collectionName=");
-		builder.append(collectionName);
-		builder.append(", entityKeyFieldName=");
-		builder.append(entityKeyFieldName);
-		builder.append("\n\t]\n");
+		StringBuilder builder = new StringBuilder("\n\t" + this.getClass().getSimpleName() + "[\n\t\t");
+		builder.append("databaseName=").append(databaseName).append(",\n\t\t");
+		builder.append("collectionName=").append(collectionName).append(",\n\t\t");
+		builder.append("entityKeyFieldName=").append(entityKeyFieldName).append(",\n\t\t");
+		builder.append("initializeIndexes=").append(initializeIndexes).append(",\n\t\t");
+		builder.append("indexes=[");
+		if (indexes != null)
+			for (Index index : indexes)
+				builder.append("\n\t\t\t").append(index);
+		builder.append("\n\t\t],\n\t");
+		builder.append("]\n");
 		return builder.toString();
 	}
 
