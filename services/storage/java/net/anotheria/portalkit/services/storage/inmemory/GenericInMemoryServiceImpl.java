@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
@@ -15,6 +16,7 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.util.SerializationUtils;
 
 import org.apache.log4j.Logger;
+import org.reflections.ReflectionUtils;
 
 /**
  * {@link GenericInMemoryService} implementation.
@@ -232,12 +234,18 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 	 */
 	private String getEntityUID(final Serializable entity) throws StorageException {
 		try {
-			Field field = entity.getClass().getDeclaredField(entityKeyFieldName);
-			field.setAccessible(true);
-			return String.valueOf(field.get(entity));
+			Set<Field> fields = ReflectionUtils.getAllFields(entity.getClass(), ReflectionUtils.withName(entityKeyFieldName));
+			if (fields == null || fields.isEmpty())
+				throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.");
+
+			for (Field field : fields)
+				if (field != null) {
+					field.setAccessible(true);
+					return String.valueOf(field.get(entity));
+				}
+
+			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.");
 		} catch (SecurityException e) {
-			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
-		} catch (NoSuchFieldException e) {
 			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
 		} catch (IllegalArgumentException e) {
 			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
