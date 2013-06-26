@@ -204,7 +204,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (toSave == null)
 			throw new IllegalArgumentException("toSave argument is null.");
 
-		String uid = MongoUtil.getEntityUID(toSave, configuration);
+		String uid = EntityUtils.getFieldValue(toSave, configuration.getEntityKeyFieldName());
 		try {
 			DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toSave)));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
@@ -228,7 +228,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (toCreate == null)
 			throw new IllegalArgumentException("toCreate argument is null.");
 
-		String uid = MongoUtil.getEntityUID(toCreate, configuration);
+		String uid = EntityUtils.getFieldValue(toCreate, configuration.getEntityKeyFieldName());
 		try {
 			T entity = read(uid);
 			if (entity != null)
@@ -262,7 +262,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			throw new IllegalArgumentException("toUpdate argument is null.");
 
 		// checking is entity exist
-		String uid = MongoUtil.getEntityUID(toUpdate, configuration);
+		String uid = EntityUtils.getFieldValue(toUpdate, configuration.getEntityKeyFieldName());
 		read(uid);
 
 		// performing entity update
@@ -282,7 +282,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		}
 
 		// reading updated entity
-		return read(MongoUtil.getEntityUID(toUpdate, configuration));
+		return read(EntityUtils.getFieldValue(toUpdate, configuration.getEntityKeyFieldName()));
 	}
 
 	@Override
