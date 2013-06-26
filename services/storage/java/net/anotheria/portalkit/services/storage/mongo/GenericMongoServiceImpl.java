@@ -17,6 +17,7 @@ import net.anotheria.portalkit.services.storage.query.LimitQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
+import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
 
 import org.apache.log4j.Logger;
@@ -104,13 +105,8 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (entityKeyFieldName == null || entityKeyFieldName.trim().isEmpty())
 			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
 
-		try {
-			entityClass.getDeclaredField(entityKeyFieldName);
-		} catch (SecurityException e) {
+		if (!EntityUtils.isFieldExist(entityClass, entityKeyFieldName))
 			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
-		} catch (NoSuchFieldException e) {
-			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
-		}
 	}
 
 	/**

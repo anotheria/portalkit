@@ -1,22 +1,20 @@
 package net.anotheria.portalkit.services.storage.inmemory;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.inmemory.query.InMemoryQueryProcessor;
 import net.anotheria.portalkit.services.storage.query.Query;
+import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.portalkit.services.storage.util.SerializationUtils;
 
 import org.apache.log4j.Logger;
-import org.reflections.ReflectionUtils;
 
 /**
  * {@link GenericInMemoryService} implementation.
@@ -73,7 +71,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 		if (toSave == null)
 			throw new IllegalArgumentException("toSave argument is null.");
 
-		String uid = getEntityUID(toSave);
+		String uid = EntityUtils.getFieldValue(toSave, entityKeyFieldName);
 
 		T toSaveInt = SerializationUtils.clone(toSave);
 		storage.put(uid, toSaveInt);
@@ -86,7 +84,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 		if (toCreate == null)
 			throw new IllegalArgumentException("toCreate argument is null.");
 
-		String uid = getEntityUID(toCreate);
+		String uid = EntityUtils.getFieldValue(toCreate, entityKeyFieldName);
 		try {
 			T entity = read(uid);
 			if (entity != null)
@@ -107,7 +105,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 		if (toUpdate == null)
 			throw new IllegalArgumentException("toUpdate argument is null.");
 
-		String uid = getEntityUID(toUpdate);
+		String uid = EntityUtils.getFieldValue(toUpdate, entityKeyFieldName);
 
 		// checking is entity exist
 		read(uid); // there EntityNotFoundStorageException can be thrown
@@ -222,36 +220,6 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 
 		List<T> internalResult = InMemoryQueryProcessor.execute(storage.values(), query);
 		return SerializationUtils.clone(internalResult);
-	}
-
-	/**
-	 * Get entity unique identifier.
-	 * 
-	 * @param entity
-	 *            entity
-	 * @return unique identifier
-	 * @throws StorageException
-	 */
-	private String getEntityUID(final Serializable entity) throws StorageException {
-		try {
-			Set<Field> fields = ReflectionUtils.getAllFields(entity.getClass(), ReflectionUtils.withName(entityKeyFieldName));
-			if (fields == null || fields.isEmpty())
-				throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.");
-
-			for (Field field : fields)
-				if (field != null) {
-					field.setAccessible(true);
-					return String.valueOf(field.get(entity));
-				}
-
-			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.");
-		} catch (SecurityException e) {
-			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
-		} catch (IllegalArgumentException e) {
-			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
-		} catch (IllegalAccessException e) {
-			throw new StorageException("Wrong key field[" + entityKeyFieldName + "] configured.", e);
-		}
 	}
 
 }
