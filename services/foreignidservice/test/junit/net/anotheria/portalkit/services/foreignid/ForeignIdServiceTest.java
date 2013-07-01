@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * TODO comment this class
+ * ForeignId service test class.
  * 
  * @author lrosenberg
  * @since 21.01.13 15:55
@@ -35,7 +35,7 @@ public class ForeignIdServiceTest {
 		MetaFactory.reset();
 		// use jdbc for persistence
 		MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
-		
+
 		MetaFactory.addFactoryClass(ForeignIdService.class, Extension.LOCAL, ForeignIdServiceFactory.class);
 		MetaFactory.addAlias(ForeignIdService.class, Extension.LOCAL);
 	}

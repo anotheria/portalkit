@@ -103,11 +103,24 @@ public abstract class BasePersistenceServiceJDBCImpl {
 			newDataSource.setMaxActive(config.getMaxConnections());
 
 		this.dataSource = newDataSource;
-
+		
+		String dbtype = "psql";
+		if (config.getDriver() != null) {
+			if (config.getDriver().contains("mysql")) {
+				dbtype = "mysql";
+			}
+			if (config.getDriver().contains("postgresql")) {
+				dbtype = "psql";
+			}
+			if (config.getDriver().contains("h2")) {
+				dbtype = "h2";
+			}
+		}
+		
 		// prepare db.
 		Flyway flyway = new Flyway();
 		flyway.setDataSource(getDataSource());
-		flyway.setLocations(getClass().getPackage().getName() + ".migrations");
+		flyway.setLocations(getClass().getPackage().getName() + ".migrations.common", getClass().getPackage().getName() + ".migrations." + dbtype);
 		flyway.setTable(getTableNameForMigration());
 		flyway.setInitOnMigrate(true);
 		flyway.migrate();

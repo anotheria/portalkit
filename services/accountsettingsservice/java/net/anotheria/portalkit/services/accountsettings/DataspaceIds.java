@@ -8,5 +8,10 @@ package net.anotheria.portalkit.services.accountsettings;
  * @since 11.12.12 17:21
  */
 public class DataspaceIds {
+	
+	/**
+	 * 
+	 */
 	public static final long CUSTOM_DATASPACE_ID_OFFSET = 1000L;
+	
 }

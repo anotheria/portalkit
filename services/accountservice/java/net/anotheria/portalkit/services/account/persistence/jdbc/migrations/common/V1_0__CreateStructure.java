@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.account.persistence.jdbc.migrations;
+package net.anotheria.portalkit.services.account.persistence.jdbc.migrations.common;
 
 import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 

@@ -7,7 +7,7 @@
 
 		"h2": {
 			"driver": "org.h2.jdbcx.JdbcDataSource",
-			"url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
+			"url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE;MODE=POSTGRESQL",
 			"username": "another"
 
 		},

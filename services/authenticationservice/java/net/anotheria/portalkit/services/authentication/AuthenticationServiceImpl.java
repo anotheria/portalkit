@@ -32,12 +32,15 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 	 */
 	private static Logger log = Logger.getLogger(AuthenticationServiceImpl.class);
 
-	public AuthenticationServiceImpl(){
+	/**
+	 * Default constructor.
+	 */
+	public AuthenticationServiceImpl() {
 		AuthenticationServiceConfig config = new AuthenticationServiceConfig();
 		//initialize with configureme.
 		try{
 			passwordAlgorithm = PasswordEncryptionAlgorithm.class.cast(Class.forName(config.getPasswordAlgorithm()).newInstance());
-		}catch(Exception e){
+		}catch(Exception e) {
 			throw new IllegalStateException("Can't operate without configured and available PasswordEncryptionAlgorithm (config="+config.getPasswordAlgorithm()+")", e);
 		}
 
@@ -145,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 			if (!newToken.isExclusive() && newToken.isExclusiveInType()){
 				//this is maybe suboptimal, but no other chance to fix it otherways for now
 				Set<String> tokens = persistenceService.getAuthTokens(newToken.getAccountId());
-				for (Iterator<String> it = tokens.iterator(); it.hasNext(); ){
+				for (Iterator<String> it = tokens.iterator(); it.hasNext();){
 					String storedToken = it.next();
 					AuthToken t = AuthTokenEncryptors.decrypt(storedToken);
 					if (t.getType()==newToken.getType())

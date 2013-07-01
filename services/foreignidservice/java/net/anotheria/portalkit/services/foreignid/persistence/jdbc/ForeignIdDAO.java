@@ -73,7 +73,6 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		} finally {
 			JDBCUtil.close(insertStatement);
 		}
-
 	}
 
 	/**
@@ -133,7 +132,6 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 			JDBCUtil.close(result);
 			JDBCUtil.close(stat);
 		}
-
 	}
 
 	/**
@@ -158,7 +156,6 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		} finally {
 			JDBCUtil.close(deleteStatement);
 		}
-
 	}
 
 	/**
