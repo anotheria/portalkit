@@ -62,8 +62,17 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	 */
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException {
 		String insert = "INSERT INTO account (id, name, email, type, regts, status, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
-				+ "SELECT ?,?,?,?,?,?,?,? WHERE NOT EXISTS (SELECT 1 FROM " + TABLE_NAME + " WHERE id = ? );";
+				+ "VALUES ( ?,?,?,?,?,?,?,? )";
 
+		try {
+			Account acc = getAccount(connection, toSave.getId());
+			if (acc != null) {
+				return false;
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		PreparedStatement insertStatement = null;
 		try {
 			insertStatement = connection.prepareStatement(insert);
@@ -76,7 +85,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			insertStatement.setLong(POS_STATUS, toSave.getStatus());
 			insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 			insertStatement.setLong(MAX_POS + 2, 0);
-			insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
+//			insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
 
 			int insertResult = insertStatement.executeUpdate();
 			System.out.println("INSERT: " + insertResult);
