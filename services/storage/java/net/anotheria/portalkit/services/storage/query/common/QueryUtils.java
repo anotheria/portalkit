@@ -2,11 +2,13 @@ package net.anotheria.portalkit.services.storage.query.common;
 
 import java.lang.reflect.Field;
 
+import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.SortingQuery;
+import net.anotheria.portalkit.services.storage.util.EntityUtils;
 
 /**
  * {@link Query} utilities.
@@ -39,21 +41,21 @@ public final class QueryUtils {
 			int index = fieldName.indexOf(QueryConstants.QUERY_NESTING_SEPARATOR);
 			if (index != -1) {
 				String nestedObjectFieldName = fieldName.substring(0, index);
-				Field nestedBeanField = bean.getClass().getDeclaredField(nestedObjectFieldName);
+				Field nestedBeanField = EntityUtils.getField(bean, nestedObjectFieldName);
 				nestedBeanField.setAccessible(true);
 				return getValue(nestedBeanField.get(bean), fieldName.substring(index + 1));
 			}
 
-			Field beanField = bean.getClass().getDeclaredField(fieldName);
+			Field beanField = EntityUtils.getField(bean, fieldName);
 			beanField.setAccessible(true);
 			return beanField.get(bean);
-		} catch (NoSuchFieldException e) {
-			return null;
 		} catch (SecurityException e) {
 			return null;
 		} catch (IllegalArgumentException e) {
 			return null;
 		} catch (IllegalAccessException e) {
+			return null;
+		} catch (StorageException e) {
 			return null;
 		}
 	}
