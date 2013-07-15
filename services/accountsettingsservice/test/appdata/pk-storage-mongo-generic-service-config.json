@@ -1,0 +1,16 @@
+{
+	"databaseName": "test_acc_settings_database",
+	"collectionName": "test_acc_settings_collection",
+	"entityKeyFieldName": "key",
+	"initializeIndexes": true,
+	"@indexes": [{
+		"name": "accid_dataspaceid_index",
+		"@fields": [{
+			"name":"key"
+		}],
+		"unique": true,
+		"dropDups": true,
+		"sparse": true,
+		"background": true
+	}],
+}

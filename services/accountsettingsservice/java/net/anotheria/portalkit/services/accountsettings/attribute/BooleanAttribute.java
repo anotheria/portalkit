@@ -17,6 +17,10 @@ public class BooleanAttribute extends Attribute {
 	 */
 	private boolean value;
 
+	public BooleanAttribute() {
+		this(null, false);
+	}
+	
 	/**
 	 * Default constructor.
 	 *

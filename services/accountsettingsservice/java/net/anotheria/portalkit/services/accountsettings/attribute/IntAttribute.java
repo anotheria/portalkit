@@ -16,6 +16,10 @@ public class IntAttribute extends Attribute {
 	 * Attribute long value.
 	 */
 	private int value;
+	
+	public IntAttribute() {
+		this(null, 0);
+	}
 
 	/**
 	 * Default constructor.

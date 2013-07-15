@@ -18,6 +18,10 @@ public class StringAttribute extends Attribute {
 	 * Attribute long value.
 	 */
 	private String value;
+	
+	public StringAttribute() {
+		this(null, null);
+	}
 
 	/**
 	 * Default constructor.

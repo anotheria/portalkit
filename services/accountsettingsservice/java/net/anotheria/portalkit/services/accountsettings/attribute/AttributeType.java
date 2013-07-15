@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountsettings.attribute;
 
+
 /**
  * AtributeType used in DataspaceService.
  * 

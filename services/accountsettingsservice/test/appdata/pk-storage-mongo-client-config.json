@@ -1,0 +1,6 @@
+{
+	"description": "DEFAULT CLIENT",
+	"@hosts": [
+		{"host": "localhost", "port": 27017}
+	]
+}

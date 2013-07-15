@@ -16,6 +16,10 @@ public class LongAttribute extends Attribute {
 	 * Attribute long value.
 	 */
 	private long value;
+	
+	public LongAttribute() {
+		this(null, 0);
+	}
 
 	/**
 	 * Default constructor.
