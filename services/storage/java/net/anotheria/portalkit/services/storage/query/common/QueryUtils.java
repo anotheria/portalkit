@@ -74,11 +74,11 @@ public final class QueryUtils {
 			throw new IllegalArgumentException("query argument is null.");
 
 		if (query instanceof OffsetQuery)
-			return true;
+			return false;
 		if (query instanceof LimitQuery)
-			return true;
+			return false;
 		if (query instanceof SortingQuery)
-			return true;
+			return false;
 
 		return true;
 	}
