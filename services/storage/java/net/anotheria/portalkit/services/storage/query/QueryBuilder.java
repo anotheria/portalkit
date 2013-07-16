@@ -45,13 +45,13 @@ public final class QueryBuilder {
 	}
 
 	/**
-	 * Add {@link CompositeQuery}.
+	 * Add {@link Query}.
 	 * 
 	 * @param query
-	 *            {@link CompositeQuery}, can't be null
+	 *            {@link Query}, can't be null
 	 * @return {@link QueryBuilder}
 	 */
-	public QueryBuilder add(final CompositeQuery query) {
+	public QueryBuilder add(final Query query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");
 
