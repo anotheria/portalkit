@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
 import net.anotheria.portalkit.services.storage.exception.StorageException;
-import net.anotheria.portalkit.services.storage.mongo.util.MongoConstants;
 import net.anotheria.portalkit.services.storage.query.BetweenModifier;
 import net.anotheria.portalkit.services.storage.query.BetweenQuery;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
@@ -61,6 +60,9 @@ public final class MongoQueryMapper {
 
 				compositePart.add(innerPart);
 			}
+
+			if (compositePart.isEmpty())
+				return new BasicDBObject();
 
 			return new BasicDBObject(modifier, compositePart);
 		}
@@ -183,7 +185,7 @@ public final class MongoQueryMapper {
 			throw new IllegalArgumentException("query argument in null.");
 
 		int modifier = query.getQueryValue().getValue() == SortingType.ASC ? 1 : -1;
-		return new BasicDBObject(MongoConstants.OPERATOR_SORTING, new BasicDBObject(query.getFieldName(), modifier));
+		return new BasicDBObject(query.getFieldName(), modifier);
 	}
 
 	/**

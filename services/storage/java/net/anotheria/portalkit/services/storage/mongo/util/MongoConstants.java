@@ -13,11 +13,6 @@ public final class MongoConstants {
 	public static final String FIELD_ID_NAME = "_id";
 
 	/**
-	 * Operator name for sorting.
-	 */
-	public static final String OPERATOR_SORTING = "$sort";
-
-	/**
 	 * Private constructor.
 	 */
 	private MongoConstants() {
