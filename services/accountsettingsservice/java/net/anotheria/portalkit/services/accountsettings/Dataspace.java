@@ -43,10 +43,10 @@ public class Dataspace implements Serializable {
 	 * @param dataspaceId
 	 *            - dataspace ID
 	 */
-	public Dataspace(String accountId, int dataspaceId) {
+	public Dataspace(String accountId, DataspaceType type) {
 		this();
 		this.key.setAccountId(accountId);
-		this.key.setDataspaceId(dataspaceId);
+		this.key.setDataspaceId(type.getId());
 	}
 
 	public AccountSettingsKey getKey() {

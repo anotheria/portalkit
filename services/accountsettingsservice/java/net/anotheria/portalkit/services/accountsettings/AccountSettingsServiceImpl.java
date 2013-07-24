@@ -41,12 +41,12 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 	}
 	
 	@Override
-	public Dataspace getDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException {
+	public Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException {
 		AccountSettingsKey key = new AccountSettingsKey();
 		IdBasedLock<AccountSettingsKey> lock = accountsLockManager.obtainLock(key);
 		lock.lock();
 		try {
-			Dataspace ds = persistence.loadDataspace(accountId, dataspaceId);
+			Dataspace ds = persistence.loadDataspace(accountId, domain.getId());
 			if (ds == null) {
 				throw new AccountSettingsServiceException("dataspace does not exist");
 			}

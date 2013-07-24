@@ -24,6 +24,30 @@ import org.junit.Test;
 public class AccountSettingsImplTest {
 
 	/**
+	 * Domains.
+	 * 
+	 * @author dagafonov
+	 * 
+	 */
+	private enum Domains implements DataspaceType {
+		
+		/**
+		 * For testing purposes.
+		 */
+		TEST;
+
+		@Override
+		public int getId() {
+			return this.ordinal();
+		}
+
+		@Override
+		public String getName() {
+			return this.name();
+		}
+	}
+
+	/**
 	 * 
 	 */
 	private AccountSettingsService service;
@@ -48,9 +72,9 @@ public class AccountSettingsImplTest {
 	public void testSave() throws AccountSettingsServiceException {
 
 		AccountId accId = AccountId.generateNew();
-		int dataspaceId = 1;
+		DataspaceType dst = Domains.TEST;
 
-		Dataspace ds = new Dataspace(accId.getInternalId(), dataspaceId);
+		Dataspace ds = new Dataspace(accId.getInternalId(), dst);
 		ds.addAttribute("firstName", new StringAttribute("fn", "Dmytro"));
 		ds.addAttribute("lastName", new StringAttribute("ln", "Agafonov"));
 		ds.addAttribute("age", new IntAttribute("age", 23));
@@ -59,7 +83,7 @@ public class AccountSettingsImplTest {
 
 		service.saveDataspace(ds);
 
-		ds = service.getDataspace(accId, dataspaceId);
+		ds = service.getDataspace(accId, dst);
 	}
 
 }

@@ -22,7 +22,7 @@ public interface AccountSettingsService extends Service {
 	 * @return {@link Dataspace}
 	 * @throws AccountSettingsServiceException
 	 */
-	Dataspace getDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException;
+	Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException;
 
 	/**
 	 * Saves given dataspace in persistence.
