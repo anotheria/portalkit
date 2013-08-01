@@ -36,7 +36,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 		try {
 			persistence = MetaFactory.get(AccountSettingsPersistenceService.class);
 		} catch (MetaFactoryException e) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("Can't instantiate persistence", e);
 		}
 	}
 	
