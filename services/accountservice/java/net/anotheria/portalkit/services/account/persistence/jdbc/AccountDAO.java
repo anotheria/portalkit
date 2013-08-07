@@ -216,4 +216,23 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	public List<AccountId> getAccountIdsByType(Connection con, int typeId) throws SQLException, DAOException {
+		List<AccountId> result = new ArrayList<AccountId>();
+		String sql = "SELECT id FROM " + TABLE_NAME + " WHERE type = ?";
+		PreparedStatement select = null;
+		ResultSet rs = null;
+		try {
+			select = con.prepareStatement(sql);
+			select.setInt(1, typeId);
+			rs = select.executeQuery();
+			while(rs.next()) {
+				result.add(new AccountId(rs.getString("id")));
+			}
+			return result;
+		} finally {
+			JDBCUtil.close(rs);
+			JDBCUtil.close(select);
+		}
+	}
+
 }

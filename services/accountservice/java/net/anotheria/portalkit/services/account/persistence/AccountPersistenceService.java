@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.account.persistence;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.account.Account;
@@ -18,7 +19,7 @@ public interface AccountPersistenceService extends Service {
 	 * Returns the account with that account id.
 	 * 
 	 * @param id
-	 * @return
+	 * @return Account
 	 * @throws AccountPersistenceServiceException
 	 */
 	Account getAccount(AccountId id) throws AccountPersistenceServiceException;
@@ -43,7 +44,7 @@ public interface AccountPersistenceService extends Service {
 	 * Returns the id of the account with the given name.
 	 * 
 	 * @param name
-	 * @return
+	 * @return AccountId
 	 * @throws AccountPersistenceServiceException
 	 */
 	AccountId getIdByName(String name) throws AccountPersistenceServiceException;
@@ -52,7 +53,7 @@ public interface AccountPersistenceService extends Service {
 	 * Returns the id of the account with the given email.
 	 * 
 	 * @param email
-	 * @return
+	 * @return AccountId
 	 * @throws AccountPersistenceServiceException
 	 */
 	AccountId getIdByEmail(String email) throws AccountPersistenceServiceException;
@@ -64,5 +65,13 @@ public interface AccountPersistenceService extends Service {
 	 * @throws AccountPersistenceServiceException
 	 */
 	Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException;
+
+	/**
+	 * 
+	 * @param id
+	 * @return List<AccountId>
+	 * @throws AccountPersistenceServiceException
+	 */
+	List<AccountId> getAccountsByType(int id) throws AccountPersistenceServiceException;
 
 }

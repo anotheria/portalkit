@@ -252,5 +252,14 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 			throw new AccountAdminServiceException(e);
 		}
 	}
+	
+	@Override
+	public List<AccountId> getAccountsByType(AccountType accountType) throws AccountServiceException {
+		try {
+			return persistenceService.getAccountsByType(accountType.getId());
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
 
 }

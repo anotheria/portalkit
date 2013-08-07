@@ -31,6 +31,8 @@ public interface AccountService extends Service {
 	 * @throws AccountServiceException
 	 */
 	List<Account> getAccounts(List<AccountId> ids) throws AccountServiceException;
+	
+	
 
 	/**
 	 * Deletes an account.

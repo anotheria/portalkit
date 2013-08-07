@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account.persistence.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
@@ -116,6 +117,21 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 		try {
 			con = getConnection();
 			return dao.getAccountIds(con);
+		} catch (DAOException e) {
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		} catch (SQLException e) {
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public List<AccountId> getAccountsByType(int accountTypeId) throws AccountPersistenceServiceException {
+		Connection con = null;
+		try {
+			con = getConnection();
+			return dao.getAccountIdsByType(con, accountTypeId);
 		} catch (DAOException e) {
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} catch (SQLException e) {

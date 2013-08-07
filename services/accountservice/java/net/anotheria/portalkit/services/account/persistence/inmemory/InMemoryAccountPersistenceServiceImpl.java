@@ -69,5 +69,17 @@ public class InMemoryAccountPersistenceServiceImpl implements AccountPersistence
 
 		return result;
 	}
+	
+	@Override
+	public List<AccountId> getAccountsByType(int accountTypeId) throws AccountPersistenceServiceException {
+		List<AccountId> result = new ArrayList<AccountId>();
+		for (AccountId accountId : storage.keySet()) {
+			Account acc = storage.get(accountId);
+			if (acc.getType() == accountTypeId) {
+				result.add(accountId.clone());
+			}
+		}
+		return result;
+	}
 
 }
