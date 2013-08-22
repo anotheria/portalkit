@@ -1,5 +1,11 @@
 package net.anotheria.portalkit.apis.online;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.anoplass.api.APIInitException;
@@ -25,11 +31,7 @@ import net.anotheria.portalkit.services.online.OnlineServiceException;
 import net.anotheria.util.StringUtils;
 import net.anotheria.util.log.LogMessageUtil;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.MarkerFactory;
 
 /**
  * {@link OnlineAPI} implementation.
@@ -100,7 +102,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
         try {
             onlineService = MetaFactory.get(OnlineService.class);
         } catch (MetaFactoryException e) {
-            log.fatal("OnlineService init failed", e);
+            log.error(MarkerFactory.getMarker("FATAL"), "OnlineService init failed", e);
             throw new APIInitException("OnlineService init failed", e);
         }
         loginAPI = APIFinder.findAPI(LoginAPI.class);

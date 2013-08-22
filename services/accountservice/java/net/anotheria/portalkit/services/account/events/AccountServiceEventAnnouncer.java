@@ -8,7 +8,8 @@ import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
 import net.anotheria.portalkit.services.account.Account;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -40,7 +41,7 @@ public class AccountServiceEventAnnouncer implements EventServicePushSupplier {
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOG = Logger.getLogger(AccountServiceEventAnnouncer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AccountServiceEventAnnouncer.class);
 
 	/**
 	 * 

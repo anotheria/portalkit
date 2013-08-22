@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="java">
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" output="target/test-classes" path="test/appdata"/>
-	<classpathentry kind="src" output="target/test-classes" path="test/junit">
+	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="test/appdata"/>
+	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="test/junit">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>

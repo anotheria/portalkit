@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.online.events;
 
+import java.util.List;
+
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventChannel;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
@@ -8,9 +10,9 @@ import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.online.OnlineServiceConfiguration;
-import org.apache.log4j.Logger;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link OnlineActivityEvent} announcer.
@@ -35,7 +37,7 @@ public class ActivityAnnouncer implements EventServicePushSupplier {
     /**
      * Logger instance.
      */
-    private static final Logger LOG = Logger.getLogger(ActivityAnnouncer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityAnnouncer.class);
 
     /**
      * Sender for the events.
