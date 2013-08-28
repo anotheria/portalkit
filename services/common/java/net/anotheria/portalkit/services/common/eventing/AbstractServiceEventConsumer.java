@@ -50,7 +50,7 @@ public abstract class AbstractServiceEventConsumer implements ServiceEventConsum
 	@Override
 	public final void push(final Event e) {
 		if (e != null && e.getData() instanceof ServiceEventData)
-			serviceEvent(ServiceEventData.class.cast(e));
+			serviceEvent(ServiceEventData.class.cast(e.getData()));
 		else
 			LOGGER.error("AbstractServiceEventConsumer: incoming event is null or not contains ServiceEventData");
 	}
