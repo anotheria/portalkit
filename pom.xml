@@ -8,7 +8,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>portalkit</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>The PortalKIT</name>
 	<description>PortalKIT</description>
@@ -164,9 +164,9 @@
 
 
 	<scm>
-		<url>svn:http://svn.anotheria.net/portalkit/portalkit/tags/portalkit-0.2.0</url>
-		<connection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/tags/portalkit-0.2.0</connection>
-		<developerConnection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/tags/portalkit-0.2.0</developerConnection>
+		<url>svn:http://svn.anotheria.net/portalkit/portalkit/trunk</url>
+		<connection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</connection>
+		<developerConnection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</developerConnection>
 	</scm>
 
 	<profiles>
