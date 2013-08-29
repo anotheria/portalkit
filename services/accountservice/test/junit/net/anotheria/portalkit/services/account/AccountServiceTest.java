@@ -1,30 +1,21 @@
 package net.anotheria.portalkit.services.account;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import junit.framework.Assert;
-import net.anotheria.anoprise.eventservice.Event;
-import net.anotheria.anoprise.eventservice.EventChannel;
-import net.anotheria.anoprise.eventservice.EventServiceFactory;
-import net.anotheria.anoprise.eventservice.EventServicePushConsumer;
-import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
 import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.account.events.AccountEvent;
-import net.anotheria.portalkit.services.account.events.AccountServiceEventAnnouncer;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 /**
  * AccountServiceTest.
@@ -136,46 +127,4 @@ public class AccountServiceTest {
 
 		}
 	}
-
-	@Test
-	public void testAnnouncer() throws AccountServiceException, MetaFactoryException {
-
-		AccountService service = MetaFactory.get(AccountService.class);
-
-		Account toCreate = new Account();
-		toCreate.setName("puzatikov");
-		toCreate = service.createAccount(toCreate);
-		final AccountId accId = toCreate.getId();
-
-		final CountDownLatch cdl = new CountDownLatch(1);
-
-		EventServicePushConsumer accountConsumer = new EventServicePushConsumer() {
-			@Override
-			public void push(Event event) {
-				if (event.getData() instanceof AccountEvent) {
-					AccountEvent accountEvent = (AccountEvent) event.getData();
-					if (accId.equals(accountEvent.getAccount().getId())) {
-						cdl.countDown();
-					}
-				}
-			}
-		};
-
-		QueuedEventReceiver accountEventReceiver = new QueuedEventReceiver("AccountServiceEventReceiver",
-				AccountServiceEventAnnouncer.EVENT_CHANNEL_NAME, accountConsumer);
-
-		EventChannel channel = EventServiceFactory.createEventService().obtainEventChannel(AccountServiceEventAnnouncer.EVENT_CHANNEL_NAME,
-				accountEventReceiver);
-		channel.addConsumer(accountConsumer);
-
-		accountEventReceiver.start();
-
-		try {
-			cdl.await();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
-
-	}
-
 }

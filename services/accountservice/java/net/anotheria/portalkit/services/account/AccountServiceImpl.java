@@ -1,17 +1,17 @@
 package net.anotheria.portalkit.services.account;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.account.events.AccountServiceEventAnnouncer;
+import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplier;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The implementation of the account service.
@@ -30,6 +30,11 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	 * Persistence service.
 	 */
 	private AccountPersistenceService persistenceService;
+
+	/**
+	 * {@link AccountServiceEventSupplier} instance.
+	 */
+	private final AccountServiceEventSupplier eventSupplier = new AccountServiceEventSupplier();
 
 	/**
 	 * AccountId id->account cache.
@@ -57,11 +62,6 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
 	/**
-	 * Event announcer instance for this service.
-	 */
-	private AccountServiceEventAnnouncer announcer;
-
-	/**
 	 * Default constructor.
 	 */
 	public AccountServiceImpl() {
@@ -78,9 +78,6 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
-
-		announcer = new AccountServiceEventAnnouncer();
-
 	}
 
 	private Account getAccountInternally(AccountId accountId) throws AccountServiceException {
@@ -134,8 +131,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		Account oldAccount = getAccountInternally(id);
 		try {
 			persistenceService.deleteAccount(id);
-			announcer.accountDelete(oldAccount);
 			cache.remove(id);
+			eventSupplier.accountDeleted(oldAccount);
 		} catch (AccountPersistenceServiceException e) {
 			throw new AccountServiceException(e);
 		}
@@ -179,7 +176,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	public Account updateAccount(Account toUpdate) throws AccountServiceException {
 		Account oldAccount = getAccountInternally(toUpdate.getId());
 		saveAccount(toUpdate);
-		announcer.accountUpdate(oldAccount, toUpdate);
+		eventSupplier.accountUpdated(oldAccount, toUpdate);
 		return getAccount(toUpdate.getId());
 	}
 
@@ -193,7 +190,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 		Account newAccount = Account.newAccountFromPattern(toCreate);
 		saveAccount(newAccount);
-		announcer.accountCreate(newAccount);
+		eventSupplier.accountCreated(newAccount);
 		nonExistingAccountCache.remove(newAccount.getId());
 		return getAccount(newAccount.getId());
 	}
