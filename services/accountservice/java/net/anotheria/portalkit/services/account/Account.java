@@ -116,6 +116,7 @@ public class Account implements Serializable, Cloneable {
 	 * @param pattern
 	 * @return {@link Account}
 	 */
+	@Deprecated
 	public static final Account newAccountFromPattern(Account pattern){
 		Account ret = new Account(AccountId.generateNew());
 		ret.copyFrom(pattern);
