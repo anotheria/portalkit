@@ -158,11 +158,18 @@ public class Account implements Serializable, Cloneable {
 	}
 
 	/**
-	 * Adds aditional status (sets bit) to the internal status bitmap.
+	 * Add additional status (sets bit) to the internal status bitmap.
 	 * @param aStatus
 	 */
 	public void addStatus(long aStatus){
 		status |= aStatus;
+	}
+	/**
+	 * Remove status (sets bit) to the internal status bitmap.
+	 * @param aStatus status
+	 */
+	public void removeStatus(long aStatus){
+		status &= ~aStatus;
 	}
 
 	/**
