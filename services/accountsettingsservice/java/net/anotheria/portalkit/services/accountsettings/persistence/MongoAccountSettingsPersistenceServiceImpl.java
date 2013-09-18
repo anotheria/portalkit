@@ -14,15 +14,19 @@ import net.anotheria.portalkit.services.storage.query.QueryBuilder;
  * Mongo implementation of Account settings persistence service.
  * 
  * @author dagafonov
- * 
  */
 public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServiceImpl<Dataspace> implements AccountSettingsPersistenceService {
 
 	/**
+	 * Storage configuration name.
+	 */
+	private static final String MONGO_SERVICE_COLLECTION_CONFIG_NAME = "pk-storage-mongo-accountsettings";
+	
+	/**
 	 * Default constructor.
 	 */
 	public MongoAccountSettingsPersistenceServiceImpl() {
-		super(Dataspace.class);
+		super(Dataspace.class, MONGO_SERVICE_COLLECTION_CONFIG_NAME, null, null, null);
 	}
 
 	@Override
