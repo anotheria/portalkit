@@ -1,8 +1,9 @@
 package net.anotheria.portalkit.services.accountsettings;
 
-import java.io.Serializable;
-
+import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.crypt.MD5Util;
+
+import java.io.Serializable;
 
 /**
  * 
@@ -25,6 +26,15 @@ public class AccountSettingsKey implements Serializable {
 	 * Dataspace ID.
 	 */
 	private int dataspaceId;
+
+	public AccountSettingsKey(){
+
+	}
+
+	public AccountSettingsKey(AccountId anAccountId, int aDataspaceId){
+		accountId = anAccountId.getInternalId();
+		dataspaceId = aDataspaceId;
+	}
 
 	public String getAccountId() {
 		return accountId;

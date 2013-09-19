@@ -48,7 +48,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 		try {
 			Dataspace ds = persistence.loadDataspace(accountId, domain.getId());
 			if (ds == null) {
-				throw new AccountSettingsServiceException("dataspace does not exist");
+				throw new DataspaceNotFoundException(domain.getName());
 			}
 			return ds;
 		} catch (AccountSettingsPersistenceServiceException e) {

@@ -1,9 +1,10 @@
 package net.anotheria.portalkit.services.accountsettings;
 
+import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
+import net.anotheria.portalkit.services.common.AccountId;
+
 import java.io.Serializable;
 import java.util.HashMap;
-
-import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
 
 /**
  * Dataspace bean class.
@@ -40,14 +41,20 @@ public class Dataspace implements Serializable {
 	 * 
 	 * @param accountId
 	 *            - account id
-	 * @param dataspaceId
-	 *            - dataspace ID
+	 * @param type
+	 *            - dataspace type
 	 */
 	public Dataspace(String accountId, DataspaceType type) {
 		this();
 		this.key.setAccountId(accountId);
 		this.key.setDataspaceId(type.getId());
 	}
+
+	public Dataspace(AccountId accountId, DataspaceType type){
+		this(accountId.getInternalId(), type);
+	}
+
+
 
 	public AccountSettingsKey getKey() {
 		return key;
