@@ -97,7 +97,7 @@ public class OnlineServiceImpl implements OnlineService {
             if (onlineUserStorage.isAccountOnline(account))
                 throw new AccountIsOnlineException(account);
 
-            final long lastLoginNanoTime = System.nanoTime();
+            final long lastLoginNanoTime = System.currentTimeMillis()*1000000;
             persistence.saveLastLogin(account, toMillis(lastLoginNanoTime));
             onlineUserStorage.notifyLoggedIn(account, lastLoginNanoTime);
         } catch (ActivityPersistenceServiceException e) {
@@ -121,7 +121,7 @@ public class OnlineServiceImpl implements OnlineService {
             if (!onlineUserStorage.isAccountOnline(account))
                 throw new AccountIsOfflineException(account);
 
-            final long lastActivityTime = System.nanoTime();
+            final long lastActivityTime = System.currentTimeMillis()*1000000;
             persistence.saveLastActivity(account, toMillis(lastActivityTime));
             onlineUserStorage.notifyActivity(account, lastActivityTime);
         } catch (ActivityPersistenceServiceException e) {

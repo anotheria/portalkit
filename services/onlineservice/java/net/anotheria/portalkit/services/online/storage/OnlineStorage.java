@@ -478,7 +478,7 @@ public class OnlineStorage {
 	 * @return {@link AccountId} which should be cleaned up
 	 */
 	private List<AccountId> getExpiredOnlineAccounts(final long expirationPeriod) {
-		final long time = System.nanoTime();
+		final long time = System.currentTimeMillis()*1000000;
 		if (expirationPeriod > time)
 			throw new IllegalArgumentException("Provided period is not valid! It should be less than current nano-time");
 		final long expirationTime = time - expirationPeriod;
