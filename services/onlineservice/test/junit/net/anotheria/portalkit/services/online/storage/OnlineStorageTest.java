@@ -8,6 +8,7 @@ import net.anotheria.portalkit.services.online.AccountIsOnlineException;
 import net.anotheria.portalkit.services.online.OnlineAccountReadCriteria.Builder;
 import net.anotheria.portalkit.services.online.OnlineServiceConfiguration;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -979,6 +980,7 @@ public class OnlineStorageTest {
      * Afterwards  we will see - if {@link OnlineStorage#cleanUpInactiveAccounts()} works correctly.
      */
     @Test
+    @Ignore
     public void inactiveAccountsCleanUpTest() {
         OnlineServiceConfiguration config = OnlineServiceConfiguration.getInstance();
 
