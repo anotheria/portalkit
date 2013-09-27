@@ -227,9 +227,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
         SupportedActivityEvents subject = SupportedActivityEvents.getBySubjectString(event.getSubject());
         try {
             AccountId account = getLoggedInAccountId();
-            //checking if we can send activity updates  // no matter which
-            if (!activityUpdateRequired())
-                return;
+            //checking if we can send activity updates  // no matter which            
             switch (subject) {
                 case LOGIN:
                     //async
@@ -244,6 +242,8 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
                     break;
 
                 case ACTIVITY:
+                	if (!activityUpdateRequired())
+                        return;
                     //async
                     if (config.isPerformActivityUpdateNotificationAsync()) {
                         handleEventAsync(account, SupportedActivityEvents.ACTIVITY);
