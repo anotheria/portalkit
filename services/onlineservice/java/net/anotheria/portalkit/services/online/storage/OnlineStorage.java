@@ -204,7 +204,7 @@ public class OnlineStorage {
 
 			//event announce
 			if (sendEvent)
-				announcer.accountLoggedOut(account, System.nanoTime()); // TODO is this time are right?
+				announcer.accountLoggedOut(account, System.currentTimeMillis()*1000000);
 
 		} finally {
 			lock.unlock();
