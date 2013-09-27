@@ -250,7 +250,8 @@ public class OnlineAPIBasicsTest {
     private void configureTestSession() {
         // Other Configuration For Testing
         try {
-            APISession session = APISessionManager.getInstance().obtainSession(IdCodeGenerator.generateCode());
+            @SuppressWarnings("deprecation")
+			APISession session = APISessionManager.getInstance().obtainSession(IdCodeGenerator.generateCode());
             APICallContext.getCallContext().setCurrentSession(session);
         } catch (APISessionCreationException e) {
             throw new RuntimeException("APISession initialization failed", e);

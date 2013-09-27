@@ -39,7 +39,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testSyncLoginNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff disabled!!!
-        config.setPerformNotificationAsync(false);
+        config.setPerformLoginNotificationAsync(false);
+        config.setPerformLogoutNotificationAsync(false);        
+        config.setPerformActivityUpdateNotificationAsync(false);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -82,7 +84,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testAsyncLoginNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff enabled!!!
-        config.setPerformNotificationAsync(true);
+        config.setPerformLoginNotificationAsync(true);
+        config.setPerformLogoutNotificationAsync(true);        
+        config.setPerformActivityUpdateNotificationAsync(true);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -130,7 +134,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testSyncActivityNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff disabled!!!
-        config.setPerformNotificationAsync(false);
+        config.setPerformLoginNotificationAsync(false);
+        config.setPerformLogoutNotificationAsync(false);        
+        config.setPerformActivityUpdateNotificationAsync(false);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -205,7 +211,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testAsyncActivityNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff disabled!!!
-        config.setPerformNotificationAsync(false);
+        config.setPerformLoginNotificationAsync(false);
+        config.setPerformLogoutNotificationAsync(false);        
+        config.setPerformActivityUpdateNotificationAsync(false);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -287,7 +295,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testSyncLOGOUTNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff disabled!!!
-        config.setPerformNotificationAsync(false);
+        config.setPerformLoginNotificationAsync(false);
+        config.setPerformLogoutNotificationAsync(false);        
+        config.setPerformActivityUpdateNotificationAsync(false);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -328,7 +338,9 @@ public class OnlineAPIImplIntegrationTest {
     public void testASyncLOGOUTNotifications() {
         OnlineAPIConfiguration config = OnlineAPIConfiguration.getInstance();
         //for Async stuff disabled!!!
-        config.setPerformNotificationAsync(true);
+        config.setPerformLoginNotificationAsync(true);
+        config.setPerformLogoutNotificationAsync(true);        
+        config.setPerformActivityUpdateNotificationAsync(true);
         // changing update interval to 1ms
         config.setActivityUpdateInterval(1L);
 
@@ -395,7 +407,8 @@ public class OnlineAPIImplIntegrationTest {
     private void configureTestSession() {
         // Other Configuration For Testing
         try {
-            APISession session = APISessionManager.getInstance().obtainSession(IdCodeGenerator.generateCode());
+            @SuppressWarnings("deprecation")
+			APISession session = APISessionManager.getInstance().obtainSession(IdCodeGenerator.generateCode());
             APICallContext.getCallContext().setCurrentSession(session);
         } catch (APISessionCreationException e) {
             throw new RuntimeException("APISession initialization failed", e);

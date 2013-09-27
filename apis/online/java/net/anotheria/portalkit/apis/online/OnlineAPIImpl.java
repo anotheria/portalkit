@@ -233,7 +233,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
             switch (subject) {
                 case LOGIN:
                     //async
-                    if (config.isPerformNotificationAsync()) {
+                    if (config.isPerformLoginNotificationAsync()) {
                         handleEventAsync(account, SupportedActivityEvents.LOGIN);
                         resetLastActivityUpdateTime();
                         return;
@@ -245,7 +245,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
 
                 case ACTIVITY:
                     //async
-                    if (config.isPerformNotificationAsync()) {
+                    if (config.isPerformActivityUpdateNotificationAsync()) {
                         handleEventAsync(account, SupportedActivityEvents.ACTIVITY);
                         resetLastActivityUpdateTime();
                         return;
@@ -295,7 +295,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
                     return;
                 }
                 //async
-                if (config.isPerformNotificationAsync()) {
+                if (config.isPerformLogoutNotificationAsync()) {
                     handleEventAsync(new AccountId(event.getTargetUserId()), SupportedActivityEvents.LOGOUT);
                     return;
                 }
