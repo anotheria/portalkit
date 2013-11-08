@@ -128,7 +128,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 	@Override
 	public void deleteAccount(AccountId id) throws AccountServiceException {
-		Account oldAccount = getAccountInternally(id);
+		Account oldAccount = getAccount(id);
 		try {
 			persistenceService.deleteAccount(id);
 			cache.remove(id);

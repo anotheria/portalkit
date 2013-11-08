@@ -13,13 +13,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * AccountServiceTest.
- * 
+ *
  * @author lrosenberg
  * @since 12.12.12 22:36
  */
@@ -50,6 +48,12 @@ public class AccountServiceTest {
 		AccountService service = MetaFactory.get(AccountService.class);
 		try {
 			Account existing = service.getAccount(newAccountId);
+			fail("Exception expected");
+		} catch (AccountNotFoundException e) {
+			// this exception is expected
+		}
+		try {
+			service.deleteAccount(newAccountId);
 			fail("Exception expected");
 		} catch (AccountNotFoundException e) {
 			// this exception is expected
@@ -85,30 +89,33 @@ public class AccountServiceTest {
 		int counter = 0;
 		for (Account acc : accounts2) {
 			if (counter++ == 3) {
-                checkPropertiesEquals(newAccount, acc);
+				checkPropertiesEquals(newAccount, acc);
 			} else {
 				assertSame(NullAccount.INSTANCE, acc);
 			}
 		}
 	}
 
-    /**
-     * Check that all properties of two incoming {@link Account} instance are equals.
-     * @param account {@link Account}
-     * @param secondAccount  {@link Account}
-     */
-    private void checkPropertiesEquals(final Account account, final Account secondAccount){
-        Assert.assertNotNull("account is null",account);
-        Assert.assertNotNull("secondAccount is null",secondAccount);
+	/**
+	 * Check that all properties of two incoming {@link Account} instance are equals.
+	 *
+	 * @param account
+	 * 		{@link Account}
+	 * @param secondAccount
+	 * 		{@link Account}
+	 */
+	private void checkPropertiesEquals(final Account account, final Account secondAccount) {
+		Assert.assertNotNull("account is null", account);
+		Assert.assertNotNull("secondAccount is null", secondAccount);
 
-        Assert.assertEquals("Ids are not equals", account.getId(), secondAccount.getId());
-        Assert.assertEquals("Emails are not equals", account.getEmail(), secondAccount.getEmail());
-        Assert.assertEquals("Names are not equals", account.getName(), secondAccount.getName());
-        Assert.assertEquals("Registration times  are not equals", account.getRegistrationTimestamp(), secondAccount.getRegistrationTimestamp());
-        Assert.assertEquals("Statuses  are not equals", account.getStatus(), secondAccount.getStatus());
-        Assert.assertEquals("Types  are not equals", account.getType(), secondAccount.getType());
+		Assert.assertEquals("Ids are not equals", account.getId(), secondAccount.getId());
+		Assert.assertEquals("Emails are not equals", account.getEmail(), secondAccount.getEmail());
+		Assert.assertEquals("Names are not equals", account.getName(), secondAccount.getName());
+		Assert.assertEquals("Registration times  are not equals", account.getRegistrationTimestamp(), secondAccount.getRegistrationTimestamp());
+		Assert.assertEquals("Statuses  are not equals", account.getStatus(), secondAccount.getStatus());
+		Assert.assertEquals("Types  are not equals", account.getType(), secondAccount.getType());
 
-    }
+	}
 
 	@Test
 	public void testGetByName() throws AccountServiceException, MetaFactoryException {
