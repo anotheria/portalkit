@@ -101,7 +101,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		initializeIndexes();
 
 		// validating configured entity key field
-		String entityKeyFieldName = configuration.getEntityKeyFieldName();
+		final String entityKeyFieldName = configuration.getEntityKeyFieldName();
 		if (entityKeyFieldName == null || entityKeyFieldName.trim().isEmpty())
 			throw new StorageRuntimeException("Wrong key field[" + entityKeyFieldName + "] configured.");
 
@@ -116,13 +116,13 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (!configuration.isInitializeIndexes())
 			return;
 
-		List<Index> indexes = configuration.getIndexes();
+		final List<Index> indexes = configuration.getIndexes();
 		if (indexes == null || indexes.isEmpty()) {
 			LOGGER.warn("Indexes configuration is empty. Skipping.");
 			return;
 		}
 
-		for (Index index : indexes) {
+		for (final Index index : indexes) {
 			if (index == null) {
 				LOGGER.warn("Index[" + null + "] configuration is wrong. Skipping.");
 				continue;
@@ -132,8 +132,8 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				continue;
 			}
 
-			BasicDBObject fields = new BasicDBObject();
-			for (IndexField field : index.getFields()) {
+			final BasicDBObject fields = new BasicDBObject();
+			for (final IndexField field : index.getFields()) {
 				if (field == null) {
 					LOGGER.warn("Index[" + index + "] field[" + null + "] configuration is wrong. Skipping.");
 					continue;
@@ -148,7 +148,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				final boolean hashed = field.isHashed();
 				fields.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
 			}
-			BasicDBObject options = new BasicDBObject();
+			final BasicDBObject options = new BasicDBObject();
 			if (!StringUtils.isEmpty(index.getName())) // index name
 				options.put(Index.MONGO_INDEX_PROPERTY_NAME, index.getName());
 
@@ -178,7 +178,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		DBObject obj;
 		try {
 			obj = getCollection().findOne(MongoUtil.queryGetEntity(uid));
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't read entity[" + uid + "].", e);
 		}
 
@@ -186,15 +186,15 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			throw new EntityNotFoundStorageException(uid);
 
 		try {
-			ObjectMapper objectMapper = new ObjectMapper();
+			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 			return objectMapper.readValue(obj.toString(), entityClass);
-		} catch (JsonParseException e) {
+		} catch (final JsonParseException e) {
 			throw new StorageException("Can't parse entity[" + obj + "].", e);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 			throw new StorageException("Can't map entity[" + obj + "].", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new StorageException(e);
 		}
 	}
@@ -204,19 +204,19 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (toSave == null)
 			throw new IllegalArgumentException("toSave argument is null.");
 
-		String uid = EntityUtils.getFieldValue(toSave, configuration.getEntityKeyFieldName());
+		final String uid = EntityUtils.getFieldValue(toSave, configuration.getEntityKeyFieldName());
 		try {
-			DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toSave)));
+			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toSave)));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
 			getCollection().save(entity);
-		} catch (JsonGenerationException e) {
+		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toSave + "].", e);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 			throw new StorageException("Can't map entity[" + toSave + "].", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new StorageException(e);
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't save entity[" + toSave + "].", e);
 		}
 
@@ -228,28 +228,28 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (toCreate == null)
 			throw new IllegalArgumentException("toCreate argument is null.");
 
-		String uid = EntityUtils.getFieldValue(toCreate, configuration.getEntityKeyFieldName());
+		final String uid = EntityUtils.getFieldValue(toCreate, configuration.getEntityKeyFieldName());
 		try {
-			T entity = read(uid);
+			final T entity = read(uid);
 			if (entity != null)
 				throw new EntityAlreadyExistStorageException(uid);
-		} catch (EntityNotFoundStorageException e) {
+		} catch (final EntityNotFoundStorageException e) {
 			if (LOGGER.isTraceEnabled())
 				LOGGER.trace("create(" + toCreate + ") expected exception. Message[" + e.getMessage() + "].");
 		}
 
 		try {
-			DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toCreate)));
+			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toCreate)));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
 			getCollection().insert(entity);
-		} catch (JsonGenerationException e) {
+		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toCreate + "].", e);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 			throw new StorageException("Can't map entity[" + toCreate + "].", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new StorageException(e);
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't create entity[" + toCreate + "].", e);
 		}
 
@@ -262,22 +262,22 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			throw new IllegalArgumentException("toUpdate argument is null.");
 
 		// checking is entity exist
-		String uid = EntityUtils.getFieldValue(toUpdate, configuration.getEntityKeyFieldName());
+		final String uid = EntityUtils.getFieldValue(toUpdate, configuration.getEntityKeyFieldName());
 		read(uid);
 
 		// performing entity update
 		try {
-			DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toUpdate)));
+			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toUpdate)));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
 			getCollection().update(MongoUtil.queryGetEntity(uid), entity);
-		} catch (JsonGenerationException e) {
+		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toUpdate + "].", e);
-		} catch (JsonMappingException e) {
+		} catch (final JsonMappingException e) {
 			throw new StorageException("Can't map entity[" + toUpdate + "].", e);
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new StorageException(e);
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't create entity[" + toUpdate + "].", e);
 		}
 
@@ -287,10 +287,10 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public T delete(final String uid) throws StorageException {
-		T result = read(uid);
+		final T result = read(uid);
 		try {
 			getCollection().remove(MongoUtil.queryGetEntity(uid));
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't delete entity[" + uid + "].", e);
 		}
 		return result;
@@ -298,15 +298,18 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> read(final List<String> uidList) throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 		if (uidList == null || uidList.isEmpty())
 			return result;
 
-		for (String uid : uidList)
+		for (final String uid : uidList)
 			try {
 				result.add(read(uid));
-			} catch (StorageException e) {
-				LOGGER.warn("read('uidList') skipping read(" + uid + ").", e);
+			} catch (final EntityNotFoundStorageException e) {
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("read(" + uid + ") skipped[" + e.getMessage() + "].");
+			} catch (final StorageException e) {
+				LOGGER.warn("read(" + uid + ") fail. Skipping.", e);
 			}
 
 		return result;
@@ -314,15 +317,15 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> save(final List<T> toSaveList) throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 		if (toSaveList == null || toSaveList.isEmpty())
 			return result;
 
-		for (T entity : toSaveList)
+		for (final T entity : toSaveList)
 			try {
 				result.add(save(entity));
-			} catch (StorageException e) {
-				LOGGER.warn("save('toSaveList') skipping save(" + entity + ").", e);
+			} catch (final StorageException e) {
+				LOGGER.warn("save(" + entity + ") fail. Skipping.", e);
 			}
 
 		return result;
@@ -330,15 +333,18 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> create(final List<T> toCreateList) throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 		if (toCreateList == null || toCreateList.isEmpty())
 			return result;
 
-		for (T entity : toCreateList)
+		for (final T entity : toCreateList)
 			try {
 				result.add(create(entity));
-			} catch (StorageException e) {
-				LOGGER.warn("create('toCreateList') skipping create(" + entity + ").", e);
+			} catch (final EntityAlreadyExistStorageException e) {
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("create(" + entity + ") skipped[" + e.getMessage() + "].");
+			} catch (final StorageException e) {
+				LOGGER.warn("create(" + entity + ") fail. Skipping.", e);
 			}
 
 		return result;
@@ -346,15 +352,18 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> update(final List<T> toUpdateList) throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 		if (toUpdateList == null || toUpdateList.isEmpty())
 			return result;
 
-		for (T entity : toUpdateList)
+		for (final T entity : toUpdateList)
 			try {
 				result.add(update(entity));
-			} catch (StorageException e) {
-				LOGGER.warn("update('toUpdateList') skipping update(" + entity + ").", e);
+			} catch (final EntityNotFoundStorageException e) {
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("update(" + entity + ") skipped[" + e.getMessage() + "].");
+			} catch (final StorageException e) {
+				LOGGER.warn("update(" + entity + ") fail. Skipping.", e);
 			}
 
 		return result;
@@ -362,15 +371,18 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> delete(final List<String> uidList) throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 		if (uidList == null || uidList.isEmpty())
 			return result;
 
-		for (String uid : uidList)
+		for (final String uid : uidList)
 			try {
 				result.add(delete(uid));
-			} catch (StorageException e) {
-				LOGGER.warn("delete('uidList') skipping delete(" + uid + ").", e);
+			} catch (final EntityNotFoundStorageException e) {
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("delete(" + uid + ") skipped[" + e.getMessage() + "].");
+			} catch (final StorageException e) {
+				LOGGER.warn("delete(" + uid + ") fail. Skipping.", e);
 			}
 
 		return result;
@@ -378,31 +390,31 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	@Override
 	public List<T> findAll() throws StorageException {
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 
 		DBCursor rawResult = null;
 		try {
 			rawResult = getCollection().find();
 
-			ObjectMapper objectMapper = new ObjectMapper();
+			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
 			while (rawResult.hasNext()) {
-				DBObject obj = rawResult.next();
+				final DBObject obj = rawResult.next();
 				try {
 					result.add(objectMapper.readValue(obj.toString(), entityClass));
-				} catch (JsonParseException e) {
+				} catch (final JsonParseException e) {
 					throw new StorageException("Can't parse entity[" + obj + "].", e);
-				} catch (JsonMappingException e) {
+				} catch (final JsonMappingException e) {
 					throw new StorageException("Can't map entity[" + obj + "].", e);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new StorageException(e);
 				}
 			}
 
 			return result;
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't exequte query: find all entities.", e);
 		} finally {
 			if (rawResult != null)
@@ -415,9 +427,9 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");
 
-		List<T> result = new ArrayList<T>();
+		final List<T> result = new ArrayList<T>();
 
-		BasicDBObject mongoQuery = MongoQueryMapper.map(query);
+		final BasicDBObject mongoQuery = MongoQueryMapper.map(query);
 		if (mongoQuery == null)
 			return result;
 
@@ -428,38 +440,38 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 			rawResult = getCollection().find(mongoQuery);
 
-			BasicDBObject sorting = MongoQueryMapper.getSorting(query);
+			final BasicDBObject sorting = MongoQueryMapper.getSorting(query);
 			if (sorting != null)
 				rawResult.sort(sorting);
 
-			OffsetQuery offset = QueryUtils.getOffset(query);
+			final OffsetQuery offset = QueryUtils.getOffset(query);
 			if (offset != null)
 				rawResult.skip(offset.getQueryValue().getValue());
 
-			LimitQuery limit = QueryUtils.getLimit(query);
+			final LimitQuery limit = QueryUtils.getLimit(query);
 			if (limit != null)
 				rawResult.limit(limit.getQueryValue().getValue());
 
 			// processing results
-			ObjectMapper objectMapper = new ObjectMapper();
+			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
 			while (rawResult.hasNext()) {
-				DBObject obj = rawResult.next();
+				final DBObject obj = rawResult.next();
 				try {
 					result.add(objectMapper.readValue(obj.toString(), entityClass));
-				} catch (JsonParseException e) {
+				} catch (final JsonParseException e) {
 					throw new StorageException("Can't parse entity[" + obj + "].", e);
-				} catch (JsonMappingException e) {
+				} catch (final JsonMappingException e) {
 					throw new StorageException("Can't map entity[" + obj + "].", e);
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					throw new StorageException(e);
 				}
 			}
 
 			return result;
-		} catch (MongoException e) {
+		} catch (final MongoException e) {
 			throw new StorageException("Can't exequte query[" + query + "].", e);
 		} finally {
 			if (rawResult != null)
