@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.account;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
  * {@link AccountService} factory for main implementation.
@@ -11,7 +12,7 @@ public class AccountServiceFactory implements ServiceFactory<AccountService> {
 
 	@Override
 	public AccountService create() {
-		return new AccountServiceImpl();
+		return ServiceProxyUtil.createServiceProxy(AccountService.class, new AccountServiceImpl(), "service", "portal-kit", true);
 	}
 
 }

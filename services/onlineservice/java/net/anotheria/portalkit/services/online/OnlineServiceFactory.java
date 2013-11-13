@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.online;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
  * {@link OnlineService} factory.
@@ -10,6 +11,6 @@ import net.anotheria.anoprise.metafactory.ServiceFactory;
 public class OnlineServiceFactory implements ServiceFactory<OnlineService> {
     @Override
     public OnlineService create() {
-        return new OnlineServiceImpl();
+		return ServiceProxyUtil.createServiceProxy(OnlineService.class, new OnlineServiceImpl(), "service", "portal-kit", true);
     }
 }

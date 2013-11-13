@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
  * {@link AuthenticationService} factory for main implementation.
@@ -11,7 +12,7 @@ public class AuthenticationServiceFactory implements ServiceFactory<Authenticati
 
 	@Override
 	public AuthenticationService create() {
-		return new AuthenticationServiceImpl();
+		return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new AuthenticationServiceImpl(), "service", "portal-kit", true);
 	}
 
 }

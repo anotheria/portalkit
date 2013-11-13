@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.account.persistence.jdbc;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
+import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
  * {@link AccountPersistenceService} factory for JDBC implementation.
@@ -12,7 +13,7 @@ public class JDBCAccountPersistenceServiceFactory implements ServiceFactory<Acco
 
 	@Override
 	public AccountPersistenceService create() {
-		return new JDBCAccountPersistenceServiceImpl();
+		return ServiceProxyUtil.createServiceProxy(AccountPersistenceService.class, new JDBCAccountPersistenceServiceImpl(), "service", "portal-kit-persistence", true);
 	}
 
 }
