@@ -33,7 +33,7 @@ import com.googlecode.flyway.core.api.MigrationInfoService;
 /**
  * Base persistence service.
  */
-public abstract class BasePersistenceServiceJDBCImpl {
+public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceService {
 
 	/**
 	 * Data source.
@@ -86,6 +86,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	/**
 	 * Initialize data source.
 	 */
+	@Override
 	public void init() {
 		BasicDataSource newDataSource = new BasicDataSource();
 		if (configName == null)
@@ -303,6 +304,7 @@ public abstract class BasePersistenceServiceJDBCImpl {
 	 * 
 	 * @throws Exception
 	 */
+	@Override
 	public void cleanupFromUnitTests() throws SQLException, DAOException {
 		for (DAO d : daos) {
 			Connection conn = getConnection();

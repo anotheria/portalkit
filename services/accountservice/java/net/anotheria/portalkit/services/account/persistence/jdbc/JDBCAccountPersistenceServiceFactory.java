@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.account.persistence.jdbc;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
+import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceService;
 import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
@@ -13,7 +14,8 @@ public class JDBCAccountPersistenceServiceFactory implements ServiceFactory<Acco
 
 	@Override
 	public AccountPersistenceService create() {
-		return ServiceProxyUtil.createServiceProxy(AccountPersistenceService.class, new JDBCAccountPersistenceServiceImpl(), "service", "portal-kit-persistence", true);
+		return ServiceProxyUtil.createServiceProxy(AccountPersistenceService.class, new JDBCAccountPersistenceServiceImpl(), "service",
+				"portal-kit-persistence", true, BasePersistenceService.class);
 	}
 
 }

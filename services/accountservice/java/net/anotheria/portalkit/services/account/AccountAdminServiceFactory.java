@@ -14,11 +14,7 @@ public class AccountAdminServiceFactory implements ServiceFactory<AccountAdminSe
 	@Override
 	public AccountAdminService create() {
 		try {
-			AccountService accountService = MetaFactory.get(AccountService.class);
-			if (!(accountService instanceof AccountServiceImpl))
-				throw new RuntimeException("Configured AccountService implementation not instance of AccountServiceImpl.");
-
-			return AccountServiceImpl.class.cast(accountService);
+			return AccountAdminService.class.cast(MetaFactory.get(AccountService.class));
 		} catch (MetaFactoryException e) {
 			throw new RuntimeException("Can't obtain AccountAdminService implementation.");
 		}
