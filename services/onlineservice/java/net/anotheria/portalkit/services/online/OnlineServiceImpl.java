@@ -241,8 +241,6 @@ public class OnlineServiceImpl implements OnlineService {
 		if (property == null)
 			throw new IllegalArgumentException("Incoming parameter : [property] is not valid");
 
-		IdBasedLock<AccountId> lock = lockManager.obtainLock(account);
-		lock.lock();
 		try {
 			final boolean isOnline = onlineUserStorage.isAccountOnline(account);
 			switch (property) {
@@ -273,8 +271,6 @@ public class OnlineServiceImpl implements OnlineService {
 			LOG.error(msg, e);
 			throw new OnlineServiceException(msg, e);
 
-		} finally {
-			lock.unlock();
 		}
 	}
 

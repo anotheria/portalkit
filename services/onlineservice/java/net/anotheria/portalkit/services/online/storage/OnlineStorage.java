@@ -122,12 +122,11 @@ public class OnlineStorage {
 			long lastLogin = indexLastLogin(account, lastLoginNanoTime);
 			//put to storage
 			onlineUsers.put(account, new OnlineUserData(account, lastLogin, lastActivity));
-
-			//event announce
-			announcer.accountLoggedIn(account, lastLoginNanoTime);
 		} finally {
 			lock.unlock();
 		}
+		//event announce
+		announcer.accountLoggedIn(account, lastLoginNanoTime);
 
 	}
 
@@ -157,12 +156,12 @@ public class OnlineStorage {
 			//generate unique last activity
 			long lastActivity = indexLastActivity(account, lastActivityNanoTime);
 			data.setLastActivityNanoTime(lastActivity);
-
-			//event announce
-			announcer.accountActivityChange(account, lastActivityNanoTime);
 		} finally {
 			lock.unlock();
 		}
+
+		//event announce
+		announcer.accountActivityChange(account, lastActivityNanoTime);
 	}
 
 	/**
@@ -202,13 +201,13 @@ public class OnlineStorage {
 			//remove data
 			onlineUsers.remove(account);
 
-			//event announce
-			if (sendEvent)
-				announcer.accountLoggedOut(account, System.currentTimeMillis()*1000000);
-
 		} finally {
 			lock.unlock();
 		}
+
+		//event announce
+		if (sendEvent)
+			announcer.accountLoggedOut(account, System.currentTimeMillis() * 1000000);
 	}
 
 	/**
@@ -478,7 +477,7 @@ public class OnlineStorage {
 	 * @return {@link AccountId} which should be cleaned up
 	 */
 	private List<AccountId> getExpiredOnlineAccounts(final long expirationPeriod) {
-		final long time = System.currentTimeMillis()*1000000;
+		final long time = System.currentTimeMillis() * 1000000;
 		if (expirationPeriod > time)
 			throw new IllegalArgumentException("Provided period is not valid! It should be less than current nano-time");
 		final long expirationTime = time - expirationPeriod;
