@@ -164,9 +164,9 @@
 
 
 	<scm>
-		<url>svn:http://svn.anotheria.net/portalkit/portalkit/trunk</url>
-		<connection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</connection>
-		<developerConnection>scm:svn:http://svn.anotheria.net/portalkit/portalkit/trunk</developerConnection>
+		<url>http://svn.anotheria.net/portalkit/portalkit/trunk</url>
+		<connection>scm:git:git@github.com:anotheria/portalkit.git</connection>
+		<developerConnection>scm:git:git@github.com:anotheria/portalkit.git</developerConnection>
 	</scm>
 
 	<profiles>
