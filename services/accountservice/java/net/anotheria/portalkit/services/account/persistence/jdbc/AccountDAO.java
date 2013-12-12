@@ -9,11 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
+import net.anotheria.util.StringUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DAO class for account object.
@@ -22,6 +27,11 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
  * @since 06.01.13 01:39
  */
 public class AccountDAO extends AbstractDAO implements DAO {
+
+	/**
+	 * {@link Logger} instance.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountDAO.class);
 
 	/**
 	 * Name of the table in the database.
@@ -72,7 +82,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 		PreparedStatement insertStatement = null;
 		try {
 			insertStatement = connection.prepareStatement(insert);
@@ -85,7 +95,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			insertStatement.setLong(POS_STATUS, toSave.getStatus());
 			insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 			insertStatement.setLong(MAX_POS + 2, 0);
-//			insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
+			// insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
 
 			int insertResult = insertStatement.executeUpdate();
 			System.out.println("INSERT: " + insertResult);
@@ -225,7 +235,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			select = con.prepareStatement(sql);
 			select.setInt(1, typeId);
 			rs = select.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				result.add(new AccountId(rs.getString("id")));
 			}
 			return result;
@@ -233,6 +243,95 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			JDBCUtil.close(rs);
 			JDBCUtil.close(select);
 		}
+	}
+
+	public List<Account> getAccountsByQuery(final Connection con, final AccountQuery query) throws SQLException {
+		final String sqlSelectPart = "SELECT id, name, email, type, status, regts FROM " + TABLE_NAME;
+		final String sqlWherePart = " WHERE 1=1";
+		final String sqlOrderPart = " ORDER BY regts DESC";
+		// general selection part
+		final StringBuilder sqlRawQuery = new StringBuilder(sqlSelectPart);
+		// filtering part
+		sqlRawQuery.append(sqlWherePart);
+		if (query.getRegisteredFrom() != null)
+			sqlRawQuery.append(" AND regts >= ").append(query.getRegisteredFrom());
+		if (query.getRegisteredTill() != null)
+			sqlRawQuery.append(" AND regts <= ").append(query.getRegisteredTill());
+		if (!query.getIds().isEmpty()) {
+			final String ids = StringUtils.concatenateTokens(query.getIds(), ',', '\'', '\'');
+			sqlRawQuery.append(" AND id IN (").append(ids).append(")");
+		}
+		if (!StringUtils.isEmpty(query.getEmailMask()))
+			sqlRawQuery.append(" AND email LIKE '").append(query.getEmailMask()).append("'");
+		if (!StringUtils.isEmpty(query.getNameMask()))
+			sqlRawQuery.append(" AND name LIKE '").append(query.getNameMask()).append("'");
+		if (!StringUtils.isEmpty(query.getIdMask()))
+			sqlRawQuery.append(" AND id LIKE '").append(query.getIdMask()).append("'");
+		if (!query.getTypesIncluded().isEmpty()) {
+			final String types = StringUtils.concatenateTokens(query.getTypesIncluded(), ",");
+			sqlRawQuery.append(" AND type IN (").append(types).append(")");
+		}
+		if (!query.getTypesExcluded().isEmpty()) {
+			final String types = StringUtils.concatenateTokens(query.getTypesExcluded(), ",");
+			sqlRawQuery.append(" AND type NOT IN (").append(types).append(")");
+		}
+		// ordering part
+		sqlRawQuery.append(sqlOrderPart);
+
+		final String sqlQuery = sqlRawQuery.toString();
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug("getAccountsByQuery(Connection, AccountQuery) executing with query[" + sqlQuery + "].");
+
+		final List<Account> rawResult = new ArrayList<Account>();
+		Statement statement = null;
+		ResultSet rs = null;
+		try {
+			statement = con.createStatement();
+			rs = statement.executeQuery(sqlQuery);
+			while (rs.next()) {
+				Account account = new Account();
+				account.setId(new AccountId(rs.getString("id")));
+				account.setName(rs.getString("name"));
+				account.setEmail(rs.getString("email"));
+				account.setType(rs.getInt("type"));
+				account.setStatus(rs.getLong("status"));
+				account.setRegistrationTimestamp(rs.getLong("regts"));
+				rawResult.add(account);
+			}
+		} finally {
+			JDBCUtil.close(rs);
+			JDBCUtil.close(statement);
+		}
+
+		if (rawResult.isEmpty()) // no results
+			return rawResult;
+		if (query.getStatusesIncluded().isEmpty() && query.getStatusesExcluded().isEmpty()) // no filtering by status
+			return rawResult;
+
+		final List<Account> result = new ArrayList<Account>();
+		// now we should exclude accounts by status field - we can't do this in the query because value stored as long bitmap
+		for (final Account account : rawResult) {
+			boolean skip = false;
+			for (final Long status : query.getStatusesIncluded())
+				if (!account.hasStatus(status)) { // skipping account if it doesn't have required status
+					skip = true;
+					break;
+				}
+			if (skip)
+				continue;
+
+			for (final Long status : query.getStatusesExcluded())
+				if (account.hasStatus(status)) { // skipping account if it have doesn't required status
+					skip = true;
+					break;
+				}
+			if (skip)
+				continue;
+
+			result.add(account);
+		}
+
+		return result;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -80,6 +81,11 @@ public class InMemoryAccountPersistenceServiceImpl implements AccountPersistence
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<Account> getAccountsByQuery(final AccountQuery query) throws AccountPersistenceServiceException {
+		throw new UnsupportedOperationException("Implement me.");
 	}
 
 }

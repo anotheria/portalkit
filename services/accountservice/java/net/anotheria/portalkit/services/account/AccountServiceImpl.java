@@ -1,5 +1,9 @@
 package net.anotheria.portalkit.services.account;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
@@ -8,10 +12,6 @@ import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplie
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * The implementation of the account service.
@@ -187,6 +187,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail()) != null)
 			throw new AccountAlreadyExistsException("email", toCreate.getEmail());
 
+		@SuppressWarnings("deprecation")
 		Account newAccount = Account.newAccountFromPattern(toCreate);
 		saveAccount(newAccount);
 		eventSupplier.accountCreated(newAccount);
@@ -248,13 +249,25 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 			throw new AccountAdminServiceException(e);
 		}
 	}
-	
+
 	@Override
-	public List<AccountId> getAccountsByType(AccountType accountType) throws AccountServiceException {
+	public List<AccountId> getAccountsByType(@SuppressWarnings("rawtypes") AccountType accountType) throws AccountServiceException {
 		try {
 			return persistenceService.getAccountsByType(accountType.getId());
 		} catch (AccountPersistenceServiceException e) {
 			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public List<Account> getAccountsByQuery(final AccountQuery query) throws AccountAdminServiceException {
+		if (query == null)
+			throw new IllegalArgumentException("query argument is null.");
+
+		try {
+			return persistenceService.getAccountsByQuery(query);
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountAdminServiceException(e);
 		}
 	}
 

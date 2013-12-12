@@ -7,10 +7,7 @@ import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
 /**
- * TODO comment this class
- * 
- * @author lrosenberg
- * @since 18.02.13 10:11
+ * Administrative interface for {@link AccountService}.
  */
 public interface AccountAdminService extends Service {
 
@@ -21,13 +18,25 @@ public interface AccountAdminService extends Service {
 	 * @throws AccountAdminServiceException
 	 */
 	Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException;
-	
+
 	/**
+	 * Get accounts identifiers by account type.
 	 * 
 	 * @param accountType
-	 * @return
+	 *            {@link AccountType}
+	 * @return {@link List} of {@link Account}
 	 * @throws AccountServiceException
 	 */
-	List<AccountId> getAccountsByType(AccountType accountType) throws AccountServiceException;
+	List<AccountId> getAccountsByType(@SuppressWarnings("rawtypes") AccountType accountType) throws AccountServiceException;
+
+	/**
+	 * Get accounts by query.
+	 * 
+	 * @param query
+	 *            {@link AccountQuery}
+	 * @return {@link List} of {@link Account}
+	 * @throws AccountAdminServiceException
+	 */
+	List<Account> getAccountsByQuery(AccountQuery query) throws AccountAdminServiceException;
 
 }
