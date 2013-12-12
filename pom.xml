@@ -1,19 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<parent>
-		<groupId>portalkit</groupId>
+		<groupId>net.anotheria</groupId>
 		<artifactId>parent</artifactId>
-		<version>1</version>
+		<version>2.2</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>portalkit</groupId>
 	<artifactId>portalkit</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>The PortalKIT</name>
 	<description>PortalKIT</description>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tools-anno-plugin.version>1.3.1</tools-anno-plugin.version>
+
 		<moskito.version>2.3.0</moskito.version>
 		<distributeme.version>2.0.0</distributeme.version>
 	</properties>
@@ -25,78 +28,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- ano-dependencies -->
-			<!-- External dependencies: START -->
-			<dependency>
-				<groupId>log4j</groupId>
-				<artifactId>log4j</artifactId>
-				<version>1.2.17</version>
-			</dependency>
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.10</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>2.5</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-beanutils</groupId>
-				<artifactId>commons-beanutils</artifactId>
-				<version>1.8.3</version>
-			</dependency>
-			<dependency>
-				<groupId>commons-dbcp</groupId>
-				<artifactId>commons-dbcp</artifactId>
-				<version>1.4</version>
-			</dependency>
-			<dependency>
-				<groupId>com.googlecode.flyway</groupId>
-				<artifactId>flyway-core</artifactId>
-				<version>2.0.3</version>
-			</dependency>
-			<dependency>
-				<groupId>postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>9.1-901-1.jdbc4</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hsqldb</groupId>
-				<artifactId>hsqldb</artifactId>
-				<version>2.2.9</version>
-			</dependency>
-			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>1.3.168</version>
-			</dependency>
-
-			<!-- External dependencies: END -->
-			<!-- Testing dependencies: START -->
-			<dependency>
-				<groupId>org.jmock</groupId>
-				<artifactId>jmock</artifactId>
-				<version>2.5.1</version>
-				<scope>test</scope>
-			</dependency>
-			<!-- Testing dependencies: END -->
-			<!-- Provided dependencies: START -->
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>2.2</version>
-				<scope>provided</scope>
-			</dependency>
-			<!-- Provided dependencies: END -->
+			<!-- ano-dependencies: START -->
 			<dependency>
 				<groupId>net.anotheria</groupId>
 				<artifactId>ano-prise</artifactId>
@@ -128,7 +60,67 @@
 				<artifactId>distributeme-agents</artifactId>
 				<version>${distributeme.version}</version>
 			</dependency>
-
+			<!-- ano-dependencies: END -->
+			<!-- External dependencies: START -->
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-dbcp</groupId>
+				<artifactId>commons-dbcp</artifactId>
+				<version>1.4</version>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.flyway</groupId>
+				<artifactId>flyway-core</artifactId>
+				<version>2.0.3</version>
+			</dependency>
+			<dependency>
+				<groupId>postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>9.1-901-1.jdbc4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>2.2.9</version>
+			</dependency>
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>1.3.168</version>
+			</dependency>
+			<!-- External dependencies: END -->
+			<!-- Testing dependencies: START -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.10</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jmock</groupId>
+				<artifactId>jmock</artifactId>
+				<version>2.5.1</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- Testing dependencies: END -->
+			<!-- Provided dependencies: START -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>2.2</version>
+				<scope>provided</scope>
+			</dependency>
+			<!-- Provided dependencies: END -->
 		</dependencies>
 	</dependencyManagement>
 
@@ -159,15 +151,7 @@
 			<groupId>net.anotheria</groupId>
 			<artifactId>distributeme-support</artifactId>
 		</dependency>
-
 	</dependencies>
-
-
-	<scm>
-		<url>http://svn.anotheria.net/portalkit/portalkit/trunk</url>
-		<connection>scm:git:git@github.com:anotheria/portalkit.git</connection>
-		<developerConnection>scm:git:git@github.com:anotheria/portalkit.git</developerConnection>
-	</scm>
 
 	<profiles>
 		<profile>
@@ -186,6 +170,7 @@
 					<artifactId>distributeme-support</artifactId>
 				</dependency>
 			</dependencies>
+
 			<build>
 				<plugins>
 					<plugin>
@@ -240,4 +225,60 @@
 			</build>
 		</profile>
 	</profiles>
+
+	<scm>
+		<url>https://github.com/anotheria/portalkit.git</url>
+		<connection>scm:git:git@github.com:anotheria/portalkit.git</connection>
+		<developerConnection>scm:git:git@github.com:anotheria/portalkit.git</developerConnection>
+	</scm>
+
+	<distributionManagement>
+		<!-- use the following if you're not using a snapshot version. -->
+		<repository>
+			<id>portalkit-release</id>
+			<name>Portalkit Release Repository</name>
+			<url> http://repository.anotheria.net/content/repositories/portalkit-releases/</url>
+		</repository>
+		<!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>portalkit-snapshot</id>
+			<name>Portalkit Snapshot Repository</name>
+			<url>http://repository.anotheria.net/content/repositories/portalkit-snapshots/</url>
+			<uniqueVersion>true</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<licenses>
+		<license>
+			<name>NOT OPENSOURCE</name>
+			<url />
+			<distribution />
+		</license>
+	</licenses>
+
+	<url>http://anotheria.net</url>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://jira.anotheria.net/</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://jenkins.anotheria.net</url>
+	</ciManagement>
+
+	<inceptionYear>2012</inceptionYear>
+	<developers>
+		<developer>
+			<id>ano-team</id>
+			<name>Core Anotheria Team</name>
+			<email>info@anotheria.net</email>
+			<organization>anotheria.net</organization>
+			<organizationUrl>http://www.anotheria.net</organizationUrl>
+			<timezone>+1</timezone>
+			<roles>
+				<role>Everything</role>
+			</roles>
+		</developer>
+	</developers>
+
 </project>

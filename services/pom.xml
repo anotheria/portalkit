@@ -1,9 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<parent>
 		<groupId>portalkit</groupId>
 		<artifactId>portalkit</artifactId>
-		<version>0.2.1-SNAPSHOT</version>
+		<version>0.3.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -12,26 +11,25 @@
 	<name>The PortalKIT Services</name>
 	<description>PortalKIT Services Aggregator</description>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/java</directory>
-                <includes>
-                    <include>**/*.sql</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>
+	<build>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/java</directory>
+				<includes>
+					<include>**/*.sql</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
 
-
-    <modules>
+	<modules>
 		<module>common</module>
 		<module>storage</module>
 		<module>accountservice</module>
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
-	    <module>onlineservice</module>
+		<module>onlineservice</module>
 		<module>recordservice</module>
 		<module>notificationservice</module>
 		<module>messagingservice</module>
