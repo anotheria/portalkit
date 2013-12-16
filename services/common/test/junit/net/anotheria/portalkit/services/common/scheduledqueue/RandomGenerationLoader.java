@@ -19,12 +19,12 @@ public class RandomGenerationLoader implements Loader {
 	/**
 	 * Loaded elements amount.
 	 */
-	private static final AtomicInteger loaded = new AtomicInteger(0);
+	private final AtomicInteger loaded = new AtomicInteger(0);
 
 	/**
 	 * Synchronization lock.
 	 */
-	private static final Object LOCK = new Object();
+	private final Object LOCK = new Object();
 
 	@Override
 	public List<Object> load() throws LoadingException {

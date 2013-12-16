@@ -19,7 +19,7 @@ public class SystemOutProcessor implements Processor {
 	/**
 	 * Processed elements amount.
 	 */
-	private static final AtomicInteger processed = new AtomicInteger(0);
+	private final AtomicInteger processed = new AtomicInteger(0);
 
 	@Override
 	public void process(final Object element) throws ProcessingException {
