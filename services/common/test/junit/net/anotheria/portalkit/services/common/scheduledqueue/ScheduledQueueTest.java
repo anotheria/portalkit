@@ -49,13 +49,13 @@ public class ScheduledQueueTest {
 	}
 
 	/**
-	 * Complex test.
+	 * Complex test for interval based schedule.
 	 * 
 	 * @throws InterruptedException
 	 * @throws ScheduledQueueException
 	 */
 	@Test
-	public void complexTestForSyncMode() throws ScheduledQueueException, InterruptedException {
+	public void complexTestForSyncModeIntervalSchedule() throws ScheduledQueueException, InterruptedException {
 		queue.setMode(ProcessingMode.SYNC);
 		queue.schedule(1L);
 		Assert.assertTrue(queue.isStarted()); // should be already started
@@ -64,6 +64,33 @@ public class ScheduledQueueTest {
 		Assert.assertFalse(queue.isPaused()); // shouldn't be paused
 
 		Thread.sleep(300L);
+		Assert.assertEquals("Loaded and processed elements amount should be the same.", loader.getLoaded(), processor.getProcessed());
+
+		queue.pause();
+		Assert.assertTrue(queue.isPaused()); // should be paused
+
+		queue.resume();
+		Assert.assertFalse(queue.isPaused()); // shouldn't be paused
+
+		Assert.assertTrue(queue.isStarted()); // will be false after tear down
+	}
+
+	/**
+	 * Complex test for cron based schedule.
+	 * 
+	 * @throws InterruptedException
+	 * @throws ScheduledQueueException
+	 */
+	@Test
+	public void complexTestForSyncModeCronSchedule() throws ScheduledQueueException, InterruptedException {
+		queue.setMode(ProcessingMode.SYNC);
+		queue.schedule("0/1 * * * * ?");
+		Assert.assertTrue(queue.isStarted()); // should be already started
+
+		Thread.sleep(1000L);
+		Assert.assertFalse(queue.isPaused()); // shouldn't be paused
+
+		Thread.sleep(1000L);
 		Assert.assertEquals("Loaded and processed elements amount should be the same.", loader.getLoaded(), processor.getProcessed());
 
 		queue.pause();
