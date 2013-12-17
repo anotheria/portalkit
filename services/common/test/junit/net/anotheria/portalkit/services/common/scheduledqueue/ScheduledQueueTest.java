@@ -90,7 +90,7 @@ public class ScheduledQueueTest {
 		Thread.sleep(1000L);
 		Assert.assertFalse(queue.isPaused()); // shouldn't be paused
 
-		Thread.sleep(1000L);
+		Thread.sleep(1500L);
 		Assert.assertEquals("Loaded and processed elements amount should be the same.", loader.getLoaded(), processor.getProcessed());
 
 		queue.pause();
