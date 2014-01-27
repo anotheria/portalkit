@@ -78,7 +78,7 @@ public final class EqualQuery extends AbstractQuery implements Query {
 	 * @return {@link EqualQuery}
 	 */
 	public static EqualQuery create(final String fieldName, final NullModifier value) {
-		return new EqualQuery(fieldName, NullValue.create(value.getValue()));
+		return new EqualQuery(fieldName, value.getValue());
 	}
 
 	@Override
@@ -93,15 +93,15 @@ public final class EqualQuery extends AbstractQuery implements Query {
 		/**
 		 * Null value.
 		 */
-		NULL(Boolean.TRUE),
+		NULL(new NullValue(Boolean.TRUE)),
 		/**
 		 * Not Null value.
 		 */
-		NOT_NULL(Boolean.FALSE);
+		NOT_NULL(new NullValue(Boolean.FALSE));
 		/**
 		 * Value.
 		 */
-		private Boolean value;
+		private NullValue value;
 
 		/**
 		 * Constructor.
@@ -109,11 +109,11 @@ public final class EqualQuery extends AbstractQuery implements Query {
 		 * @param value
 		 * 		value
 		 */
-		NullModifier(Boolean value) {
+		NullModifier(NullValue value) {
 			this.value = value;
 		}
 
-		public Boolean getValue() {
+		public NullValue getValue() {
 			return value;
 		}
 	}
