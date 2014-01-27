@@ -15,7 +15,6 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.QueryBuilder;
 import net.anotheria.portalkit.services.storage.query.SortingQuery;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -64,7 +63,6 @@ public class GenericMongoServiceTestIntegration extends AbstractStorageServiceTe
 		// creating new entity
 		TestVO created = storage.create(toCreate);
 		validateEntity(toCreate, created);
-
 		// reading all entities
 		validateAll(created, storage.findAll());
 
@@ -127,6 +125,16 @@ public class GenericMongoServiceTestIntegration extends AbstractStorageServiceTe
 		Assert.assertNotNull(containsResult);
 		Assert.assertEquals(1, containsResult.size());
 		validateEntity(updated, containsResult.get(0));
+
+		// null query
+		List<TestVO> nullResult = storage.find(EqualQuery.create("intValues", EqualQuery.NullModifier.NULL));
+		Assert.assertNotNull(nullResult);
+		Assert.assertEquals(1, nullResult.size());
+
+		// not null query
+		List<TestVO> notNullResult = storage.find(EqualQuery.create("intValue", EqualQuery.NullModifier.NOT_NULL));
+		Assert.assertNotNull(notNullResult );
+		Assert.assertEquals(1, notNullResult .size());
 
 		// removing entity
 		TestVO deleted = storage.delete(toCreate.getId());

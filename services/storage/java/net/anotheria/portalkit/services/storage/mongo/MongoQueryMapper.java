@@ -21,6 +21,7 @@ import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.QueryOperators;
+import net.anotheria.portalkit.services.storage.query.value.NullValue;
 
 /**
  * Utility for converting {@link Query} to mongo query.
@@ -106,6 +107,8 @@ public final class MongoQueryMapper {
 	public static BasicDBObject map(final EqualQuery query) {
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");
+		if(query.getQueryValue() instanceof NullValue)
+			return new BasicDBObject(query.getFieldName(), Boolean.TRUE.equals(query.getQueryValue().getValue()) ? null : new BasicDBObject("$ne", null));
 
 		return new BasicDBObject(query.getFieldName(), query.getQueryValue().getValue());
 	}

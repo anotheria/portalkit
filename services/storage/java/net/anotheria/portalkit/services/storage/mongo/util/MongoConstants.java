@@ -11,6 +11,10 @@ public final class MongoConstants {
 	 * Field name for document id.
 	 */
 	public static final String FIELD_ID_NAME = "_id";
+	/**
+	 * No equal operator.
+	 */
+	public static final String NOT_EQUAL_OPERATOR = "$ne";
 
 	/**
 	 * Private constructor.

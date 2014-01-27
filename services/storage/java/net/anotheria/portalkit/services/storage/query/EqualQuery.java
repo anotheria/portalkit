@@ -1,13 +1,14 @@
 package net.anotheria.portalkit.services.storage.query;
 
 import net.anotheria.portalkit.services.storage.query.value.BooleanValue;
+import net.anotheria.portalkit.services.storage.query.value.NullValue;
 import net.anotheria.portalkit.services.storage.query.value.NumberValue;
 import net.anotheria.portalkit.services.storage.query.value.QueryValue;
 import net.anotheria.portalkit.services.storage.query.value.StringValue;
 
 /**
  * {@link EqualQuery}.
- * 
+ *
  * @author Alexandr Bolbat
  */
 public final class EqualQuery extends AbstractQuery implements Query {
@@ -19,11 +20,11 @@ public final class EqualQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param fieldName
-	 *            field name
+	 * 		field name
 	 * @param queryValue
-	 *            query value
+	 * 		query value
 	 */
 	private EqualQuery(final String fieldName, final QueryValue queryValue) {
 		super(fieldName, queryValue);
@@ -31,11 +32,11 @@ public final class EqualQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Create new instance of {@link EqualQuery} with {@link String} value.
-	 * 
+	 *
 	 * @param fieldName
-	 *            field name
+	 * 		field name
 	 * @param value
-	 *            query value
+	 * 		query value
 	 * @return {@link EqualQuery}
 	 */
 	public static EqualQuery create(final String fieldName, final String value) {
@@ -44,11 +45,11 @@ public final class EqualQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Create new instance of {@link EqualQuery} with {@link Number} value.
-	 * 
+	 *
 	 * @param fieldName
-	 *            field name
+	 * 		field name
 	 * @param value
-	 *            query value
+	 * 		query value
 	 * @return {@link EqualQuery}
 	 */
 	public static EqualQuery create(final String fieldName, final Number value) {
@@ -57,20 +58,64 @@ public final class EqualQuery extends AbstractQuery implements Query {
 
 	/**
 	 * Create new instance of {@link EqualQuery} with {@link Boolean} value.
-	 * 
+	 *
 	 * @param fieldName
-	 *            field name
+	 * 		field name
 	 * @param value
-	 *            query value
+	 * 		query value
 	 * @return {@link EqualQuery}
 	 */
 	public static EqualQuery create(final String fieldName, final Boolean value) {
 		return new EqualQuery(fieldName, BooleanValue.create(value));
 	}
 
+
+	/**
+	 * Create new instance of {@link EqualQuery} with null value.
+	 *
+	 * @param fieldName
+	 * 		field name
+	 * @return {@link EqualQuery}
+	 */
+	public static EqualQuery create(final String fieldName, final NullModifier value) {
+		return new EqualQuery(fieldName, NullValue.create(value.getValue()));
+	}
+
 	@Override
 	public String toString() {
 		return "equal[" + getFieldName() + "=" + getQueryValue() + "]";
+	}
+
+	/**
+	 * @author ivanbatura
+	 */
+	public enum NullModifier {
+		/**
+		 * Null value.
+		 */
+		NULL(Boolean.TRUE),
+		/**
+		 * Not Null value.
+		 */
+		NOT_NULL(Boolean.FALSE);
+		/**
+		 * Value.
+		 */
+		private Boolean value;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param value
+		 * 		value
+		 */
+		NullModifier(Boolean value) {
+			this.value = value;
+		}
+
+		public Boolean getValue() {
+			return value;
+		}
 	}
 
 }

@@ -5,9 +5,9 @@ import java.util.UUID;
 
 import net.anotheria.portalkit.services.storage.StorageService;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
+import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.shared.InheritanceVO;
 import net.anotheria.portalkit.services.storage.shared.TestVO;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -83,6 +83,17 @@ public class GenericInMemoryServiceTest {
 		toUpdate.setSubObject(subObject);
 		updated = storage.save(toUpdate);
 		validateEntity(toUpdate, updated);
+
+		//validate null value
+		List<TestVO> nullResult = storage.find(EqualQuery.create("intValues", EqualQuery.NullModifier.NULL));
+		Assert.assertNotNull("Result should not be be null", nullResult);
+		Assert.assertEquals("Result should have values inside", 1, nullResult.size());
+
+		//validate not null value
+		List<TestVO> notNullResult = storage.find(EqualQuery.create("intValue", EqualQuery.NullModifier.NOT_NULL));
+		Assert.assertNotNull("Result should not be be null", notNullResult);
+		Assert.assertEquals("Result should have values inside", 1, notNullResult.size());
+
 
 		// reading all entities
 		validateAll(updated, storage.findAll());
