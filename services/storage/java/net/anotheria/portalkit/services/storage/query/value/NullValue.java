@@ -18,11 +18,11 @@ public class NullValue implements QueryValue {
 	/**
 	 * Constructor.
 	 *
-	 * @param value
+	 * @param aValue
 	 * 		{@link Boolean} value
 	 */
-	public NullValue(Boolean value) {
-		this.value = value;
+	public NullValue(Boolean aValue) {
+		this.value = aValue != null ? aValue : Boolean.FALSE;
 	}
 
 	@Override

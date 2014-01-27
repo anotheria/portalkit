@@ -93,11 +93,11 @@ public final class EqualQuery extends AbstractQuery implements Query {
 		/**
 		 * Null value.
 		 */
-		NULL(new NullValue(Boolean.TRUE)),
+		NULL(NullValue.create(Boolean.TRUE)),
 		/**
 		 * Not Null value.
 		 */
-		NOT_NULL(new NullValue(Boolean.FALSE));
+		NOT_NULL(NullValue.create(Boolean.FALSE));
 		/**
 		 * Value.
 		 */
@@ -109,7 +109,7 @@ public final class EqualQuery extends AbstractQuery implements Query {
 		 * @param value
 		 * 		value
 		 */
-		NullModifier(NullValue value) {
+		private NullModifier(NullValue value) {
 			this.value = value;
 		}
 
