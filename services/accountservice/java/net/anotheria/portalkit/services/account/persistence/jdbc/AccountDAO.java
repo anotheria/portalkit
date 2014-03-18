@@ -1,13 +1,5 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -16,9 +8,16 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 import net.anotheria.util.StringUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DAO class for account object.
@@ -62,17 +61,19 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	 * Position of the status field in insert/update statements.
 	 */
 	public static final int POS_STATUS = 6;
+
+	public static final int POS_TENANT = 7;
 	/**
 	 * Max value of the position field.
 	 */
-	public static final int MAX_POS = POS_STATUS;
+	public static final int MAX_POS = POS_TENANT;
 
 	/**
 	 * Internal create account operation.
 	 */
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException {
-		String insert = "INSERT INTO account (id, name, email, type, regts, status, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
-				+ "VALUES ( ?,?,?,?,?,?,?,? )";
+		String insert = "INSERT INTO account (id, name, email, type, regts, status, tenant, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
+				+ "VALUES ( ?,?,?,?,?,?,?,?,? )";
 
 		try {
 			Account acc = getAccount(connection, toSave.getId());
@@ -93,6 +94,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			insertStatement.setInt(POS_TYPE, toSave.getType());
 			insertStatement.setLong(POS_REG, toSave.getRegistrationTimestamp());
 			insertStatement.setLong(POS_STATUS, toSave.getStatus());
+			insertStatement.setString(POS_TENANT, toSave.getTenant());
 			insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 			insertStatement.setLong(MAX_POS + 2, 0);
 			// insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
@@ -109,7 +111,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	 * Internal update operation.
 	 */
 	private boolean updateAccount(Connection connection, Account toSave) throws SQLException, DAOException {
-		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, status = ?, " + ATT_DAO_UPDATED + " = ? WHERE id = ?";
+		String update = "UPDATE account set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, " + ATT_DAO_UPDATED + " = ? WHERE id = ?";
 		PreparedStatement updateStatement = null;
 		try {
 			updateStatement = connection.prepareStatement(update);
@@ -122,6 +124,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			updateStatement.setInt(i++, toSave.getType());
 			updateStatement.setLong(i++, toSave.getRegistrationTimestamp());
 			updateStatement.setLong(i++, toSave.getStatus());
+			updateStatement.setString(i++, toSave.getTenant());
 			updateStatement.setLong(i++, System.currentTimeMillis());
 			updateStatement.setString(i++, toSave.getId().getInternalId());
 			// */
@@ -146,7 +149,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		PreparedStatement stat = null;
 		ResultSet result = null;
 		try {
-			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status from " + TABLE_NAME + " WHERE id = ?;");
+			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status, tenant from " + TABLE_NAME + " WHERE id = ?;");
 			stat.setString(1, id.getInternalId());
 			result = stat.executeQuery();
 			if (!result.next()) {
@@ -159,6 +162,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			acc.setRegistrationTimestamp(result.getLong(POS_REG));
 			acc.setType(result.getInt(POS_TYPE));
 			acc.setStatus(result.getLong(POS_STATUS));
+			acc.setTenant(result.getString(POS_TENANT));
 			return acc;
 		} finally {
 			JDBCUtil.close(result);

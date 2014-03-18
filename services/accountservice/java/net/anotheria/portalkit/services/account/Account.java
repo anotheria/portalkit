@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.account;
 
-import java.io.Serializable;
-
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.io.Serializable;
 
 /**
  * Representation of a user account.
@@ -44,6 +44,12 @@ public class Account implements Serializable, Cloneable {
 	 * The creation timestamp for this account.
 	 */
 	private long registrationTimestamp;
+
+	/**
+	 * Tenant. This can be an agency, a locale or whatever, you use to separate the accounts. In case of ASG based
+	 * sites, tenant should be the cms-language.
+	 */
+	private String tenant;
 
 	/**
 	 * Default constructor.
@@ -191,4 +197,12 @@ public class Account implements Serializable, Cloneable {
             throw new AssertionError("Not cloneable? "+e.getMessage());
         }
     }
+
+	public String getTenant() {
+		return tenant;
+	}
+
+	public void setTenant(String aTenant) {
+		tenant = aTenant;
+	}
 }
