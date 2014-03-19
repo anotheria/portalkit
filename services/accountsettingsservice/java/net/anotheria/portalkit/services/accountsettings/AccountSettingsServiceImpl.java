@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.accountsettings;
 
+import net.anotheria.anoprise.cache.Cache;
+import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceService;
@@ -27,7 +29,12 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 	/**
 	 * Lock manager.
 	 */
-	private IdBasedLockManager<AccountSettingsKey> accountsLockManager = new SafeIdBasedLockManager<AccountSettingsKey>();
+	private IdBasedLockManager<AccountId> accountsLockManager = new SafeIdBasedLockManager<AccountId>();
+
+	/**
+	 * Cache for dataspaces.
+	 */
+	private Cache<AccountId, DataspaceCacheHolder> cache;
 	
 	/**
 	 * 
@@ -38,18 +45,32 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't instantiate persistence", e);
 		}
+
+		cache = Caches.createConfigurableHardwiredCache("accountsettingsservice-cache");
+		Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
+
 	}
 	
 	@Override
 	public Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException {
-		AccountSettingsKey key = new AccountSettingsKey();
-		IdBasedLock<AccountSettingsKey> lock = accountsLockManager.obtainLock(key);
+		IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
 		lock.lock();
 		try {
+
+			//first check cache
+			DataspaceCacheHolder holder = cache.get(accountId);
+			if (holder!=null){
+				Dataspace fromCache = holder.get(domain.getId());
+				if (fromCache!=null)
+					return fromCache;
+			}
+
 			Dataspace ds = persistence.loadDataspace(accountId, domain.getId());
 			if (ds == null) {
 				throw new DataspaceNotFoundException(domain.getName());
 			}
+			putInCache(accountId, domain.getId(), ds);
+
 			return ds;
 		} catch (AccountSettingsPersistenceServiceException e) {
 			throw new AccountSettingsServiceException("persistence.loadDataspace failed", e);
@@ -58,12 +79,24 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 		}
 	}
 
+	//this method is unsafe, it should be called from locked areas only.
+	private void putInCache(AccountId accountId, int dataspaceType, Dataspace dataspace){
+		DataspaceCacheHolder holder = cache.get(accountId);
+		if (holder==null){
+			holder = new DataspaceCacheHolder();
+			cache.put(accountId, holder);
+		}
+		holder.put(dataspaceType, dataspace);
+	}
+
 	@Override
 	public void saveDataspace(Dataspace dataspace) throws AccountSettingsServiceException {
-		IdBasedLock<AccountSettingsKey> lock = accountsLockManager.obtainLock(dataspace.getKey());
+		AccountId accId = new AccountId(dataspace.getKey().getAccountId());
+		IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accId);
 		lock.lock();
 		try {
 			persistence.saveDataspace(dataspace);
+			putInCache(accId, dataspace.getKey().getDataspaceId(), dataspace);
 		} catch (AccountSettingsPersistenceServiceException e) {
 			throw new AccountSettingsServiceException("persistence.saveDataspace failed", e);
 		} finally {
