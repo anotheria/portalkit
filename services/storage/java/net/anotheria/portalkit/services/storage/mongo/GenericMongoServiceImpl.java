@@ -40,7 +40,7 @@ import java.util.List;
  * 
  * @param <T>
  */
-@Monitor
+@Monitor (subsystem = "portalkit")
 public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMongoService implements GenericMongoService<T> {
 
 	/**

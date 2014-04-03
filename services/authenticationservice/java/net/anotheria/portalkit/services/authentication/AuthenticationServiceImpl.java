@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -16,6 +17,7 @@ import java.util.Set;
  * @author lrosenberg
  * @since 13.12.12 09:30
  */
+@Monitor(subsystem = "portalkit")
 public class AuthenticationServiceImpl implements AuthenticationService{
 
 	/**

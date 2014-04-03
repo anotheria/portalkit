@@ -1,21 +1,23 @@
 package net.anotheria.portalkit.services.foreignid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceService;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceServiceException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ForeignId Service implementation.
  * 
  * @author dagafonov
  */
+@Monitor(subsystem = "portalkit")
 public class ForeignIdServiceImpl implements ForeignIdService {
 
 	/**
