@@ -1,17 +1,18 @@
 package net.anotheria.portalkit.services.account;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplier;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The implementation of the account service.
@@ -19,6 +20,7 @@ import net.anotheria.portalkit.services.common.AccountId;
  * @author lrosenberg
  * @since 12.12.12 11:28
  */
+@Monitor
 public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 	/**

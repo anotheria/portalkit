@@ -121,6 +121,18 @@
 				<scope>provided</scope>
 			</dependency>
 			<!-- Provided dependencies: END -->
+
+            <dependency>
+                <groupId>net.anotheria</groupId>
+                <artifactId>moskito-core</artifactId>
+                <version>${moskito.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.anotheria</groupId>
+                <artifactId>moskito-aop</artifactId>
+                <version>${moskito.version}</version>
+            </dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -151,7 +163,43 @@
 			<groupId>net.anotheria</groupId>
 			<artifactId>distributeme-support</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>moskito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>moskito-aop</artifactId>
+        </dependency>
 	</dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.4</version>
+                <configuration>
+                    <aspectLibraries>
+                        <aspectLibrary>
+                            <groupId>net.anotheria</groupId>
+                            <artifactId>moskito-aop</artifactId>
+                        </aspectLibrary>
+                    </aspectLibraries>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 	<profiles>
 		<profile>
