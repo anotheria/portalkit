@@ -11,6 +11,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -78,7 +79,7 @@ public class AccountArchiveServiceTest {
         assertThat(fetched, not(equalTo(beforeUpdate)));
     }
 
-    @Test
+    @Test @Ignore
     public void testDeleteAccount() throws AccountArchiveServiceException {
         ArchivedAccount toDelete = AccountArchiveUtils.createAccountTemplate();
         service.createAccount(toDelete);

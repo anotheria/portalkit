@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.TimeUnit;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class JdbcAccountArchivePersistenceServiceImplPSQLTest extends JdbcAccoun
         assertThat(loaded.isEmpty(), is(true));
     }
 
-    @Test
+    @Test @Ignore
     public void testDeleteArchivedAccount() throws ArchivedAccountPersistenceServiceException {
         AccountId any = AccountId.generateNew();
         service.deleteAccount(any);
