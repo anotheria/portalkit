@@ -36,6 +36,7 @@
 		<module>paymentservice</module>
 		<module>foreignidservice</module>
 		<module>approvalservice</module>
-	</modules>
+        <module>accountarchiveservice</module>
+    </modules>
 
 </project>

@@ -59,7 +59,7 @@ public final class JDBCUtil {
 	/**
 	 * Close {@link ResultSet} if it opened. If {@link SQLException} happen on closing it will be logged.
 	 * 
-	 * @param st
+	 * @param rs
 	 *            - {@link ResultSet} object
 	 */
 	public static void close(ResultSet rs) {
@@ -94,7 +94,7 @@ public final class JDBCUtil {
 	/**
 	 * Close {@link ResultSet} if it opened. If {@link SQLException} happen on closing it will be logged.
 	 * 
-	 * @param st
+	 * @param rs
 	 *            - {@link ResultSet} object
 	 */
 	public static void release(ResultSet rs) {

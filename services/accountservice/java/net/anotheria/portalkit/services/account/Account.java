@@ -129,7 +129,7 @@ public class Account implements Serializable, Cloneable {
 		return ret;
 	}
 
-	private void copyFrom(Account anotherAccount){
+	protected void copyFrom(Account anotherAccount){
 		name = anotherAccount.name;
 		email = anotherAccount.email;
 		type = anotherAccount.type;
