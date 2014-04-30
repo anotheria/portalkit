@@ -73,6 +73,7 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
     @Override
     public ArchivedAccount createAccount(ArchivedAccount toUpdate) throws AccountArchiveServiceException {
         try {
+            toUpdate.setDeletionTimestamp(System.currentTimeMillis());
             persistenceService.saveAccount(toUpdate);
             eventSupplier.accountCreated(toUpdate);
         } catch (ArchivedAccountPersistenceServiceException e) {

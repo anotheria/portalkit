@@ -11,6 +11,26 @@ import java.io.Serializable;
  */
 public class ArchivedAccount extends Account implements Serializable, Cloneable {
     private static final long serialVersionUID = -7238185562478440815L;
+    /**
+     * Deletion timestamp.
+     */
+    private long deletionTimestamp;
+    /**
+     * Note of the account deletion.
+     */
+    private String deletionNote;
+
+    public ArchivedAccount() {
+    }
+
+    public ArchivedAccount(AccountId id) {
+        super(id);
+    }
+
+    public ArchivedAccount(Account account) {
+        super(account);
+        this.setId(account.getId());
+    }
 
     public long getDeletionTimestamp() {
         return deletionTimestamp;
@@ -28,30 +48,12 @@ public class ArchivedAccount extends Account implements Serializable, Cloneable 
         this.deletionNote = deletionNote;
     }
 
-    /**
-     * Deletion timestamp.
-     */
-    private long deletionTimestamp;
-    /**
-     * Note of the account deletion.
-     */
-    private String deletionNote;
-
-    public ArchivedAccount() {
-    }
-
-    public ArchivedAccount(AccountId id) {
-        super(id);
-    }
-
-    public ArchivedAccount(ArchivedAccount account){
-        super(account);
-    }
-
     @Override
     protected void copyFrom(Account anotherAccount) {
         super.copyFrom(anotherAccount);
-        if (anotherAccount instanceof ArchivedAccount){
+        this.setRegistrationTimestamp(anotherAccount.getRegistrationTimestamp());
+        this.setTenant(anotherAccount.getTenant());
+        if (anotherAccount instanceof ArchivedAccount) {
             this.deletionTimestamp = ((ArchivedAccount) anotherAccount).getDeletionTimestamp();
             this.deletionNote = ((ArchivedAccount) anotherAccount).getDeletionNote();
         }
