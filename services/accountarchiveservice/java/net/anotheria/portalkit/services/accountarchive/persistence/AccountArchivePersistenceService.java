@@ -30,6 +30,7 @@ public interface AccountArchivePersistenceService extends Service {
      */
     List<ArchivedAccount> getAccounts(List<AccountId> identities) throws ArchivedAccountPersistenceServiceException;
 
+    List<ArchivedAccount> getAllAccounts() throws  ArchivedAccountPersistenceServiceException;
     /**
      * Saves the account.
      *

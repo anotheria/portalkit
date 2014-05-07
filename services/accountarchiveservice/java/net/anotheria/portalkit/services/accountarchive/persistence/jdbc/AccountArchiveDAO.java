@@ -78,13 +78,37 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
                 }
             });
             String[] identities = transform.toArray(new String[transform.size()]);
-            query = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME + " WHERE id = ANY(?)");
-            query.setArray(1, connection.createArrayOf("varchar", identities));
+            StringBuilder sb = new StringBuilder("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME + " WHERE id IN (");
+            int listSize = identities.length;
+            for(int i = 0; i < listSize; i++){
+                sb.append("'").append(identities[i]).append("'");
+                if (i < listSize - 1) sb.append(",");
+            }
+            sb.append(")");
+            query = connection.prepareStatement(sb.toString());
+//            query.setArray(1, connection.createArrayOf("varchar", identities));
             resultSet = query.executeQuery();
             while (resultSet.next()) {
                 result.add(mapArchivedAccount(new AccountId(resultSet.getString("id")), resultSet));
             }
         } finally {
+            JDBCUtil.close(resultSet);
+            JDBCUtil.close(query);
+        }
+        return result;
+    }
+
+    public List<ArchivedAccount> getAllAccounts(Connection connection) throws SQLException{
+        PreparedStatement query = null;
+        ResultSet resultSet = null;
+        List<ArchivedAccount> result = new ArrayList<ArchivedAccount>();
+        try{
+            query = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME);
+            resultSet = query.executeQuery();
+            while (resultSet.next()){
+                result.add(mapArchivedAccount(new AccountId(resultSet.getString("id")), resultSet));
+            }
+        }finally {
             JDBCUtil.close(resultSet);
             JDBCUtil.close(query);
         }

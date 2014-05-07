@@ -69,6 +69,16 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
     }
 
     @Override
+    public List<ArchivedAccount> getAllAccounts() throws ArchivedAccountPersistenceServiceException {
+        return callDao(new SQLConnectionAware<List<ArchivedAccount>>() {
+            @Override
+            public List<ArchivedAccount> execute(Connection connection) throws SQLException, DAOException {
+                return dao.getAllAccounts(connection);
+            }
+        });
+    }
+
+    @Override
     public void saveAccount(final ArchivedAccount account) throws ArchivedAccountPersistenceServiceException {
         callDao(new SQLConnectionAware<Void>() {
             @Override

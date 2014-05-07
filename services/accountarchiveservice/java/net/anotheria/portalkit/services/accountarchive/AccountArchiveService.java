@@ -66,4 +66,19 @@ public interface AccountArchiveService extends Service {
      * @throws AccountArchiveServiceException
      */
     ArchivedAccount getAccountByEmail(String email) throws AccountArchiveServiceException;
+
+    /**
+     *
+     * @return
+     * @throws AccountArchiveServiceException
+     */
+    List<ArchivedAccount> getAllAccounts() throws AccountArchiveServiceException;
+
+    /**
+     *
+     * @param query
+     * @return
+     * @throws AccountArchiveServiceException
+     */
+    List<ArchivedAccount> getAccountsByQuery(ArchivedAccountQuery query) throws AccountArchiveServiceException;
 }

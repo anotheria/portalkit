@@ -7,6 +7,8 @@ import net.anotheria.portalkit.services.accountarchive.persistence.AccountArchiv
 import net.anotheria.portalkit.services.accountarchive.persistence.ArchivedAccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -103,6 +105,24 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
                 throw new ArchivedAccountNotFoundException(email);
             }
             return getAccount(id);
+        } catch (ArchivedAccountPersistenceServiceException e) {
+            throw new AccountArchiveServiceException(e);
+        }
+    }
+
+    @Override
+    public List<ArchivedAccount> getAllAccounts() throws AccountArchiveServiceException {
+        try {
+            return persistenceService.getAllAccounts();
+        } catch (ArchivedAccountPersistenceServiceException e) {
+            throw new AccountArchiveServiceException(e);
+        }
+    }
+
+    @Override
+    public List<ArchivedAccount> getAccountsByQuery(ArchivedAccountQuery query) throws AccountArchiveServiceException {
+        try {
+            return persistenceService.getAccountsByQuery(query);
         } catch (ArchivedAccountPersistenceServiceException e) {
             throw new AccountArchiveServiceException(e);
         }
