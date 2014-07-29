@@ -263,7 +263,7 @@ public class RelationServiceImpl implements RelationService {
         if (ownerId == null)
             throw new IllegalArgumentException("ownerId incoming parameter is not valid");
         List<UserRelationData> cachedData = userRelationOutCache.get(ownerId);
-        if (cachedData != null)
+        if (cachedData != null && !cachedData.isEmpty())
             return cachedData;
         try {
             List<UserRelationData> outRelations = persistence.getOutRelations(ownerId);
@@ -279,7 +279,7 @@ public class RelationServiceImpl implements RelationService {
         if (ownerId == null)
             throw new IllegalArgumentException("ownerId incoming parameter is not valid");
         List<UserRelationData> cachedData = userRelationInCache.get(ownerId);
-        if (cachedData != null)
+        if (cachedData != null && !cachedData.isEmpty())
             return cachedData;
         try {
             List<UserRelationData> outRelations = persistence.getInRelations(ownerId);

@@ -117,8 +117,9 @@ public class RelationDAO extends AbstractDAO implements DAO {
                 st.setString(3, relation.getName());
                 st.setString(4, relation.getParameter());
                 st.setLong(5, currentTime);
-                st.setLong(6, 0);
+                st.setLong(6, currentTime);
                 relation.setCreatedTime(currentTime);
+                relation.setUpdatedTime(currentTime);
             }
             final int result = st.executeUpdate();
             if (result != 1)

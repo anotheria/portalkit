@@ -52,7 +52,7 @@ public interface RelationService extends CrudService<UserRelationData> {
      * @return {@link UserRelationData} list
      * @throws RelationServiceException on errors
      */
-    List<UserRelationData> getOutRelationsData(AccountId owner) throws RelationServiceException;
+    List<UserRelationData>getOutRelationsData(AccountId owner) throws RelationServiceException;
 
     /**
      * Return list of in relations.

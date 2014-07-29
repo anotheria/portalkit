@@ -29,7 +29,7 @@ public class RelationServiceTest {
 
     @BeforeClass
     public static void before() {
-        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
+        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "psql"));
         System.setProperty("JUNITTEST", "true");
         MetaFactory.reset();
         MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
@@ -39,6 +39,22 @@ public class RelationServiceTest {
         MetaFactory.addFactoryClass(RelationPersistenceService.class, Extension.LOCAL, JDBCRelationPersistenceServiceImplFactory.class);
     }
 
+    @Test
+    public void dd(){
+        try {
+            RelationService service = MetaFactory.get(RelationService.class);
+            RelationPersistenceService persistenceService = MetaFactory.get(RelationPersistenceService.class);
+            AccountId owner = new AccountId("9694a07e-a663-4655-8509-2eeb937d6ef7");
+//            AccountId partner = new AccountId("")
+            System.out.println(service.getOutRelationsData(owner));
+        } catch (MetaFactoryException e) {
+            e.printStackTrace();
+//        } catch (RelationPersistenceServiceException e) {
+//            e.printStackTrace();
+        } catch (RelationServiceException e) {
+            e.printStackTrace();
+        }
+    }
     @Test
     public void test() {
         try {

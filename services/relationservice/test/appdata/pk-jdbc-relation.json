@@ -14,7 +14,7 @@
 
         "psql": {
             "driver": "org.postgresql.Driver",
-            "url": "jdbc:postgresql://localhost/relation",
+            "url": "jdbc:postgresql://localhost/baldur_m2m_test_pk",
             "username": "baldur_m2m",
             "password": "baldurPass"
         },
