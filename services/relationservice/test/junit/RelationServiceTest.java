@@ -1,3 +1,5 @@
+import net.anotheria.anoprise.dualcrud.CrudServiceException;
+import net.anotheria.anoprise.dualcrud.ItemNotFoundException;
 import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
@@ -43,7 +45,6 @@ public class RelationServiceTest {
             //get services
             RelationService service = MetaFactory.get(RelationService.class);
             RelationPersistenceService persistenceService = MetaFactory.get(RelationPersistenceService.class);
-
             //prepare test data
             AccountId ownerId = AccountId.generateNew();
             AccountId partnerId = AccountId.generateNew();
@@ -54,30 +55,30 @@ public class RelationServiceTest {
             assertNotNull("Cannot be NULL", persistRelation);
 
             //then try to get using service
-            UserRelationData relationFromDatabase = service.getRelationData(ownerId, partnerId);
+            UserRelationData relationFromDatabase = service.read(ownerId.getInternalId() + "_relation_" + partnerId.getInternalId());
             assertNotNull("Cannot be NULL", relationFromDatabase);
-            assertEquals("Should be equals", ownerId, relationFromDatabase.getOwnerId());
-            assertEquals("Should be equals", partnerId, relationFromDatabase.getPartnerId());
+            assertEquals("Should be equals", ownerId.getInternalId(), relationFromDatabase.getOwnerId());
+            assertEquals("Should be equals", partnerId, relationFromDatabase.getPartner());
             assertNotNull("Cannot be NULL", relationFromDatabase.getRelationMap());
             assertFalse("Cannot be empty", relationFromDatabase.getRelationMap().isEmpty());
             assertEquals("Should be equals", 1, relationFromDatabase.getRelationMap().size());
             assertNotNull("Cannot be NULL", relationFromDatabase.getRelationMap().get(relation.getName()));
 
             //and now get the same relation from cache
-            UserRelationData relationFromCache = service.getRelationData(ownerId, partnerId);
+            UserRelationData relationFromCache = service.read(ownerId.getInternalId() + "_relation_" + partnerId.getInternalId());
             assertNotNull("Cannot be NULL", relationFromCache);
-            assertEquals("Should be equals", ownerId, relationFromCache.getOwnerId());
-            assertEquals("Should be equals", partnerId, relationFromCache.getPartnerId());
+            assertEquals("Should be equals", ownerId.getInternalId(), relationFromCache.getOwnerId());
+            assertEquals("Should be equals", partnerId, relationFromCache.getPartner());
             assertNotNull("Cannot be NULL", relationFromCache.getRelationMap());
             assertFalse("Cannot be empty", relationFromCache.getRelationMap().isEmpty());
             assertEquals("Should be equals", 1, relationFromCache.getRelationMap().size());
             assertNotNull("Cannot be NULL", relationFromCache.getRelationMap().get(relation.getName()));
 
             //try to add the same relation into database
-            UserRelationData userRelationData = service.addRelation(ownerId, partnerId, relation);
+            UserRelationData userRelationData = service.save(new UserRelationData(ownerId, partnerId, relation));
             assertNotNull("Cannot be NULL", userRelationData);
-            assertEquals("Should be equals", ownerId, userRelationData.getOwnerId());
-            assertEquals("Should be equals", partnerId, userRelationData.getPartnerId());
+            assertEquals("Should be equals", ownerId.getInternalId(), userRelationData.getOwnerId());
+            assertEquals("Should be equals", partnerId, userRelationData.getPartner());
             assertNotNull("Cannot be NULL", userRelationData.getRelationMap());
             assertFalse("Cannot be empty", userRelationData.getRelationMap().isEmpty());
             assertEquals("Should be equals", 1, userRelationData.getRelationMap().size());
@@ -92,6 +93,10 @@ public class RelationServiceTest {
             fail(e.getMessage());
         } catch (RelationPersistenceServiceException e) {
             fail(e.getMessage());
+        } catch (ItemNotFoundException e) {
+            e.printStackTrace();
+        } catch (CrudServiceException e) {
+            e.printStackTrace();
         }
     }
 
@@ -109,8 +114,8 @@ public class RelationServiceTest {
 
             UserRelationData userRelationData = service.getRelationData(ownerId, partnerId);
             assertNotNull("Cannot be NULL", userRelationData);
-            assertEquals("Should be equals", ownerId, userRelationData.getOwnerId());
-            assertEquals("Should be equals", partnerId, userRelationData.getPartnerId());
+            assertEquals("Should be equals", ownerId.getInternalId(), userRelationData.getOwnerId());
+            assertEquals("Should be equals", partnerId, userRelationData.getPartner());
             assertNotNull("Cannot be NULL", userRelationData.getRelationMap());
             assertFalse("Cannot be empty", userRelationData.getRelationMap().isEmpty());
             assertEquals("Should be equals", 2, userRelationData.getRelationMap().size());
@@ -118,8 +123,8 @@ public class RelationServiceTest {
 
             userRelationData = service.getRelationData(ownerId, partnerId);
             assertNotNull("Cannot be NULL", userRelationData);
-            assertEquals("Should be equals", ownerId, userRelationData.getOwnerId());
-            assertEquals("Should be equals", partnerId, userRelationData.getPartnerId());
+            assertEquals("Should be equals", ownerId.getInternalId(), userRelationData.getOwnerId());
+            assertEquals("Should be equals", partnerId, userRelationData.getPartner());
             assertNotNull("Cannot be NULL", userRelationData.getRelationMap());
             assertFalse("Cannot be empty", userRelationData.getRelationMap().isEmpty());
             assertEquals("Should be equals", 1, userRelationData.getRelationMap().size());

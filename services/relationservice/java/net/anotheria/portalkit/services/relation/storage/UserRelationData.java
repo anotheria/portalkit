@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.relation.storage;
 
+import net.anotheria.anoprise.dualcrud.CrudSaveable;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,19 +11,23 @@ import java.util.Map;
  *
  * @author asamoilich
  */
-public class UserRelationData implements Serializable {
+public class UserRelationData implements CrudSaveable {
     /**
      * Serial version UID.
      */
     private static final long serialVersionUID = -2477261682140878871L;
+
+    private String id;
     /**
      * Relation owner id.
      */
-    private AccountId ownerId;
+    private AccountId owner;
     /**
      * Relation partner id.
      */
-    private AccountId partnerId;
+    private AccountId partner;
+
+    private Relation toCreate;
     /**
      * Map of relations between owner and partner.
      */
@@ -37,8 +41,9 @@ public class UserRelationData implements Serializable {
      * @param firstRelation first relation
      */
     public UserRelationData(AccountId ownerId, AccountId partnerId, Relation firstRelation) {
-        this.ownerId = ownerId;
-        this.partnerId = partnerId;
+        this.owner = ownerId;
+        this.partner = partnerId;
+        this.toCreate = firstRelation;
         relationMap.put(firstRelation.getName(), firstRelation);
     }
 
@@ -49,24 +54,32 @@ public class UserRelationData implements Serializable {
      * @param partnerId partner id
      */
     public UserRelationData(AccountId ownerId, AccountId partnerId) {
-        this.ownerId = ownerId;
-        this.partnerId = partnerId;
+        this.owner = ownerId;
+        this.partner = partnerId;
     }
 
-    public AccountId getOwnerId() {
-        return ownerId;
+    public String getId() {
+        return id;
     }
 
-    public void setOwnerId(AccountId ownerId) {
-        this.ownerId = ownerId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public AccountId getPartnerId() {
-        return partnerId;
+    public String getOwnerId() {
+        return owner.getInternalId();
     }
 
-    public void setPartnerId(AccountId partnerId) {
-        this.partnerId = partnerId;
+    public void setOwner(AccountId owner) {
+        this.owner = owner;
+    }
+
+    public AccountId getPartner() {
+        return partner;
+    }
+
+    public void setPartner(AccountId partner) {
+        this.partner = partner;
     }
 
     public Map<String, Relation> getRelationMap() {
@@ -77,11 +90,15 @@ public class UserRelationData implements Serializable {
         this.relationMap = relationMap;
     }
 
+    public Relation getRelationToCreate() {
+        return toCreate;
+    }
+
     @Override
     public String toString() {
         return "UserRelationData{" +
-                "ownerId=" + ownerId +
-                ", partnerId=" + partnerId +
+                "owner=" + owner +
+                ", partner=" + partner +
                 ", relationMap=" + relationMap +
                 '}';
     }

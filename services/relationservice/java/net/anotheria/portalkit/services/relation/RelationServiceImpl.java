@@ -2,18 +2,24 @@ package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
+import net.anotheria.anoprise.dualcrud.CrudServiceException;
+import net.anotheria.anoprise.dualcrud.ItemNotFoundException;
+import net.anotheria.anoprise.dualcrud.Query;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.persistence.RelationPersistenceService;
 import net.anotheria.portalkit.services.relation.persistence.RelationPersistenceServiceException;
 import net.anotheria.portalkit.services.relation.storage.Relation;
+import net.anotheria.portalkit.services.relation.storage.RelationQueries;
+import net.anotheria.portalkit.services.relation.storage.RelationQuery;
 import net.anotheria.portalkit.services.relation.storage.UserRelationData;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +33,10 @@ public class RelationServiceImpl implements RelationService {
      * Logging util instance.
      */
     private static final Logger LOG = Logger.getLogger(RelationServiceImpl.class);
+    /**
+     * Lock key delimiter.
+     */
+    private static final String DELIMITER = "_relation_";
     /**
      * {@link RelationPersistenceService} instance.
      */
@@ -51,7 +61,7 @@ public class RelationServiceImpl implements RelationService {
     /**
      * Constructor.
      */
-    protected RelationServiceImpl() {
+    public RelationServiceImpl() {
         userRelationDataCache = Caches.createHardwiredCache("user-relation-data");
         userRelationOutCache = Caches.createHardwiredCache("user-out-relations");
         userRelationInCache = Caches.createHardwiredCache("user-in-relations");
@@ -63,6 +73,7 @@ public class RelationServiceImpl implements RelationService {
         }
         lockManager = new SafeIdBasedLockManager<CacheKey>();
     }
+
 
     @Override
     public UserRelationData addRelation(AccountId ownerId, AccountId partnerId, Relation relation) throws RelationServiceException {
@@ -92,6 +103,92 @@ public class RelationServiceImpl implements RelationService {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public UserRelationData create(UserRelationData toCreate) throws CrudServiceException {
+        if (toCreate == null)
+            throw new IllegalArgumentException("Incoming relation to create is NULL");
+        AccountId ownerId = new AccountId(toCreate.getOwnerId());
+        try {
+            return addRelation(ownerId, toCreate.getPartner(), toCreate.getRelationToCreate());
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Create failed.", e);
+        }
+    }
+
+    @Override
+    public UserRelationData read(String relationId) throws CrudServiceException, ItemNotFoundException {
+        if (relationId == null || relationId.isEmpty() || !relationId.contains(DELIMITER))
+            throw new IllegalArgumentException("Invalid incoming parameter");
+        String ownerId = relationId.substring(0, relationId.indexOf(DELIMITER));
+        String partnerId = relationId.substring(relationId.indexOf(DELIMITER) + DELIMITER.length(), relationId.length());
+        try {
+            return getRelationData(new AccountId(ownerId), new AccountId(partnerId));
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Read failed", e);
+        }
+    }
+
+    @Override
+    public UserRelationData update(UserRelationData toUpdate) throws CrudServiceException {
+        if (toUpdate == null)
+            throw new IllegalArgumentException("Incoming relation to create is NULL");
+        AccountId ownerId = new AccountId(toUpdate.getOwnerId());
+        try {
+            return addRelation(ownerId, toUpdate.getPartner(), toUpdate.getRelationToCreate());
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Update failed.", e);
+        }
+    }
+
+    @Override
+    public void delete(UserRelationData toDelete) throws CrudServiceException {
+        if (toDelete == null)
+            throw new IllegalArgumentException("Incoming relation to create is NULL");
+        AccountId ownerId = new AccountId(toDelete.getOwnerId());
+
+        try {
+            removeRelation(ownerId, toDelete.getPartner(), toDelete.getRelationToCreate().getName());
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Delete failed", e);
+        }
+    }
+
+    @Override
+    public UserRelationData save(UserRelationData toSave) throws CrudServiceException {
+        if (toSave == null)
+            throw new IllegalArgumentException("Incoming relation to create is NULL");
+        AccountId ownerId = new AccountId(toSave.getOwnerId());
+        try {
+            return addRelation(ownerId, toSave.getPartner(), toSave.getRelationToCreate());
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Save failed.", e);
+        }
+    }
+
+    @Override
+    public boolean exists(UserRelationData relation) throws CrudServiceException {
+        return false;
+    }
+
+    @Override
+    public List<UserRelationData> query(Query q) throws CrudServiceException {
+        RelationQuery relationQuery = RelationQuery.class.cast(q);
+        RelationQueries queries = RelationQueries.getByName(relationQuery.getName());
+        try {
+            switch (queries) {
+                case IN:
+                    return getInRelationsData(relationQuery.getAccountId());
+                case OUT:
+                    return getOutRelationsData(relationQuery.getAccountId());
+            }
+
+        } catch (RelationServiceException e) {
+            throw new CrudServiceException("Query failed.", e);
+        }
+
+        return new ArrayList<UserRelationData>();
     }
 
     @Override

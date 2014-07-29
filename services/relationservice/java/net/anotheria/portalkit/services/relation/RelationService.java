@@ -1,6 +1,6 @@
 package net.anotheria.portalkit.services.relation;
 
-import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.anoprise.dualcrud.CrudService;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.storage.Relation;
 import net.anotheria.portalkit.services.relation.storage.UserRelationData;
@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author asamoilich
  */
-public interface RelationService extends Service {
+public interface RelationService extends CrudService<UserRelationData> {
     /**
      * Add new relation or update old.
      *

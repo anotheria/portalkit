@@ -13,7 +13,7 @@ import net.anotheria.portalkit.services.relation.persistence.RelationPersistence
 public class JDBCRelationPersistenceServiceImplFactory implements ServiceFactory<RelationPersistenceService> {
     @Override
     public RelationPersistenceService create() {
-        return ServiceProxyUtil.createPersistenceServiceProxy(RelationPersistenceService.class, new JDBCRelationPersistenceServiceImpl(),
-                BasePersistenceService.class);
+        return ServiceProxyUtil.createServiceProxy(RelationPersistenceService.class, new JDBCRelationPersistenceServiceImpl(), "service",
+                "portal-kit-persistence", true, BasePersistenceService.class);
     }
 }
