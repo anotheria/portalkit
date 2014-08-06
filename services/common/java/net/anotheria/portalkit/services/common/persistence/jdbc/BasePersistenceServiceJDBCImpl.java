@@ -1,5 +1,14 @@
 package net.anotheria.portalkit.services.common.persistence.jdbc;
 
+import com.googlecode.flyway.core.Flyway;
+import com.googlecode.flyway.core.api.MigrationInfo;
+import com.googlecode.flyway.core.api.MigrationInfoService;
+import net.anotheria.util.StringUtils;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.log4j.Logger;
+import org.configureme.ConfigurationManager;
+
+import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,21 +23,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.sql.DataSource;
-
-import net.anotheria.util.StringUtils;
-
-import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.log4j.Logger;
-import org.configureme.ConfigurationManager;
-
-import com.googlecode.flyway.core.Flyway;
-import com.googlecode.flyway.core.api.MigrationInfoService;
 
 /**
  * Base persistence service.
@@ -95,6 +94,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 		ConfigurationManager.INSTANCE.configureAs(config, configName);
 		log.info("Using config: " + config);
 
+		//System.out.println("Using config: "+config);
 		newDataSource.setDriverClassName(config.getDriver());
 		newDataSource.setUrl(config.getUrl());
 		newDataSource.setUsername(config.getUsername());
@@ -126,15 +126,11 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 		flyway.setInitOnMigrate(true);
 		flyway.migrate();
 		MigrationInfoService flywayInfo = flyway.info();
-		// System.out.println("FLYWAY: ");
-		// for (MigrationInfo mi : flywayInfo.applied()){
-		// System.out.println("Applied: "+mi.getVersion());
-		// }
-		// for (MigrationInfo mi : flywayInfo.pending()){
-		// System.out.println("Pending: "+mi.getVersion());
-		// }
-		log.info("Flyway current version:" + flywayInfo.current().getVersion());
-
+		if (flywayInfo.current()==null){
+			log.info("MigrationFailed? Current is null!");
+		}else {
+			log.info("Flyway current version:" + flywayInfo.current().getVersion());
+		}
 	}
 
 	private String getTableNameForMigration() {
@@ -148,6 +144,10 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 			parts.remove(p);
 		}
 
+		for (String p: getPackagePartsToExcludeFromFlywayTableName()){
+			parts.remove(p);
+		}
+
 		StringBuilder name = new StringBuilder();
 		for (Iterator<String> it = parts.iterator(); it.hasNext();) {
 			if (name.length() > 0)
@@ -155,6 +155,10 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 			name.append(it.next());
 		}
 		return "flyway_" + name.toString();
+	}
+
+	protected String[] getPackagePartsToExcludeFromFlywayTableName(){
+		return new String[]{};
 	}
 
 	/**
