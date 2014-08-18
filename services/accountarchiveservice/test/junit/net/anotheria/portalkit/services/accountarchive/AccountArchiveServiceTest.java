@@ -22,16 +22,17 @@ import static org.junit.Assert.fail;
  * @author VKoulakov
  * @since 24.04.14 14:07
  */
+@Ignore
 public class AccountArchiveServiceTest {
 
-    public static final String PSQL = "psql";
+//    public static final String PSQL = "psql";
     private AccountArchiveService service;
 
     @After
     @Before
     public void setup() throws MetaFactoryException {
         MetaFactory.reset();
-        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", PSQL));
+        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
         MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 
         MetaFactory.addFactoryClass(AccountArchiveService.class, Extension.LOCAL, AccountArchiveServiceFactory.class);

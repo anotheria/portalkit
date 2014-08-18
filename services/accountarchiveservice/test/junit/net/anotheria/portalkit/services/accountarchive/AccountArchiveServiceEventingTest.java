@@ -16,6 +16,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.hamcrest.CoreMatchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -26,10 +27,11 @@ import static org.junit.Assert.assertThat;
  * @author VKoulakov
  * @since 24.04.14 17:04
  */
+@Ignore
 public class AccountArchiveServiceEventingTest {
 
     private static final int DAYS_AGO = 7;
-    private static final String PSQL = "psql";
+//    private static final String PSQL = "psql";
     private AccountArchiveService accountArchiveService;
     private TestEventConsumer eventConsumer;
     private int accountCreateCount = 0;
@@ -39,7 +41,7 @@ public class AccountArchiveServiceEventingTest {
     @Before
     public void init() {
         MetaFactory.reset();
-        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", PSQL));
+        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
         MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 
         MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);

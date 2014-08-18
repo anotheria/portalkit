@@ -19,17 +19,18 @@ import static org.junit.Assert.assertThat;
  * @author VKoulakov
  * @since 24.04.14 12:39
  */
+@Ignore
 public class JdbcAccountArchivePersistenceServiceImplPSQLTest extends JdbcAccountArchivePersistenceServiceImplTest {
 
     public static final int DAYS_AGO = 7;
-    public static final String PSQL = "psql";
+//    public static final String PSQL = "psql";
     public static final int MODIFIED_TYPE = 100;
     private JdbcAccountArchivePersistenceServiceImpl service;
     private ArchivedAccount created;
 
     @Before
     public void init() throws ArchivedAccountPersistenceServiceException {
-        service = getService(PSQL);
+        service = getService("h2");
         created = createAccountTemplate();
         service.saveAccount(created);
     }
