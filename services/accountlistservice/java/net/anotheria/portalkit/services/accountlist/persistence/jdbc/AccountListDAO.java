@@ -242,8 +242,7 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	public boolean updateInList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException, SQLException {
 		PreparedStatement updateStmt = null;
 		try {
-			String prefSQL = String.format("update %s set %s=?, %s=? where %s=? and %s=? and %s=?", TABLE_NAME, ADDITIONAL_INFO, CREATION_TIMESTAMP,
-					OWNER_ID, TARGET_ID, LIST_NAME);
+			String prefSQL = String.format("update %s set %s=?, %s=? where %s=? and %s=? and %s=?", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME, ADDITIONAL_INFO, CREATION_TIMESTAMP);
 
 			connection.setAutoCommit(false);
 			updateStmt = connection.prepareStatement(prefSQL);
