@@ -29,7 +29,7 @@ public class RelationServiceTest {
 
     @BeforeClass
     public static void before() {
-        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "psql"));
+        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", "h2"));
         System.setProperty("JUNITTEST", "true");
         MetaFactory.reset();
         MetaFactory.addOnTheFlyConflictResolver(new JDBCPickerConflictResolver());
