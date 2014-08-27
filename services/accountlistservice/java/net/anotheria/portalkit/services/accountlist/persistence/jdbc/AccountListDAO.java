@@ -242,8 +242,8 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	public boolean updateInList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException, SQLException {
 		PreparedStatement updateStmt = null;
 		try {
-			String prefSQL = String.format("update %s set %s=?, %s=? where %s=? and %s=? and %s=?", TABLE_NAME, OWNER_ID, TARGET_ID, LIST_NAME, ADDITIONAL_INFO, CREATION_TIMESTAMP);
-
+            String prefSQL = String.format("update %s set %s=?, %s=? where %s=? and %s=? and %s=?", TABLE_NAME, ADDITIONAL_INFO, CREATION_TIMESTAMP,
+                    OWNER_ID, TARGET_ID, LIST_NAME);
 			connection.setAutoCommit(false);
 			updateStmt = connection.prepareStatement(prefSQL);
 
@@ -254,12 +254,12 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 				// params
 				if (!batchSupport)
 					updateStmt.clearParameters();
+                updateStmt.setString(1, accId.getAdditionalInfo());
+                updateStmt.setLong(2, accId.getCreationTimestamp());
+				updateStmt.setString(3, owner.getInternalId());
+				updateStmt.setString(4, accId.getAccountId().getInternalId());
+				updateStmt.setString(5, listName);
 
-				updateStmt.setString(1, owner.getInternalId());
-				updateStmt.setString(2, accId.getAccountId().getInternalId());
-				updateStmt.setString(3, listName);
-				updateStmt.setString(4, accId.getAdditionalInfo());
-				updateStmt.setLong(5, accId.getCreationTimestamp());
 
 				// performing update - or add to batch
 				if (!batchSupport)
