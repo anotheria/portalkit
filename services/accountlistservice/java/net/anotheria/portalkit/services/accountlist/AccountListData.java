@@ -81,7 +81,9 @@ public class AccountListData implements Serializable {
 			getLists().put(accList.getListName(), accList);
 		} else {
 			unique.addAll(accList.getTargets());
+            unique.removeAll(targets);
 			unique.addAll(targets);
+            accList.getTargets().clear();
 			accList.addAll(unique);
 		}
 	}
