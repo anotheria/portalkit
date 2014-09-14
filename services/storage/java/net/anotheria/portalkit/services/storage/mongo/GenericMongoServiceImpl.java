@@ -21,12 +21,13 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -46,7 +47,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	/**
 	 * {@link Logger} instance.
 	 */
-	protected static final Logger LOGGER = Logger.getLogger(GenericMongoServiceImpl.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(GenericMongoServiceImpl.class);
 
 	/**
 	 * {@link GenericMongoServiceConfig} instance.
