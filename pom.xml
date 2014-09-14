@@ -161,6 +161,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
+            <!-- actually it's not used directly, but however comes along with distributeme-core -->
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
