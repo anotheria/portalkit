@@ -28,4 +28,15 @@ public class InMemoryAccountSettingsPersistenceServiceImpl implements AccountSet
 	public Dataspace loadDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
 		return storage.get(new AccountSettingsKey(owner, dataspaceId).toString());
 	}
+
+	@Override
+	public boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
+		return storage.remove(new AccountSettingsKey(owner, dataspaceId).toString()) != null;
+
+	}
+
+	@Override
+	public boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+		throw new IllegalStateException("Not implemented yet");
+	}
 }

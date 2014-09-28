@@ -31,4 +31,21 @@ public interface AccountSettingsService extends Service {
 	 * @throws AccountSettingsServiceException
 	 */
 	void saveDataspace(Dataspace dataspace) throws AccountSettingsServiceException;
+
+	/**
+	 * Deletes a dataspace of user.
+	 * @param accountId
+	 * @param dataspaceType
+	 * @return
+	 * @throws AccountSettingsServiceException
+	 */
+	boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException;
+
+	/**
+	 * Deletes all dataspaces of user. Returns amount of dataspaces deleted.
+	 * @param accountId
+	 * @return
+	 * @throws AccountSettingsServiceException
+	 */
+	int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException;
 }

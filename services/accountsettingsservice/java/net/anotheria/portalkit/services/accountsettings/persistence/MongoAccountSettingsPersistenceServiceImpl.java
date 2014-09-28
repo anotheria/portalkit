@@ -1,7 +1,5 @@
 package net.anotheria.portalkit.services.accountsettings.persistence;
 
-import java.util.List;
-
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
@@ -9,6 +7,8 @@ import net.anotheria.portalkit.services.storage.mongo.GenericMongoServiceImpl;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.QueryBuilder;
+
+import java.util.List;
 
 /**
  * Mongo implementation of Account settings persistence service.
@@ -52,5 +52,20 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 			throw new AccountSettingsPersistenceServiceException("save(" + dataspace + ") failed", ex);
 		}
 	}
+
+	@Override
+	public boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+		try {
+			return delete(owner.getInternalId()) != null;
+		} catch (StorageException ex) {
+			throw new AccountSettingsPersistenceServiceException("deleteDataspace(" + owner + ") failed", ex);
+		}
+	}
+
+	@Override
+	public boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
+		throw new IllegalStateException("deleteDataspace not implemented yet");
+	}
+
 
 }

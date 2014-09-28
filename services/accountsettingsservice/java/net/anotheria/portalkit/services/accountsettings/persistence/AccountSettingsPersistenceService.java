@@ -28,6 +28,10 @@ public interface AccountSettingsPersistenceService extends Service {
 	 */
 	Dataspace loadDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException;
 
+	boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException;
+
+	boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
+
 //	/**
 //	 * 
 //	 * @param owner
