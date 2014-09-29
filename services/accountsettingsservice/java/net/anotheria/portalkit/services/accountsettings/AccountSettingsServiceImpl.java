@@ -10,115 +10,128 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
+import org.apache.log4j.Logger;
 
 /**
  * Account settings service implementation.
- * 
+ *
  * @author lrosenberg
  * @author dagafonov
- * 
  * @since 12.12.12 10:14
  */
 public class AccountSettingsServiceImpl implements AccountSettingsService {
+    /**
+     * Logger.
+     */
+    private static Logger log = Logger.getLogger(AccountSettingsServiceImpl.class);
 
-	/**
-	 * {@link AccountSettingsPersistenceService} instance.
-	 */
-	private AccountSettingsPersistenceService persistence;
-	
-	/**
-	 * Lock manager.
-	 */
-	private IdBasedLockManager<AccountId> accountsLockManager = new SafeIdBasedLockManager<AccountId>();
+    /**
+     * {@link AccountSettingsPersistenceService} instance.
+     */
+    private AccountSettingsPersistenceService persistence;
 
-	/**
-	 * Cache for dataspaces.
-	 */
-	private Cache<AccountId, DataspaceCacheHolder> cache;
-	
-	/**
-	 * 
-	 */
-	public AccountSettingsServiceImpl() {
-		try {
-			persistence = MetaFactory.get(AccountSettingsPersistenceService.class);
-		} catch (MetaFactoryException e) {
-			throw new IllegalStateException("Can't instantiate persistence", e);
-		}
+    /**
+     * Lock manager.
+     */
+    private IdBasedLockManager<AccountId> accountsLockManager = new SafeIdBasedLockManager<AccountId>();
 
-		cache = Caches.createConfigurableHardwiredCache("accountsettingsservice-cache");
-		Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
+    /**
+     * Cache for dataspaces.
+     */
+    private Cache<AccountId, DataspaceCacheHolder> cache;
 
-	}
-	
-	@Override
-	public Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException {
-		IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
-		lock.lock();
-		try {
+    /**
+     *
+     */
+    public AccountSettingsServiceImpl() {
+        try {
+            persistence = MetaFactory.get(AccountSettingsPersistenceService.class);
+        } catch (MetaFactoryException e) {
+            throw new IllegalStateException("Can't instantiate persistence", e);
+        }
 
-			//first check cache
-			DataspaceCacheHolder holder = cache.get(accountId);
-			if (holder!=null){
-				Dataspace fromCache = holder.get(domain.getId());
-				if (fromCache!=null)
-					return fromCache;
-			}
+        cache = Caches.createConfigurableHardwiredCache("accountsettingsservice-cache");
+        Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
 
-			Dataspace ds = persistence.loadDataspace(accountId, domain.getId());
-			if (ds == null) {
-				throw new DataspaceNotFoundException(domain.getName());
-			}
-			putInCache(accountId, domain.getId(), ds);
+    }
 
-			return ds;
-		} catch (AccountSettingsPersistenceServiceException e) {
-			throw new AccountSettingsServiceException("persistence.loadDataspace failed", e);
-		} finally {
-			lock.unlock();
-		}
-	}
+    @Override
+    public Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
+        try {
 
-	//this method is unsafe, it should be called from locked areas only.
-	private void putInCache(AccountId accountId, int dataspaceType, Dataspace dataspace){
-		DataspaceCacheHolder holder = cache.get(accountId);
-		if (holder==null){
-			holder = new DataspaceCacheHolder();
-			cache.put(accountId, holder);
-		}
-		holder.put(dataspaceType, dataspace);
-	}
+            //first check cache
+            DataspaceCacheHolder holder = cache.get(accountId);
+            if (holder != null) {
+                Dataspace fromCache = holder.get(domain.getId());
+                if (fromCache != null)
+                    return fromCache;
+            }
 
-	@Override
-	public void saveDataspace(Dataspace dataspace) throws AccountSettingsServiceException {
-		AccountId accId = new AccountId(dataspace.getKey().getAccountId());
-		IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accId);
-		lock.lock();
-		try {
-			persistence.saveDataspace(dataspace);
-			putInCache(accId, dataspace.getKey().getDataspaceId(), dataspace);
-		} catch (AccountSettingsPersistenceServiceException e) {
-			throw new AccountSettingsServiceException("persistence.saveDataspace failed", e);
-		} finally {
-			lock.unlock();
-		}
-	}
+            Dataspace ds = persistence.loadDataspace(accountId, domain.getId());
+            if (ds == null) {
+                throw new DataspaceNotFoundException(domain.getName());
+            }
+            putInCache(accountId, domain.getId(), ds);
 
-	@Override
-	public boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException {
-		try{
-			return persistence.deleteDataspace(accountId, dataspaceType.getId());
-		}catch(AccountSettingsPersistenceServiceException e){
-			throw new AccountSettingsServiceException("persistence failed ", e);
-		}
-	}
+            return ds;
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence.loadDataspace failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	@Override
-	public int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException {
-		try{
-			return persistence.deleteDataspaces(accountId) ? 1 : 0;
-		}catch(AccountSettingsPersistenceServiceException e){
-			throw new AccountSettingsServiceException("persistence failed ", e);
-		}
-	}
+    //this method is unsafe, it should be called from locked areas only.
+    private void putInCache(AccountId accountId, int dataspaceType, Dataspace dataspace) {
+        DataspaceCacheHolder holder = cache.get(accountId);
+        if (holder == null) {
+            holder = new DataspaceCacheHolder();
+            cache.put(accountId, holder);
+        }
+        holder.put(dataspaceType, dataspace);
+    }
+
+    @Override
+    public void saveDataspace(Dataspace dataspace) throws AccountSettingsServiceException {
+        AccountId accId = new AccountId(dataspace.getKey().getAccountId());
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accId);
+        lock.lock();
+        try {
+            persistence.saveDataspace(dataspace);
+            putInCache(accId, dataspace.getKey().getDataspaceId(), dataspace);
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence.saveDataspace failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException {
+        try {
+            return persistence.deleteDataspace(accountId, dataspaceType.getId());
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence failed ", e);
+        }
+    }
+
+    @Override
+    public int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException {
+        try {
+            return persistence.deleteDataspaces(accountId) ? 1 : 0;
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence failed ", e);
+        }
+    }
+
+    @Override
+    public void deleteData(AccountId accountId) {
+        try {
+            persistence.deleteDataspaces(accountId);
+        } catch (AccountSettingsPersistenceServiceException e) {
+            log.error("Deleting settings data for " + accountId + " failed.");
+        }
+    }
 }

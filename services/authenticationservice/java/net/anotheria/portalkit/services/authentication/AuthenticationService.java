@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.authentication;
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.DeletionService;
 import org.distributeme.annotation.DistributeMe;
 
 /**
@@ -12,7 +13,7 @@ import org.distributeme.annotation.DistributeMe;
  * @since 11.12.12 15:56
  */
 @DistributeMe()
-public interface AuthenticationService extends Service {
+public interface AuthenticationService extends Service, DeletionService {
 
     /**
      * Sets new password for the user.
@@ -64,11 +65,4 @@ public interface AuthenticationService extends Service {
      */
     EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
-    /**
-     * Remove auth tokens and password by provided accountId.
-     *
-     * @param accountId provided {@link AccountId}
-     * @throws AuthenticationServiceException on errors
-     */
-    void deleteAuthenticationData(AccountId accountId) throws AuthenticationServiceException;
 }

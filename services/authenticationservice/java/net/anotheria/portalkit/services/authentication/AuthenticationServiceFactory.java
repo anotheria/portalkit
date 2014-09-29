@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.portalkit.services.common.DeletionService;
 import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
@@ -12,7 +13,7 @@ public class AuthenticationServiceFactory implements ServiceFactory<Authenticati
 
 	@Override
 	public AuthenticationService create() {
-		return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new AuthenticationServiceImpl(), "service", "portal-kit", true);
+		return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new AuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
 	}
 
 }
