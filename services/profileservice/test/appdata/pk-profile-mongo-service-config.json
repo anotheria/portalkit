@@ -1,0 +1,33 @@
+{
+    "databaseName": "test_profile_db",
+    "collectionName": "test_profiles_collection",
+    "initializeIndexes": true,
+    "@indexes": [
+        {
+            "name": "testIndex",
+            "@fields": [
+                {
+                    "name": "name",
+                    "hashed" : true
+                }
+            ],
+            "background": true
+        },
+        {
+            "name": "anotherIndex",
+            "@fields": [
+                {
+                    "name": "age"
+                },
+                {
+                    "name": "height",
+                    "order": -1
+                }
+            ],
+            "unique": true,
+            "dropDups": true,
+            "sparse": true,
+            "background": true
+        }
+    ]
+}

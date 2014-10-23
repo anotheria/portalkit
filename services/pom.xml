@@ -38,6 +38,7 @@
 		<module>approvalservice</module>
         <module>accountarchiveservice</module>
         <module>relationservice</module>
+        <module>profileservice</module>
     </modules>
 
 </project>
