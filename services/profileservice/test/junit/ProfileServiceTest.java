@@ -39,30 +39,30 @@ public class ProfileServiceTest {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        try {
-            ProfileBO profile18 = createProfile(18);
-            ProfileBO profile19 = createProfile(19);
-            ProfileBO profile20 = createProfile(20);
-            @SuppressWarnings("unchecked")
-            ProfileService<ProfileBO> service = MetaFactory.get(ProfileService.class, "profile");
-            service.create(profile18);
-            service.create(profile19);
-            service.create(profile20);
-            Assert.assertEquals(3, service.findAll().size());
-            service.delete(profile19.get_id());
-            Assert.assertEquals(2, service.findAll().size());
-
-            try {
-                service.read(profile19.get_id());
-                Assert.fail();
-            } catch (ProfileServiceException e) {
-                Assert.assertTrue(e instanceof ProfileNotFoundException);
-            }
-        } catch (MetaFactoryException e) {
-            e.printStackTrace();
-        } catch (ProfileServiceException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            ProfileBO profile18 = createProfile(18);
+//            ProfileBO profile19 = createProfile(19);
+//            ProfileBO profile20 = createProfile(20);
+//            @SuppressWarnings("unchecked")
+//            ProfileService<ProfileBO> service = MetaFactory.get(ProfileService.class, "profile");
+//            service.create(profile18);
+//            service.create(profile19);
+//            service.create(profile20);
+//            Assert.assertEquals(3, service.findAll().size());
+//            service.delete(profile19.get_id());
+//            Assert.assertEquals(2, service.findAll().size());
+//
+//            try {
+//                service.read(profile19.get_id());
+//                Assert.fail();
+//            } catch (ProfileServiceException e) {
+//                Assert.assertTrue(e instanceof ProfileNotFoundException);
+//            }
+//        } catch (MetaFactoryException e) {
+//            e.printStackTrace();
+//        } catch (ProfileServiceException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private static ProfileBO createProfile(int i) {

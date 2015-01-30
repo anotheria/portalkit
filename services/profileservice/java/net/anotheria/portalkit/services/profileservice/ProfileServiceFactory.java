@@ -20,6 +20,12 @@ public class ProfileServiceFactory<T extends Profile> extends AbstractParameteri
      */
     public static final String PARAMETER_CONFIGURATION = "conf";
 
+    /**
+     * Parameter name for ConfigureMe {@link org.configureme.Environment} configuration.<br>
+     * Not required. If <code>null</code> current system environment will be used.
+     */
+    public static final String PARAMETER_ENVIRONMENT = "env";
+
     @Override
     public ProfileService<T> create() {
         Serializable rawEntityClass = getParameterValue(PARAMETER_ENTITY_CLASS);
@@ -29,7 +35,8 @@ public class ProfileServiceFactory<T extends Profile> extends AbstractParameteri
         @SuppressWarnings("unchecked")
         Class<T> entityClass = (Class<T>) rawEntityClass;
         String conf = getParameterValueAsString(PARAMETER_CONFIGURATION);
-        return new ProfileServiceImpl<T>(entityClass, conf);
+        String env = getParameterValueAsString(PARAMETER_ENVIRONMENT);
+        return new ProfileServiceImpl<T>(entityClass, conf, env);
     }
 
 }

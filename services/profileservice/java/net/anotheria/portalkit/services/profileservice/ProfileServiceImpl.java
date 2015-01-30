@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,22 +37,22 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
      */
     private final Class<T> entity;
 
+
     /**
-     * Default constructor.
+     * Public constructor.
      *
-     * @param entity entity class
+     * @param entity      entity class
+     * @param conf        service configuration name, can be <code>null</code>
+     * @param env         configuration environment, can be <code>null</code>
      */
-    public ProfileServiceImpl(final Class<T> entity, final String conf) {
+    public ProfileServiceImpl(final Class<T> entity, final String conf, final String env) {
         if (entity == null)
             throw new IllegalArgumentException("entity argument is null.");
 
         this.entity = entity;
-        try {
-            mongoClient = new MongoClient("localhost", 27017);
-        } catch (UnknownHostException e) {
-            throw new IllegalStateException("Failed to init mongo client, e = " + e.getMessage());
-        }
-        this.config = ProfileServiceConfig.getInstance(conf);
+        this.config = ProfileServiceConfig.getInstance(conf, env);
+        List<ServerAddress> addresses = ProfileServiceUtil.getAddresses(config);
+        mongoClient = new MongoClient(addresses);
         initializeIndexes();
     }
 

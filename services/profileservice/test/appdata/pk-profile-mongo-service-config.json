@@ -29,5 +29,8 @@
             "sparse": true,
             "background": true
         }
+    ],
+    "@hosts": [
+        {"host": "localhost", "port": 27017}
     ]
 }
