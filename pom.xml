@@ -175,6 +175,10 @@
 		</dependency>
 		<dependency>
 			<groupId>net.anotheria</groupId>
+			<artifactId>distributeme-agents</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.anotheria</groupId>
 			<artifactId>distributeme-support</artifactId>
 		</dependency>
         <dependency>
