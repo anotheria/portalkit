@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.common.eventing;
 
 import org.configureme.ConfigurationManager;
+import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.slf4j.LoggerFactory;
 
@@ -15,21 +16,24 @@ public final class ServiceEventingConfig {
 	/**
 	 * {@link ServiceEventingConfig} singleton instance.
 	 */
-	private static volatile ServiceEventingConfig instance;
+	private static volatile ServiceEventingConfig instance = new ServiceEventingConfig();
 
 	/**
 	 * If {@code true} eventing will be performed in asynchronous mode.
 	 */
-	private boolean asynchronousMode = false;
+	@Configure
+	private boolean asynchronousMode = true;
 
 	/**
 	 * Queue size.
 	 */
+	@Configure
 	private int queueSize = 1000;
 
 	/**
 	 * Sleep time.
 	 */
+	@Configure
 	private long sleepTime = 50;
 
 	/**
@@ -74,14 +78,6 @@ public final class ServiceEventingConfig {
 	 * @return {@link ServiceEventingConfig} instance
 	 */
 	public static ServiceEventingConfig getInstance() {
-		if (instance != null)
-			return instance;
-
-		synchronized (ServiceEventingConfig.class) {
-			if (instance == null)
-				instance = new ServiceEventingConfig();
-		}
-
 		return instance;
 	}
 
