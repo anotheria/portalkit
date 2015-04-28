@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.common.eventing;
 
 import net.anotheria.anoprise.eventservice.Event;
 import net.anotheria.anoprise.eventservice.EventServiceFactory;
-import net.anotheria.anoprise.eventservice.util.QueuedEventReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,14 +29,15 @@ public abstract class AbstractServiceEventConsumer implements ServiceEventConsum
 		if (channelId == null || channelId.isEmpty())
 			throw new IllegalArgumentException("channelId is empty");
 
-		ServiceEventingConfig config = ServiceEventingConfig.getInstance();
+		//ServiceEventingConfig config = ServiceEventingConfig.getInstance();
 
-		if (config.isAsynchronousMode()) {
+/*		if (config.isAsynchronousMode()) {
 			QueuedEventReceiver eventReceiver = new QueuedEventReceiver(consumerId, channelId, this, config.getQueueSize(), config.getSleepTime());
 			EventServiceFactory.createEventService().obtainEventChannel(channelId, eventReceiver).addConsumer(eventReceiver);
-		} else {
+			eventReceiver.start();
+		} else {*/
 			EventServiceFactory.createEventService().obtainEventChannel(channelId, this).addConsumer(this);
-		}
+		//}
 	}
 
 	/**

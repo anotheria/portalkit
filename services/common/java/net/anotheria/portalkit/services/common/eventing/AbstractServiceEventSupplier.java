@@ -36,6 +36,7 @@ public abstract class AbstractServiceEventSupplier {
 			throw new IllegalArgumentException("channelId is empty");
 
 		ServiceEventingConfig config = ServiceEventingConfig.getInstance();
+		LOGGER.info("Eventing config for "+this.getClass().getSimpleName()+config);
 
 		eventSender = new QueuedEventSender(supplierId, channelId, config.getQueueSize(), config.getSleepTime(), LOGGER);
 
