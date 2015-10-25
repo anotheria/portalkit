@@ -137,7 +137,7 @@ public class Account implements Serializable, Cloneable {
 	}
 
 	@Override public String toString(){
-		return getId()+" "+getName()+" "+getType()+" "+getStatus()+" "+getTenant();
+		return "id: "+getId()+", name: "+getName()+", type: "+getType()+", status: "+getStatus()+", tenant: "+getTenant();
 	}
 
 	@Override public boolean equals(Object o){
