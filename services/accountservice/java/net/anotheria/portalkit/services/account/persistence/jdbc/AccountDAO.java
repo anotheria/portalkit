@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 06.01.13 01:39
  */
+@Monitor(category = "DAO", subsystem = "account")
 public class AccountDAO extends AbstractDAO implements DAO {
 
 	/**

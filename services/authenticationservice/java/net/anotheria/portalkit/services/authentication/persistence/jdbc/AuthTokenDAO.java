@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.authentication.persistence.jdbc;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
@@ -19,6 +20,7 @@ import java.util.Set;
  * @author lrosenberg
  * @since 30.01.13 09:58
  */
+@Monitor(subsystem = "authentication", category = "DAO")
 public class AuthTokenDAO extends AbstractDAO implements DAO {
 
 	public static final String TABLE_NAME = "auth_token";

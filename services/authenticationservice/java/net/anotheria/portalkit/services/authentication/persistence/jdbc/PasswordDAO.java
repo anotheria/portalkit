@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.authentication.persistence.jdbc;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
@@ -17,6 +18,7 @@ import java.sql.SQLException;
  * @author lrosenberg
  * @since 13.01.13 23:18
  */
+@Monitor(subsystem = "authentication", category = "DAO")
 public class PasswordDAO extends AbstractDAO implements DAO {
 
 	public static final String TABLE_NAME = "auth_passwd";

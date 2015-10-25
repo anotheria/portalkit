@@ -17,7 +17,7 @@ import java.util.Set;
  * @author lrosenberg
  * @since 13.12.12 09:30
  */
-@Monitor(subsystem = "portalkit")
+@Monitor(subsystem = "authentication", category = "portalkit-service")
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     /**

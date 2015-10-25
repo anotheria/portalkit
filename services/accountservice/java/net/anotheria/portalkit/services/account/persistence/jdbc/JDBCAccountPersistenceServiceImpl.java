@@ -1,10 +1,6 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
@@ -14,12 +10,18 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceS
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * JDBC Based implementation of the account persistence service.
  * 
  * @author lrosenberg
  * @since 06.01.13 01:09
  */
+@Monitor(category = "portalkit-persistence-service", subsystem = "account")
 public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AccountPersistenceService {
 
 	/**

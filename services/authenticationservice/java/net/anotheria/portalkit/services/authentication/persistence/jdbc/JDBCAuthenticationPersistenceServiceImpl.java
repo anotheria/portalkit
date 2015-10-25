@@ -18,7 +18,8 @@ import java.util.Set;
  * @author lrosenberg
  * @since 14.01.13 18:06
  */
-@Monitor(subsystem = "portalkit-persistence")
+
+@Monitor(category = "portalkit-persistence-service", subsystem = "authentication")
 public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AuthenticationPersistenceService{
 
 	private PasswordDAO passwordDAO = new PasswordDAO();

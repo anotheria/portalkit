@@ -20,7 +20,7 @@ import java.util.List;
  * @author lrosenberg
  * @since 12.12.12 11:28
  */
-@Monitor (subsystem = "portalkit")
+@Monitor (subsystem = "account", category = "portalkit-service")
 public class AccountServiceImpl implements AccountService, AccountAdminService {
 
 	/**
