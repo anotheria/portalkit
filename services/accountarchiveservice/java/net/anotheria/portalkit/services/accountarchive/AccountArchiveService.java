@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.accountarchive;
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
  * @since 21.04.14 18:40
  */
 @DistributeMe
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface AccountArchiveService extends Service {
     /**
      * Returns an account by it's id.

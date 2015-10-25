@@ -1,10 +1,11 @@
 package net.anotheria.portalkit.services.approval;
 
-import java.util.Collection;
-
 import net.anotheria.anoprise.metafactory.Service;
-
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
+
+import java.util.Collection;
 
 /**
  * Approval service interface.
@@ -12,7 +13,8 @@ import org.distributeme.annotation.DistributeMe;
  * @author dagafonov
  * 
  */
-@DistributeMe()
+@DistributeMe
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface ApprovalService extends Service {
 
 	/**

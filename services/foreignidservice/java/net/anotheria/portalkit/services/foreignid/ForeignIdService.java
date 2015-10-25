@@ -1,11 +1,12 @@
 package net.anotheria.portalkit.services.foreignid;
 
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
+
+import java.util.List;
 
 /**
  * ForeignId service interface.
@@ -13,7 +14,8 @@ import org.distributeme.annotation.DistributeMe;
  * @author lrosenberg
  * @since 28.12.12 23:44
  */
-@DistributeMe()
+@DistributeMe
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface ForeignIdService extends Service {
 	/**
 	 * Creates a new association between our account and another account.

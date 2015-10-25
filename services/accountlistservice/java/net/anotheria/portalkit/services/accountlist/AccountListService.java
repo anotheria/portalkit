@@ -8,6 +8,8 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.slicer.Slice;
 
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 /**
  * AccountList service interface.
@@ -15,7 +17,8 @@ import org.distributeme.annotation.DistributeMe;
  * @author lrosenberg
  * 
  */
-@DistributeMe()
+@DistributeMe
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface AccountListService extends Service {
 
 	/**

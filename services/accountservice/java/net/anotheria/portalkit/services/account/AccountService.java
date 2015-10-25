@@ -1,11 +1,12 @@
 package net.anotheria.portalkit.services.account;
 
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
+
+import java.util.List;
 
 /**
  * This interface describes the account service, where all system accounts are managed.
@@ -14,6 +15,7 @@ import org.distributeme.annotation.DistributeMe;
  * @since 14.10.12 21:56
  */
 @DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface AccountService extends Service {
 
 	/**
