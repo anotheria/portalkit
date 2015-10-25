@@ -5,6 +5,8 @@ import net.anotheria.portalkit.services.common.AccountId;
 
 import net.anotheria.portalkit.services.common.DeletionService;
 import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 /**
  * TODO comment this class
@@ -12,7 +14,8 @@ import org.distributeme.annotation.DistributeMe;
  * @author lrosenberg
  * @since 11.12.12 15:56
  */
-@DistributeMe()
+@DistributeMe
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface AuthenticationService extends Service, DeletionService {
 
     /**
