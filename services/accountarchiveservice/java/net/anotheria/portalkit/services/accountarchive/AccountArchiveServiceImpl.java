@@ -2,19 +2,19 @@ package net.anotheria.portalkit.services.accountarchive;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.accountarchive.event.AccountArchiveServiceEventSupplier;
 import net.anotheria.portalkit.services.accountarchive.persistence.AccountArchivePersistenceService;
 import net.anotheria.portalkit.services.accountarchive.persistence.ArchivedAccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author VKoulakov
  * @since 21.04.14 19:03
  */
+@Monitor(subsystem = "portalkit")
 public class AccountArchiveServiceImpl implements AccountArchiveService {
 
     private AccountArchivePersistenceService persistenceService;
