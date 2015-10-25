@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.accountarchive.persistence.jdbc;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.accountarchive.ArchivedAccount;
 import net.anotheria.portalkit.services.accountarchive.ArchivedAccountQuery;
 import net.anotheria.portalkit.services.accountarchive.persistence.AccountArchivePersistenceService;
@@ -19,6 +20,7 @@ import java.util.List;
  * @author VKoulakov
  * @since 22.04.14 11:36
  */
+@Monitor(subsystem = "portalkit")
 public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements AccountArchivePersistenceService {
 
 
