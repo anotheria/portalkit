@@ -161,11 +161,6 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-            <!-- actually it's not used directly, but however comes along with distributeme-core -->
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
@@ -224,8 +219,8 @@
                             <artifactId>moskito-sql</artifactId>
                         </aspectLibrary>
                     </aspectLibraries>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
                 <executions>
                     <execution>
