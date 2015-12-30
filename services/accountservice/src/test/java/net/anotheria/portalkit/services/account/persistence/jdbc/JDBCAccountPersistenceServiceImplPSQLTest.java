@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.account.persistence.jdbc;
 
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
