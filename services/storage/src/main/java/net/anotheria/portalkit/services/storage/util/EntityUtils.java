@@ -1,11 +1,10 @@
 package net.anotheria.portalkit.services.storage.util;
 
+import net.anotheria.portalkit.services.storage.exception.StorageException;
+import org.reflections.ReflectionUtils;
+
 import java.lang.reflect.Field;
 import java.util.Set;
-
-import net.anotheria.portalkit.services.storage.exception.StorageException;
-
-import org.reflections.ReflectionUtils;
 
 /**
  * Reflections utility.
