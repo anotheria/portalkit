@@ -2,13 +2,10 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.profileservice.ProfileNotFoundException;
 import net.anotheria.portalkit.services.profileservice.ProfileService;
-import net.anotheria.portalkit.services.profileservice.ProfileServiceException;
 import net.anotheria.portalkit.services.profileservice.ProfileServiceFactory;
-import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -19,6 +16,7 @@ import java.util.Map;
 /**
  * @author asamoilich.
  */
+@Ignore
 public class ProfileServiceTest {
     @BeforeClass
     public static void before() {
