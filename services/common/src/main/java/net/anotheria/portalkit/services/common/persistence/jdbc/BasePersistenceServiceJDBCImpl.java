@@ -1,12 +1,12 @@
 package net.anotheria.portalkit.services.common.persistence.jdbc;
 
 import com.googlecode.flyway.core.Flyway;
-import com.googlecode.flyway.core.api.MigrationInfo;
 import com.googlecode.flyway.core.api.MigrationInfoService;
 import net.anotheria.util.StringUtils;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -42,7 +41,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 	/**
 	 * Logger.
 	 */
-	private Logger log = Logger.getLogger(BasePersistenceServiceJDBCImpl.class);
+	private Logger log = LoggerFactory.getLogger(BasePersistenceServiceJDBCImpl.class);
 
 	/**
 	 * PROXY factory.

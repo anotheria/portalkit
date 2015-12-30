@@ -1,20 +1,20 @@
 package net.anotheria.portalkit.services.foreignid.persistence.jdbc;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 import net.anotheria.portalkit.services.foreignid.ForeignId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ForeignId DAO.
@@ -44,7 +44,7 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	/**
 	 * Logger.
 	 */
-	private static Logger log = Logger.getLogger(ForeignIdDAO.class);
+	private static Logger log = LoggerFactory.getLogger(ForeignIdDAO.class);
 
 	@Override
 	protected String[] getTableNames() {

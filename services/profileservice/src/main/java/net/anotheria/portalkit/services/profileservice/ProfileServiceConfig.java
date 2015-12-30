@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.profileservice;
 
 import net.anotheria.portalkit.services.profileservice.index.Index;
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.Environment;
 import org.configureme.annotations.Configure;
@@ -9,6 +8,8 @@ import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
 import org.configureme.environments.DynamicEnvironment;
 import org.configureme.sources.ConfigurationSourceKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public final class ProfileServiceConfig implements Serializable {
      * {@link Logger} instance.
      */
     @DontConfigure
-    private static final Logger LOGGER = Logger.getLogger(ProfileServiceConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfileServiceConfig.class);
 
     /**
      * Synchronization object.
@@ -90,8 +91,6 @@ public final class ProfileServiceConfig implements Serializable {
         } catch (RuntimeException e) {
             LOGGER.warn("MongoClientConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
                     + "]. Relaying on defaults.");
-            if (LOGGER.isDebugEnabled())
-                LOGGER.debug(e);
 
 //            this.hosts = new Host[]{new Host(ServerAddress.defaultHost(), ServerAddress.defaultPort())};
         }

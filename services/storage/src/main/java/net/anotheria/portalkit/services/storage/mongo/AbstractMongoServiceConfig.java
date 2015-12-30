@@ -1,8 +1,5 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.io.Serializable;
-
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.Environment;
 import org.configureme.annotations.Configure;
@@ -10,6 +7,10 @@ import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
 import org.configureme.environments.DynamicEnvironment;
 import org.configureme.sources.ConfigurationSourceKey.Format;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 /**
  * {@link AbstractMongoService} configuration.
@@ -29,7 +30,7 @@ public final class AbstractMongoServiceConfig implements Serializable {
 	 * {@link Logger} instance.
 	 */
 	@DontConfigure
-	private static final Logger LOGGER = Logger.getLogger(AbstractMongoServiceConfig.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractMongoServiceConfig.class);
 
 	/**
 	 * Synchronization object.
@@ -73,8 +74,6 @@ public final class AbstractMongoServiceConfig implements Serializable {
 		} catch (RuntimeException e) {
 			LOGGER.warn("AbstractMongoServiceConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
 					+ "]. Relaying on defaults.");
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(e);
 
 		}
 

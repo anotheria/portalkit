@@ -24,7 +24,6 @@ import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceSe
 import net.anotheria.portalkit.services.online.persistence.inmemory.InMemoryActivityPersistenceServiceFactory;
 import net.anotheria.util.IdCodeGenerator;
 import net.anotheria.util.TimeUnit;
-import org.apache.log4j.BasicConfigurator;
 import org.junit.Test;
 
 /**
@@ -383,7 +382,6 @@ public class OnlineAPIImplIntegrationTest {
     private OnlineAPI getAPI() {
         MetaFactory.reset();
         APIFinder.cleanUp();
-        BasicConfigurator.configure();
 
         MetaFactory.addAlias(ActivityPersistenceService.class, Extension.LOCAL);
         MetaFactory.addFactoryClass(ActivityPersistenceService.class, Extension.LOCAL, InMemoryActivityPersistenceServiceFactory.class);

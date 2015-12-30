@@ -10,7 +10,8 @@ import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +37,7 @@ public class ActivityDAO extends AbstractDAO implements DAO {
     /**
      * Logging utility.
      */
-    private static final Logger LOG = Logger.getLogger(ActivityDAO.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityDAO.class);
     /**
      * Log prefix.
      */

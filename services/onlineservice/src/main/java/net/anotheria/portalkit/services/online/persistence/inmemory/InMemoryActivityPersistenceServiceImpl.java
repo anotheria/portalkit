@@ -7,7 +7,8 @@ import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceSe
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class InMemoryActivityPersistenceServiceImpl implements ActivityPersisten
     /**
      * Logging util instance.
      */
-    private static final Logger LOG = Logger.getLogger(InMemoryActivityPersistenceServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InMemoryActivityPersistenceServiceImpl.class);
 
     /**
      * InMemory storage.

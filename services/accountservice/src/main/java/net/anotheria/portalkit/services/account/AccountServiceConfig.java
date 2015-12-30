@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.account;
 
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for account service.
@@ -47,7 +47,7 @@ public final class AccountServiceConfig {
             try {
                 ConfigurationManager.INSTANCE.configure(instance);
             } catch (Exception e) {
-                Logger.getLogger(AccountServiceConfig.class).warn("Configuration failed, relying on defaults. " + e.getMessage());
+                LoggerFactory.getLogger(AccountServiceConfig.class).warn("Configuration failed, relying on defaults. " + e.getMessage());
             }
             return instance;
         }

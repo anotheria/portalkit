@@ -11,13 +11,18 @@ import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link RelationPersistenceService} DAO implementation.
@@ -32,7 +37,7 @@ public class RelationDAO extends AbstractDAO implements DAO {
     /**
      * Logging utility.
      */
-    private static final Logger LOG = Logger.getLogger(RelationDAO.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RelationDAO.class);
     /**
      * Log prefix.
      */

@@ -1,11 +1,11 @@
 package net.anotheria.portalkit.services.online;
 
 import net.anotheria.util.TimeUnit;
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for {@link OnlineService}, which allow to provide abd change basic settings.
@@ -84,7 +84,7 @@ public final class OnlineServiceConfiguration {
             try {
                 ConfigurationManager.INSTANCE.configure(instance);
             } catch (Exception e) {
-                Logger.getLogger(OnlineServiceConfiguration.class).warn("Configuration failed, relying on defaults!");
+                LoggerFactory.getLogger(OnlineServiceConfiguration.class).warn("Configuration failed, relying on defaults!");
             }
             return instance;
         }

@@ -3,7 +3,8 @@ package net.anotheria.portalkit.services.online.persistence.jdbc.migrations.comm
 import com.googlecode.flyway.core.api.migration.jdbc.JdbcMigration;
 import net.anotheria.portalkit.services.online.persistence.jdbc.ActivityDAO;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ public class V1_0__InitialiseActivityPersistence implements JdbcMigration {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(V1_0__InitialiseActivityPersistence.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(V1_0__InitialiseActivityPersistence.class);
 
     @Override
     public void migrate(Connection connection) throws Exception {
@@ -41,7 +42,7 @@ public class V1_0__InitialiseActivityPersistence implements JdbcMigration {
             connection.commit();
         } catch (SQLException e) {
             String message = LogMessageUtil.failMsg(e, connection);
-            LOGGER.fatal(message, e);
+            LOGGER.error(message, e);
             throw new RuntimeException(message, e);
         } finally {
             connection.setAutoCommit(isAutoCommitEnabled);

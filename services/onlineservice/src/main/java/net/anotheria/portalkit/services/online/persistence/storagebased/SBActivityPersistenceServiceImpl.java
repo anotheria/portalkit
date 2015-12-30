@@ -6,14 +6,15 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPersistenceServiceException;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceServiceException;
+import net.anotheria.portalkit.services.storage.StorageService;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
-import net.anotheria.portalkit.services.storage.StorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class SBActivityPersistenceServiceImpl implements ActivityPersistenceServ
     /**
      * Logging utility instance.
      */
-    private static final Logger LOG = Logger.getLogger(SBActivityPersistenceServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SBActivityPersistenceServiceImpl.class);
     /**
      * {@link IdBasedLockManager} instance.
      */
@@ -50,7 +51,7 @@ public class SBActivityPersistenceServiceImpl implements ActivityPersistenceServ
         try {
             persistence = MetaFactory.get(StorageService.class, ACTIVITY_PERSISTENCE_GENERIC_STORAGE_NAME);
         } catch (MetaFactoryException e) {
-            LOG.fatal("StorageService init failure", e);
+            LOG.error("StorageService init failure", e);
         }
         lockManager = new SafeIdBasedLockManager<AccountId>();
     }

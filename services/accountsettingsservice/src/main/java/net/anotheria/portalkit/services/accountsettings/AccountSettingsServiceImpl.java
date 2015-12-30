@@ -10,7 +10,8 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Account settings service implementation.
@@ -23,7 +24,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(AccountSettingsServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(AccountSettingsServiceImpl.class);
 
     /**
      * {@link AccountSettingsPersistenceService} instance.

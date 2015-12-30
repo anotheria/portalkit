@@ -23,7 +23,6 @@ import net.anotheria.portalkit.services.online.OnlineServiceFactory;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.inmemory.InMemoryActivityPersistenceServiceFactory;
 import net.anotheria.util.IdCodeGenerator;
-import org.apache.log4j.BasicConfigurator;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -226,7 +225,6 @@ public class OnlineAPIBasicsTest {
     private OnlineAPI getAPI() {
         MetaFactory.reset();
         APIFinder.cleanUp();
-        BasicConfigurator.configure();
 
         MetaFactory.addAlias(ActivityPersistenceService.class, Extension.LOCAL);
         MetaFactory.addFactoryClass(ActivityPersistenceService.class, Extension.LOCAL, InMemoryActivityPersistenceServiceFactory.class);

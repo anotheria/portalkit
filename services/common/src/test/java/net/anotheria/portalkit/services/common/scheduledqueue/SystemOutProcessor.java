@@ -1,8 +1,9 @@
 package net.anotheria.portalkit.services.common.scheduledqueue;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * {@link Processor} testing implementation.
@@ -14,7 +15,7 @@ public class SystemOutProcessor implements Processor {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(SystemOutProcessor.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SystemOutProcessor.class);
 
 	/**
 	 * Processed elements amount.

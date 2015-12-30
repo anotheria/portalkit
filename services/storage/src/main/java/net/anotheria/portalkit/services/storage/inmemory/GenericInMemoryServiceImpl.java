@@ -1,11 +1,5 @@
 package net.anotheria.portalkit.services.storage.inmemory;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
@@ -13,8 +7,14 @@ import net.anotheria.portalkit.services.storage.inmemory.query.InMemoryQueryProc
 import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.portalkit.services.storage.util.SerializationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * {@link GenericInMemoryService} implementation.
@@ -29,7 +29,7 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GenericInMemoryServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericInMemoryServiceImpl.class);
 
 	/**
 	 * In-Memory storage.

@@ -9,7 +9,8 @@ import net.anotheria.portalkit.services.relation.persistence.RelationPersistence
 import net.anotheria.portalkit.services.relation.storage.Relation;
 import net.anotheria.portalkit.services.relation.storage.UserRelationData;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class JDBCRelationPersistenceServiceImpl extends BasePersistenceServiceJD
     /**
      * Logging utility instance.
      */
-    private static final Logger LOG = Logger.getLogger(JDBCRelationPersistenceServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JDBCRelationPersistenceServiceImpl.class);
     /**
      * Basic Log prefix.
      */

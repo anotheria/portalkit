@@ -1,10 +1,5 @@
 package net.anotheria.portalkit.services.accountlist.persistence.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-
 import net.anotheria.portalkit.services.accountlist.AccountIdAdditionalInfo;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceService;
 import net.anotheria.portalkit.services.accountlist.persistence.AccountListPersistenceServiceException;
@@ -13,7 +8,13 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceS
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * JDBC implementation of AccountListPersistence service.
@@ -28,7 +29,7 @@ public class JDBCAccountListPersistenceServiceImpl extends BasePersistenceServic
 	/**
 	 * Logging utility instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(JDBCAccountListPersistenceServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JDBCAccountListPersistenceServiceImpl.class);
 	/**
 	 * DAO definition.
 	 */

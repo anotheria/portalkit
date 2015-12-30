@@ -1,19 +1,18 @@
 package net.anotheria.portalkit.services.common.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.moskito.core.dynamic.MoskitoInvokationProxy;
 import net.anotheria.moskito.core.logging.DefaultStatsLogger;
 import net.anotheria.moskito.core.logging.IntervalStatsLogger;
-import net.anotheria.moskito.core.logging.Log4JOutput;
+import net.anotheria.moskito.core.logging.SLF4JLogOutput;
 import net.anotheria.moskito.core.predefined.ServiceStatsCallHandler;
 import net.anotheria.moskito.core.predefined.ServiceStatsFactory;
 import net.anotheria.moskito.core.stats.DefaultIntervals;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Utility which allow wrapping of any {@link Service} into {@link MoskitoInvokationProxy}.
@@ -137,11 +136,11 @@ public final class ServiceProxyUtil {
 		final T result = interfaceClazz.cast(proxy.createProxy());
 
 		if (isLog) {
-			new DefaultStatsLogger(proxy.getProducer(), new Log4JOutput(Logger.getLogger(MOSKITO_DEFAULT)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIVE_MINUTES, new Log4JOutput(Logger.getLogger(MOSKITO_5_M)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIFTEEN_MINUTES, new Log4JOutput(Logger.getLogger(MOSKITO_15_M)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_HOUR, new Log4JOutput(Logger.getLogger(MOSKITO_1_H)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_DAY, new Log4JOutput(Logger.getLogger(MOSKITO_1_D)));
+			new DefaultStatsLogger(proxy.getProducer(), new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_DEFAULT)));
+			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIVE_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_5_M)));
+			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIFTEEN_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_15_M)));
+			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_HOUR, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_1_H)));
+			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_DAY, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_1_D)));
 		}
 
 		return result;

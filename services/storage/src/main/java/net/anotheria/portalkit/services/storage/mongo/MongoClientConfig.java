@@ -1,11 +1,6 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.log4j.Logger;
+import com.mongodb.ServerAddress;
 import org.configureme.ConfigurationManager;
 import org.configureme.Environment;
 import org.configureme.annotations.Configure;
@@ -13,8 +8,13 @@ import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
 import org.configureme.environments.DynamicEnvironment;
 import org.configureme.sources.ConfigurationSourceKey.Format;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.mongodb.ServerAddress;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Mongo client configuration.
@@ -34,7 +34,7 @@ public final class MongoClientConfig implements Serializable {
 	 * {@link Logger} instance.
 	 */
 	@DontConfigure
-	private static final Logger LOGGER = Logger.getLogger(MongoClientConfig.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientConfig.class);
 
 	/**
 	 * Synchronization object.
@@ -167,9 +167,7 @@ public final class MongoClientConfig implements Serializable {
 			}
 		} catch (RuntimeException e) {
 			LOGGER.warn("MongoClientConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
-					+ "]. Relaying on defaults.");
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(e);
+					+ "]. Relaying on defaults.", e);
 
 			this.description = "";
 			this.hosts = new Host[] { new Host(ServerAddress.defaultHost(), ServerAddress.defaultPort()) };

@@ -2,11 +2,12 @@ package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.StringUtils;
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.AfterConfiguration;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class AuthTokenEncryptors {
 
 
 	static{
-		log = Logger.getLogger(AuthTokenEncryptors.class);
+		log = LoggerFactory.getLogger(AuthTokenEncryptors.class);
 		AuthTokenEncryptorsConfig config = new AuthTokenEncryptorsConfig();
 		try{
 			ConfigurationManager.INSTANCE.configure(config);

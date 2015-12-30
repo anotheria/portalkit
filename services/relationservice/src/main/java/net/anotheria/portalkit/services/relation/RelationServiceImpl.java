@@ -17,7 +17,8 @@ import net.anotheria.portalkit.services.relation.storage.UserRelationData;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class RelationServiceImpl implements RelationService {
     /**
      * Logging util instance.
      */
-    private static final Logger LOG = Logger.getLogger(RelationServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RelationServiceImpl.class);
     /**
      * Lock key delimiter.
      */
@@ -68,7 +69,7 @@ public class RelationServiceImpl implements RelationService {
         try {
             persistence = MetaFactory.get(RelationPersistenceService.class);
         } catch (MetaFactoryException e) {
-            LOG.fatal("RelationPersistenceService init failed", e);
+            LOG.error("RelationPersistenceService init failed", e);
             throw new RuntimeException("RelationPersistenceService init failed", e);
         }
         lockManager = new SafeIdBasedLockManager<CacheKey>();

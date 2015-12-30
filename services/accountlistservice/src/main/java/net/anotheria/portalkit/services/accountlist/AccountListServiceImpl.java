@@ -1,13 +1,5 @@
 package net.anotheria.portalkit.services.accountlist;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
@@ -27,8 +19,16 @@ import net.anotheria.util.log.LogMessageUtil;
 import net.anotheria.util.slicer.Segment;
 import net.anotheria.util.slicer.Slice;
 import net.anotheria.util.slicer.Slicer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.log4j.Logger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * AccountList service implementation.
@@ -41,7 +41,7 @@ public class AccountListServiceImpl implements AccountListService {
 	/**
 	 * Logging utility instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(AccountListServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(AccountListServiceImpl.class);
 	/**
 	 * {@link AccountListPersistenceService} instance.
 	 */

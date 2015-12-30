@@ -12,7 +12,8 @@ import net.anotheria.portalkit.services.online.events.OnlineActivityServiceEvent
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class OnlineStorage {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(OnlineStorage.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OnlineStorage.class);
 	/**
 	 * Amount of nano-seconds in 1 milli second.
 	 */

@@ -8,7 +8,8 @@ import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPer
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceServiceException;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ public class JDBCActivityPersistenceServiceImpl extends BasePersistenceServiceJD
     /**
      * Logging utility instance.
      */
-    private static final Logger LOG = Logger.getLogger(JDBCActivityPersistenceServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JDBCActivityPersistenceServiceImpl.class);
     /**
      * Basic Log prefix.
      */

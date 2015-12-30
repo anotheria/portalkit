@@ -1,11 +1,10 @@
 package net.anotheria.portalkit.apis.online;
 
 import net.anotheria.util.TimeUnit;
-
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configuration for {@link OnlineAPI}.
@@ -93,7 +92,7 @@ public final class OnlineAPIConfiguration {
 			try {
 				ConfigurationManager.INSTANCE.configure(instance);
 			} catch (Exception e) {
-				Logger.getLogger(OnlineAPIConfiguration.class).warn("Configuration failed, relying on defaults. " + e.getMessage());
+				LoggerFactory.getLogger(OnlineAPIConfiguration.class).warn("Configuration failed, relying on defaults. " + e.getMessage());
 			}
 			return instance;
 		}

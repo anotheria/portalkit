@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.common.scheduledqueue;
 
-import org.apache.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -10,6 +9,8 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link ScheduledQueue} implementation.
@@ -21,7 +22,7 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(ScheduledQueueImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ScheduledQueueImpl.class);
 
 	/**
 	 * Processing mode.
@@ -86,7 +87,7 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 			schedulerJob.getJobDataMap().put(LoaderJob.PROCESSING_MODE, mode);
 		} catch (SchedulerException e) {
 			String message = "ScheduledQueueImpl(...) scheduler initialization fail.";
-			LOGGER.fatal(message, e);
+			LOGGER.error(message, e);
 			throw new ScheduledQueueException(message, e);
 		}
 	}

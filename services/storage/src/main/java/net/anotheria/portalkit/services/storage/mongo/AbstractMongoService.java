@@ -1,16 +1,15 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
-import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.DB;
-
-import org.apache.log4j.Logger;
-
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
+import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
+import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.DB;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Abstract storage service implementation for Mongo.
@@ -22,7 +21,7 @@ public abstract class AbstractMongoService {
 	/**
 	 * {@link Logger} instance.
 	 */
-	protected static final Logger LOGGER = Logger.getLogger(AbstractMongoService.class);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractMongoService.class);
 
 	/**
 	 * Service initialization status.

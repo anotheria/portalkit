@@ -1,11 +1,12 @@
 package net.anotheria.portalkit.services.common.scheduledqueue;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * Quartz job implementation for {@link Loader} execution.
@@ -17,7 +18,7 @@ public final class LoaderJob implements Job {
 	/**
 	 * {@link Logger} instance.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(LoaderJob.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(LoaderJob.class);
 
 	/**
 	 * Configured {@link Processor}.

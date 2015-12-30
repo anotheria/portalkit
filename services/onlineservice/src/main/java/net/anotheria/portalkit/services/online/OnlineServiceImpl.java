@@ -12,7 +12,8 @@ import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import net.anotheria.util.log.LogMessageUtil;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class OnlineServiceImpl implements OnlineService {
 	/**
 	 * Logging util instance.
 	 */
-	private static final Logger LOG = Logger.getLogger(OnlineServiceImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(OnlineServiceImpl.class);
 	/**
 	 * {@link ActivityPersistenceService} instance, provides basic crud operations for UserActivity stuff..
 	 */
@@ -56,7 +57,7 @@ public class OnlineServiceImpl implements OnlineService {
 		try {
 			persistence = MetaFactory.get(ActivityPersistenceService.class);
 		} catch (MetaFactoryException e) {
-			LOG.fatal("ActivityPersistenceService init failed", e);
+			LOG.error("ActivityPersistenceService init failed", e);
 			throw new RuntimeException("ActivityPersistenceService init failed", e);
 		}
 		onlineUserStorage = new OnlineStorage();

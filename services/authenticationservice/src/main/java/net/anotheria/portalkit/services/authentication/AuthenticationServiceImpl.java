@@ -6,7 +6,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /**
      * Logger.
      */
-    private static Logger log = Logger.getLogger(AuthenticationServiceImpl.class);
+    private static Logger log = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
     /**
      * Default constructor.

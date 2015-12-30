@@ -1,13 +1,6 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.anotheria.portalkit.services.storage.mongo.index.Index;
-
-import org.apache.log4j.Logger;
 import org.configureme.ConfigurationManager;
 import org.configureme.Environment;
 import org.configureme.annotations.Configure;
@@ -15,6 +8,13 @@ import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
 import org.configureme.environments.DynamicEnvironment;
 import org.configureme.sources.ConfigurationSourceKey.Format;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * {@link GenericMongoServiceImpl} configuration.
@@ -35,7 +35,7 @@ public final class GenericMongoServiceConfig implements Serializable {
 	 * {@link Logger} instance.
 	 */
 	@DontConfigure
-	private static final Logger LOGGER = Logger.getLogger(GenericMongoServiceConfig.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GenericMongoServiceConfig.class);
 
 	/**
 	 * Synchronization object.
@@ -97,8 +97,6 @@ public final class GenericMongoServiceConfig implements Serializable {
 		} catch (RuntimeException e) {
 			LOGGER.warn("GenericMongoServiceConfig(conf:" + configuration + ", env: " + environment + ") Configuration fail[" + e.getMessage()
 					+ "]. Relaying on defaults.");
-			if (LOGGER.isDebugEnabled())
-				LOGGER.debug(e);
 
 		}
 
