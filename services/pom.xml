@@ -11,6 +11,14 @@
 	<name>The PortalKIT Services</name>
 	<description>PortalKIT Services Aggregator</description>
 
+	<dependencies>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+         </dependency>
+	</dependencies>
+
 	<build>
 		<resources>
 			<resource>
@@ -39,6 +47,7 @@
         <module>accountarchiveservice</module>
         <module>relationservice</module>
         <module>profileservice</module>
+        <module>combined</module>
     </modules>
 
 </project>
