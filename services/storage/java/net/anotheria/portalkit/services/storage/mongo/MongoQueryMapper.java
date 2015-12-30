@@ -1,11 +1,15 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.QueryOperators;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.query.BetweenModifier;
 import net.anotheria.portalkit.services.storage.query.BetweenQuery;
 import net.anotheria.portalkit.services.storage.query.CompositeModifier;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.ContainsQuery;
+import net.anotheria.portalkit.services.storage.query.CustomQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.LessThanModifier;
 import net.anotheria.portalkit.services.storage.query.LessThanQuery;
@@ -17,10 +21,6 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.SortingQuery;
 import net.anotheria.portalkit.services.storage.query.SortingType;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.QueryOperators;
 import net.anotheria.portalkit.services.storage.query.value.NullValue;
 
 /**
@@ -92,7 +92,8 @@ public final class MongoQueryMapper {
 		if (query instanceof ContainsQuery)
 			return map(ContainsQuery.class.cast(query));
 
-		// TODO Implement CustomQuery support
+		if (query instanceof CustomQuery)
+			return map(CustomQuery.class.cast(query));
 
 		throw new StorageException("Not supported query[" + query + "].");
 	}
@@ -203,4 +204,16 @@ public final class MongoQueryMapper {
 		return sortingQuery != null ? map(sortingQuery) : null;
 	}
 
+	/**
+	 * Map {@link CustomQuery} to mongo query format.
+	 *
+	 * @param query {@link SortingQuery}, can't be <code>null</code>
+	 * @return {@link BasicDBObject}
+	 */
+	public static BasicDBObject map(final CustomQuery query) {
+		if (query == null)
+			throw new IllegalArgumentException("query argument in null.");
+
+		return query.map();
+	}
 }
