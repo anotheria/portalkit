@@ -1,17 +1,16 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.Host;
-import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.ReadConcernType;
-import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.WriteConcernType;
-
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ReadPreference;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteConcern;
+import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.Host;
+import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.ReadConcernType;
+import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.WriteConcernType;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility for mongo client.
@@ -61,6 +60,7 @@ public final class MongoClientUtil {
 			optionsBuilder.socketKeepAlive(configuration.isSocketKeepAlive());
 			optionsBuilder.autoConnectRetry(configuration.isAutoConnectRetry());
 			optionsBuilder.maxAutoConnectRetryTime(configuration.getAutoConnectRetryMaxTimeout());
+
 
 			ReadConcernType readConcernType = configuration.getReadConcernType() != null ? configuration.getReadConcernType() : ReadConcernType.DEFAULT;
 			switch (readConcernType) {

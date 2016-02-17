@@ -6,6 +6,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.mongodb.util.JSON;
+import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
 import net.anotheria.portalkit.services.storage.exception.EntityNotFoundStorageException;
@@ -163,6 +164,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	}
 
 	@Override
+	@DontMonitor
 	protected String getDBName() {
 		return configuration.getDatabaseName();
 	}
