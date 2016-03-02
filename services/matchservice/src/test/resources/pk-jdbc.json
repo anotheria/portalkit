@@ -1,6 +1,0 @@
-{
-    "driver": "org.postgresql.Driver",
-    "url": "jdbc:postgresql://localhost/baldur_m2m_pk",
-    "username": "baldur_m2m",
-    "password": "baldurPass"
-}

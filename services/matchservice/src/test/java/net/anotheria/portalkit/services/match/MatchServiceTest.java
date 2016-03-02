@@ -227,12 +227,21 @@ public class MatchServiceTest {
             return ENTITY_PACKAGES_TO_SCAN;
         }
 
+        @Override
+        protected String getServiceName() {
+            return "match";
+        }
+
+        @Override
+        protected String[] getFlywayLocations() {
+            return new String[] {"match"};
+        }
+
         @Bean
         @Override
         public DataSource dataSource() {
             return new EmbeddedDatabaseBuilder()
                     .setType(EmbeddedDatabaseType.HSQL)
-                    .addScript("dbunit/match/matches-schema.sql")
                     .build();
         }
     }

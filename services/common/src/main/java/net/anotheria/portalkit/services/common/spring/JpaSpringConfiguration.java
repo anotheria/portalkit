@@ -1,11 +1,14 @@
 package net.anotheria.portalkit.services.common.spring;
 
+import com.googlecode.flyway.core.Flyway;
+import net.anotheria.portalkit.services.common.flyway.FlywayUtils;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.configureme.ConfigurationManager;
 import org.hibernate.dialect.PostgreSQL82Dialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,13 +28,32 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class JpaSpringConfiguration {
 
-    public String getJdbcConfigurationName() {
+    protected String getServiceName() {
+        throw new UnsupportedOperationException("No implementation for getServiceName()");
+    }
+
+    protected String getBasePackageName() {
+        throw new UnsupportedOperationException("No implementation for getBasePackageName()");
+    }
+
+    protected String getJdbcConfigurationName() {
         throw new UnsupportedOperationException("No implementation for getJdbcConfigurationName()");
     }
 
-    public String getEntityPackagesToScan() {
-        throw new UnsupportedOperationException("No implementation for getEntityPackagesToScan()");
+    protected String getEntityPackagesToScan() {
+        return getBasePackageName();
+    }
 
+    protected String[] getPackagePartsToExcludeFromFlywayTableName(){
+        return new String[] {};
+    }
+
+    protected String[] getFlywayLocations() {
+        return FlywayUtils.getDefaultFlywayLocations(getBasePackageName(), getJdbcConfig().getDriver());
+    }
+
+    protected String getTableNameForMigration() {
+        return FlywayUtils.getDefaultTableNameForMigration(getServiceName());
     }
 
     public JDBCConfig getJdbcConfig() {
@@ -66,7 +88,7 @@ public class JpaSpringConfiguration {
     }
 
     @Bean
-//    @DependsOn("flyway")
+    @DependsOn("flyway")
     public EntityManagerFactory entityManagerFactory(DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource);
@@ -83,12 +105,15 @@ public class JpaSpringConfiguration {
         return entityManagerFactoryBean.getObject();
     }
 
-//    @Bean(initMethod = "migrate")
-//    public Flyway flyway(DataSource dataSource) {
-//        Flyway flyway = new Flyway();
-//        flyway.setDataSource(dataSource);
-//        return flyway;
-//    }
+    @Bean(initMethod = "migrate")
+    public Flyway flyway(DataSource dataSource) {
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(dataSource);
+        flyway.setLocations(getFlywayLocations());
+        flyway.setTable(getTableNameForMigration());
+        flyway.setInitOnMigrate(true);
+        return flyway;
+    }
 
     @Bean
     public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory){
