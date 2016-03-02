@@ -20,6 +20,12 @@
 		<moskito.version>2.7.0</moskito.version>
 		<distributeme.version>2.2.1</distributeme.version>
 		<aspectj.version>1.7.4</aspectj.version>
+
+        <spring-version>4.2.4.RELEASE</spring-version>
+        <spring-data-jpa-version>1.9.4.RELEASE</spring-data-jpa-version>
+
+        <hibernate-version>4.3.8.Final</hibernate-version>
+        <hibernate-validator-version>5.1.3.Final</hibernate-validator-version>
 	</properties>
 
 	<modules>
@@ -66,6 +72,46 @@
 				<version>${distributeme.version}</version>
 			</dependency>
 			<!-- ano-dependencies: END -->
+            <!-- Spring: START -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+                <version>${spring-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-jpa</artifactId>
+                <version>${spring-data-jpa-version}</version>
+            </dependency>
+            <!-- Spring: END -->
+            <!-- Hibernate: START -->
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-core</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>${hibernate-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator-version}</version>
+            </dependency>
+            <!-- Hibernate: END -->
 			<!-- External dependencies: START -->
 			<dependency>
 				<groupId>commons-lang</groupId>
@@ -97,7 +143,13 @@
 				<artifactId>h2</artifactId>
 				<version>1.3.168</version>
 			</dependency>
-			<!-- External dependencies: END -->
+            <!-- For using Args -->
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>4.4.4</version>
+            </dependency>
+            <!-- External dependencies: END -->
 			<!-- Testing dependencies: START -->
 			<dependency>
 				<groupId>junit</groupId>
@@ -105,12 +157,42 @@
 				<version>4.10</version>
 				<scope>test</scope>
 			</dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
 			<dependency>
 				<groupId>org.jmock</groupId>
 				<artifactId>jmock</artifactId>
 				<version>2.5.1</version>
 				<scope>test</scope>
 			</dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>4.1.6.RELEASE</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.springtestdbunit</groupId>
+                <artifactId>spring-test-dbunit</artifactId>
+                <version>1.2.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.dbunit</groupId>
+                <artifactId>dbunit</artifactId>
+                <version>2.5.1</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>junit</artifactId>
+                        <groupId>junit</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 			<!-- Testing dependencies: END -->
 			<!-- Provided dependencies: START -->
 			<dependency>
@@ -164,10 +246,24 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>junit</artifactId>
+                    <groupId>junit</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 		<dependency>
 			<groupId>net.anotheria</groupId>
 			<artifactId>distributeme-core</artifactId>
@@ -223,6 +319,7 @@
                             <artifactId>moskito-sql</artifactId>
                         </aspectLibrary>
                     </aspectLibraries>
+                    <complianceLevel>1.7</complianceLevel>
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
