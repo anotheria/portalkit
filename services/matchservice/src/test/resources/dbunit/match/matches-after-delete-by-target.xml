@@ -1,0 +1,5 @@
+<dataset>
+    <match owner="A" target="B" type="0"/>
+    <match owner="A" target="C" type="1"/>
+    <match owner="A" target="E" type="2"/>
+</dataset>

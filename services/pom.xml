@@ -16,7 +16,7 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>test</scope>
-         </dependency>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -54,6 +54,7 @@
         <module>relationservice</module>
         <module>profileservice</module>
         <module>combined</module>
+        <module>matchservice</module>
     </modules>
 
 </project>
