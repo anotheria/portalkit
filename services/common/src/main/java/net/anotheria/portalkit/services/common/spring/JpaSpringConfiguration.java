@@ -44,10 +44,6 @@ public class JpaSpringConfiguration {
         return getBasePackageName();
     }
 
-    protected String[] getPackagePartsToExcludeFromFlywayTableName(){
-        return new String[] {};
-    }
-
     protected String[] getFlywayLocations() {
         return FlywayUtils.getDefaultFlywayLocations(getBasePackageName(), getJdbcConfig().getDriver());
     }

@@ -4,25 +4,18 @@ import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.ExpectedDatabase;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.spring.JpaSpringConfiguration;
+import net.anotheria.portalkit.services.match.conf.MatchSpringConfiguration;
 import net.anotheria.portalkit.services.match.entity.Match;
 import net.anotheria.portalkit.services.match.entity.MatchType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
-import javax.sql.DataSource;
 import java.util.List;
 
 import static com.github.springtestdbunit.assertion.DatabaseAssertionMode.NON_STRICT_UNORDERED;
@@ -36,7 +29,7 @@ import static org.junit.Assert.assertThat;
  * @author bvanchuhov
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = MatchServiceTest.SpringConfiguration.class)
+@ContextConfiguration(classes = MatchSpringConfiguration.class)
 @TestExecutionListeners({
         DependencyInjectionTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
@@ -214,35 +207,5 @@ public class MatchServiceTest {
         assertThat(a.getTarget(), is(b.getTarget()));
         assertThat(a.getType(), is(b.getType()));
     }
-
-    @Import(JpaSpringConfiguration.class)
-    @ComponentScan(SpringConfiguration.ENTITY_PACKAGES_TO_SCAN)
-    @Configuration
-    public static class SpringConfiguration extends JpaSpringConfiguration {
-
-        public static final String ENTITY_PACKAGES_TO_SCAN = "net.anotheria.portalkit.services.match";
-
-        @Override
-        public String getEntityPackagesToScan() {
-            return ENTITY_PACKAGES_TO_SCAN;
-        }
-
-        @Override
-        protected String getServiceName() {
-            return "match";
-        }
-
-        @Override
-        protected String[] getFlywayLocations() {
-            return new String[] {"match"};
-        }
-
-        @Bean
-        @Override
-        public DataSource dataSource() {
-            return new EmbeddedDatabaseBuilder()
-                    .setType(EmbeddedDatabaseType.HSQL)
-                    .build();
-        }
-    }
 }
+

@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.match;
 
+import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.entity.Match;
 import net.anotheria.portalkit.services.match.entity.MatchType;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * @author bvanchuhov
  */
-public interface MatchService {
+public interface MatchService extends Service {
 
     void addMatch(AccountId owner, AccountId target, MatchType type);
     List<Match> getMatches(AccountId owner);
