@@ -32,7 +32,7 @@ public class JpaSpringConfiguration {
         throw new UnsupportedOperationException("No implementation for getServiceName()");
     }
 
-    protected String getBasePackageName() {
+    protected String getBasePackage() {
         throw new UnsupportedOperationException("No implementation for getBasePackageName()");
     }
 
@@ -41,11 +41,11 @@ public class JpaSpringConfiguration {
     }
 
     protected String getEntityPackagesToScan() {
-        return getBasePackageName();
+        return getBasePackage();
     }
 
     protected String[] getFlywayLocations() {
-        return FlywayUtils.getDefaultFlywayLocations(getBasePackageName(), getJdbcConfig().getDriver());
+        return FlywayUtils.getDefaultFlywayLocations(getBasePackage(), getJdbcConfig().getDriver());
     }
 
     protected String getTableNameForMigration() {

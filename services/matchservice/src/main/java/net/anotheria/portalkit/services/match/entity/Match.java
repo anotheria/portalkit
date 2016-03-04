@@ -22,7 +22,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = Match.JPQL_GET_BY_OWNER_TYPE,
-                query = "select m from Match m where m.ownerId = :ownerId and m.typeValue = :typeValue"
+                query = "select m from Match m where m.ownerId = :ownerId and m.type = :type"
         ),
         @NamedQuery(
                 name = Match.JPQL_GET_LATEST_BY_OWNER,
@@ -30,7 +30,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = Match.JPQL_GET_LATEST_BY_OWNER_TYPE,
-                query = "select m from Match m where m.ownerId = :ownerId and m.typeValue = :typeValue order by m.created desc"
+                query = "select m from Match m where m.ownerId = :ownerId and m.type = :type order by m.created desc"
         ),
         @NamedQuery(
                 name = Match.JPQL_DELETE_BY_OWNER,
@@ -54,16 +54,16 @@ public class Match implements Serializable, Cloneable {
 
     private AccountId owner;
     private AccountId target;
-    private MatchType type;
+    private int type;
     private long created;
 
     public Match() {
     }
 
-    public Match(AccountId owner, AccountId target, MatchType type) {
+    public Match(AccountId owner, AccountId target, int type) {
         this.owner = Args.notNull(owner, "owner");
         this.target = Args.notNull(target, "target");
-        this.type = Args.notNull(type, "type");
+        this.type = type;
     }
 
     @Id
@@ -88,16 +88,6 @@ public class Match implements Serializable, Cloneable {
         return this;
     }
 
-    @Column(name = "type", nullable = false)
-    public int getTypeValue() {
-        return type.getValue();
-    }
-
-    public Match setTypeValue(int typeValue) {
-        this.type = MatchType.valueOf(typeValue);
-        return this;
-    }
-
     @Transient
     public AccountId getOwner() {
         return owner;
@@ -118,13 +108,13 @@ public class Match implements Serializable, Cloneable {
         return this;
     }
 
-    @Transient
-    public MatchType getType() {
+    @Column(name = "type", nullable = false)
+    public int getType() {
         return type;
     }
 
-    public Match setType(MatchType type) {
-        this.type = Args.notNull(type, "match type");
+    public Match setType(int type) {
+        this.type = type;
         return this;
     }
 

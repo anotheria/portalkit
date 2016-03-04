@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
  * @author bvanchuhov
  */
 @Import(JpaSpringConfiguration.class)
-@ComponentScan(MatchSpringConfiguration.BASE_PACKAGE)
+@ComponentScan("net.anotheria.portalkit.services.match")
 @Configuration
 public class MatchSpringConfiguration extends JpaSpringConfiguration {
 
@@ -21,7 +21,7 @@ public class MatchSpringConfiguration extends JpaSpringConfiguration {
     }
 
     @Override
-    protected String getBasePackageName() {
+    protected String getBasePackage() {
         return BASE_PACKAGE;
     }
 

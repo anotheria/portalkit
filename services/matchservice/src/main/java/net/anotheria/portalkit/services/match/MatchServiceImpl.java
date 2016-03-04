@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.match;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.entity.Match;
-import net.anotheria.portalkit.services.match.entity.MatchType;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +25,13 @@ public class MatchServiceImpl implements MatchService {
 
     private static final String PARAM_OWNER_ID = "ownerId";
     private static final String PARAM_TARGET_ID = "targetId";
-    private static final String PARAM_TYPE_VALUE = "typeValue";
+    private static final String PARAM_TYPE = "type";
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public void addMatch(AccountId owner, AccountId target, MatchType type) {
+    public void addMatch(AccountId owner, AccountId target, int type) {
         Match match = new Match(owner, target, type);
         match.setCreated(System.currentTimeMillis());
 
@@ -49,25 +48,25 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<Match> getMatchesByType(AccountId owner, MatchType type) {
+    public List<Match> getMatchesByType(AccountId owner, int type) {
         Args.notNull(owner, "owner");
         Args.notNull(type, "match type");
 
         TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_OWNER_TYPE, Match.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
-                .setParameter(PARAM_TYPE_VALUE, type.getValue());
+                .setParameter(PARAM_TYPE, type);
         return query.getResultList();
     }
 
     @Override
-    public List<Match> getLatestMatchesByType(AccountId owner, MatchType type, int limit) {
+    public List<Match> getLatestMatchesByType(AccountId owner, int type, int limit) {
         Args.notNull(owner, "owner");
         Args.notNull(type, "type");
         notNegativeOrZero(limit, "limit");
 
         TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_LATEST_BY_OWNER_TYPE, Match.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
-                .setParameter(PARAM_TYPE_VALUE, type.getValue())
+                .setParameter(PARAM_TYPE, type)
                 .setMaxResults(limit);
         return query.getResultList();
     }
