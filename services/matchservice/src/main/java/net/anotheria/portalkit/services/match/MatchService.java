@@ -12,6 +12,7 @@ import java.util.List;
 public interface MatchService extends Service {
 
     void addMatch(AccountId owner, AccountId target, int type);
+    void addMatch(Match match);
     List<Match> getMatches(AccountId owner);
     List<Match> getMatchesByType(AccountId owner, int type);
     List<Match> getLatestMatchesByType(AccountId owner, int type, int limit);

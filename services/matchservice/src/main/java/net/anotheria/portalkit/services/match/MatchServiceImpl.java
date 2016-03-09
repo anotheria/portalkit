@@ -35,6 +35,11 @@ public class MatchServiceImpl implements MatchService {
         Match match = new Match(owner, target, type);
         match.setCreated(System.currentTimeMillis());
 
+        addMatch(match);
+    }
+
+    @Override
+    public void addMatch(Match match) {
         entityManager.persist(match);
     }
 
