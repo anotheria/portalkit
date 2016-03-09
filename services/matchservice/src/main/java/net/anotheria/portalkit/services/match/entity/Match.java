@@ -5,6 +5,7 @@ import org.apache.http.util.Args;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -150,7 +151,7 @@ public class Match implements Serializable, Cloneable {
         sb.append("owner=").append(owner);
         sb.append(", target=").append(target);
         sb.append(", type=").append(type);
-        sb.append(", created=").append(created);
+        sb.append(", created=").append(new Date(created));
         sb.append('}');
         return sb.toString();
     }
