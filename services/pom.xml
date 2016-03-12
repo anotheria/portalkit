@@ -55,6 +55,7 @@
         <module>profileservice</module>
         <module>combined</module>
         <module>matchservice</module>
+        <module>subscription</module>
     </modules>
 
 </project>
