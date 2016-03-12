@@ -47,7 +47,6 @@
 		<module>recordservice</module>
 		<module>notificationservice</module>
 		<module>messagingservice</module>
-		<module>paymentservice</module>
 		<module>foreignidservice</module>
 		<module>approvalservice</module>
         <module>accountarchiveservice</module>
