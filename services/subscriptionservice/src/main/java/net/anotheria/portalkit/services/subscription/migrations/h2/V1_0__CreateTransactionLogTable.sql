@@ -1,5 +1,6 @@
 CREATE TABLE sub_transaction_log
 (
+  technicalId IDENTITY PRIMARY KEY NOT NULL,
   accountId VARCHAR(128) NOT NULL,
   subscriptionId VARCHAR(128),
   transactionId VARCHAR(256) NOT NULL,

@@ -37,7 +37,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		List<TransactionLogEntryEntity> fromService = transactionLogEntryPersistenceService.getTransactionLogEntries(owner.getInternalId());
 		if (fromService == null || fromService.size() == 0)
 			return Collections.emptyList();
-		LinkedList<TransactionLogEntry> ret = new LinkedList<>();
+		LinkedList<TransactionLogEntry> ret = new LinkedList<TransactionLogEntry>();
 		for (TransactionLogEntryEntity ee : fromService){
 			ret.add(ee.toBusinessObject());
 		}

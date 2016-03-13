@@ -4,11 +4,10 @@ CREATE TABLE sub_subscription
   subscriptionId VARCHAR(128) PRIMARY KEY,
   productId VARCHAR(10),
   expirationTimestamp BIGINT,
-  lastProlongationTimestamp BIGING,
+  lastProlongationTimestamp BIGINT,
   purchaseTimestamp BIGINT,
   cancelationPeriodInMillis BIGINT,
   cancelationTimestamp BIGINT,
-
   prolongationCount INT,
   active BOOLEAN,
   preparedForCancelation BOOLEAN,

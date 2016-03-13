@@ -1,0 +1,12 @@
+{
+    "driver": "org.h2.jdbcx.JdbcDataSource",
+    "url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
+    "username": "SA",
+	
+	"leon": {
+		"driver": "org.postgresql.Driver",
+		"url": "jdbc:postgresql://localhost/subscription_test",
+		"username": "baldur_m2m",
+		"password":"baldurPass"
+	}
+}
