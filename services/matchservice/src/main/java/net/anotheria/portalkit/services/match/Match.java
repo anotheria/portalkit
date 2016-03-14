@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.match.entity;
+package net.anotheria.portalkit.services.match;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;

@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.match.entity;
+package net.anotheria.portalkit.services.match;
 
 import java.io.Serializable;
 import java.util.Objects;

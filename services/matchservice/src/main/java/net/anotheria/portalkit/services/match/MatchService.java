@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.match;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.match.entity.Match;
 
 import java.util.List;
 
