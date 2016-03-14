@@ -68,7 +68,7 @@ public class Match implements Serializable, Cloneable {
     }
 
     @Id
-    @Column(name = "owner", nullable = false)
+    @Column(name = "owner", nullable = false, length = 128)
     public String getOwnerId() {
         return owner.getInternalId();
     }
@@ -79,7 +79,7 @@ public class Match implements Serializable, Cloneable {
     }
 
     @Id
-    @Column(name = "target", nullable = false)
+    @Column(name = "target", nullable = false, length = 128)
     public String getTargetId() {
         return target.getInternalId();
     }
