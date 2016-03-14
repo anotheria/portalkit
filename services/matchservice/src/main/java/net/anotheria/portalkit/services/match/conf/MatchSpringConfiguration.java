@@ -26,11 +26,6 @@ public class MatchSpringConfiguration extends JpaSpringConfiguration {
     }
 
     @Override
-    protected String getEntityPackagesToScan() {
-        return BASE_PACKAGE + ".entity";
-    }
-
-    @Override
     protected String getJdbcConfigurationName() {
         return "pk-jdbc-match";
     }
