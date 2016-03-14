@@ -134,6 +134,8 @@ public class Account implements Serializable, Cloneable {
 		email = anotherAccount.email;
 		type = anotherAccount.type;
 		status = anotherAccount.status;
+        tenant = anotherAccount.tenant;
+        registrationTimestamp = anotherAccount.registrationTimestamp;
 	}
 
 	@Override public String toString(){
