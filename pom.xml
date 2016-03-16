@@ -14,6 +14,8 @@
 	<description>PortalKIT</description>
 
 	<properties>
+        <java.version>1.7</java.version>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tools-anno-plugin.version>1.3.1</tools-anno-plugin.version>
 
@@ -21,11 +23,11 @@
 		<distributeme.version>2.2.4</distributeme.version>
 		<aspectj.version>1.7.4</aspectj.version>
 
-        <spring-version>4.2.4.RELEASE</spring-version>
-        <spring-data-jpa-version>1.9.4.RELEASE</spring-data-jpa-version>
+        <spring.version>4.2.4.RELEASE</spring.version>
+        <spring-data-jpa.version>1.9.4.RELEASE</spring-data-jpa.version>
 
-        <hibernate-version>4.3.8.Final</hibernate-version>
-        <hibernate-validator-version>5.1.3.Final</hibernate-validator-version>
+        <hibernate.version>4.3.8.Final</hibernate.version>
+        <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
 	</properties>
 
 	<modules>
@@ -76,40 +78,40 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${spring-version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${spring-version}</version>
+                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
-                <version>${spring-version}</version>
+                <version>${spring.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-jpa</artifactId>
-                <version>${spring-data-jpa-version}</version>
+                <version>${spring-data-jpa.version}</version>
             </dependency>
             <!-- Spring: END -->
             <!-- Hibernate: START -->
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
-                <version>${hibernate-version}</version>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
-                <version>${hibernate-version}</version>
+                <version>${hibernate.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>${hibernate-validator-version}</version>
+                <version>${hibernate-validator.version}</version>
             </dependency>
             <!-- Hibernate: END -->
 			<!-- External dependencies: START -->
@@ -331,14 +333,15 @@
                             <artifactId>moskito-sql</artifactId>
                         </aspectLibrary>
                     </aspectLibraries>
-                    <complianceLevel>1.7</complianceLevel>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <complianceLevel>${java.version}</complianceLevel>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>compile</goal>
+                            <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -371,8 +374,8 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>2.3.2</version>
                         <configuration>
-                            <source>1.7</source>
-                            <target>1.7</target>
+                            <source>${java.version}</source>
+                            <target>${java.version}</target>
                         </configuration>
                     </plugin>
 					<plugin>
