@@ -1,7 +1,0 @@
-<dataset>
-    <match owner="A" target="B" type="0" created="10"/>
-    <match owner="A" target="C" type="1" created="1"/>
-    <match owner="C" target="D" type="0" created="20"/>
-    <match owner="A" target="D" type="2" created="100"/>
-    <match owner="A" target="E" type="2" created="5"/>
-</dataset>

@@ -17,6 +17,11 @@ public class MatchId implements Serializable {
     public MatchId() {
     }
 
+    public MatchId(String ownerId, String targetId) {
+        this.ownerId = ownerId;
+        this.targetId = targetId;
+    }
+
     public String getOwnerId() {
         return ownerId;
     }

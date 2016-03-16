@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.match;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+@Monitor(subsystem = "match", category = "portalkit-service")
 public class MatchServiceImpl implements MatchService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchServiceImpl.class);
@@ -30,7 +32,7 @@ public class MatchServiceImpl implements MatchService {
     private EntityManager entityManager;
 
     @Override
-    public void addMatch(AccountId owner, AccountId target, int type) {
+    public void addMatch(AccountId owner, AccountId target, int type) throws MatchAlreadyExistsException {
         Match match = new Match(owner, target, type);
         match.setCreated(System.currentTimeMillis());
 
@@ -38,8 +40,23 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public void addMatch(Match match) {
+    public void addMatch(Match match) throws MatchAlreadyExistsException {
+        checkMatchExists(match);
+
         entityManager.persist(match);
+    }
+
+    private void checkMatchExists(Match match) throws MatchAlreadyExistsException {
+        if (isMatchExists(match)) {
+            throw new MatchAlreadyExistsException(match);
+        }
+    }
+
+    private boolean isMatchExists(Match match) {
+        MatchId matchId = new MatchId(match.getOwnerId(), match.getTargetId());
+        Match existedMatch = entityManager.find(Match.class, matchId);
+
+        return existedMatch != null;
     }
 
     @Override

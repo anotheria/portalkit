@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.match.conf;
+package net.anotheria.portalkit.services.match;
 
 import net.anotheria.portalkit.services.common.spring.JpaSpringConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
  * @author bvanchuhov
  */
 @Import(JpaSpringConfiguration.class)
-@ComponentScan("net.anotheria.portalkit.services.match")
+@ComponentScan(MatchSpringConfiguration.BASE_PACKAGE)
 @Configuration
 public class MatchSpringConfiguration extends JpaSpringConfiguration {
 

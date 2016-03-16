@@ -3,3 +3,9 @@
     "url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
     "username": "SA"
 }
+//{
+//    "driver": "com.mysql.jdbc.Driver",
+//    "url": "jdbc:mysql://localhost:3306/matchdb",
+//    "username": "Bohdan",
+//    "password": ",julfy1994"
+//}
