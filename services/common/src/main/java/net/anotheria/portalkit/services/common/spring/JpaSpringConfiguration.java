@@ -5,7 +5,6 @@ import net.anotheria.portalkit.services.common.flyway.FlywayUtils;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.configureme.ConfigurationManager;
-import org.hibernate.dialect.PostgreSQL82Dialect;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -73,12 +72,17 @@ public class JpaSpringConfiguration {
     }
 
     @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
+    public Database database() {
+        return DBUtils.getDatabase(getJdbcConfig().getDriver());
+    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter(Database database) {
         HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        jpaVendorAdapter.setDatabase(Database.POSTGRESQL);
+        jpaVendorAdapter.setDatabase(database);
+        jpaVendorAdapter.setDatabasePlatform(DBUtils.getHibernateDialect(database).getName());
         jpaVendorAdapter.setShowSql(true);
         jpaVendorAdapter.setGenerateDdl(false);
-        jpaVendorAdapter.setDatabasePlatform(PostgreSQL82Dialect.class.getName());
 
         return jpaVendorAdapter;
     }
