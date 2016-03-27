@@ -111,6 +111,19 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public void deleteMatches(AccountId owner, AccountId target) throws MatchServiceException {
+        Args.notNull(owner, "owner");
+        Args.notNull(target, "target");
+
+        Query query = entityManager.createNamedQuery(Match.JPQL_DELETE_BY_OWNER_TARGET)
+                .setParameter(PARAM_OWNER_ID, owner.getInternalId())
+                .setParameter(PARAM_TARGET_ID, target.getInternalId());
+        int deletedCount = query.executeUpdate();
+
+        LOGGER.info("Deleted {} matches for owner={}, target={}", deletedCount, owner, target);
+    }
+
+    @Override
     public void deleteMatchesByOwner(AccountId owner) {
         Args.notNull(owner, "owner");
 
@@ -118,7 +131,7 @@ public class MatchServiceImpl implements MatchService {
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId());
         int deletedCount = query.executeUpdate();
 
-        LOGGER.info("Deleted {} matches for owner [{}]", deletedCount, owner);
+        LOGGER.info("Deleted {} matches for owner={}", deletedCount, owner);
     }
 
     @Override
@@ -129,6 +142,6 @@ public class MatchServiceImpl implements MatchService {
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
         int deletedCount = query.executeUpdate();
 
-        LOGGER.info("Deleted {} matches for target [{}]", deletedCount, target);
+        LOGGER.info("Deleted {} matches for target={}", deletedCount, target);
     }
 }

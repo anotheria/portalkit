@@ -49,8 +49,8 @@ public class MatchServiceTest {
     private MatchService matchService;
 
     @Test
-    public void test() throws Exception {
-        System.out.println("Hello");
+    public void smokeTest() throws Exception {
+        System.out.println("OK");
     }
 
     @Before
@@ -182,6 +182,24 @@ public class MatchServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetLatestMatchesByOwnerType_notPositiveLimit_negativeLimit() throws MatchServiceException {
         matchService.getLatestMatchesByType(ACCOUNT_A, 2, -1);
+    }
+
+    @Test
+    public void testDeleteMatches() throws MatchServiceException {
+        matchService.deleteMatches(ACCOUNT_A, ACCOUNT_B);
+
+        List<Match> matchesA = matchService.getMatches(ACCOUNT_A);
+        assertThat(matchesA.contains(new Match(ACCOUNT_A, ACCOUNT_B, 0)), is(false));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteMatches_nullOwner() throws MatchServiceException {
+        matchService.deleteMatches(null, ACCOUNT_B);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteMatches_nullTarget() throws MatchServiceException {
+        matchService.deleteMatches(ACCOUNT_A, null);
     }
 
     @Test
