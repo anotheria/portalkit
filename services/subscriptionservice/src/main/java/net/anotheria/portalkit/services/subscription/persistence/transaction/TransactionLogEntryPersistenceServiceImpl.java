@@ -25,12 +25,12 @@ public class TransactionLogEntryPersistenceServiceImpl implements TransactionLog
 
 	@Override
 	@Transactional
-	public void addTransactionLogEntry(TransactionLogEntryEntity toAdd) {
+	public void addTransactionLogEntry(TransactionLogEntryEntity toAdd) throws TransactionPersistenceException {
 		entityManager.persist(toAdd);
 	}
 
 	@Override
-	public List<TransactionLogEntryEntity> getTransactionLogEntries(String ownerId) {
+	public List<TransactionLogEntryEntity> getTransactionLogEntries(String ownerId) throws TransactionPersistenceException {
 		TypedQuery<TransactionLogEntryEntity> q = entityManager.createNamedQuery("TransactionLogEntryEntity_get_by_account_id", TransactionLogEntryEntity.class);
 		q.setParameter("accountId", ownerId);
 		return q.getResultList();

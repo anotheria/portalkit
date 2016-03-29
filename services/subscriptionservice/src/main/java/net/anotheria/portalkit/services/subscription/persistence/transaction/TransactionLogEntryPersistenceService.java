@@ -16,13 +16,13 @@ public interface TransactionLogEntryPersistenceService {
 	 * Transaction log
 	 * @param toAdd
 	 */
-	void addTransactionLogEntry(TransactionLogEntryEntity toAdd);
+	void addTransactionLogEntry(TransactionLogEntryEntity toAdd) throws TransactionPersistenceException;
 
 	/**
 	 * Returns all transaction log entries for a user.
 	 * @param ownerId
 	 * @return
 	 */
-	List<TransactionLogEntryEntity> getTransactionLogEntries(String ownerId);
+	List<TransactionLogEntryEntity> getTransactionLogEntries(String ownerId) throws TransactionPersistenceException;
 
 }

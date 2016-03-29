@@ -1,7 +1,7 @@
 CREATE TABLE sub_subscription
 (
-  accountId VARCHAR(128) NOT NULL,
-  subscriptionId VARCHAR(128) PRIMARY KEY,
+  accountId VARCHAR(255) NOT NULL,
+  subscriptionId VARCHAR(255) PRIMARY KEY NOT NULL,
   productId VARCHAR(10),
   expirationTimestamp BIGINT,
   lastProlongationTimestamp BIGINT,

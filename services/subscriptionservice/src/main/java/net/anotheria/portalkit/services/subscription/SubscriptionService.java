@@ -20,6 +20,43 @@ public interface SubscriptionService extends Service {
 	 */
 	Subscription getActiveSubscriptionForAccount(AccountId accountId) throws SubscriptionServiceException;
 
+	/**
+	 * Get all subscriptions.
+	 *
+	 * @throws SubscriptionServiceException
+	 * */
+	List<Subscription> getSubscriptions()  throws SubscriptionServiceException;
+
+	/**
+	 * Get all transactions.
+	 *
+	 * @throws SubscriptionServiceException
+	 * */
+	List<Transaction> getTransactions()  throws SubscriptionServiceException;
+
+	/**
+	 * Adds new subscription.
+	 *
+	 * @param subscription	user subscription.
+	 * @throws SubscriptionServiceException
+	 * */
+	void addSubscription(Subscription subscription) throws SubscriptionServiceException;
+
+	/**
+	 * Update existing subscription.
+	 *
+	 * @param subscription	user subscription.
+	 * @throws SubscriptionServiceException
+	 * */
+	void updateSubscription(Subscription subscription) throws SubscriptionServiceException;
+
+	/**
+	 * Adds new transaction.
+	 *
+	 * @param transaction	payment transaction.
+	 * @throws SubscriptionServiceException
+	 * */
+	void addTransaction(Transaction transaction) throws SubscriptionServiceException;
 
 	///// This part of the interface handles transaction log entries.
 
