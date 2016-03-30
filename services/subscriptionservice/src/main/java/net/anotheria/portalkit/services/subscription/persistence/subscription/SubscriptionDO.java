@@ -1,8 +1,7 @@
 package net.anotheria.portalkit.services.subscription.persistence.subscription;
 
-import net.anotheria.portalkit.services.common.AccountId;
-
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * @author Vlad Lukjanenko
@@ -218,5 +217,34 @@ public class SubscriptionDO {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.subscriptionId, this.accountId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof SubscriptionDO)) {
+            return false;
+        }
+
+        SubscriptionDO subscription = (SubscriptionDO) obj;
+
+        if (!this.accountId.equals(subscription.getAccountId())) {
+            return false;
+        }
+
+        if (!this.subscriptionId.equals(subscription.getSubscriptionId())) {
+            return false;
+        }
+
+        if (!this.productId.equals(subscription.getProductId())) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -3,7 +3,7 @@ CREATE TABLE sub_transaction_log
   technicalId BIGSERIAL PRIMARY KEY NOT NULL,
   accountId VARCHAR(128) NOT NULL,
   subscriptionId VARCHAR(128),
-  transactionId VARCHAR(256) NOT NULL,
+  transactionId BIGINT NOT NULL,
   productId VARCHAR(10),
   timestamp BIGINT,
   action VARCHAR(20),

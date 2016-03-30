@@ -15,7 +15,7 @@ public class TransactionLogEntry implements Serializable{
 	/**
 	 * Id of the transaction.
 	 */
-	private String transactionId;
+	private long transactionId;
 	/**
 	 * Id of the associated subscription (if applicable).
 	 */
@@ -90,11 +90,11 @@ public class TransactionLogEntry implements Serializable{
 		this.timestamp = timestamp;
 	}
 
-	public String getTransactionId() {
+	public long getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(String transactionId) {
+	public void setTransactionId(long transactionId) {
 		this.transactionId = transactionId;
 	}
 

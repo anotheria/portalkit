@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.subscription;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.SubscriptionDO;
 
+import java.util.Objects;
+
 /**
  * TODO comment this class
  *
@@ -228,6 +230,35 @@ public class Subscription {
 		subscriptionDO.setSubscriptionId(this.subscriptionId);
 
 		return subscriptionDO;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.subscriptionId, this.accountId);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+
+		if (!(obj instanceof Subscription)) {
+			return false;
+		}
+
+		Subscription subscription = (Subscription) obj;
+
+		if (!this.accountId.equals(subscription.getAccountId())) {
+			return false;
+		}
+
+		if (!this.subscriptionId.equals(subscription.getSubscriptionId())) {
+			return false;
+		}
+
+		if (!this.productId.equals(subscription.getProductId())) {
+			return false;
+		}
+
+		return true;
 	}
 }
 

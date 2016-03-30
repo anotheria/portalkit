@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.subscription;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.TransactionDO;
 
+import java.util.Objects;
+
 /**
  * @author Vlad Lukjanenko
  */
@@ -11,7 +13,7 @@ public class Transaction {
     /**
      * Id of transaction.
      * */
-    private String transactionId;
+    private long transactionId;
     /**
      * Id of subscription.
      * */
@@ -45,7 +47,6 @@ public class Transaction {
         this.subscriptionId = subscription.getSubscriptionId();
         this.accountId = subscription.getAccountId();
         this.productId = subscription.getProductId();
-        this.timestamp = subscription.getPurchaseTimestamp();
         this.prolongationCount = subscription.getProlongationCount();
         this.amount = subscription.getAmountInCents();
     }
@@ -62,11 +63,11 @@ public class Transaction {
     }
 
 
-    public String getTransactionId() {
+    public long getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(String transactionId) {
+    public void setTransactionId(long transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -131,5 +132,30 @@ public class Transaction {
         transactionDO.setAmount(this.amount);
 
         return transactionDO;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.transactionId, this.subscriptionId);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (!(obj instanceof Transaction)) {
+            return false;
+        }
+
+        Transaction transaction = (Transaction) obj;
+
+        if (this.transactionId != transaction.getTransactionId()) {
+            return false;
+        }
+
+        if (!this.subscriptionId.equals(transaction.getSubscriptionId())) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 @ContextConfiguration(classes = SubscriptionServiceConfiguration.class)
 public class SubscriptionServiceIntegrationTest {
 
-	public static final String TRANSACTION_ID = "transactionId";
+	public static final long TRANSACTION_ID = 111;
 	public static final String SUBSCRIPTION_ID = "subscriptionId";
 	public static final String ACCOUNT_ID = "accountId";
 	public static final String PRODUCT_ID = "productId";

@@ -21,7 +21,7 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     @Override
     public void saveSubscription(SubscriptionDO subscription) throws SubscriptionPersistenceException {
 
-        if (!subscriptionExists(subscription.getSubscriptionId())) {
+        if (subscriptionExists(subscription.getSubscriptionId())) {
             throw new SubscriptionAlreadyExists(subscription.getSubscriptionId());
         }
 

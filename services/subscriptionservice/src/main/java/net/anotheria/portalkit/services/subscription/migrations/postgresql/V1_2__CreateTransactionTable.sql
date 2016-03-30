@@ -1,6 +1,6 @@
 CREATE TABLE sub_transaction
 (
-     transactionId VARCHAR(256) PRIMARY KEY NOT NULL,
+     transactionId BIGSERIAL PRIMARY KEY NOT NULL,
      subscriptionId VARCHAR(128),
      accountId VARCHAR(128) NOT NULL,
      productId VARCHAR(10),
