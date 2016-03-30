@@ -11,8 +11,12 @@ import java.util.Objects;
 @Table(name = "sub_subscription")
 @NamedQueries({
         @NamedQuery(
-                name = SubscriptionDO.JPQL_GET_BY_ACCOUNT_ID,
+                name = SubscriptionDO.JPQL_GET_ACTIVE_BY_ACCOUNT_ID,
                 query = "select s from SubscriptionDO s where s.accountId = :accountId and s.active = :active"
+        ),
+        @NamedQuery(
+                name = SubscriptionDO.JPQL_GET_BY_ACCOUNT_ID,
+                query = "select s from SubscriptionDO s where s.accountId = :accountId"
         ),
         @NamedQuery(
                 name = SubscriptionDO.JPQL_GET_ALL,
@@ -21,6 +25,7 @@ import java.util.Objects;
 })
 public class SubscriptionDO {
 
+    public static final String JPQL_GET_ACTIVE_BY_ACCOUNT_ID = "SubscriptionDO.getActiveByAccountId";
     public static final String JPQL_GET_BY_ACCOUNT_ID = "SubscriptionDO.getByAccountId";
     public static final String JPQL_GET_ALL = "SubscriptionDO.getSubscriptions";
 

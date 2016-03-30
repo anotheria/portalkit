@@ -25,7 +25,7 @@ import java.sql.Timestamp;
 @Table(name = "sub_transaction_log")
 @NamedQuery(
 		name = "TransactionLogEntryEntity_get_by_account_id",
-		query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId" )
+		query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId order by t.timestamp desc" )
 public class TransactionLogEntryEntity {
 
 	@Column @Id  @GeneratedValue(strategy= GenerationType.IDENTITY)

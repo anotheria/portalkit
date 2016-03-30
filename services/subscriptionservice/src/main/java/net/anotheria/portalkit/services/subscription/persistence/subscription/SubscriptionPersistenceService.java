@@ -20,6 +20,8 @@ public interface SubscriptionPersistenceService {
 
     SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException;
 
+    SubscriptionDO getSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException;
+
     List<TransactionDO> getTransactionForAccount(String accountId) throws SubscriptionPersistenceException;
 
     List<TransactionDO> getTransactions() throws SubscriptionPersistenceException;

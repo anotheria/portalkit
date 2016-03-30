@@ -50,6 +50,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
+	public Subscription getSubscriptionForAccount(AccountId accountId) throws SubscriptionServiceException {
+
+		SubscriptionDO subscription = null;
+
+		try {
+			subscription = subscriptionPersistenceService.getSubscriptionForAccount(accountId.getInternalId());
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException(e.getMessage(), e);
+		}
+
+		return new Subscription(subscription);
+	}
+
+	@Override
 	public List<Subscription> getSubscriptions() throws SubscriptionServiceException {
 
 		List<Subscription> subscriptions = new ArrayList<Subscription>();

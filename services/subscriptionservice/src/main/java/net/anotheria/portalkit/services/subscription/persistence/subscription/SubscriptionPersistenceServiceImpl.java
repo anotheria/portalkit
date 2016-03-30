@@ -42,7 +42,7 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
 
     @Override
     public SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException {
-        TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_BY_ACCOUNT_ID, SubscriptionDO.class);
+        TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_ACTIVE_BY_ACCOUNT_ID, SubscriptionDO.class);
         q.setParameter("accountId", accountId);
         q.setParameter("active", true);
 
@@ -50,6 +50,20 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
 
         if (subscriptions == null || subscriptions.isEmpty()) {
             throw new SubscriptionPersistenceException("Error occurred while getting active subscription. No subscription found");
+        }
+
+        return subscriptions.get(0);
+    }
+
+    @Override
+    public SubscriptionDO getSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException {
+        TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_BY_ACCOUNT_ID, SubscriptionDO.class);
+        q.setParameter("accountId", accountId);
+
+        List<SubscriptionDO> subscriptions = q.getResultList();
+
+        if (subscriptions == null || subscriptions.isEmpty()) {
+            throw new SubscriptionPersistenceException("Error occurred while getting subscription. No subscription found");
         }
 
         return subscriptions.get(0);

@@ -21,6 +21,14 @@ public interface SubscriptionService extends Service {
 	Subscription getActiveSubscriptionForAccount(AccountId accountId) throws SubscriptionServiceException;
 
 	/**
+	 * Returns subscription of the account or null if there is no subscription.
+	 * @param accountId
+	 * @return
+	 * @throws SubscriptionServiceException
+	 */
+	Subscription getSubscriptionForAccount(AccountId accountId) throws SubscriptionServiceException;
+
+	/**
 	 * Get all subscriptions.
 	 *
 	 * @throws SubscriptionServiceException
