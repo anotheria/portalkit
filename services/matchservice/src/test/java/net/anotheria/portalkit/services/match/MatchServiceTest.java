@@ -16,11 +16,13 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Integration test for MatchService.
@@ -117,7 +119,10 @@ public class MatchServiceTest {
         matchService.addMatch(ACCOUNT_C, ACCOUNT_A, 1);
 
         List<Match> matches = matchService.getMatches(ACCOUNT_C);
-        assertMatchesEqual(matches.get(0), new Match(ACCOUNT_C, ACCOUNT_A, 1));
+        assertMatchesEqualIgnoreOrder(matches, Arrays.asList(
+                new Match(ACCOUNT_C, ACCOUNT_D, 0),
+                new Match(ACCOUNT_C, ACCOUNT_A, 1)
+        ));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -246,5 +251,30 @@ public class MatchServiceTest {
         while (resultIterator.hasNext() && expectedIterator.hasNext()) {
             assertMatchesEqual(resultIterator.next(), expectedIterator.next());
         }
+    }
+
+    private void assertMatchesEqualIgnoreOrder(List<Match> actualMatches, List<Match> expectedMatches) {
+        assertThat(actualMatches.size(), is(expectedMatches.size()));
+
+        for (Match expectedMatch : expectedMatches) {
+            if (!isContain(actualMatches, expectedMatch)) {
+                fail(actualMatches + " does not contain " + expectedMatch);
+            }
+        }
+    }
+
+    private boolean isContain(List<Match> matches, Match expectedMatch) {
+        for (Match match : matches) {
+            if (isMachEqual(match, expectedMatch)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isMachEqual(Match actual, Match expected) {
+        return Objects.equals(actual.getOwner(), expected.getOwner())
+                && Objects.equals(actual.getTarget(), expected.getTarget())
+                && actual.getType() == expected.getType();
     }
 }
