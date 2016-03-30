@@ -56,7 +56,7 @@ public interface SubscriptionService extends Service {
 	 * @param transaction	payment transaction.
 	 * @throws SubscriptionServiceException
 	 * */
-	void addTransaction(Transaction transaction) throws SubscriptionServiceException;
+	long addTransaction(Transaction transaction) throws SubscriptionServiceException;
 
 	///// This part of the interface handles transaction log entries.
 

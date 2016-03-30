@@ -34,8 +34,10 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     }
 
     @Override
-    public void saveTransaction(TransactionDO transaction) throws SubscriptionPersistenceException {
+    public long saveTransaction(TransactionDO transaction) throws SubscriptionPersistenceException {
         entityManager.persist(transaction);
+
+        return transaction.getTransactionId();
     }
 
     @Override
