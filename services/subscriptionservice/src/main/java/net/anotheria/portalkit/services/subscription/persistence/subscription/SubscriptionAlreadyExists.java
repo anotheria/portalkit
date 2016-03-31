@@ -12,6 +12,6 @@ public class SubscriptionAlreadyExists extends SubscriptionPersistenceException 
     }
 
     public SubscriptionAlreadyExists(SubscriptionDO subscription) {
-        this(subscription.getSubscriptionId());
+        this(String.valueOf(subscription.getSubscriptionId()));
     }
 }

@@ -17,7 +17,7 @@ public class Transaction {
     /**
      * Id of subscription.
      * */
-    private String subscriptionId;
+    private long subscriptionId;
     /**
      * AccountId of the subscription owner.
      */
@@ -71,11 +71,11 @@ public class Transaction {
         this.transactionId = transactionId;
     }
 
-    public String getSubscriptionId() {
+    public long getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
+    public void setSubscriptionId(long subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
@@ -152,7 +152,7 @@ public class Transaction {
             return false;
         }
 
-        if (!this.subscriptionId.equals(transaction.getSubscriptionId())) {
+        if (this.subscriptionId != transaction.getSubscriptionId()) {
             return false;
         }
 

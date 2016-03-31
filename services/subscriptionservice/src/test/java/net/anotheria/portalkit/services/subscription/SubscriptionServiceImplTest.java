@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 public class SubscriptionServiceImplTest {
 
 	public static final String TRANSACTION_ID = "transactionId";
-	public static final String SUBSCRIPTION_ID = "subscriptionId";
+	public static final long SUBSCRIPTION_ID = 1;
 	public static final String ACCOUNT_ID = "accountId";
 	public static final String PRODUCT_ID = "productId";
 	public static final long   TIMESTAMP = System.currentTimeMillis();
@@ -85,7 +85,7 @@ public class SubscriptionServiceImplTest {
 		subscription.setExpirationTimestamp(System.currentTimeMillis() + TimeUnit.DAY.getMillis(30));
 		subscription.setProductId("6");
 		subscription.setLastProlongationTimestamp(0);
-		subscription.setSubscriptionId("subscriptionId");
+		subscription.setSubscriptionId(1);
 
 		service.addSubscription(subscription);
 
@@ -93,15 +93,15 @@ public class SubscriptionServiceImplTest {
 		verify(subscriptionPersistenceService).saveSubscription(captor.capture());
 		verify(subscriptionPersistenceService, atLeastOnce()).saveSubscription(any(SubscriptionDO.class));
 
-/*		assertEquals(captor.getValue().getAccountId(), );
+		/*assertEquals(captor.getValue().getAccountId(), );
 		assertEquals(captor.getValue().getPurchaseTimestamp(), );
 		assertEquals(captor.getValue().isActive(), );
 		assertEquals(captor.getValue().isPreparedForCancelation(), );
-		assertEquals(captor.getValue().getCancelationTimestamp(), );
-		assertEquals(captor.getValue().getProlongationCount(), );
-		assertEquals(captor.getValue().getAmountInCents(), );
-		assertEquals(captor.getValue().getCancelationPeriodInMillis(), );
-		//assertEquals(captor.getValue().g, );
+		assertEquals(captor.getValue().getAccountId(), );
+		assertEquals(captor.getValue().getAccountId(), );
+		assertEquals(captor.getValue().getAccountId(), );
+		assertEquals(captor.getValue().getAccountId(), );
+		assertEquals(captor.getValue().getAccountId(), );
 		assertEquals(captor.getValue().getAccountId(), );
 		assertEquals(captor.getValue().getAccountId(), );
 		assertEquals(captor.getValue().getAccountId(), );

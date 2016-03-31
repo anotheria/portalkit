@@ -40,7 +40,7 @@ public class TransactionLogEntryEntity {
 	 * Id of the associated subscription (if applicable).
 	 */
 	@Column
-	private String subscriptionId;
+	private long subscriptionId;
 	/**
 	 * AccountId.
 	 */
@@ -151,11 +151,11 @@ public class TransactionLogEntryEntity {
 		this.productId = productId;
 	}
 
-	public String getSubscriptionId() {
+	public long getSubscriptionId() {
 		return subscriptionId;
 	}
 
-	public void setSubscriptionId(String subscriptionId) {
+	public void setSubscriptionId(long subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
 

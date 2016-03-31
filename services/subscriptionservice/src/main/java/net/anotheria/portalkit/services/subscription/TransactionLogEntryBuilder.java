@@ -16,7 +16,7 @@ public class TransactionLogEntryBuilder {
 	/**
 	 * Id of the associated subscription (if applicable).
 	 */
-	private String subscriptionId;
+	private long subscriptionId;
 	/**
 	 * AccountId.
 	 */
@@ -59,7 +59,7 @@ public class TransactionLogEntryBuilder {
 		this.productId = productId; return this;
 	}
 
-	public TransactionLogEntryBuilder subscriptionId(String subscriptionId) {
+	public TransactionLogEntryBuilder subscriptionId(long subscriptionId) {
 		this.subscriptionId = subscriptionId; return this;
 	}
 

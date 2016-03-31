@@ -19,7 +19,7 @@ public class TransactionLogEntry implements Serializable{
 	/**
 	 * Id of the associated subscription (if applicable).
 	 */
-	private String subscriptionId;
+	private long subscriptionId;
 	/**
 	 * AccountId.
 	 */
@@ -74,11 +74,11 @@ public class TransactionLogEntry implements Serializable{
 		this.productId = productId;
 	}
 
-	public String getSubscriptionId() {
+	public long getSubscriptionId() {
 		return subscriptionId;
 	}
 
-	public void setSubscriptionId(String subscriptionId) {
+	public void setSubscriptionId(long subscriptionId) {
 		this.subscriptionId = subscriptionId;
 	}
 

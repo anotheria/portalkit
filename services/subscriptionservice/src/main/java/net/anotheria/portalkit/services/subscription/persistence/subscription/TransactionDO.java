@@ -41,7 +41,7 @@ public class TransactionDO {
      * Id of subscription.
      * */
     @Column
-    private String subscriptionId;
+    private long subscriptionId;
     /**
      * AccountId of the subscription owner.
      */
@@ -88,11 +88,11 @@ public class TransactionDO {
         this.transactionId = transactionId;
     }
 
-    public String getSubscriptionId() {
+    public long getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
+    public void setSubscriptionId(long subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 

@@ -15,7 +15,7 @@ public class TransactionLogEntryBuilderTest {
 	@Test public void testTransactionLogEntryBuilder(){
 		TransactionLogEntryBuilder builder = new TransactionLogEntryBuilder();
 		builder.accountId(new AccountId("accountId"))
-				.subscriptionId("subID")
+				.subscriptionId(1)
 				.action("anAction")
 				.message("Message")
 				.productId("32F")
@@ -24,7 +24,7 @@ public class TransactionLogEntryBuilderTest {
 		TransactionLogEntry entry = builder.build();
 		assertEquals("accountId", entry.getAccountId().getInternalId());
 		assertEquals("anAction", entry.getAction());
-		assertEquals("subID", entry.getSubscriptionId());
+		assertEquals(1, entry.getSubscriptionId());
 		assertEquals("Message", entry.getMessage());
 		assertEquals("32F", entry.getProductId());
 		assertEquals("1", entry.getTransactionId());

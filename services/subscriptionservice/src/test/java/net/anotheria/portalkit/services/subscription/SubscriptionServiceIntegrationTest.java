@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class SubscriptionServiceIntegrationTest {
 
 	public static final String TRANSACTION_ID = "transactionId";
-	public static final String SUBSCRIPTION_ID = "subscriptionId";
+	public static final long SUBSCRIPTION_ID = 1;
 	public static final String ACCOUNT_ID = "accountId";
 	public static final String PRODUCT_ID = "productId";
 	public static final long   TIMESTAMP = System.currentTimeMillis();

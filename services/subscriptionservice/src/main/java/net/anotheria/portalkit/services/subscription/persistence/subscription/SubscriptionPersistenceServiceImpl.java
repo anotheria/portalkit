@@ -22,7 +22,7 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     public void saveSubscription(SubscriptionDO subscription) throws SubscriptionPersistenceException {
 
         if (subscriptionExists(subscription.getSubscriptionId())) {
-            throw new SubscriptionAlreadyExists(subscription.getSubscriptionId());
+            throw new SubscriptionAlreadyExists(String.valueOf(subscription.getSubscriptionId()));
         }
 
         entityManager.persist(subscription);
@@ -86,7 +86,7 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
         return q.getResultList();
     }
 
-    private boolean subscriptionExists(String subscriptionId) {
+    private boolean subscriptionExists(long subscriptionId) {
 
         SubscriptionDO subscription = entityManager.find(SubscriptionDO.class, subscriptionId);
 

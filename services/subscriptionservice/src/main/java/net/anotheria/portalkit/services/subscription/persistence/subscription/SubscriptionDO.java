@@ -38,7 +38,7 @@ public class SubscriptionDO {
      * Subscription id.
      */
     @Column @Id
-    private String subscriptionId;
+    private long subscriptionId;
     /**
      * Id of the purchase product.
      */
@@ -120,11 +120,11 @@ public class SubscriptionDO {
         this.accountId = accountId;
     }
 
-    public String getSubscriptionId() {
+    public long getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
+    public void setSubscriptionId(long subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
@@ -242,7 +242,7 @@ public class SubscriptionDO {
             return false;
         }
 
-        if (!this.subscriptionId.equals(subscription.getSubscriptionId())) {
+        if (this.subscriptionId != subscription.getSubscriptionId()) {
             return false;
         }
 
