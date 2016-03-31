@@ -25,4 +25,10 @@ public interface TransactionLogEntryPersistenceService {
 	 */
 	List<TransactionLogEntryEntity> getTransactionLogEntries(String ownerId) throws TransactionPersistenceException;
 
+	/**
+	 * Returns all transaction log entries.
+	 * @return
+	 */
+	List<TransactionLogEntryEntity> getTransactionLogEntries() throws TransactionPersistenceException;
+
 }

@@ -78,10 +78,17 @@ public interface SubscriptionService extends Service {
 	/**
 	 * Returns all transaction log entries for a user.
 	 * @param owner
-	 * @return
+	 * @return list of {@link TransactionLogEntry}
 	 * @throws SubscriptionServiceException
 	 */
 	List<TransactionLogEntry> getTransactionLogEntries(AccountId owner) throws SubscriptionServiceException;
+
+	/**
+	 * Returns all transaction log entries.
+	 * @return list of {@link TransactionLogEntry}
+	 * @throws SubscriptionServiceException
+	 */
+	List<TransactionLogEntry> getTransactionLogEntries() throws SubscriptionServiceException;
 
 
 }

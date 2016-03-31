@@ -3,15 +3,7 @@ package net.anotheria.portalkit.services.subscription.persistence.transaction;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.TransactionLogEntry;
 
-import javax.persistence.Access;
-import javax.persistence.AccessType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -23,10 +15,18 @@ import java.sql.Timestamp;
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "sub_transaction_log")
-@NamedQuery(
-		name = "TransactionLogEntryEntity_get_by_account_id",
-		query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId order by t.timestamp desc" )
+@NamedQueries({
+		@NamedQuery(
+				name = TransactionLogEntryEntity.JPQL_GET_BY_ACCOUNT_ID,
+				query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId order by t.timestamp desc" ),
+		@NamedQuery(
+				name = TransactionLogEntryEntity.JPQL_GET_ALL,
+				query ="SELECT t from TransactionLogEntryEntity t order by t.timestamp desc" )
+})
 public class TransactionLogEntryEntity {
+
+	public static final String JPQL_GET_BY_ACCOUNT_ID = "TransactionLogEntryEntity.getByAccountId";
+	public static final String JPQL_GET_ALL = "TransactionLogEntryEntity.getAll";
 
 	@Column @Id  @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private long technicalId;

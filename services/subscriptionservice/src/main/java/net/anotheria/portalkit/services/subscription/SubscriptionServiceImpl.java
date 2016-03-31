@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -149,12 +148,34 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 			throw new SubscriptionServiceException("Error occurred while getting transaction log entries", e);
 		}
 
+		return convertToTransactionLogEntry(fromService);
+	}
+
+	@Override
+	public List<TransactionLogEntry> getTransactionLogEntries() throws SubscriptionServiceException {
+
+		List<TransactionLogEntryEntity> fromService = null;
+
+		try {
+			fromService = transactionLogEntryPersistenceService.getTransactionLogEntries();
+		} catch (TransactionPersistenceException e) {
+			throw new SubscriptionServiceException("Error occurred while getting transaction log entries", e);
+		}
+
+		return convertToTransactionLogEntry(fromService);
+	}
+
+	private List<TransactionLogEntry> convertToTransactionLogEntry(List<TransactionLogEntryEntity> fromService) {
+
 		if (fromService == null || fromService.size() == 0)
 			return Collections.emptyList();
-		LinkedList<TransactionLogEntry> ret = new LinkedList<TransactionLogEntry>();
+
+		List<TransactionLogEntry> ret = new ArrayList<TransactionLogEntry>();
+
 		for (TransactionLogEntryEntity ee : fromService){
 			ret.add(ee.toBusinessObject());
 		}
+
 		return ret;
 	}
 }
