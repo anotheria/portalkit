@@ -37,7 +37,7 @@ public class SubscriptionDO {
     /**
      * Subscription id.
      */
-    @Column @Id
+    @Column @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long subscriptionId;
     /**
      * Id of the purchase product.
