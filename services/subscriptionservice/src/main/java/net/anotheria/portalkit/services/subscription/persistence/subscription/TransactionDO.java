@@ -30,7 +30,13 @@ public class TransactionDO {
      * Id of transaction.
      * */
     @Column @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long transactionId;
+    private long Id;
+
+    /**
+     * Id of transaction.
+     * */
+    @Column
+    private String transactionId;
     /**
      * Id of subscription.
      * */
@@ -66,11 +72,19 @@ public class TransactionDO {
     public TransactionDO() {}
 
 
-    public long getTransactionId() {
+    public long getId() {
+        return Id;
+    }
+
+    public void setId(long id) {
+        Id = id;
+    }
+
+    public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(long transactionId) {
+    public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 

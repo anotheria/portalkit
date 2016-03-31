@@ -12,7 +12,7 @@ public class TransactionLogEntryBuilder {
 	/**
 	 * Id of the transaction.
 	 */
-	private long transactionId;
+	private String transactionId;
 	/**
 	 * Id of the associated subscription (if applicable).
 	 */
@@ -67,7 +67,7 @@ public class TransactionLogEntryBuilder {
 		this.timestamp = timestamp; return this;
 	}
 
-	public TransactionLogEntryBuilder transactionId(long transactionId) {
+	public TransactionLogEntryBuilder transactionId(String transactionId) {
 		this.transactionId = transactionId; return this;
 	}
 

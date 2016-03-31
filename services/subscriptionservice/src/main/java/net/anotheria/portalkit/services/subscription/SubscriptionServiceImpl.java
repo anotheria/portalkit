@@ -120,9 +120,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
-	public long addTransaction(Transaction transaction) throws SubscriptionServiceException {
+	public void addTransaction(Transaction transaction) throws SubscriptionServiceException {
 		try {
-			return subscriptionPersistenceService.saveTransaction(transaction.toDO());
+			subscriptionPersistenceService.saveTransaction(transaction.toDO());
 		} catch (SubscriptionPersistenceException e) {
 			throw new SubscriptionServiceException("Error occurred while adding new transaction", e);
 		}

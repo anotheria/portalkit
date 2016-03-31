@@ -16,7 +16,7 @@ public interface SubscriptionPersistenceService {
 
     void updateSubscription(SubscriptionDO subscription) throws SubscriptionPersistenceException;
 
-    long saveTransaction(TransactionDO transaction) throws SubscriptionPersistenceException;
+    void saveTransaction(TransactionDO transaction) throws SubscriptionPersistenceException;
 
     SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException;
 

@@ -13,7 +13,7 @@ public class Transaction {
     /**
      * Id of transaction.
      * */
-    private long transactionId;
+    private String transactionId;
     /**
      * Id of subscription.
      * */
@@ -63,11 +63,11 @@ public class Transaction {
     }
 
 
-    public long getTransactionId() {
+    public String getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(long transactionId) {
+    public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -148,7 +148,7 @@ public class Transaction {
 
         Transaction transaction = (Transaction) obj;
 
-        if (this.transactionId != transaction.getTransactionId()) {
+        if (!this.transactionId.equals(transaction.getTransactionId())) {
             return false;
         }
 

@@ -35,7 +35,7 @@ public class TransactionLogEntryEntity {
 	 * Id of the transaction.
 	 */
 	@Column
-	private long transactionId;
+	private String transactionId;
 	/**
 	 * Id of the associated subscription (if applicable).
 	 */
@@ -167,11 +167,11 @@ public class TransactionLogEntryEntity {
 		this.timestamp = timestamp;
 	}
 
-	public long getTransactionId() {
+	public String getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(long transactionId) {
+	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
 }

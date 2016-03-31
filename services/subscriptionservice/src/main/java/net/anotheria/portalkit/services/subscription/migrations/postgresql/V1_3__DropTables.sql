@@ -1,0 +1,1 @@
+drop table sub_transaction, sub_transaction_log;
