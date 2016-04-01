@@ -20,7 +20,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = SubscriptionDO.JPQL_GET_ALL,
-                query = "select s from SubscriptionDO s"
+                query = "select s from SubscriptionDO s order by s.purchaseTimestamp desc"
         )
 })
 public class SubscriptionDO {
