@@ -20,7 +20,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = SubscriptionDO.JPQL_GET_ALL,
-                query = "select s from SubscriptionDO s order by s.purchaseTimestamp desc"
+                query = "select s from SubscriptionDO s"
         )
 })
 public class SubscriptionDO {
@@ -49,6 +49,11 @@ public class SubscriptionDO {
      */
     @Column
     private boolean active;
+    /**
+     * Is user has VIP status.
+     * */
+    @Column
+    private boolean isVip;
     /**
      * Current expiration timestamp. If the current date passes the expiration timestamp and the subscription is still active, the subscription should be prolonged.
      */
@@ -110,6 +115,15 @@ public class SubscriptionDO {
 
     public SubscriptionDO() {
 
+    }
+
+
+    public boolean isVip() {
+        return isVip;
+    }
+
+    public void setVip(boolean vip) {
+        isVip = vip;
     }
 
     public String getAccountId() {

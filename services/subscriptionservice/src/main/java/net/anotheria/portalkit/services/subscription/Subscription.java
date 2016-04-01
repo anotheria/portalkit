@@ -29,6 +29,10 @@ public class Subscription {
 	 */
 	private boolean active;
 	/**
+	 * Is user has VIP status.
+	 */
+	private boolean isVip;
+	/**
 	 * Current expiration timestamp. If the current date passes the expiration timestamp and the subscription is still active, the subscription should be prolonged.
 	 */
 	private long expirationTimestamp;
@@ -83,6 +87,7 @@ public class Subscription {
 
 		this.accountId = new AccountId(subscriptionDO.getAccountId());
 		this.active = subscriptionDO.isActive();
+		this.isVip = subscriptionDO.isVip();
 		this.expirationTimestamp = subscriptionDO.getExpirationTimestamp();
 		this.amountInCents = subscriptionDO.getAmountInCents();
 		this.cancelationPeriodInMillis = subscriptionDO.getCancelationPeriodInMillis();
@@ -97,6 +102,14 @@ public class Subscription {
 		this.subscriptionId = subscriptionDO.getSubscriptionId();
 	}
 
+
+	public boolean isVip() {
+		return isVip;
+	}
+
+	public void setVip(boolean vip) {
+		isVip = vip;
+	}
 
 	public AccountId getAccountId() {
 		return accountId;
@@ -216,6 +229,7 @@ public class Subscription {
 
 		subscriptionDO.setAccountId(this.accountId.getInternalId());
 		subscriptionDO.setActive(this.active);
+		subscriptionDO.setVip(this.isVip);
 		subscriptionDO.setAmountInCents(this.amountInCents);
 		subscriptionDO.setCancelationPeriodInMillis(this.cancelationPeriodInMillis);
 		subscriptionDO.setCancelationTimestamp(this.cancelationTimestamp);
