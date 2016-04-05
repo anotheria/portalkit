@@ -482,4 +482,35 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		}
 	}
 
+	@Override
+	public void delete(Query query) throws StorageException {
+
+		if (query == null)
+			throw new IllegalArgumentException("query argument in null.");
+
+		final BasicDBObject mongoQuery = MongoQueryMapper.map(query);
+
+		if (mongoQuery == null)
+			return;
+
+		DBCursor rawResult = null;
+
+		try {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("find(" + query + ") executing with mongo query[" + mongoQuery + "].");
+
+			rawResult = getCollection().find(mongoQuery);
+
+			while (rawResult.hasNext()) {
+				final DBObject obj = rawResult.next();
+
+				delete((String) obj.get(MongoConstants.FIELD_ID_NAME));
+			}
+		} catch (final MongoException e) {
+			throw new StorageException("Can't exequte query[" + query + "].", e);
+		} finally {
+			if (rawResult != null)
+				rawResult.close();
+		}
+	}
 }

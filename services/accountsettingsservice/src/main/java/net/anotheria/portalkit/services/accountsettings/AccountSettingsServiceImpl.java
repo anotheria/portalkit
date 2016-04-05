@@ -112,7 +112,17 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
     @Override
     public boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException {
         try {
-            return persistence.deleteDataspace(accountId, dataspaceType.getId());
+            int type = dataspaceType.getId();
+            boolean success = persistence.deleteDataspace(accountId, type);
+
+            // remove dataspace from cache
+            DataspaceCacheHolder holder = cache.get(accountId);
+
+            if (holder.get(type) != null && success == true) {
+                holder.remove(type);
+            }
+
+            return success;
         } catch (AccountSettingsPersistenceServiceException e) {
             throw new AccountSettingsServiceException("persistence failed ", e);
         }

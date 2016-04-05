@@ -64,7 +64,17 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 
 	@Override
 	public boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
-		throw new IllegalStateException("deleteDataspace not implemented yet");
+
+		QueryBuilder builder = QueryBuilder.create();
+
+		try {
+			builder.add(CompositeQuery.create(EqualQuery.create("key.dataspaceId", dataspaceId), EqualQuery.create("key.accountId", owner.getInternalId())));
+			delete(builder.build());
+		} catch (StorageException ex) {
+			throw new AccountSettingsPersistenceServiceException("remove(" + builder + ") failed", ex);
+		}
+
+		return true;
 	}
 
 

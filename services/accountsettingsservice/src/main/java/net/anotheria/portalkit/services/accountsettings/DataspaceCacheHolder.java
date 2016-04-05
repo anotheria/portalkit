@@ -19,4 +19,8 @@ public class DataspaceCacheHolder {
 	void put (int type, Dataspace dataspace){
 		dataspaces.put(type, dataspace);
 	}
+
+	void remove(int type) {
+		dataspaces.remove(type);
+	}
 }
