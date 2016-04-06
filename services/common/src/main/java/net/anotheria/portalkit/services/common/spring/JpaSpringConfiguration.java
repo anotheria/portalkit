@@ -96,7 +96,12 @@ public class JpaSpringConfiguration {
         entityManagerFactoryBean.setPackagesToScan(getEntityPackagesToScan());
 
         Properties props = new Properties();
-        props.put("hibernate.show_sql", true);
+        if (ConfigurationManager.INSTANCE.getDefaultEnvironment().expandedStringForm().startsWith("prod")) {
+            props.put("hibernate.show_sql", false);
+        } else {
+            props.put("hibernate.show_sql", true);
+        }
+
         props.put("hibernate.hbm2ddl.auto", "validate");
         entityManagerFactoryBean.setJpaProperties(props);
 
