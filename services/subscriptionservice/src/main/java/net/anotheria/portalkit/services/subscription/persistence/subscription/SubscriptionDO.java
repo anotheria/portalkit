@@ -21,6 +21,10 @@ import java.util.Objects;
         @NamedQuery(
                 name = SubscriptionDO.JPQL_GET_ALL,
                 query = "select s from SubscriptionDO s"
+        ),
+        @NamedQuery(
+                name = SubscriptionDO.JPQL_DELETE_SUBSCRIPTION,
+                query = "delete from SubscriptionDO s where s.accountId = :accountId"
         )
 })
 public class SubscriptionDO {
@@ -28,6 +32,7 @@ public class SubscriptionDO {
     public static final String JPQL_GET_ACTIVE_BY_ACCOUNT_ID = "SubscriptionDO.getActiveByAccountId";
     public static final String JPQL_GET_BY_ACCOUNT_ID = "SubscriptionDO.getByAccountId";
     public static final String JPQL_GET_ALL = "SubscriptionDO.getSubscriptions";
+    public static final String JPQL_DELETE_SUBSCRIPTION = "SubscriptionDO.deleteSubscription";
 
     /**
      * AccountId of the subscription owner.

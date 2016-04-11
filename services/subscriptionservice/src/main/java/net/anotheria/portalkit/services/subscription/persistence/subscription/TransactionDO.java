@@ -19,12 +19,17 @@ import javax.persistence.*;
         @NamedQuery(
                 name = TransactionDO.JPQL_GET_ALL,
                 query = "select t from TransactionDO t"
+        ),
+        @NamedQuery(
+                name = TransactionDO.JPQL_DELETE_TRANSACTION,
+                query = "delete from TransactionDO t where t.accountId = :accountId"
         )
 })
 public class TransactionDO {
 
     public static final String JPQL_GET_BY_ACCOUNT_ID = "TransactionDO.getByAccountId";
     public static final String JPQL_GET_ALL = "TransactionDO.getTransactions";
+    public static final String JPQL_DELETE_TRANSACTION = "TransactionDO.deleteTransactions";
 
     /**
      * Id of transaction.

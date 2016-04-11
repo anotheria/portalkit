@@ -18,6 +18,10 @@ public interface SubscriptionPersistenceService {
 
     void saveTransaction(TransactionDO transaction) throws SubscriptionPersistenceException;
 
+    void deleteTransactions(String accountId) throws SubscriptionPersistenceException;
+
+    void deleteSubscriptions(String accountId) throws SubscriptionPersistenceException;
+
     SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException;
 
     SubscriptionDO getSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException;
