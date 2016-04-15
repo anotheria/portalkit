@@ -82,6 +82,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	}
 
 	@Override
+	public void deleteSubscriptions(AccountId accountId) throws SubscriptionServiceException {
+		try {
+			subscriptionPersistenceService.deleteSubscriptions(accountId.getInternalId());
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Error occurred while removing subscriptions", e);
+		}
+	}
+
+	@Override
+	public void deleteTransactions(AccountId accountId) throws SubscriptionServiceException {
+		try {
+			subscriptionPersistenceService.deleteTransactions(accountId.getInternalId());
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Error occurred while removing transactions", e);
+		}
+	}
+
+	@Override
 	public List<Transaction> getTransactions() throws SubscriptionServiceException {
 
 		List<TransactionDO> transactionDOs = null;
@@ -163,6 +181,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 
 		return convertToTransactionLogEntry(fromService);
+	}
+
+	@Override
+	public void deleteTransactionLogs(AccountId accountId) throws SubscriptionServiceException {
+		try {
+			transactionLogEntryPersistenceService.deleteTransactionLogEntrys(accountId.getInternalId());
+		} catch (TransactionPersistenceException e) {
+			throw new SubscriptionServiceException("Error occurred while removing transaction log entries", e);
+		}
 	}
 
 	private List<TransactionLogEntry> convertToTransactionLogEntry(List<TransactionLogEntryEntity> fromService) {

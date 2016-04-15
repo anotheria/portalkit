@@ -18,15 +18,22 @@ import java.sql.Timestamp;
 @NamedQueries({
 		@NamedQuery(
 				name = TransactionLogEntryEntity.JPQL_GET_BY_ACCOUNT_ID,
-				query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId order by t.timestamp desc" ),
+				query ="SELECT t from TransactionLogEntryEntity t where t.accountId = :accountId order by t.timestamp desc"
+		),
 		@NamedQuery(
 				name = TransactionLogEntryEntity.JPQL_GET_ALL,
-				query ="SELECT t from TransactionLogEntryEntity t order by t.timestamp desc" )
+				query ="SELECT t from TransactionLogEntryEntity t order by t.timestamp desc"
+		),
+		@NamedQuery(
+				name = TransactionLogEntryEntity.JPQL_DELETE_TRANSACTION_LOG,
+				query ="delete from TransactionLogEntryEntity t where t.accountId = :accountId"
+		)
 })
 public class TransactionLogEntryEntity {
 
 	public static final String JPQL_GET_BY_ACCOUNT_ID = "TransactionLogEntryEntity.getByAccountId";
 	public static final String JPQL_GET_ALL = "TransactionLogEntryEntity.getAll";
+	public static final String JPQL_DELETE_TRANSACTION_LOG = "TransactionLogEntryEntity.deleteTransactionLogs";
 
 	@Column @Id  @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private long technicalId;
