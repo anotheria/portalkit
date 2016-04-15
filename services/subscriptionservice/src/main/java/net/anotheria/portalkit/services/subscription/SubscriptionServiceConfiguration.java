@@ -32,7 +32,7 @@ public class SubscriptionServiceConfiguration extends JpaSpringConfiguration{
 	}
 
 	@Override
-	protected String getJdbcConfigurationName() {
+	protected String getDbConfigurationName() {
 		return "pk-jdbc-"+getServiceName();
 	}
 }

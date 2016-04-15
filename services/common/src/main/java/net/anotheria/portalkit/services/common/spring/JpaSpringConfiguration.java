@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.common.spring;
 
 import com.googlecode.flyway.core.Flyway;
 import net.anotheria.portalkit.services.common.flyway.FlywayUtils;
-import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCConfig;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.configureme.ConfigurationManager;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +34,7 @@ public class JpaSpringConfiguration {
         throw new UnsupportedOperationException("No implementation for getBasePackageName()");
     }
 
-    protected String getJdbcConfigurationName() {
+    protected String getDbConfigurationName() {
         throw new UnsupportedOperationException("No implementation for getJdbcConfigurationName()");
     }
 
@@ -44,28 +43,28 @@ public class JpaSpringConfiguration {
     }
 
     protected String[] getFlywayLocations() {
-        return FlywayUtils.getDefaultFlywayLocations(getBasePackage(), getJdbcConfig().getDriver());
+        return FlywayUtils.getDefaultFlywayLocations(getBasePackage(), getDbConfig().getDriver());
     }
 
     protected String getTableNameForMigration() {
         return FlywayUtils.getDefaultTableNameForMigration(getServiceName());
     }
 
-    public JDBCConfig getJdbcConfig() {
-        JDBCConfig jdbcConfig = new JDBCConfig();
-        ConfigurationManager.INSTANCE.configureAs(jdbcConfig, getJdbcConfigurationName());
-        return jdbcConfig;
+    public HibernateConfig getDbConfig() {
+        HibernateConfig dbConfig = new HibernateConfig();
+        ConfigurationManager.INSTANCE.configureAs(dbConfig, getDbConfigurationName());
+        return dbConfig;
     }
 
     @Bean(destroyMethod="close")
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
 
-        JDBCConfig jdbcConfig = getJdbcConfig();
-        dataSource.setDriverClassName(jdbcConfig.getDriver());
-        dataSource.setUrl(jdbcConfig.getUrl());
-        dataSource.setUsername(jdbcConfig.getUsername());
-        dataSource.setPassword(jdbcConfig.getPassword());
+        HibernateConfig dbConfig = getDbConfig();
+        dataSource.setDriverClassName(dbConfig.getDriver());
+        dataSource.setUrl(dbConfig.getUrl());
+        dataSource.setUsername(dbConfig.getUsername());
+        dataSource.setPassword(dbConfig.getPassword());
         dataSource.setValidationQuery("SELECT 1");
 
         return dataSource;
@@ -73,7 +72,7 @@ public class JpaSpringConfiguration {
 
     @Bean
     public Database database() {
-        return DBUtils.getDatabase(getJdbcConfig().getDriver());
+        return DBUtils.getDatabase(getDbConfig().getDriver());
     }
 
     @Bean
@@ -95,14 +94,10 @@ public class JpaSpringConfiguration {
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
         entityManagerFactoryBean.setPackagesToScan(getEntityPackagesToScan());
 
+        HibernateConfig dbConfig = getDbConfig();
         Properties props = new Properties();
-        if (ConfigurationManager.INSTANCE.getDefaultEnvironment().expandedStringForm().startsWith("prod")) {
-            props.put("hibernate.show_sql", false);
-        } else {
-            props.put("hibernate.show_sql", true);
-        }
-
-        props.put("hibernate.hbm2ddl.auto", "validate");
+        props.put("hibernate.show_sql", dbConfig.isShowSql());
+        props.put("hibernate.hbm2ddl.auto", dbConfig.isValidate());
         entityManagerFactoryBean.setJpaProperties(props);
 
         entityManagerFactoryBean.afterPropertiesSet();

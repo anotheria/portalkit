@@ -10,6 +10,7 @@ import org.configureme.annotations.ConfigureMe;
 public class HibernateConfig extends JDBCConfig {
 
     private boolean showSql = false;
+    private boolean validate = false;
 
     public boolean isShowSql() {
         return showSql;
@@ -17,6 +18,15 @@ public class HibernateConfig extends JDBCConfig {
 
     public HibernateConfig setShowSql(boolean showSql) {
         this.showSql = showSql;
+        return this;
+    }
+
+    public boolean isValidate() {
+        return validate;
+    }
+
+    public HibernateConfig setValidate(boolean validate) {
+        this.validate = validate;
         return this;
     }
 }

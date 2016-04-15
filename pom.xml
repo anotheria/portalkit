@@ -19,6 +19,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tools-anno-plugin.version>1.3.1</tools-anno-plugin.version>
 
+        <configureme.version>2.3.1-SNAPSHOT</configureme.version>
 		<moskito.version>2.7.2</moskito.version>
 		<distributeme.version>2.2.4</distributeme.version>
 		<aspectj.version>1.7.4</aspectj.version>
@@ -73,6 +74,11 @@
 				<artifactId>distributeme-agents</artifactId>
 				<version>${distributeme.version}</version>
 			</dependency>
+            <dependency>
+                <groupId>net.anotheria</groupId>
+                <artifactId>configureme</artifactId>
+                <version>${configureme.version}</version>
+            </dependency>
 			<!-- ano-dependencies: END -->
             <!-- Spring: START -->
             <dependency>
@@ -250,6 +256,10 @@
 	</dependencyManagement>
 
 	<dependencies>
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>configureme</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>net.anotheria</groupId>
 			<artifactId>ano-prise</artifactId>
