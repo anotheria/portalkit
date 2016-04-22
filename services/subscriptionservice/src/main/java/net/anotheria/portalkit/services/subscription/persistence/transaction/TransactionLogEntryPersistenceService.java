@@ -19,6 +19,12 @@ public interface TransactionLogEntryPersistenceService {
 	void addTransactionLogEntry(TransactionLogEntryEntity toAdd) throws TransactionPersistenceException;
 
 	/**
+	 * Transaction log
+	 * @param accountId
+	 */
+	void deleteTransactionLogEntrys(String accountId) throws TransactionPersistenceException;
+
+	/**
 	 * Returns all transaction log entries for a user.
 	 * @param ownerId
 	 * @return

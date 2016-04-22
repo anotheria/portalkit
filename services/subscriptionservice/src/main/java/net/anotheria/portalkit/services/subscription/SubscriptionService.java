@@ -33,14 +33,28 @@ public interface SubscriptionService extends Service {
 	 *
 	 * @throws SubscriptionServiceException
 	 * */
-	List<Subscription> getSubscriptions()  throws SubscriptionServiceException;
+	List<Subscription> getSubscriptions() throws SubscriptionServiceException;
+
+	/**
+	 * Delete all subscriptions.
+	 *
+	 * @throws SubscriptionServiceException
+	 * */
+	void deleteSubscriptions(AccountId accountId) throws SubscriptionServiceException;
+
+	/**
+	 * Delete all transactions.
+	 *
+	 * @throws SubscriptionServiceException
+	 * */
+	void deleteTransactions(AccountId accountId) throws SubscriptionServiceException;
 
 	/**
 	 * Get all transactions.
 	 *
 	 * @throws SubscriptionServiceException
 	 * */
-	List<Transaction> getTransactions()  throws SubscriptionServiceException;
+	List<Transaction> getTransactions() throws SubscriptionServiceException;
 
 	/**
 	 * Adds new subscription.
@@ -89,6 +103,13 @@ public interface SubscriptionService extends Service {
 	 * @throws SubscriptionServiceException
 	 */
 	List<TransactionLogEntry> getTransactionLogEntries() throws SubscriptionServiceException;
+
+	/**
+	 * Delete all transaction logs.
+	 *
+	 * @throws SubscriptionServiceException
+	 * */
+	void deleteTransactionLogs(AccountId accountId) throws SubscriptionServiceException;
 
 
 }

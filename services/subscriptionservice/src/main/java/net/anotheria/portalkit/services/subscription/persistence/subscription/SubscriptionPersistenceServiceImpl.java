@@ -39,6 +39,24 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     }
 
     @Override
+    public void deleteTransactions(String accountId) throws SubscriptionPersistenceException {
+
+        Query query = entityManager.createNamedQuery(TransactionDO.JPQL_DELETE_TRANSACTION)
+                .setParameter("accountId", accountId);
+
+        query.executeUpdate();
+    }
+
+    @Override
+    public void deleteSubscriptions(String accountId) throws SubscriptionPersistenceException {
+
+        Query query = entityManager.createNamedQuery(SubscriptionDO.JPQL_DELETE_SUBSCRIPTION)
+                .setParameter("accountId", accountId);
+
+        query.executeUpdate();
+    }
+
+    @Override
     public SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException {
         TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_ACTIVE_BY_ACCOUNT_ID, SubscriptionDO.class);
         q.setParameter("accountId", accountId);

@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Monitor
 @Service
+@Transactional
 public class TransactionLogEntryPersistenceServiceImpl implements TransactionLogEntryPersistenceService {
 
 	@PersistenceContext
@@ -27,6 +29,15 @@ public class TransactionLogEntryPersistenceServiceImpl implements TransactionLog
 	@Transactional
 	public void addTransactionLogEntry(TransactionLogEntryEntity toAdd) throws TransactionPersistenceException {
 		entityManager.persist(toAdd);
+	}
+
+	@Override
+	public void deleteTransactionLogEntrys(String accountId) throws TransactionPersistenceException {
+
+		Query query = entityManager.createNamedQuery(TransactionLogEntryEntity.JPQL_DELETE_TRANSACTION_LOG)
+				.setParameter("accountId", accountId);
+
+		query.executeUpdate();
 	}
 
 	@Override
