@@ -169,6 +169,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		return configuration.getDatabaseName();
 	}
 
+	@DontMonitor
 	private DBCollection getCollection() {
 		return getMongoClient().getDB(getDBName()).getCollection(configuration.getCollectionName());
 	}
