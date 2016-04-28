@@ -7,7 +7,6 @@ import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +36,6 @@ public class MatchServiceImpl implements MatchService {
     /**
      * (owner, target, type) -> isMatched cache.
      */
-    @Autowired
     private Cache<String, Boolean> isMatchedCache;
 
     public MatchServiceImpl() {
