@@ -50,18 +50,22 @@ public class MatchServiceTest {
     @Autowired
     private MatchService matchService;
 
-    @Test
-    public void smokeTest() throws Exception {
-        System.out.println("OK");
+    @Before
+    public void before() throws MatchServiceException {
+        fillDatabase();
     }
 
-    @Before
     public void fillDatabase() throws MatchServiceException {
         matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_B, 0).setCreated(10));
         matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_C, 1).setCreated(1));
         matchService.addMatch(new Match(ACCOUNT_C, ACCOUNT_D, 0).setCreated(20));
         matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_D, 2).setCreated(100));
         matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_E, 2).setCreated(5));
+    }
+
+    @Test
+    public void smokeTest() throws Exception {
+        System.out.println("OK");
     }
 
     @Test
@@ -235,6 +239,16 @@ public class MatchServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteMatchesByTarget_nullTarget() throws MatchServiceException {
         matchService.deleteMatchesByTarget(null);
+    }
+
+    @Test
+    public void testIsMatched_existingEntity() throws MatchServiceException {
+        assertThat(matchService.isMatched(ACCOUNT_A, ACCOUNT_B, 0), is(true));
+    }
+
+    @Test
+    public void testIsMatched_nonExistingEntity() throws MatchServiceException {
+        assertThat(matchService.isMatched(ACCOUNT_B, ACCOUNT_A, 0), is(false));
     }
 
     private void assertMatchesEqual(Match a, Match b) {

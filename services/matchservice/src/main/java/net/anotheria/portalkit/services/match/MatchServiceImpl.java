@@ -1,10 +1,13 @@
 package net.anotheria.portalkit.services.match;
 
+import net.anotheria.anoprise.cache.Cache;
+import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +33,16 @@ public class MatchServiceImpl implements MatchService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    /**
+     * (owner, target, type) -> isMatched cache.
+     */
+    @Autowired
+    private Cache<String, Boolean> isMatchedCache;
+
+    public MatchServiceImpl() {
+        isMatchedCache = Caches.createConfigurableHardwiredCache("matchservice-cache");
+    }
 
     @Override
     public void addMatch(AccountId owner, AccountId target, int type) throws MatchAlreadyExistsException {
@@ -71,7 +84,6 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<Match> getMatchesByType(AccountId owner, int type) {
         Args.notNull(owner, "owner");
-        Args.notNull(type, "match type");
 
         TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_OWNER_TYPE, Match.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
@@ -82,7 +94,6 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public List<Match> getLatestMatchesByType(AccountId owner, int type, int limit) {
         Args.notNull(owner, "owner");
-        Args.notNull(type, "type");
         notNegativeOrZero(limit, "limit");
 
         TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_LATEST_BY_OWNER_TYPE, Match.class)
@@ -143,5 +154,28 @@ public class MatchServiceImpl implements MatchService {
         int deletedCount = query.executeUpdate();
 
         LOGGER.info("Deleted {} matches for target={}", deletedCount, target);
+    }
+
+    @Override
+    public boolean isMatched(AccountId owner, AccountId target, int type) throws MatchServiceException {
+        Args.notNull(owner, "owner");
+        Args.notNull(target, "target");
+
+        String cacheKey = getIsMatchedCacheKey(owner, target, type);
+        Boolean cacheValue = isMatchedCache.get(cacheKey);
+        if (cacheValue != null) {
+            return cacheValue;
+        }
+
+        Match match = new Match(owner, target, type);
+        boolean persistenceValue = isMatchExists(match);
+
+        isMatchedCache.put(cacheKey, persistenceValue);
+
+        return persistenceValue;
+    }
+
+    private String getIsMatchedCacheKey(AccountId owner, AccountId target, int type) {
+        return owner + "|" + target + "|" + type;
     }
 }

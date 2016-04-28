@@ -87,4 +87,14 @@ public interface MatchService extends Service {
      * @throws MatchServiceException
      */
     void deleteMatchesByTarget(AccountId target) throws MatchServiceException;
+
+    /**
+     *
+     * @param owner
+     * @param target
+     * @param type
+     * @return
+     * @throws MatchServiceException
+     */
+    boolean isMatched(AccountId owner, AccountId target, int type) throws MatchServiceException;
 }
