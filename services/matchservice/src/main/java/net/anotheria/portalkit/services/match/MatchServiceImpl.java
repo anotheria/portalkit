@@ -58,16 +58,9 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private void checkMatchExists(Match match) throws MatchAlreadyExistsException {
-        if (isMatchExists(match)) {
+        if (isMatched(match)) {
             throw new MatchAlreadyExistsException(match);
         }
-    }
-
-    private boolean isMatchExists(Match match) {
-        MatchId matchId = new MatchId(match.getOwnerId(), match.getTargetId());
-        Match existedMatch = entityManager.find(Match.class, matchId);
-
-        return existedMatch != null;
     }
 
     @Override
@@ -174,7 +167,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public boolean isMatched(AccountId owner, AccountId target, int type) throws MatchServiceException {
+    public boolean isMatched(AccountId owner, AccountId target, int type) {
         Args.notNull(owner, "owner");
         Args.notNull(target, "target");
 
@@ -185,7 +178,7 @@ public class MatchServiceImpl implements MatchService {
         }
 
         Match match = new Match(owner, target, type);
-        boolean persistenceValue = isMatchExists(match);
+        boolean persistenceValue = isMatchExistsInternally(match);
 
         isMatchedCache.put(cacheKey, persistenceValue);
 
@@ -194,5 +187,18 @@ public class MatchServiceImpl implements MatchService {
 
     private String getIsMatchedCacheKey(AccountId owner, AccountId target, int type) {
         return owner + "|" + target + "|" + type;
+    }
+
+    private boolean isMatchExistsInternally(Match match) {
+        MatchId matchId = new MatchId(match.getOwnerId(), match.getTargetId());
+        Match existedMatch = entityManager.find(Match.class, matchId);
+
+        return existedMatch != null;
+    }
+
+    public boolean isMatched(Match match) {
+        Args.notNull(match, "match");
+
+        return isMatched(match.getOwner(), match.getTarget(), match.getType());
     }
 }
