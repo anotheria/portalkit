@@ -80,11 +80,30 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public List<Match> getTargetMatches(AccountId target) throws MatchServiceException {
+        Args.notNull(target, "target");
+
+        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_TARGET, Match.class)
+                .setParameter(PARAM_TARGET_ID, target.getInternalId());
+        return query.getResultList();
+    }
+
+    @Override
     public List<Match> getMatchesByType(AccountId owner, int type) {
         Args.notNull(owner, "owner");
 
         TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_OWNER_TYPE, Match.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
+                .setParameter(PARAM_TYPE, type);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Match> getTargetMatchesByType(AccountId target, int type) throws MatchServiceException {
+        Args.notNull(target, "target");
+
+        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_TARGET_TYPE, Match.class)
+                .setParameter(PARAM_TARGET_ID, target.getInternalId())
                 .setParameter(PARAM_TYPE, type);
         return query.getResultList();
     }

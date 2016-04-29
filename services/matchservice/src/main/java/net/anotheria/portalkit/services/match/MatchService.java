@@ -39,6 +39,13 @@ public interface MatchService extends Service {
     List<Match> getMatches(AccountId owner) throws MatchServiceException;
 
     /**
+     * @param target
+     * @return
+     * @throws MatchServiceException
+     */
+    List<Match> getTargetMatches(AccountId target) throws MatchServiceException;
+
+    /**
      *
      * @param owner
      * @param type
@@ -46,6 +53,15 @@ public interface MatchService extends Service {
      * @throws MatchServiceException
      */
     List<Match> getMatchesByType(AccountId owner, int type) throws MatchServiceException;
+
+    /**
+     *
+     * @param target
+     * @param type
+     * @return
+     * @throws MatchServiceException
+     */
+    List<Match> getTargetMatchesByType(AccountId target, int type) throws MatchServiceException;
 
     /**
      *

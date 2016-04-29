@@ -92,6 +92,27 @@ public class MatchServiceTest {
     }
 
     @Test
+    public void testGetMatchesByTarget() throws MatchServiceException {
+        List<Match> matches = matchService.getTargetMatches(ACCOUNT_D);
+
+        assertThat(matches.size(), is(2));
+        assertMatchesEqual(matches.get(0), new Match(ACCOUNT_C, ACCOUNT_D, 0));
+        assertMatchesEqual(matches.get(1), new Match(ACCOUNT_A, ACCOUNT_D, 2));
+    }
+
+    @Test
+    public void testGetMatchesByTarget_noSuchOwner() throws MatchServiceException {
+        List<Match> matches = matchService.getTargetMatches(NONEXISTENT_ACCOUNT);
+
+        assertThat(matches, is(empty()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMatchesByTarget_nullOwner() throws MatchServiceException {
+        matchService.getTargetMatches(null);
+    }
+
+    @Test
     public void testGetMatchesByOwnerType() throws MatchServiceException {
         List<Match> matches = matchService.getMatchesByType(ACCOUNT_A, 1);
 
@@ -116,6 +137,33 @@ public class MatchServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetMatchesByOwnerType_nullOwner() throws MatchServiceException {
         matchService.getMatchesByType(null, 2);
+    }
+
+    @Test
+    public void testGetMatchesByTargetType() throws MatchServiceException {
+        List<Match> matches = matchService.getTargetMatchesByType(ACCOUNT_D, 0);
+
+        assertThat(matches.size(), is(1));
+        assertMatchesEqual(matches.get(0), new Match(ACCOUNT_C, ACCOUNT_D, 0));
+    }
+
+    @Test
+    public void testGetMatchesByTargetType_noSuchOwner() throws MatchServiceException {
+        List<Match> matches = matchService.getTargetMatchesByType(NONEXISTENT_ACCOUNT, 1);
+
+        assertThat(matches, is(empty()));
+    }
+
+    @Test
+    public void testGetMatchesByTargetType_noSuchTypeForOwner() throws MatchServiceException {
+        List<Match> matches = matchService.getTargetMatchesByType(ACCOUNT_C, 10);
+
+        assertThat(matches, is(empty()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMatchesByTargetType_nullOwner() throws MatchServiceException {
+        matchService.getTargetMatchesByType(null, 2);
     }
 
     @Test

@@ -22,8 +22,16 @@ import java.util.Objects;
                 query = "select m from Match m where m.ownerId = :ownerId"
         ),
         @NamedQuery(
+                name = Match.JPQL_GET_BY_TARGET,
+                query = "select m from Match m where m.targetId = :targetId"
+        ),
+        @NamedQuery(
                 name = Match.JPQL_GET_BY_OWNER_TYPE,
                 query = "select m from Match m where m.ownerId = :ownerId and m.type = :type"
+        ),
+        @NamedQuery(
+                name = Match.JPQL_GET_BY_TARGET_TYPE,
+                query = "select m from Match m where m.targetId = :targetId and m.type = :type"
         ),
         @NamedQuery(
                 name = Match.JPQL_GET_LATEST_BY_OWNER,
@@ -49,7 +57,9 @@ import java.util.Objects;
 public class Match implements Serializable, Cloneable {
 
     public static final String JPQL_GET_BY_OWNER = "Match.getByOwner";
+    public static final String JPQL_GET_BY_TARGET = "Match.getByTarget";
     public static final String JPQL_GET_BY_OWNER_TYPE = "Match.getByOwnerType";
+    public static final String JPQL_GET_BY_TARGET_TYPE = "Match.getByTargetType";
     public static final String JPQL_GET_LATEST_BY_OWNER = "Match.getLatestByOwner";
     public static final String JPQL_GET_LATEST_BY_OWNER_TYPE = "Match.getLatestByOwnerType";
     public static final String JPQL_DELETE_BY_OWNER_TARGET = "Match.deleteByOwnerTarget";
