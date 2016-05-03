@@ -1,12 +1,12 @@
 package net.anotheria.portalkit.services.storage;
 
-import java.io.Serializable;
-
 import net.anotheria.anoprise.metafactory.AbstractParameterizedServiceFactory;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
 import net.anotheria.portalkit.services.storage.inmemory.GenericInMemoryServiceFactory;
 import net.anotheria.portalkit.services.storage.mongo.GenericMongoServiceFactory;
 import net.anotheria.portalkit.services.storage.type.StorageType;
+
+import java.io.Serializable;
 
 /**
  * Parameterizable {@link StorageService} factory.<br>
@@ -21,7 +21,7 @@ import net.anotheria.portalkit.services.storage.type.StorageType;
  * 
  * @param <T>
  */
-public final class StorageServiceFactory<T extends Serializable> extends AbstractParameterizedServiceFactory<StorageService<T>> {
+public class StorageServiceFactory<T extends Serializable> extends AbstractParameterizedServiceFactory<StorageService<T>> {
 
 	/**
 	 * Storage type parameter name. Value should be instance of {@link StorageType}.
@@ -41,12 +41,16 @@ public final class StorageServiceFactory<T extends Serializable> extends Abstrac
 			inMemoryFactory.setParameters(getParameters());
 			return inMemoryFactory.create();
 		case NO_SQL_MONGO_GENERIC:
-			GenericMongoServiceFactory<T> mongoFactory = new GenericMongoServiceFactory<T>();
+			GenericMongoServiceFactory<T> mongoFactory = createMongoServiceFactory();
 			mongoFactory.setParameters(getParameters());
 			return mongoFactory.create();
 		default:
 			throw new StorageRuntimeException("Storage type[" + type + "] not supported.");
 		}
+	}
+
+	protected GenericMongoServiceFactory<T> createMongoServiceFactory(){
+		return new GenericMongoServiceFactory<T>();
 	}
 
 }

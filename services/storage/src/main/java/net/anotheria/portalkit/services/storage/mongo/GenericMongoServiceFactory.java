@@ -1,11 +1,10 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import java.io.Serializable;
-
 import net.anotheria.anoprise.metafactory.AbstractParameterizedServiceFactory;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
-
 import org.configureme.Environment;
+
+import java.io.Serializable;
 
 /**
  * {@link GenericMongoService} factory.<br>
@@ -15,7 +14,7 @@ import org.configureme.Environment;
  * 
  * @param <T>
  */
-public final class GenericMongoServiceFactory<T extends Serializable> extends AbstractParameterizedServiceFactory<GenericMongoService<T>> {
+public class GenericMongoServiceFactory<T extends Serializable> extends AbstractParameterizedServiceFactory<GenericMongoService<T>> {
 
 	/**
 	 * Parameter name for entity class.<br>
