@@ -200,6 +200,16 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public void hideMatch(AccountId owner, AccountId target, int type) throws MatchServiceException {
+        Args.notNull(owner, "owner id");
+        Args.notNull(target, "target id");
+
+        Match match = getMatch(owner, target, type);
+        match.setHidden(true);
+        entityManager.merge(matchBO2matchEntity(match));
+    }
+
+    @Override
     public boolean isMatched(AccountId owner, AccountId target, int type) {
         Args.notNull(owner, "owner id");
         Args.notNull(target, "target id");

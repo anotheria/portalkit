@@ -313,6 +313,14 @@ public class MatchServiceTest {
     }
 
     @Test
+    public void testHideMatch() throws MatchServiceException {
+        matchService.hideMatch(ACCOUNT_A, ACCOUNT_B, 0);
+
+        Match match = matchService.getMatch(ACCOUNT_A, ACCOUNT_B, 0);
+        assertThat(match.isHidden(), is(true));
+    }
+
+    @Test
     public void testIsMatched_existingEntity() throws MatchServiceException {
         assertThat(matchService.isMatched(ACCOUNT_A, ACCOUNT_B, 0), is(true));
     }

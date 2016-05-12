@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.match;
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
+import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 
 import java.util.List;
@@ -33,11 +34,13 @@ public interface MatchService extends Service {
     void addMatch(Match match) throws MatchServiceException;
 
     /**
-     * @param owner
-     * @param target
-     * @param type
-     * @return
-     * @throws MatchAlreadyExistsException
+     * Returns match by specified owner, target and type.
+     *
+     * @param owner owner id.
+     * @param target target id.
+     * @param type match type.
+     * @return match.
+     * @throws MatchNotFoundException if match is not found.
      */
     Match getMatch(AccountId owner, AccountId target, int type) throws MatchServiceException;
 
@@ -124,4 +127,14 @@ public interface MatchService extends Service {
      * @throws MatchServiceException
      */
     boolean isMatched(AccountId owner, AccountId target, int type) throws MatchServiceException;
+
+    /**
+     * Hide match.
+     *
+     * @param owner  owner id.
+     * @param target target id.
+     * @param type   match type.
+     * @throws MatchNotFoundException if match is not found.
+     */
+    void hideMatch(AccountId owner, AccountId target, int type) throws MatchServiceException;
 }
