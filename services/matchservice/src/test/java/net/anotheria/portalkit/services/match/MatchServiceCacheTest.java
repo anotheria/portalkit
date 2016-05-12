@@ -33,7 +33,7 @@ public class MatchServiceCacheTest {
     @Test
     public void testIsMatched_emptyCache() throws MatchServiceException {
         MatchId matchId = new MatchId(ACCOUNT_A.getInternalId(), ACCOUNT_B.getInternalId());
-        when(entityManagerMock.find(Match.class, matchId)).thenReturn(new Match());
+        when(entityManagerMock.find(MatchEntity.class, matchId)).thenReturn(new MatchEntity());
 
         matchService.isMatched(ACCOUNT_A, ACCOUNT_B, 0);
 
@@ -41,7 +41,7 @@ public class MatchServiceCacheTest {
         verify(isMatchedCacheMock).get(cacheKey);
         verify(isMatchedCacheMock).put(cacheKey, true);
 
-        verify(entityManagerMock).find(Match.class, matchId);
+        verify(entityManagerMock).find(MatchEntity.class, matchId);
     }
 
     @Test

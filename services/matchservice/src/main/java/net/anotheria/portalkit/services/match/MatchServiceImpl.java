@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,7 +55,8 @@ public class MatchServiceImpl implements MatchService {
     public void addMatch(Match match) throws MatchAlreadyExistsException {
         checkMatchNotExists(match);
 
-        entityManager.persist(match);
+        MatchEntity matchEntity = matchBO2matchEntity(match);
+        entityManager.persist(matchEntity);
 
         isMatchedCache.put(getMatchedCacheKey(match), true);
     }
@@ -69,38 +71,46 @@ public class MatchServiceImpl implements MatchService {
     public List<Match> getMatches(AccountId owner) {
         Args.notNull(owner, "owner");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_OWNER, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_OWNER, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId());
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     @Override
     public List<Match> getTargetMatches(AccountId target) throws MatchServiceException {
         Args.notNull(target, "target");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_TARGET, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_TARGET, MatchEntity.class)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     @Override
     public List<Match> getMatchesByType(AccountId owner, int type) {
         Args.notNull(owner, "owner");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_OWNER_TYPE, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_OWNER_TYPE, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .setParameter(PARAM_TYPE, type);
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     @Override
     public List<Match> getTargetMatchesByType(AccountId target, int type) throws MatchServiceException {
         Args.notNull(target, "target");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_BY_TARGET_TYPE, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_TARGET_TYPE, MatchEntity.class)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId())
                 .setParameter(PARAM_TYPE, type);
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     @Override
@@ -108,11 +118,13 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner");
         notNegativeOrZero(limit, "limit");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_LATEST_BY_OWNER_TYPE, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_LATEST_BY_OWNER_TYPE, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .setParameter(PARAM_TYPE, type)
                 .setMaxResults(limit);
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     @Override
@@ -120,10 +132,12 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner");
         notNegativeOrZero(limit, "limit");
 
-        TypedQuery<Match> query = entityManager.createNamedQuery(Match.JPQL_GET_LATEST_BY_OWNER, Match.class)
+        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_LATEST_BY_OWNER, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .setMaxResults(limit);
-        return query.getResultList();
+        List<MatchEntity> matchEntities = query.getResultList();
+
+        return matchEntities2matchBOs(matchEntities);
     }
 
     private int notNegativeOrZero(int value, String name) {
@@ -138,7 +152,7 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner");
         Args.notNull(target, "target");
 
-        Query query = entityManager.createNamedQuery(Match.JPQL_DELETE_BY_OWNER_TARGET)
+        Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_OWNER_TARGET)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
         int deletedCount = query.executeUpdate();
@@ -150,7 +164,7 @@ public class MatchServiceImpl implements MatchService {
     public void deleteMatchesByOwner(AccountId owner) {
         Args.notNull(owner, "owner");
 
-        Query query = entityManager.createNamedQuery(Match.JPQL_DELETE_BY_OWNER)
+        Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_OWNER)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId());
         int deletedCount = query.executeUpdate();
 
@@ -161,7 +175,7 @@ public class MatchServiceImpl implements MatchService {
     public void deleteMatchesByTarget(AccountId target) {
         Args.notNull(target, "target");
 
-        Query query = entityManager.createNamedQuery(Match.JPQL_DELETE_BY_TARGET)
+        Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_TARGET)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
         int deletedCount = query.executeUpdate();
 
@@ -196,15 +210,42 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private boolean isMatchExistsInternally(Match match) {
-        MatchId matchId = new MatchId(match.getOwnerId(), match.getTargetId());
-        Match existedMatch = entityManager.find(Match.class, matchId);
+        MatchId matchId = new MatchId(match.getOwner().getInternalId(), match.getTarget().getInternalId());
+        MatchEntity existedMatchEntity = entityManager.find(MatchEntity.class, matchId);
 
-        return existedMatch != null;
+        return existedMatchEntity != null;
     }
 
     private boolean isMatched(Match match) {
         Args.notNull(match, "match");
 
         return isMatched(match.getOwner(), match.getTarget(), match.getType());
+    }
+
+    private List<Match> matchEntities2matchBOs(List<MatchEntity> matchEntities) {
+        List<Match> results = new ArrayList<>(matchEntities.size());
+
+        for (MatchEntity matchEntity : matchEntities) {
+            Match match = matchEntity2matchBO(matchEntity);
+            results.add(match);
+        }
+
+        return results;
+    }
+
+    private Match matchEntity2matchBO(MatchEntity matchEntity) {
+        return new Match()
+                .setOwner(new AccountId(matchEntity.getOwnerId()))
+                .setTarget(new AccountId(matchEntity.getTargetId()))
+                .setType(matchEntity.getType())
+                .setCreated(matchEntity.getCreated());
+    }
+
+    private MatchEntity matchBO2matchEntity(Match match) {
+        return new MatchEntity()
+                .setOwnerId(match.getOwner().getInternalId())
+                .setTargetId(match.getTarget().getInternalId())
+                .setType(match.getType())
+                .setCreated(match.getCreated());
     }
 }
