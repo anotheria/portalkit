@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.match;
+package net.anotheria.portalkit.services.match.exception;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 

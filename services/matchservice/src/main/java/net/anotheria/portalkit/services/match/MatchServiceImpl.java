@@ -4,6 +4,9 @@ import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
+import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
+import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +71,22 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public Match getMatch(AccountId owner, AccountId target, int type) throws MatchServiceException {
+        Args.notNull(owner, "owner id");
+        Args.notNull(target, "target id");
+
+        MatchId matchId = new MatchId(owner.getInternalId(), target.getInternalId(), type);
+        MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
+        if (matchEntity == null) {
+            throw new MatchNotFoundException(owner, target, type);
+        }
+
+        return matchEntity2matchBO(matchEntity);
+    }
+
+    @Override
     public List<Match> getMatches(AccountId owner) {
-        Args.notNull(owner, "owner");
+        Args.notNull(owner, "owner id");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_OWNER, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId());
@@ -80,7 +97,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getTargetMatches(AccountId target) throws MatchServiceException {
-        Args.notNull(target, "target");
+        Args.notNull(target, "target id");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_TARGET, MatchEntity.class)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
@@ -91,7 +108,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getMatchesByType(AccountId owner, int type) {
-        Args.notNull(owner, "owner");
+        Args.notNull(owner, "owner id");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_OWNER_TYPE, MatchEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
@@ -103,7 +120,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getTargetMatchesByType(AccountId target, int type) throws MatchServiceException {
-        Args.notNull(target, "target");
+        Args.notNull(target, "target id");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_BY_TARGET_TYPE, MatchEntity.class)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId())
@@ -115,7 +132,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getLatestMatchesByType(AccountId owner, int type, int limit) {
-        Args.notNull(owner, "owner");
+        Args.notNull(owner, "owner id");
         notNegativeOrZero(limit, "limit");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_LATEST_BY_OWNER_TYPE, MatchEntity.class)
@@ -129,7 +146,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<Match> getLatestMatches(AccountId owner, int limit) {
-        Args.notNull(owner, "owner");
+        Args.notNull(owner, "owner id");
         notNegativeOrZero(limit, "limit");
 
         TypedQuery<MatchEntity> query = entityManager.createNamedQuery(MatchEntity.JPQL_GET_LATEST_BY_OWNER, MatchEntity.class)
@@ -149,8 +166,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void deleteMatches(AccountId owner, AccountId target) throws MatchServiceException {
-        Args.notNull(owner, "owner");
-        Args.notNull(target, "target");
+        Args.notNull(owner, "owner id");
+        Args.notNull(target, "target id");
 
         Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_OWNER_TARGET)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
@@ -162,7 +179,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void deleteMatchesByOwner(AccountId owner) {
-        Args.notNull(owner, "owner");
+        Args.notNull(owner, "owner id");
 
         Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_OWNER)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId());
@@ -173,7 +190,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void deleteMatchesByTarget(AccountId target) {
-        Args.notNull(target, "target");
+        Args.notNull(target, "target id");
 
         Query query = entityManager.createNamedQuery(MatchEntity.JPQL_DELETE_BY_TARGET)
                 .setParameter(PARAM_TARGET_ID, target.getInternalId());
@@ -184,8 +201,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public boolean isMatched(AccountId owner, AccountId target, int type) {
-        Args.notNull(owner, "owner");
-        Args.notNull(target, "target");
+        Args.notNull(owner, "owner id");
+        Args.notNull(target, "target id");
 
         String cacheKey = getMatchedCacheKey(owner, target, type);
         Boolean cacheValue = isMatchedCache.get(cacheKey);
@@ -210,14 +227,18 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private boolean isMatchExistsInternally(Match match) {
-        MatchId matchId = new MatchId(match.getOwner().getInternalId(), match.getTarget().getInternalId());
-        MatchEntity existedMatchEntity = entityManager.find(MatchEntity.class, matchId);
+        MatchEntity existedMatchEntity = getMatchEntityFromPersistence(match);
 
         return existedMatchEntity != null;
     }
 
+    private MatchEntity getMatchEntityFromPersistence(Match match) {
+        MatchId matchId = new MatchId(match.getOwner().getInternalId(), match.getTarget().getInternalId(), match.getType());
+        return entityManager.find(MatchEntity.class, matchId);
+    }
+
     private boolean isMatched(Match match) {
-        Args.notNull(match, "match");
+        Args.notNull(match, "match id");
 
         return isMatched(match.getOwner(), match.getTarget(), match.getType());
     }

@@ -2,6 +2,8 @@ package net.anotheria.portalkit.services.match;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
+import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 
 import java.util.List;
 
@@ -29,6 +31,15 @@ public interface MatchService extends Service {
      * @throws MatchAlreadyExistsException
      */
     void addMatch(Match match) throws MatchServiceException;
+
+    /**
+     * @param owner
+     * @param target
+     * @param type
+     * @return
+     * @throws MatchAlreadyExistsException
+     */
+    Match getMatch(AccountId owner, AccountId target, int type) throws MatchServiceException;
 
     /**
      *

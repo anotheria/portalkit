@@ -1,6 +1,9 @@
 package net.anotheria.portalkit.services.match;
 
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
+import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
+import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,14 +77,18 @@ public class MatchServiceTest {
     }
 
     @Test
-    public void testMatchFieldsIntegrity() throws Exception {
-        List<Match> matches = matchService.getMatches(ACCOUNT_X);
+    public void testGetMatches_existentMatch() throws MatchServiceException {
+        Match match = matchService.getMatch(ACCOUNT_X, ACCOUNT_Y, 0);
 
-        Match match = matches.get(0);
         assertThat(match.getOwner(), is(ACCOUNT_X));
         assertThat(match.getTarget(), is(ACCOUNT_Y));
         assertThat(match.isHidden(), is(true));
         assertThat(match.getCreated(), is(30L));
+    }
+
+    @Test(expected = MatchNotFoundException.class)
+    public void testGetMatches_nonexistentMatch() throws MatchServiceException {
+        matchService.getMatch(NONEXISTENT_ACCOUNT, NONEXISTENT_ACCOUNT, 0);
     }
 
     @Test
@@ -205,7 +212,7 @@ public class MatchServiceTest {
 
     @Test(expected = MatchAlreadyExistsException.class)
     public void testAddMatch_matchAlreadyExists() throws MatchServiceException {
-        matchService.addMatch(ACCOUNT_A, ACCOUNT_B, 10);
+        matchService.addMatch(ACCOUNT_A, ACCOUNT_B, 0);
     }
 
     @Test

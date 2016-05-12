@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.match;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +33,7 @@ public class MatchServiceCacheTest {
 
     @Test
     public void testIsMatched_emptyCache() throws MatchServiceException {
-        MatchId matchId = new MatchId(ACCOUNT_A.getInternalId(), ACCOUNT_B.getInternalId());
+        MatchId matchId = new MatchId(ACCOUNT_A.getInternalId(), ACCOUNT_B.getInternalId(), 0);
         when(entityManagerMock.find(MatchEntity.class, matchId)).thenReturn(new MatchEntity());
 
         matchService.isMatched(ACCOUNT_A, ACCOUNT_B, 0);
