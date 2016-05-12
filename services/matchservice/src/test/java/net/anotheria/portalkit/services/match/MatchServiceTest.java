@@ -45,6 +45,9 @@ public class MatchServiceTest {
     private static final AccountId ACCOUNT_D = new AccountId("D");
     private static final AccountId ACCOUNT_E = new AccountId("E");
 
+    private static final AccountId ACCOUNT_X = new AccountId("X");
+    private static final AccountId ACCOUNT_Y = new AccountId("Y");
+
     private static final AccountId NONEXISTENT_ACCOUNT = new AccountId("Nonexistent");
 
     @Autowired
@@ -56,16 +59,29 @@ public class MatchServiceTest {
     }
 
     public void fillDatabase() throws MatchServiceException {
-        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_B, 0).setCreated(10));
-        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_C, 1).setCreated(1));
-        matchService.addMatch(new Match(ACCOUNT_C, ACCOUNT_D, 0).setCreated(20));
-        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_D, 2).setCreated(100));
-        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_E, 2).setCreated(5));
+        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_B, 0).setCreated(10L));
+        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_C, 1).setCreated(1L));
+        matchService.addMatch(new Match(ACCOUNT_C, ACCOUNT_D, 0).setCreated(20L));
+        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_D, 2).setCreated(100L));
+        matchService.addMatch(new Match(ACCOUNT_A, ACCOUNT_E, 2).setCreated(5L));
+
+        matchService.addMatch(new Match(ACCOUNT_X, ACCOUNT_Y, 0).setHidden(true).setCreated(30L));
     }
 
     @Test
     public void smokeTest() throws Exception {
         System.out.println("OK");
+    }
+
+    @Test
+    public void testMatchFieldsIntegrity() throws Exception {
+        List<Match> matches = matchService.getMatches(ACCOUNT_X);
+
+        Match match = matches.get(0);
+        assertThat(match.getOwner(), is(ACCOUNT_X));
+        assertThat(match.getTarget(), is(ACCOUNT_Y));
+        assertThat(match.isHidden(), is(true));
+        assertThat(match.getCreated(), is(30L));
     }
 
     @Test

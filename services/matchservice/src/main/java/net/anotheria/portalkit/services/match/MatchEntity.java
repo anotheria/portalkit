@@ -73,6 +73,9 @@ public class MatchEntity {
     @Column(name = "type", nullable = false)
     private int type;
 
+    @Column(name = "hidden")
+    private boolean hidden;
+
     @Column(name = "created")
     private long created;
 
@@ -112,12 +115,22 @@ public class MatchEntity {
         return this;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public MatchEntity setHidden(boolean hidden) {
+        this.hidden = hidden;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MatchEntity that = (MatchEntity) o;
         return type == that.type &&
+                hidden == that.hidden &&
                 created == that.created &&
                 Objects.equals(ownerId, that.ownerId) &&
                 Objects.equals(targetId, that.targetId);
@@ -125,15 +138,16 @@ public class MatchEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(ownerId, targetId, type, created);
+        return Objects.hash(ownerId, targetId, type, hidden, created);
     }
 
     @Override
     public String toString() {
         return "MatchEntity{" +
-                "ownerId=" + ownerId +
-                ", targetId=" + targetId +
+                "ownerId='" + ownerId + '\'' +
+                ", targetId='" + targetId + '\'' +
                 ", type=" + type +
+                ", hidden=" + hidden +
                 ", created=" + created +
                 '}';
     }

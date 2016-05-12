@@ -18,6 +18,7 @@ public class Match implements Serializable {
     private AccountId owner;
     private AccountId target;
     private int type;
+    private boolean hidden;
     private long created;
 
     public Match() {
@@ -65,20 +66,30 @@ public class Match implements Serializable {
         return this;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public Match setHidden(boolean hidden) {
+        this.hidden = hidden;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Match)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Match match = (Match) o;
-        return created == match.created &&
+        return type == match.type &&
+                hidden == match.hidden &&
+                created == match.created &&
                 Objects.equals(owner, match.owner) &&
-                Objects.equals(target, match.target) &&
-                type == match.type;
+                Objects.equals(target, match.target);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, target, type, created);
+        return Objects.hash(owner, target, type, hidden, created);
     }
 
     @Override
@@ -87,6 +98,7 @@ public class Match implements Serializable {
                 "owner=" + owner +
                 ", target=" + target +
                 ", type=" + type +
+                ", hidden=" + hidden +
                 ", created=" + created +
                 '}';
     }

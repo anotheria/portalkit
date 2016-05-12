@@ -238,6 +238,7 @@ public class MatchServiceImpl implements MatchService {
                 .setOwner(new AccountId(matchEntity.getOwnerId()))
                 .setTarget(new AccountId(matchEntity.getTargetId()))
                 .setType(matchEntity.getType())
+                .setHidden(matchEntity.isHidden())
                 .setCreated(matchEntity.getCreated());
     }
 
@@ -246,6 +247,7 @@ public class MatchServiceImpl implements MatchService {
                 .setOwnerId(match.getOwner().getInternalId())
                 .setTargetId(match.getTarget().getInternalId())
                 .setType(match.getType())
+                .setHidden(match.isHidden())
                 .setCreated(match.getCreated());
     }
 }
