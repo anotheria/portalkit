@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author bvanchuhov
  */
-public class Match implements Serializable, Cloneable {
+public class Match implements Serializable {
 
     private static final long serialVersionUID = -5247613267567452168L;
 
