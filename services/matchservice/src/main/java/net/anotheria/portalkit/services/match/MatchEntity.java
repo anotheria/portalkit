@@ -69,6 +69,7 @@ public class MatchEntity {
     @Column(name = "target", nullable = false, length = 128)
     private String targetId;
 
+    @Id
     @Column(name = "type", nullable = false)
     private int type;
 
