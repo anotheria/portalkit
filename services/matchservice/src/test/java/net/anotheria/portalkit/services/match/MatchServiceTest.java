@@ -130,11 +130,6 @@ public class MatchServiceTest {
         assertThat(matches, is(empty()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetMatchesByTarget_nullOwner() throws MatchServiceException {
-        matchService.getTargetMatches(null);
-    }
-
     @Test
     public void testGetMatchesByOwnerType() throws MatchServiceException {
         List<Match> matches = matchService.getMatchesByType(ACCOUNT_A, 1);
@@ -155,11 +150,6 @@ public class MatchServiceTest {
         List<Match> matches = matchService.getMatchesByType(ACCOUNT_C, 2);
 
         assertThat(matches, is(empty()));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetMatchesByOwnerType_nullOwner() throws MatchServiceException {
-        matchService.getMatchesByType(null, 2);
     }
 
     @Test
@@ -184,11 +174,6 @@ public class MatchServiceTest {
         assertThat(matches, is(empty()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetMatchesByTargetType_nullOwner() throws MatchServiceException {
-        matchService.getTargetMatchesByType(null, 2);
-    }
-
     @Test
     public void testAddMatch() throws MatchServiceException {
         matchService.addMatch(ACCOUNT_C, ACCOUNT_A, 1);
@@ -198,16 +183,6 @@ public class MatchServiceTest {
                 new Match(ACCOUNT_C, ACCOUNT_D, 0),
                 new Match(ACCOUNT_C, ACCOUNT_A, 1)
         ));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddMatch_nullOwner() throws MatchServiceException {
-        matchService.addMatch(null, ACCOUNT_A, 1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddMatch_nullTarget() throws MatchServiceException {
-        matchService.addMatch(ACCOUNT_C, null, 1);
     }
 
     @Test(expected = MatchAlreadyExistsException.class)
@@ -225,21 +200,6 @@ public class MatchServiceTest {
         ));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwner_nullOwner() throws MatchServiceException {
-        matchService.getLatestMatches(null, 1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwner_notPositiveLimit_zeroLimit() throws MatchServiceException {
-        matchService.getLatestMatches(ACCOUNT_A, 0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwner_notPositiveLimit_negativeLimit() throws MatchServiceException {
-        matchService.getLatestMatches(ACCOUNT_A, -1);
-    }
-
     @Test
     public void testGetLatestMatchesByOwnerType() throws MatchServiceException {
         List<Match> matches = matchService.getLatestMatchesByType(ACCOUNT_A, 2, 1);
@@ -249,19 +209,16 @@ public class MatchServiceTest {
         ));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwnerType_nullOwner() throws MatchServiceException {
-        matchService.getLatestMatchesByType(null, 2, 1);
+    @Test(expected = MatchNotFoundException.class)
+    public void testDeleteMatch() throws MatchServiceException {
+        matchService.deleteMatch(ACCOUNT_A, ACCOUNT_B, 0);
+
+        matchService.getMatch(ACCOUNT_A, ACCOUNT_B, 0);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwnerType_notPositiveLimit_zeroLimit() throws MatchServiceException {
-        matchService.getLatestMatchesByType(ACCOUNT_A, 2, 0);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetLatestMatchesByOwnerType_notPositiveLimit_negativeLimit() throws MatchServiceException {
-        matchService.getLatestMatchesByType(ACCOUNT_A, 2, -1);
+    @Test(expected = MatchNotFoundException.class)
+    public void testDeleteMatch_nonexistentMatch() throws Exception {
+        matchService.deleteMatch(NONEXISTENT_ACCOUNT, NONEXISTENT_ACCOUNT, 0);
     }
 
     @Test
@@ -272,26 +229,11 @@ public class MatchServiceTest {
         assertThat(matchesA.contains(new Match(ACCOUNT_A, ACCOUNT_B, 0)), is(false));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeleteMatches_nullOwner() throws MatchServiceException {
-        matchService.deleteMatches(null, ACCOUNT_B);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeleteMatches_nullTarget() throws MatchServiceException {
-        matchService.deleteMatches(ACCOUNT_A, null);
-    }
-
     @Test
     public void testDeleteMatchesByOwner() throws MatchServiceException {
         matchService.deleteMatchesByOwner(ACCOUNT_A);
 
         assertThat(matchService.getMatches(ACCOUNT_A), is(empty()));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeleteMatchesByOwner_nullOwner() throws MatchServiceException {
-        matchService.deleteMatchesByOwner(null);
     }
 
     @Test
@@ -305,11 +247,6 @@ public class MatchServiceTest {
                 new Match(ACCOUNT_A, ACCOUNT_C, 1),
                 new Match(ACCOUNT_A, ACCOUNT_E, 2)
         ));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeleteMatchesByTarget_nullTarget() throws MatchServiceException {
-        matchService.deleteMatchesByTarget(null);
     }
 
     @Test

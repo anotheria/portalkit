@@ -75,7 +75,7 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner id");
         Args.notNull(target, "target id");
 
-        MatchId matchId = new MatchId(owner.getInternalId(), target.getInternalId(), type);
+        MatchId matchId = new MatchId(owner, target, type);
         MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
         if (matchEntity == null) {
             throw new MatchNotFoundException(owner, target, type);
@@ -165,6 +165,20 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public void deleteMatch(AccountId owner, AccountId target, int type) throws MatchServiceException {
+        Args.notNull(owner, "owner id");
+        Args.notNull(target, "target id");
+
+        MatchId matchId = new MatchId(owner, target, type);
+        MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
+        if (matchEntity == null) {
+            throw new MatchNotFoundException(owner, target, type);
+        }
+
+        entityManager.remove(matchEntity);
+    }
+
+    @Override
     public void deleteMatches(AccountId owner, AccountId target) throws MatchServiceException {
         Args.notNull(owner, "owner id");
         Args.notNull(target, "target id");
@@ -243,7 +257,7 @@ public class MatchServiceImpl implements MatchService {
     }
 
     private MatchEntity getMatchEntityFromPersistence(Match match) {
-        MatchId matchId = new MatchId(match.getOwner().getInternalId(), match.getTarget().getInternalId(), match.getType());
+        MatchId matchId = new MatchId(match.getOwner(), match.getTarget(), match.getType());
         return entityManager.find(MatchEntity.class, matchId);
     }
 

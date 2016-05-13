@@ -97,6 +97,14 @@ public interface MatchService extends Service {
     List<Match> getLatestMatches(AccountId owner, int limit) throws MatchServiceException;
 
     /**
+     * @param owner
+     * @param target
+     * @param type
+     * @throws MatchNotFoundException if match is not found.
+     */
+    void deleteMatch(AccountId owner, AccountId target, int type) throws MatchServiceException;
+
+    /**
      *
      * @param owner
      * @param target

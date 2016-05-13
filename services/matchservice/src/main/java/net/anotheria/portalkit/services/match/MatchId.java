@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.match;
 
+import net.anotheria.portalkit.services.common.AccountId;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,6 +23,12 @@ public class MatchId implements Serializable {
     public MatchId(String ownerId, String targetId, int type) {
         this.ownerId = ownerId;
         this.targetId = targetId;
+        this.type = type;
+    }
+
+    public MatchId(AccountId owner, AccountId target, int type) {
+        this.ownerId = owner.getInternalId();
+        this.targetId = target.getInternalId();
         this.type = type;
     }
 
