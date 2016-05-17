@@ -51,12 +51,12 @@
 		<module>foreignidservice</module>
 		<module>approvalservice</module>
         <module>accountarchiveservice</module>
-        <module>relationservice</module>
         <module>profileservice</module>
-        <module>combined</module>
-        <module>matchservice</module>
-        <module>subscriptionservice</module>
-		<module>userrelationservice</module>
+		<module>combined</module>
+		<module>matchservice</module>
+		<module>subscriptionservice</module>
+		<module>relationservice</module>
+		<module>oldrelationservice</module>
 	</modules>
 
 </project>
