@@ -19,7 +19,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_GET_BY_TARGET,
-                query = "select r from UserRelationEntity r where r.tagetId = :targetId"
+                query = "select r from UserRelationEntity r where r.targetId = :targetId"
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_GET_BY_OWNER_TYPE,
@@ -27,11 +27,11 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_GET_BY_TARGET_TYPE,
-                query = "select r from UserRelationEntity r where r.tagetId = :targetId and r.relationName = :relationName"
+                query = "select r from UserRelationEntity r where r.targetId = :targetId and r.relationName = :relationName"
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_DELETE_BY_OWNER_TARGET,
-                query = "delete from UserRelationEntity r where r.ownerId = :ownerId and r.tagetId = :targetId"
+                query = "delete from UserRelationEntity r where r.ownerId = :ownerId and r.targetId = :targetId"
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_DELETE_BY_OWNER,
@@ -39,7 +39,7 @@ import java.util.Objects;
         ),
         @NamedQuery(
                 name = UserRelationEntity.JPQL_DELETE_BY_TARGET,
-                query = "delete from UserRelationEntity r where r.tagetId = :targetId"
+                query = "delete from UserRelationEntity r where r.targetId = :targetId"
         )
 })
 public class UserRelationEntity {
@@ -49,9 +49,9 @@ public class UserRelationEntity {
     public static final String JPQL_GET_BY_OWNER_TYPE = "UserRelation.getByOwnerType";
     public static final String JPQL_GET_BY_TARGET_TYPE = "UserRelation.getByTargetType";
 
-    public static final String JPQL_DELETE_BY_OWNER_TARGET = "UserRelation.deleteByOwnerType";
+    public static final String JPQL_DELETE_BY_OWNER_TARGET = "UserRelation.deleteByOwnerTarget";
     public static final String JPQL_DELETE_BY_OWNER = "UserRelation.deleteByOwner";
-    public static final String JPQL_DELETE_BY_TARGET = "UserRelation.deleteByOwner";
+    public static final String JPQL_DELETE_BY_TARGET = "UserRelation.deleteByTarget";
 
     @Id
     @Column(name = "owner", nullable = false, length = 128)
