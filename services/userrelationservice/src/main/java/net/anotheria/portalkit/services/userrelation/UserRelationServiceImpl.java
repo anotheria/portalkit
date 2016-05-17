@@ -168,7 +168,7 @@ public class UserRelationServiceImpl implements UserRelationService {
         Args.notEmpty(relationName, "relation name");
 
         List<UserRelationEntity> userRelationEntities = entityManager.createNamedQuery(JPQL_GET_BY_OWNER_TYPE, UserRelationEntity.class)
-                .setParameter(PARAM_RELATION_NAME, owner.getInternalId())
+                .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .setParameter(PARAM_RELATION_NAME, relationName)
                 .getResultList();
 

@@ -77,7 +77,7 @@ public class MatchServiceTest {
     }
 
     @Test
-    public void testGetMatches_existentMatch() throws MatchServiceException {
+    public void testGetMatch_existingMatch() throws MatchServiceException {
         Match match = matchService.getMatch(ACCOUNT_X, ACCOUNT_Y, 0);
 
         assertThat(match.getOwner(), is(ACCOUNT_X));
@@ -87,8 +87,15 @@ public class MatchServiceTest {
     }
 
     @Test(expected = MatchNotFoundException.class)
-    public void testGetMatches_nonexistentMatch() throws MatchServiceException {
+    public void testGetMatch_nonExistingMatch() throws MatchServiceException {
         matchService.getMatch(NONEXISTENT_ACCOUNT, NONEXISTENT_ACCOUNT, 0);
+    }
+
+    @Test
+    public void testGetMatches_existentMatch() throws MatchServiceException {
+        List<Match> matches = matchService.getMatches(ACCOUNT_C);
+
+        assertMatchesEqual(matches, Arrays.asList(new Match(ACCOUNT_C, ACCOUNT_D, 0)));
     }
 
     @Test
@@ -109,11 +116,6 @@ public class MatchServiceTest {
         assertThat(matches, is(empty()));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetMatchesByOwner_nullOwner() throws MatchServiceException {
-        matchService.getMatches(null);
-    }
-
     @Test
     public void testGetMatchesByTarget() throws MatchServiceException {
         List<Match> matches = matchService.getTargetMatches(ACCOUNT_D);
@@ -124,7 +126,7 @@ public class MatchServiceTest {
     }
 
     @Test
-    public void testGetMatchesByTarget_noSuchOwner() throws MatchServiceException {
+    public void testGetMatchesByTarget_noSuchTarget() throws MatchServiceException {
         List<Match> matches = matchService.getTargetMatches(NONEXISTENT_ACCOUNT);
 
         assertThat(matches, is(empty()));
@@ -161,7 +163,7 @@ public class MatchServiceTest {
     }
 
     @Test
-    public void testGetMatchesByTargetType_noSuchOwner() throws MatchServiceException {
+    public void testGetMatchesByTargetType_noSuchTarget() throws MatchServiceException {
         List<Match> matches = matchService.getTargetMatchesByType(NONEXISTENT_ACCOUNT, 1);
 
         assertThat(matches, is(empty()));

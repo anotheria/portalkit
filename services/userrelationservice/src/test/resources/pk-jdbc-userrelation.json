@@ -1,0 +1,5 @@
+{
+    "driver": "org.h2.jdbcx.JdbcDataSource",
+    "url": "jdbc:h2:mem:pk_test;IGNORECASE=TRUE",
+    "username": "SA"
+}
