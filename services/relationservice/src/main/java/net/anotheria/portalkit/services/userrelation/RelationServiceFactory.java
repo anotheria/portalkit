@@ -7,7 +7,7 @@ import net.anotheria.portalkit.services.common.spring.SpringHolder;
 /**
  * @author bvanchuhov
  */
-public class RelationFactory implements ServiceFactory<RelationService> {
+public class RelationServiceFactory implements ServiceFactory<RelationService> {
 
     @Override
     public RelationService create() {
