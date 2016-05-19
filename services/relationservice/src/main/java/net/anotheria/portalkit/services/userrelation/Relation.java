@@ -80,16 +80,14 @@ public class Relation implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Relation that = (Relation) o;
-        return created == that.created &&
-                updated == that.updated &&
-                Objects.equals(owner, that.owner) &&
+        return Objects.equals(owner, that.owner) &&
                 Objects.equals(partner, that.partner) &&
                 Objects.equals(relationName, that.relationName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, partner, relationName, created, updated);
+        return Objects.hash(owner, partner, relationName);
     }
 
     @Override

@@ -153,16 +153,14 @@ public class RelationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RelationEntity that = (RelationEntity) o;
-        return created == that.created &&
-                updated == that.updated &&
-                Objects.equals(ownerId, that.ownerId) &&
+        return Objects.equals(ownerId, that.ownerId) &&
                 Objects.equals(partnerId, that.partnerId) &&
                 Objects.equals(relationName, that.relationName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ownerId, partnerId, relationName, created, updated);
+        return Objects.hash(ownerId, partnerId);
     }
 
     @Override
