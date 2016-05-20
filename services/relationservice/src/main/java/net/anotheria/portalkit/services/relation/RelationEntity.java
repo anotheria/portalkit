@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;
@@ -10,7 +10,7 @@ import java.util.Objects;
  * @author bvanchuhov
  */
 @Entity
-@Table(name = "userrelation")
+@Table(name = "relation")
 @IdClass(RelationId.class)
 @NamedQueries({
         @NamedQuery(

@@ -1,9 +1,9 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.userrelation.exception.RelationAlreadyExistsException;
-import net.anotheria.portalkit.services.userrelation.exception.RelationNotFoundException;
-import net.anotheria.portalkit.services.userrelation.exception.RelationServiceException;
+import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
+import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
+import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

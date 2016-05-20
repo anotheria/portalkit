@@ -1,12 +1,12 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.userrelation.exception.RelationAlreadyExistsException;
-import net.anotheria.portalkit.services.userrelation.exception.RelationNotFoundException;
-import net.anotheria.portalkit.services.userrelation.exception.RelationServiceException;
+import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
+import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
+import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +20,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static net.anotheria.portalkit.services.userrelation.RelationEntity.*;
+import static net.anotheria.portalkit.services.relation.RelationEntity.*;
 
 /**
  * @author bvanchuhov
  */
 @Service
 @Transactional
-@Monitor(subsystem = "userrelation", category = "portalkit-service")
+@Monitor(subsystem = "relation", category = "portalkit-service")
 public class RelationServiceImpl implements RelationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RelationServiceImpl.class);
@@ -45,7 +45,7 @@ public class RelationServiceImpl implements RelationService {
     private Cache<String, Boolean> isRelatedCache;
 
     public RelationServiceImpl() {
-        isRelatedCache = Caches.createConfigurableHardwiredCache("userrelationservice-cache");
+        isRelatedCache = Caches.createConfigurableHardwiredCache("relationservice-cache");
     }
 
     @Override

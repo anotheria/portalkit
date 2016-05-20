@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.portalkit.services.common.spring.JpaSpringConfiguration;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Import;
 @Configuration
 public class RelationSpringConfiguration extends JpaSpringConfiguration {
 
-    public static final String BASE_PACKAGE = "net.anotheria.portalkit.services.userrelation";
+    public static final String BASE_PACKAGE = "net.anotheria.portalkit.services.relation";
 
     @Override
     protected String getServiceName() {
-        return "userrelation";
+        return "relation";
     }
 
     @Override
@@ -27,6 +27,6 @@ public class RelationSpringConfiguration extends JpaSpringConfiguration {
 
     @Override
     protected String getDbConfigurationName() {
-        return "pk-jdbc-userrelation";
+        return "pk-jdbc-relation";
     }
 }

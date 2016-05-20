@@ -1,8 +1,8 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.userrelation.exception.RelationServiceException;
+import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

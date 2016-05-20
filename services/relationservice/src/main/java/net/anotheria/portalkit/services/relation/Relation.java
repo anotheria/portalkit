@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.userrelation;
+package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.http.util.Args;

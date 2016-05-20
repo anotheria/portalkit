@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.userrelation.exception;
+package net.anotheria.portalkit.services.relation.exception;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 
