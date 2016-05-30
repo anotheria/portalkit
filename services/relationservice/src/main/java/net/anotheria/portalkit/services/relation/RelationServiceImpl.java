@@ -13,12 +13,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static net.anotheria.portalkit.services.relation.RelationEntity.*;
 
@@ -36,16 +34,18 @@ public class RelationServiceImpl implements RelationService {
     private static final String PARAM_PARTNER_ID = "partnerId";
     private static final String PARAM_RELATION_NAME = "relationName";
 
+    static final Relation NULL_RELATION = new Relation();
+
     @PersistenceContext
     private EntityManager entityManager;
 
     /**
-     * (owner, partner, relationName) -> isRelated cache.
+     * (owner, partner, relationName) -> Relation cache.
      */
-    private Cache<String, Boolean> isRelatedCache;
+    private Cache<String, Relation> relationCache;
 
     public RelationServiceImpl() {
-        isRelatedCache = Caches.createConfigurableHardwiredCache("relationservice-cache");
+        relationCache = Caches.createConfigurableHardwiredCache("relationservice-cache");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RelationServiceImpl implements RelationService {
         RelationEntity relationEntity = relationBO2relationEntity(relation);
         entityManager.persist(relationEntity);
 
-        isRelatedCache.put(getRelatedCacheKey(relation), true);
+        relationCache.put(getRelatedCacheKey(relation), relation);
     }
 
     private void checkRelationNotExists(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
@@ -77,43 +77,40 @@ public class RelationServiceImpl implements RelationService {
 
     @Override
     public Relation getRelation(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
+        Relation relation = getRelationInternally(owner, partner, relationName);
+
+        if (Objects.equals(relation, NULL_RELATION)) {
+            throw new RelationNotFoundException(relation);
+        }
+        return relation;
+    }
+
+    @Nonnull
+    private Relation getRelationInternally(AccountId owner, AccountId partner, String relationName) {
         Args.notNull(owner, "owner id");
         Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
+
+        String cacheKey = getRelatedCacheKey(owner, partner, relationName);
+        Relation cachedRelation = relationCache.get(cacheKey);
+        if (cachedRelation != null) {
+            return cachedRelation;
+        }
 
         RelationId relationId = new RelationId(owner, partner, relationName);
         RelationEntity relationEntity = entityManager.find(RelationEntity.class, relationId);
-        if (relationEntity == null) {
-            throw new RelationNotFoundException(owner, partner, relationName);
-        }
+        Relation relation = relationEntity != null ? relationEntity2relationBO(relationEntity) : NULL_RELATION;
 
-        return relationEntity2relationBO(relationEntity);
+        relationCache.put(cacheKey, relation);
+
+        return relation;
     }
 
     @Override
     public boolean isRelated(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
-        Args.notNull(owner, "owner id");
-        Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Relation relation = getRelationInternally(owner, partner, relationName);
 
-        String cacheKey = getRelatedCacheKey(owner, partner, relationName);
-        Boolean cacheValue = isRelatedCache.get(cacheKey);
-        if (cacheValue != null) {
-            return cacheValue;
-        }
-
-        RelationId relationId = new RelationId(owner, partner, relationName);
-        boolean persistenceValue = isRelationExistsInternally(relationId);
-
-        isRelatedCache.put(cacheKey, persistenceValue);
-
-        return persistenceValue;
-    }
-
-    private boolean isRelationExistsInternally(RelationId relationId) {
-        RelationEntity relationEntity = entityManager.find(RelationEntity.class, relationId);
-
-        return relationEntity != null;
+        return !Objects.equals(relation, NULL_RELATION);
     }
 
     @Override
@@ -130,7 +127,7 @@ public class RelationServiceImpl implements RelationService {
     @Override
     public Set<Relation> getOwnerRelations(AccountId owner, String relationName) throws RelationServiceException {
         Args.notNull(owner, "owner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         List<RelationEntity> userRelationEntities = entityManager.createNamedQuery(JPQL_GET_BY_OWNER_TYPE, RelationEntity.class)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
@@ -154,7 +151,7 @@ public class RelationServiceImpl implements RelationService {
     @Override
     public Set<Relation> getPartnerRelations(AccountId partner, String relationName) throws RelationServiceException {
         Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         List<RelationEntity> userRelationEntities = entityManager.createNamedQuery(JPQL_GET_BY_PARTNER_TYPE, RelationEntity.class)
                 .setParameter(PARAM_PARTNER_ID, partner.getInternalId())
@@ -168,7 +165,7 @@ public class RelationServiceImpl implements RelationService {
     public void deleteRelation(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
         Args.notNull(owner, "owner id");
         Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         RelationId relationId = new RelationId(owner, partner, relationName);
         RelationEntity relationEntity = entityManager.find(RelationEntity.class, relationId);
@@ -177,6 +174,8 @@ public class RelationServiceImpl implements RelationService {
         }
 
         entityManager.remove(relationEntity);
+
+        relationCache.put(getRelatedCacheKey(owner, partner, relationName), NULL_RELATION);
     }
 
     @Override
