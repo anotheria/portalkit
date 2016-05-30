@@ -23,7 +23,7 @@ public class RelationId implements Serializable {
     public RelationId(String ownerId, String partnerId, String relationName) {
         Args.notEmpty(ownerId, "owner id string");
         Args.notEmpty(partnerId, "partner id string");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         this.ownerId = ownerId;
         this.partnerId = partnerId;
@@ -33,7 +33,7 @@ public class RelationId implements Serializable {
     public RelationId(AccountId owner, AccountId partner, String relationName) {
         Args.notNull(owner, "owner id");
         Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         this.ownerId = owner.getInternalId();
         this.partnerId = partner.getInternalId();

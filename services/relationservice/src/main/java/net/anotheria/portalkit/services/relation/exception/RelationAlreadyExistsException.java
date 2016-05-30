@@ -9,7 +9,7 @@ import net.anotheria.portalkit.services.relation.Relation;
 public class RelationAlreadyExistsException extends RelationServiceException {
 
     public RelationAlreadyExistsException(AccountId owner, AccountId partner, String relationName) {
-        super("User oldrelation [owner=" + owner + ", partner=" + partner + ", relationName=" + relationName + "] already exists");
+        super("User relation [owner=" + owner + ", partner=" + partner + ", relationName=" + relationName + "] already exists");
     }
 
     public RelationAlreadyExistsException(Relation relation) {

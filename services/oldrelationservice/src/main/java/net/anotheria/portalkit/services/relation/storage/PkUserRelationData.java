@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * User oldrelation data object.
+ * User relation data object.
  *
  * @author asamoilich
  */
@@ -39,7 +39,7 @@ public class PkUserRelationData implements CrudSaveable {
      *
      * @param ownerId       owner id
      * @param partnerId     partner id
-     * @param firstRelation first oldrelation
+     * @param firstRelation first relation
      */
     public PkUserRelationData(AccountId ownerId, AccountId partnerId, PkRelation firstRelation) {
         this.owner = ownerId;

@@ -33,7 +33,7 @@ public class PkRelation implements Serializable {
     /**
      * Constructor.
      *
-     * @param name oldrelation name
+     * @param name relation name
      */
     public PkRelation(String name) {
         this.name = name;

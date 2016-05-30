@@ -77,7 +77,7 @@ public class RelationEntity {
     public RelationEntity(AccountId owner, AccountId partner, String relationName) {
         Args.notNull(owner, "owner id");
         Args.notNull(partner, "partner id");
-        Args.notEmpty(relationName, "oldrelation name");
+        Args.notEmpty(relationName, "relation name");
 
         this.ownerId = owner.getInternalId();
         this.partnerId = partner.getInternalId();
@@ -85,7 +85,7 @@ public class RelationEntity {
     }
 
     public RelationEntity(Relation relation) {
-        Args.notNull(relation, "user oldrelation");
+        Args.notNull(relation, "user relation");
 
         this.ownerId = relation.getOwner().getInternalId();
         this.partnerId = relation.getPartner().getInternalId();

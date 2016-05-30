@@ -23,7 +23,7 @@ public class Relation implements Serializable {
     public Relation(AccountId owner, AccountId partner, String relationName) {
         Args.notNull(owner, "owner id");
         Args.notNull(partner, "partner id");
-        Args.notBlank(relationName, "oldrelation name");
+        Args.notBlank(relationName, "relation name");
 
         this.owner = owner;
         this.partner = partner;

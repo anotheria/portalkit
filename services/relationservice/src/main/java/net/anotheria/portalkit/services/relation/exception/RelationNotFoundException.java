@@ -9,7 +9,7 @@ import net.anotheria.portalkit.services.relation.Relation;
 public class RelationNotFoundException extends RelationServiceException {
 
     public RelationNotFoundException(AccountId owner, AccountId partner, String relationName) {
-        super("User oldrelation [owner=" + owner + ", partner=" + partner + ", relationName=" + relationName + "] not found");
+        super("User relation [owner=" + owner + ", partner=" + partner + ", relationName=" + relationName + "] not found");
     }
 
     public RelationNotFoundException(Relation relation) {
