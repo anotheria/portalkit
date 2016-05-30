@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
+import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
@@ -214,31 +215,37 @@ public class RelationServiceImpl implements RelationService {
         LOGGER.info("Deleted {} user relations for partner={}", deletedCount, partner);
     }
 
-
+    @DontMonitor
     private String getRelatedCacheKey(Relation relation) {
         return getRelatedCacheKey(relation.getOwner(), relation.getPartner(), relation.getRelationName());
     }
 
+    @DontMonitor
     private String getRelatedCacheKey(AccountId owner, AccountId partner, String relationName) {
         return owner + "|" + partner + "|" + relationName;
     }
 
+    @DontMonitor
     private RelationId getUserRelationId(Relation relation) {
         return new RelationId(relation.getOwner(), relation.getPartner(), relation.getRelationName());
     }
 
+    @DontMonitor
     private RelationId getUserRelationId(RelationEntity relationEntity) {
         return new RelationId(relationEntity.getOwnerId(), relationEntity.getPartnerId(), relationEntity.getRelationName());
     }
 
+    @DontMonitor
     private RelationEntity relationBO2relationEntity(Relation relation) {
         return new RelationEntity(relation);
     }
 
+    @DontMonitor
     private Relation relationEntity2relationBO(RelationEntity relationEntity) {
         return relationEntity.toUserRelation();
     }
 
+    @DontMonitor
     private Set<Relation> relationEntities2relationBOs(Collection<RelationEntity> userRelationEntities) {
         Set<Relation> results = new HashSet<>();
 
