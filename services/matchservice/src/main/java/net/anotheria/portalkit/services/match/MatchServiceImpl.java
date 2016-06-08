@@ -177,6 +177,8 @@ public class MatchServiceImpl implements MatchService {
         }
 
         entityManager.remove(matchEntity);
+
+        isMatchedCache.put(getMatchedCacheKey(owner, target, type), false);
     }
 
     @Override
@@ -189,6 +191,8 @@ public class MatchServiceImpl implements MatchService {
                 .setParameter(PARAM_TARGET_ID, target.getInternalId())
                 .executeUpdate();
 
+        isMatchedCache.clear();
+
         LOGGER.info("Deleted {} matches for owner={}, target={}", deletedCount, owner, target);
     }
 
@@ -199,6 +203,8 @@ public class MatchServiceImpl implements MatchService {
         int deletedCount = entityManager.createNamedQuery(JPQL_DELETE_BY_OWNER)
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .executeUpdate();
+
+        isMatchedCache.clear();
 
         LOGGER.info("Deleted {} matches for owner={}", deletedCount, owner);
     }
@@ -211,6 +217,8 @@ public class MatchServiceImpl implements MatchService {
                 .setParameter(PARAM_TARGET_ID, target.getInternalId())
                 .executeUpdate();
 
+        isMatchedCache.clear();
+
         LOGGER.info("Deleted {} matches for target={}", deletedCount, target);
     }
 
@@ -222,6 +230,8 @@ public class MatchServiceImpl implements MatchService {
         Match match = getMatch(owner, target, type);
         match.setHidden(true);
         entityManager.merge(matchBO2matchEntity(match));
+
+        isMatchedCache.put(getMatchedCacheKey(owner, target, type), false);
     }
 
     @Override

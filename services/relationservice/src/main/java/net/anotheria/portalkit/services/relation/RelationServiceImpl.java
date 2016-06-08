@@ -189,6 +189,8 @@ public class RelationServiceImpl implements RelationService {
                 .setParameter(PARAM_PARTNER_ID, partner.getInternalId())
                 .executeUpdate();
 
+        relationCache.clear();
+
         LOGGER.info("Deleted {} user relations for owner={}, partner={}", deletedCount, owner, partner);
     }
 
@@ -200,8 +202,9 @@ public class RelationServiceImpl implements RelationService {
                 .setParameter(PARAM_OWNER_ID, owner.getInternalId())
                 .executeUpdate();
 
-        LOGGER.info("Deleted {} user relations for owner={}", deletedCount, owner);
+        relationCache.clear();
 
+        LOGGER.info("Deleted {} user relations for owner={}", deletedCount, owner);
     }
 
     @Override
@@ -211,6 +214,8 @@ public class RelationServiceImpl implements RelationService {
         int deletedCount = entityManager.createNamedQuery(JPQL_DELETE_BY_PARTNER)
                 .setParameter(PARAM_PARTNER_ID, partner.getInternalId())
                 .executeUpdate();
+
+        relationCache.clear();
 
         LOGGER.info("Deleted {} user relations for partner={}", deletedCount, partner);
     }
