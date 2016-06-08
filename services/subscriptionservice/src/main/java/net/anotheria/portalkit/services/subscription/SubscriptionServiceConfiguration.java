@@ -12,9 +12,11 @@ import org.springframework.context.annotation.Import;
  * @since 13.03.16 23:43
  */
 @Import(JpaSpringConfiguration.class)
-@ComponentScan("net.anotheria.portalkit.services.subscription")
+@ComponentScan(SubscriptionServiceConfiguration.BASE_PACKAGE)
 @Configuration
 public class SubscriptionServiceConfiguration extends JpaSpringConfiguration{
+
+    public static final String BASE_PACKAGE = "net.anotheria.portalkit.services.subscription";
 
 	@Override
 	protected String getServiceName() {
@@ -23,16 +25,6 @@ public class SubscriptionServiceConfiguration extends JpaSpringConfiguration{
 
 	@Override
 	protected String getBasePackage() {
-		return SubscriptionServiceConfiguration.class.getPackage().getName();
-	}
-
-	@Override
-	protected String getEntityPackagesToScan() {
-		return getBasePackage();
-	}
-
-	@Override
-	protected String getDbConfigurationName() {
-		return "pk-jdbc-"+getServiceName();
-	}
+        return BASE_PACKAGE;
+    }
 }

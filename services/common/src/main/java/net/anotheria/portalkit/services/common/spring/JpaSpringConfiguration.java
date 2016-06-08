@@ -35,7 +35,7 @@ public class JpaSpringConfiguration {
     }
 
     protected String getDbConfigurationName() {
-        throw new UnsupportedOperationException("No implementation for getJdbcConfigurationName()");
+        return "pk-jdbc-" + getServiceName();
     }
 
     protected String getEntityPackagesToScan() {

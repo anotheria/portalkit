@@ -24,9 +24,4 @@ public class MatchSpringConfiguration extends JpaSpringConfiguration {
     protected String getBasePackage() {
         return BASE_PACKAGE;
     }
-
-    @Override
-    protected String getDbConfigurationName() {
-        return "pk-jdbc-match";
-    }
 }
