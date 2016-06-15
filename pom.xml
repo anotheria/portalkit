@@ -35,6 +35,7 @@
 	<modules>
 		<module>services</module>
 		<module>apis</module>
+		<module>engines</module>
 	</modules>
 
 	<dependencyManagement>
