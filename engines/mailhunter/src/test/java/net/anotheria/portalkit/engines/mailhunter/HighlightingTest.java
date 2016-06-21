@@ -1,8 +1,8 @@
-package net.anotheria.mailhunter;
-
-import static org.junit.Assert.assertEquals;
+package net.anotheria.portalkit.engines.mailhunter;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class HighlightingTest {
 	

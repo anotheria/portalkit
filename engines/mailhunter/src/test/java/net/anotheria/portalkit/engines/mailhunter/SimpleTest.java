@@ -1,4 +1,4 @@
-package net.anotheria.mailhunter;
+package net.anotheria.portalkit.engines.mailhunter;
 
 import org.junit.After;
 import org.junit.Test;

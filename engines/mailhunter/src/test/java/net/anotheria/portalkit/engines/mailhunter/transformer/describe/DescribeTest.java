@@ -1,4 +1,4 @@
-package net.anotheria.mailhunter.transformer.describe;
+package net.anotheria.portalkit.engines.mailhunter.transformer.describe;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
