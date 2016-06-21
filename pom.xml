@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tools-anno-plugin.version>1.3.1</tools-anno-plugin.version>
 
-        <configureme.version>2.3.1-SNAPSHOT</configureme.version>
+        <configureme.version>2.3.2</configureme.version>
 		<moskito.version>2.7.2</moskito.version>
 		<distributeme.version>2.2.4</distributeme.version>
 		<aspectj.version>1.7.4</aspectj.version>
