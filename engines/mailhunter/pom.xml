@@ -3,7 +3,7 @@
 
 		<parent>
 			<groupId>portalkit</groupId>
-			<artifactId>apis</artifactId>
+			<artifactId>engines</artifactId>
 			<version>0.9.1-SNAPSHOT</version>
 		</parent>
 		
