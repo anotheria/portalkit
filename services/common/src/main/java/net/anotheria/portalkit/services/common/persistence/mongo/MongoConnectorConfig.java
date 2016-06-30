@@ -6,7 +6,7 @@ import org.configureme.annotations.ConfigureMe;
 /**
  * Mongo configuration
  */
-@ConfigureMe(name = "pk-mongo-auth")
+@ConfigureMe(name = "pk-mongo-account")
 public class MongoConnectorConfig {
 
     @Configure

@@ -1,0 +1,147 @@
+package net.anotheria.portalkit.services.account.persistence.mongo;
+
+import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountQuery;
+import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
+import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.mongo.entities.AccountEntity;
+import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
+import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
+
+@Monitor(category = "portalkit-persistence-service", subsystem = "account")
+public class MongoAccountPersistenceServiceImpl implements AccountPersistenceService {
+	private Logger log = LoggerFactory.getLogger(MongoAccountPersistenceServiceImpl.class);
+
+	private final MongoAccountDAOImpl accountDao = new MongoAccountDAOImpl();
+
+	@Override
+	public void saveAccount(Account account) throws AccountPersistenceServiceException {
+		try {
+			Account savedAccount = getAccount(account.getId());
+			if (savedAccount == null) {
+				//create new entity
+				AccountEntity accountEntity = new AccountEntity(new ObjectId());
+				accountEntity.setAccid(account.getId().getInternalId());
+				accountEntity.setEmail(account.getEmail());
+				accountEntity.setName(account.getName());
+				accountEntity.setRegts(account.getRegistrationTimestamp());
+				accountEntity.setStatus(account.getStatus());
+				accountEntity.setTenant(account.getTenant());
+				accountEntity.setType(account.getType());
+				accountEntity.setDaoCreated(System.currentTimeMillis());
+				accountEntity.setDaoUpdated(System.currentTimeMillis());
+
+				accountDao.createEntity(accountEntity);
+			} else {
+				//update existing entity
+				AccountEntity accountEntity = (AccountEntity) accountDao.getEntity(account.getId().getInternalId(), AccountEntity.class);
+				accountDao.updateEntityFields(accountEntity, account);
+			}
+
+		} catch (MongoDaoException e) {
+			log.error("Can't create account", e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Account getAccount(AccountId id) throws AccountPersistenceServiceException {
+		try {
+			AccountEntity accountEntity = (AccountEntity) accountDao.getEntityByAccountId(id.getInternalId(), AccountEntity.class);
+			if (accountEntity == null) return null;
+
+			return accountEntity.toAccout();
+		} catch (MongoDaoException e) {
+			log.error("Can't find account by accountId " + id.getInternalId(), e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void deleteAccount(AccountId id) throws AccountPersistenceServiceException {
+		try {
+			accountDao.deleteEntity(id.getInternalId(), AccountEntity.class);
+		} catch (MongoDaoException e) {
+			log.error("Can't delete account with accid= " + id.getInternalId());
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
+		try {
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByName(name, AccountEntity.class);
+			if (accountEntity == null) return null;
+
+			return new AccountId(accountEntity.getAccid());
+		} catch (MongoDaoException e) {
+			log.error("Can't find accountId by name " + name, e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
+		try {
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByEmail(email, AccountEntity.class);
+			if (accountEntity == null) return null;
+
+			return new AccountId(accountEntity.getAccid());
+		} catch (MongoDaoException e) {
+			log.error("Can't find accountId by email " + email, e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException {
+		try {
+			List<? extends BaseEntity> allAccounts = accountDao.getAll(AccountEntity.class);
+
+			Set<AccountId> resultSet = new HashSet<>();
+			for (BaseEntity baseEntity : allAccounts) {
+				resultSet.add(
+					new AccountId(((AccountEntity)baseEntity).getAccid())
+				);
+			}
+
+			return resultSet;
+		} catch (MongoDaoException e) {
+			log.error("Error while getting tokens for accountId", e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<AccountId> getAccountsByType(int type) throws AccountPersistenceServiceException {
+		try {
+			List<? extends BaseEntity> accountsByType = accountDao.getAccountsByType(type, AccountEntity.class);
+			if (accountsByType == null) return null;
+
+			List<AccountId> resultList = new ArrayList<>();
+			for (BaseEntity baseEntity : accountsByType) {
+				resultList.add(
+						new AccountId(((AccountEntity)baseEntity).getAccid())
+				);
+			}
+
+			return resultList;
+
+		} catch (MongoDaoException e) {
+			log.error("Can't find accountId by type " + type, e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<Account> getAccountsByQuery(AccountQuery query) throws AccountPersistenceServiceException {
+		return null;
+	}
+
+}

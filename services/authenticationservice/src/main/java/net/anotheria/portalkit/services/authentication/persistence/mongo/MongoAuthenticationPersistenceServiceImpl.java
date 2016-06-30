@@ -39,7 +39,7 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 			}
 
 		} catch (MongoDaoException e) {
-			log.error("Can't create campaign", e);
+			log.error("Can't create password entity", e);
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}
 	}

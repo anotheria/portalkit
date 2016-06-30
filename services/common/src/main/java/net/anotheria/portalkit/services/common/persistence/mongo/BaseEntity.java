@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.services.authentication.persistence.mongo.entities;
+package net.anotheria.portalkit.services.common.persistence.mongo;
 
 import org.bson.types.ObjectId;
 

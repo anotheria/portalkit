@@ -4,7 +4,7 @@ import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthPasswordEntity;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthTokenEntity;
-import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.BaseEntity;
+import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import net.anotheria.portalkit.services.common.persistence.mongo.MongoConnector;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.UpdateOperations;
