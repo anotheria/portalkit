@@ -5,7 +5,6 @@ import com.mongodb.MongoException;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.persistence.mongo.entities.AccountEntity;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
-import net.anotheria.portalkit.services.common.persistence.mongo.MongoConnector;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.slf4j.Logger;
@@ -15,23 +14,18 @@ import java.util.List;
 
 public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
 
-    private final MongoConnector connector;
-
     private final Logger log;
 
     public MongoAccountDAOImpl() {
-        connector = MongoConnector.INSTANCE;
-        connector.setConfigName("pk-mongo-account");
         log = LoggerFactory.getLogger(MongoAccountDAOImpl.class);
     }
 
     @Override
-    public void createEntity(BaseEntity entity) throws MongoDaoException {
+    public void createEntity(Datastore datastore, BaseEntity entity) throws MongoDaoException {
         if (entity == null) {
             throw new IllegalArgumentException("Entity is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             datastore.save(entity);
         } catch (DuplicateKeyException e) {
             log.error("id already exists " + entity);
@@ -44,12 +38,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public void updateEntityFields(BaseEntity entity, Account newAccountData) throws MongoDaoException {
+    public void updateEntityFields(Datastore datastore, BaseEntity entity, Account newAccountData) throws MongoDaoException {
         if (entity == null) {
             throw new IllegalArgumentException("Entity is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             // change the name of the hotel
             UpdateOperations<AccountEntity> ops = datastore.createUpdateOperations(AccountEntity.class)
                     .set("name", newAccountData.getName())
@@ -67,12 +60,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public BaseEntity getEntity(String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public BaseEntity getEntity(Datastore datastore, String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (id == null) {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("accid").equal(id).asList();
             if (result.isEmpty()) {
                 throw new MongoDaoException(entityClass.getSimpleName() + "with acid= " + id + " not found");
@@ -85,9 +77,8 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public List<? extends BaseEntity> getAll(Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public List<? extends BaseEntity> getAll(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         try {
-            Datastore datastore = connector.connect();
             return datastore.createQuery(entityClass).asList();
         } catch (MongoException e) {
             log.error("Can't find " + entityClass.getSimpleName() + "list");
@@ -97,12 +88,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public void deleteEntity(String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public void deleteEntity(Datastore datastore, String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (id == null) {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             datastore.delete(datastore.createQuery(entityClass).field("accid").equal(id));
         } catch (MongoException e) {
             log.error("Can't delete " + entityClass.getSimpleName() + "with accid " + id);
@@ -111,12 +101,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public List<? extends BaseEntity> getAllById(String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public List<? extends BaseEntity> getAllById(Datastore datastore, String id, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (id == null) {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             return datastore.createQuery(entityClass).field("externalId").equal(id).asList();
 
         } catch (MongoException e) {
@@ -126,12 +115,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public BaseEntity getEntityByAccountId(String accountId, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public BaseEntity getEntityByAccountId(Datastore datastore, String accountId, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (accountId == null) {
             throw new IllegalArgumentException("AccountId is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("accid").equal(accountId).asList();
             if (result.isEmpty()) {
                 return null;
@@ -144,12 +132,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public BaseEntity getAccountByName(String name, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public BaseEntity getAccountByName(Datastore datastore, String name, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (name == null) {
             throw new IllegalArgumentException("AccountId is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("name").equal(name).asList();
             if (result.isEmpty()) {
                 return null;
@@ -162,12 +149,11 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public BaseEntity getAccountByEmail(String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public BaseEntity getAccountByEmail(Datastore datastore, String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (email == null) {
             throw new IllegalArgumentException("AccountId is null.");
         }
         try {
-            Datastore datastore = connector.connect();
             List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("email").equal(email).asList();
             if (result.isEmpty()) {
                 return null;
@@ -180,14 +166,13 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
-    public List<? extends BaseEntity> getAllAccounts(Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public List<? extends BaseEntity> getAllAccounts(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         return null;
     }
 
     @Override
-    public List<? extends BaseEntity> getAccountsByType(int type, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+    public List<? extends BaseEntity> getAccountsByType(Datastore datastore, int type, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         try {
-            Datastore datastore = connector.connect();
             return datastore.createQuery(entityClass).field("type").equal(type).asList();
 
         } catch (MongoException e) {

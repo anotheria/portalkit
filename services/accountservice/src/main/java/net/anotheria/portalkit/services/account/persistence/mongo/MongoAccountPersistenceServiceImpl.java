@@ -8,21 +8,30 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.mongo.entities.AccountEntity;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
+import net.anotheria.portalkit.services.common.persistence.mongo.BaseMongoPersistenceServiceImpl;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 @Monitor(category = "portalkit-persistence-service", subsystem = "account")
-public class MongoAccountPersistenceServiceImpl implements AccountPersistenceService {
+public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServiceImpl implements AccountPersistenceService {
 	private Logger log = LoggerFactory.getLogger(MongoAccountPersistenceServiceImpl.class);
 
-	private final MongoAccountDAOImpl accountDao = new MongoAccountDAOImpl();
+	private final MongoAccountDAOImpl accountDao;
+
+	public MongoAccountPersistenceServiceImpl(){
+		super("pk-mongo-account");
+		accountDao = new MongoAccountDAOImpl();
+	}
+
 
 	@Override
 	public void saveAccount(Account account) throws AccountPersistenceServiceException {
 		try {
+			Datastore datastore = connect();
 			Account savedAccount = getAccount(account.getId());
 			if (savedAccount == null) {
 				//create new entity
@@ -37,11 +46,11 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 				accountEntity.setDaoCreated(System.currentTimeMillis());
 				accountEntity.setDaoUpdated(System.currentTimeMillis());
 
-				accountDao.createEntity(accountEntity);
+				accountDao.createEntity(datastore, accountEntity);
 			} else {
 				//update existing entity
-				AccountEntity accountEntity = (AccountEntity) accountDao.getEntity(account.getId().getInternalId(), AccountEntity.class);
-				accountDao.updateEntityFields(accountEntity, account);
+				AccountEntity accountEntity = (AccountEntity) accountDao.getEntity(datastore, account.getId().getInternalId(), AccountEntity.class);
+				accountDao.updateEntityFields(datastore, accountEntity, account);
 			}
 
 		} catch (MongoDaoException e) {
@@ -53,7 +62,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public Account getAccount(AccountId id) throws AccountPersistenceServiceException {
 		try {
-			AccountEntity accountEntity = (AccountEntity) accountDao.getEntityByAccountId(id.getInternalId(), AccountEntity.class);
+			Datastore datastore = connect();
+			AccountEntity accountEntity = (AccountEntity) accountDao.getEntityByAccountId(datastore, id.getInternalId(), AccountEntity.class);
 			if (accountEntity == null) return null;
 
 			return accountEntity.toAccout();
@@ -66,7 +76,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public void deleteAccount(AccountId id) throws AccountPersistenceServiceException {
 		try {
-			accountDao.deleteEntity(id.getInternalId(), AccountEntity.class);
+			Datastore datastore = connect();
+			accountDao.deleteEntity(datastore, id.getInternalId(), AccountEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Can't delete account with accid= " + id.getInternalId());
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
@@ -76,7 +87,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public AccountId getIdByName(String name) throws AccountPersistenceServiceException {
 		try {
-			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByName(name, AccountEntity.class);
+			Datastore datastore = connect();
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByName(datastore, name, AccountEntity.class);
 			if (accountEntity == null) return null;
 
 			return new AccountId(accountEntity.getAccid());
@@ -89,7 +101,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
 		try {
-			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByEmail(email, AccountEntity.class);
+			Datastore datastore = connect();
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByEmail(datastore, email, AccountEntity.class);
 			if (accountEntity == null) return null;
 
 			return new AccountId(accountEntity.getAccid());
@@ -102,7 +115,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException {
 		try {
-			List<? extends BaseEntity> allAccounts = accountDao.getAll(AccountEntity.class);
+			Datastore datastore = connect();
+			List<? extends BaseEntity> allAccounts = accountDao.getAll(datastore, AccountEntity.class);
 
 			Set<AccountId> resultSet = new HashSet<>();
 			for (BaseEntity baseEntity : allAccounts) {
@@ -121,7 +135,8 @@ public class MongoAccountPersistenceServiceImpl implements AccountPersistenceSer
 	@Override
 	public List<AccountId> getAccountsByType(int type) throws AccountPersistenceServiceException {
 		try {
-			List<? extends BaseEntity> accountsByType = accountDao.getAccountsByType(type, AccountEntity.class);
+			Datastore datastore = connect();
+			List<? extends BaseEntity> accountsByType = accountDao.getAccountsByType(datastore, type, AccountEntity.class);
 			if (accountsByType == null) return null;
 
 			List<AccountId> resultList = new ArrayList<>();

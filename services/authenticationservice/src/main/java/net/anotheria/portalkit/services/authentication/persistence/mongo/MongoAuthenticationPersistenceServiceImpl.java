@@ -6,22 +6,33 @@ import net.anotheria.portalkit.services.authentication.persistence.Authenticatio
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthPasswordEntity;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthTokenEntity;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.persistence.mongo.BaseMongoPersistenceServiceImpl;
 import org.bson.types.ObjectId;
+import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 @Monitor(category = "portalkit-persistence-service", subsystem = "authentication")
-public class MongoAuthenticationPersistenceServiceImpl implements AuthenticationPersistenceService{
+public class MongoAuthenticationPersistenceServiceImpl extends BaseMongoPersistenceServiceImpl implements AuthenticationPersistenceService{
 	private Logger log = LoggerFactory.getLogger(MongoAuthenticationPersistenceServiceImpl.class);
 
-	private final MongoPasswordDAOImpl passwordDao = new MongoPasswordDAOImpl();
-	private final MongoTokenDAOImpl tokenDao = new MongoTokenDAOImpl();
+	private final MongoPasswordDAOImpl passwordDao;
+	private final MongoTokenDAOImpl tokenDao;
+
+	public MongoAuthenticationPersistenceServiceImpl(){
+		super("pk-mongo-auth");
+		passwordDao = new MongoPasswordDAOImpl();
+		tokenDao = new MongoTokenDAOImpl();
+	}
+
 
 	@Override
 	public void saveEncryptedPassword(AccountId id, String password) throws AuthenticationPersistenceServiceException {
 		try {
+
+			Datastore datastore = connect();
 			String encryptedPassword = getEncryptedPassword(id);
 			if (encryptedPassword == null) {
 				//create new entity
@@ -31,11 +42,11 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 				authPassword.setDaoCreated(System.currentTimeMillis());
 				authPassword.setDaoUpdated(System.currentTimeMillis());
 
-				passwordDao.createEntity(authPassword);
+				passwordDao.createEntity(datastore, authPassword);
 			} else {
 				//update existing entity
-				AuthPasswordEntity authPasswordEntity = (AuthPasswordEntity) passwordDao.getEntity(id.getInternalId(), AuthPasswordEntity.class);
-				passwordDao.updateEntityPassword(authPasswordEntity, password);
+				AuthPasswordEntity authPasswordEntity = (AuthPasswordEntity) passwordDao.getEntity(datastore, id.getInternalId(), AuthPasswordEntity.class);
+				passwordDao.updateEntityPassword(datastore, authPasswordEntity, password);
 			}
 
 		} catch (MongoDaoException e) {
@@ -47,7 +58,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public String getEncryptedPassword(AccountId id) throws AuthenticationPersistenceServiceException {
 		try {
-			AuthPasswordEntity authPasswordEntity = (AuthPasswordEntity) passwordDao.getEntityByAccountId(id.getInternalId(), AuthPasswordEntity.class);
+			Datastore datastore = connect();
+			AuthPasswordEntity authPasswordEntity = (AuthPasswordEntity) passwordDao.getEntityByAccountId(datastore, id.getInternalId(), AuthPasswordEntity.class);
 			if (authPasswordEntity == null) return null;
 
 			return authPasswordEntity.getPassword();
@@ -60,7 +72,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public void deleteEncryptedPassword(AccountId id) throws AuthenticationPersistenceServiceException {
 		try {
-			passwordDao.deleteEntity(id.getInternalId(), AuthPasswordEntity.class);
+			Datastore datastore = connect();
+			passwordDao.deleteEntity(datastore, id.getInternalId(), AuthPasswordEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Can't delete password with accid= " + id.getInternalId());
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
@@ -70,6 +83,7 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
 		try {
+			Datastore datastore = connect();
 			//create new entity
 			AuthTokenEntity authToken = new AuthTokenEntity(new ObjectId());
 			authToken.setAccid(owner.getInternalId());
@@ -77,7 +91,7 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 			authToken.setDaoCreated(System.currentTimeMillis());
 			authToken.setDaoUpdated(System.currentTimeMillis());
 
-			tokenDao.createEntity(authToken);
+			tokenDao.createEntity(datastore, authToken);
 		} catch (MongoDaoException e) {
 			log.error("Can't create campaign", e);
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
@@ -87,7 +101,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public Set<String> getAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
 		try {
-			return tokenDao.getTokensByAccountId(owner.getInternalId(), AuthTokenEntity.class);
+			Datastore datastore = connect();
+			return tokenDao.getTokensByAccountId(datastore, owner.getInternalId(), AuthTokenEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Error while getting tokens for accountId", e);
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
@@ -97,7 +112,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public boolean authTokenExists(String encryptedToken) throws AuthenticationPersistenceServiceException {
 		try {
-			return tokenDao.authTokenExists(encryptedToken, AuthTokenEntity.class);
+			Datastore datastore = connect();
+			return tokenDao.authTokenExists(datastore, encryptedToken, AuthTokenEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Error while checking token", e);
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
@@ -107,7 +123,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public void deleteAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException {
 		try {
-			tokenDao.deleteEntity(owner.getInternalId(), AuthTokenEntity.class);
+			Datastore datastore = connect();
+			tokenDao.deleteEntity(datastore, owner.getInternalId(), AuthTokenEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Can't delete token with accid= " + owner.getInternalId());
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
@@ -117,7 +134,8 @@ public class MongoAuthenticationPersistenceServiceImpl implements Authentication
 	@Override
 	public void deleteAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
 		try {
-			tokenDao.deleteEntityWithToken(owner.getInternalId(), encryptedToken, AuthTokenEntity.class);
+			Datastore datastore = connect();
+			tokenDao.deleteEntityWithToken(datastore, owner.getInternalId(), encryptedToken, AuthTokenEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Can't delete token with accid= " + owner.getInternalId());
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);

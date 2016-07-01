@@ -2,31 +2,32 @@ package net.anotheria.portalkit.services.account.persistence.mongo;
 
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
+import org.mongodb.morphia.Datastore;
 
 import java.util.List;
 
 public interface MongoAccountDAO<T> {
-    void createEntity(T entity) throws MongoDaoException;
+    void createEntity(Datastore datastore, T entity) throws MongoDaoException;
 
-    void updateEntityFields(BaseEntity entity, Account newAccount) throws MongoDaoException;
+    void updateEntityFields(Datastore datastore, BaseEntity entity, Account newAccount) throws MongoDaoException;
 
-    T getEntity(String id, Class<? extends T> tClass) throws MongoDaoException;
+    T getEntity(Datastore datastore, String id, Class<? extends T> tClass) throws MongoDaoException;
 
-    List<? extends T> getAll(Class<? extends T> tClass) throws MongoDaoException;
+    List<? extends T> getAll(Datastore datastore, Class<? extends T> tClass) throws MongoDaoException;
 
-    List<? extends T> getAllById(String id, Class<? extends T> tClass) throws MongoDaoException;
+    List<? extends T> getAllById(Datastore datastore, String id, Class<? extends T> tClass) throws MongoDaoException;
 
-    void deleteEntity(String id, Class<? extends T> tClass) throws MongoDaoException;
+    void deleteEntity(Datastore datastore, String id, Class<? extends T> tClass) throws MongoDaoException;
 
-    T getEntityByAccountId(String accountId, Class<? extends T> tClass) throws MongoDaoException;
+    T getEntityByAccountId(Datastore datastore, String accountId, Class<? extends T> tClass) throws MongoDaoException;
 
 
-    T getAccountByName(String name, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+    T getAccountByName(Datastore datastore, String name, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
-    T getAccountByEmail(String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+    T getAccountByEmail(Datastore datastore, String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
-    List<? extends T> getAllAccounts(Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+    List<? extends T> getAllAccounts(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
-    List<? extends T> getAccountsByType(int id, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+    List<? extends T> getAccountsByType(Datastore datastore, int id, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
 }
