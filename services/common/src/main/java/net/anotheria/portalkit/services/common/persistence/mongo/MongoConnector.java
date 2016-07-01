@@ -19,6 +19,8 @@ public enum MongoConnector {
 
     private Morphia morphia;
 
+    private String configName;
+
     MongoConnector() {
         log = LoggerFactory.getLogger(MongoConnector.class);
         mongoClient = configure();
@@ -27,13 +29,20 @@ public enum MongoConnector {
         connect().ensureIndexes();
     }
 
+    public void setConfigName(String configName) {
+        this.configName = configName;
+    }
+
     public Datastore connect() {
         return morphia.createDatastore(mongoClient, config.getDbName());
     }
 
     private MongoClient configure() {
+        if (configName == null || configName.isEmpty())
+            throw new IllegalStateException("Config not set");
 
         config = new MongoConnectorConfig();
+        ConfigurationManager.INSTANCE.configureAs(config, configName);
 
         try {
             ConfigurationManager.INSTANCE.configure(config);
@@ -44,7 +53,8 @@ public enum MongoConnector {
 
 //        MongoCredential credential = MongoCredential.createCredential(config.getLogin(), config.getDbName(), config.getPassword().toCharArray());
 
-        return new MongoClient(new ServerAddress(config.getHost(), Integer.parseInt(config.getPort())));
+        ServerAddress addr = new ServerAddress(config.getHost(), Integer.parseInt(config.getPort()));
+        return new MongoClient(addr);
     }
 
 }

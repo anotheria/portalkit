@@ -20,6 +20,7 @@ public class MongoPasswordDAOImpl implements MongoDAO<BaseEntity> {
 
     public MongoPasswordDAOImpl() {
         connector = MongoConnector.INSTANCE;
+        connector.setConfigName("pk-mongo-auth");
         log = LoggerFactory.getLogger(MongoPasswordDAOImpl.class);
     }
 

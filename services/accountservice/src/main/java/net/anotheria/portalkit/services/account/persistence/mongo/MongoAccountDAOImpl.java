@@ -21,6 +21,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
 
     public MongoAccountDAOImpl() {
         connector = MongoConnector.INSTANCE;
+        connector.setConfigName("pk-mongo-account");
         log = LoggerFactory.getLogger(MongoAccountDAOImpl.class);
     }
 

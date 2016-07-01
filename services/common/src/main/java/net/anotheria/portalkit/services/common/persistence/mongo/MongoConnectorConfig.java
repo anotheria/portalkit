@@ -6,14 +6,14 @@ import org.configureme.annotations.ConfigureMe;
 /**
  * Mongo configuration
  */
-@ConfigureMe(name = "pk-mongo-account")
+@ConfigureMe(allfields = true)
 public class MongoConnectorConfig {
 
     @Configure
-    private String host;
+    private String host = "localhost";
 
     @Configure
-    private String port;
+    private String port = "27001";
 
     @Configure
     private String dbName;

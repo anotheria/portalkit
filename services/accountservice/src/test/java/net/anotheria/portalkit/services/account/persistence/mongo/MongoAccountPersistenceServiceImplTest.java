@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account.persistence.mongo;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -10,6 +11,7 @@ import static org.junit.Assert.*;
 /**
  * MongoAccountPersistenceServiceImplTest.
  */
+
 public class MongoAccountPersistenceServiceImplTest {
 
 

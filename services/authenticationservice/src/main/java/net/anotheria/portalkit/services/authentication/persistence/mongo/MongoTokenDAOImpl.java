@@ -23,6 +23,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
 
     public MongoTokenDAOImpl() {
         connector = MongoConnector.INSTANCE;
+        connector.setConfigName("pk-mongo-auth");
         log = LoggerFactory.getLogger(MongoTokenDAOImpl.class);
     }
 
