@@ -20,6 +20,7 @@ import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -29,6 +30,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Roman Stetsiuk on 6/21/16.
  */
+@Ignore
 public class MongoAuthenticationPersistenceServiceImplTest {
 //    public static final String ENV = "embedded";
 //

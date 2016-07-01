@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 /**
  * MongoAccountPersistenceServiceImplTest.
  */
-
+@Ignore
 public class MongoAccountPersistenceServiceImplTest {
 
 
