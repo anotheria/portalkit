@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 
 /**
  * Created by Roman Stetsiuk
@@ -17,10 +18,13 @@ public class AccountEntity extends BaseEntity {
 
     private String accid;
 
+    @Indexed
     private String name;
 
+    @Indexed
     private String email;
 
+    @Indexed
     private int type;
 
     private String tenant;

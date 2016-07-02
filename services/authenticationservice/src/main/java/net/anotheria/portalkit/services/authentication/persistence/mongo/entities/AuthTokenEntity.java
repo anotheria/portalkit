@@ -4,6 +4,7 @@ import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Indexed;
 
 /**
  * Created by Roman Stetsiuk
@@ -13,6 +14,7 @@ public class AuthTokenEntity extends BaseEntity {
     @Id
     private ObjectId id;
 
+    @Indexed
     private String accid;
 
     private String token;
