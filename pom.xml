@@ -20,8 +20,8 @@
 		<tools-anno-plugin.version>1.3.1</tools-anno-plugin.version>
 
         <configureme.version>2.3.2</configureme.version>
-		<moskito.version>2.7.2</moskito.version>
-		<distributeme.version>2.2.4</distributeme.version>
+		<moskito.version>2.7.5</moskito.version>
+		<distributeme.version>2.3.0</distributeme.version>
 		<aspectj.version>1.7.4</aspectj.version>
 
         <spring.version>4.2.4.RELEASE</spring.version>
@@ -312,6 +312,11 @@
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
+                    <annotationProcessors>
+                        <annotationProcessor>
+                            org.distributeme.processors.GeneratorProcessorFactory
+                        </annotationProcessor>
+                    </annotationProcessors>
 				</configuration>
 			</plugin>
 			<plugin>
