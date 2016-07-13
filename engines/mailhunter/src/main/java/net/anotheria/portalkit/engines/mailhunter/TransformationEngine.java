@@ -26,8 +26,12 @@ public class TransformationEngine {
 		for (int i=0; i<transStats.length; i++)
 			transStats[i] = new TransformationStats(transformations.get(i).describe());
 	}
-	
-	public double getHighestMatchProbability(String toCheck){
+
+	public double getHighestMatchProbability(String toCheck) {
+		return getHighestMatchProbability(toCheck, "");
+	}
+
+	public double getHighestMatchProbability(String toCheck, String locale){
 		double result = 0.0;
 		long startTime;
 		TransformationContext.getContext().setToMatch(toCheck);
@@ -35,7 +39,7 @@ public class TransformationEngine {
 			Transformation t = transformations.get(i);
 			startTime = System.currentTimeMillis();
 			transStats[i].notifyRequest();
-			String transformedToCheck = t.transform(toCheck);
+			String transformedToCheck = t.transform(toCheck, locale);
 			for (int y=0; y<matchers.size(); y++){
 				Matcher m = matchers.get(y);
 				boolean match = m.doesMatch(transformedToCheck);
@@ -108,9 +112,13 @@ public class TransformationEngine {
 		details.setMatchedArea(context.getToMatch().substring(start, end+1));
 		return details;
 	}
+
+	public boolean doesMatch(String toCheck, double probabilityTreshhold) {
+		return doesMatch(toCheck, probabilityTreshhold, "");
+	}
 	
-	public boolean doesMatch(String toCheck, double probabilityTreshhold){
-		double result = getHighestMatchProbability(toCheck);
+	public boolean doesMatch(String toCheck, double probabilityTreshhold, String locale){
+		double result = getHighestMatchProbability(toCheck, locale);
 		return result>=probabilityTreshhold;
 	}
 	

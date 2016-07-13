@@ -37,4 +37,9 @@ public abstract class AbstractTransformer implements Transformer {
 		
 		return ret;
 	}
+
+	@Override
+	public String transform(String s, String locale) {
+		return transform(s);
+	}
 }

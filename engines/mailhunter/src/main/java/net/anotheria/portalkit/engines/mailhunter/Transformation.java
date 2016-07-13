@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.engines.mailhunter;
 
+import net.anotheria.portalkit.engines.mailhunter.transformer.LocalizedTransformer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +22,24 @@ public class Transformation {
 		this();
 		transformers.addAll(someTransformers);
 	}
-	
-	public String transform(String s){
-		for (int i=0; i<transformers.size(); i++)
-			s = transformers.get(i).transform(s);
+
+	public String transform(String s) {
+		return transform(s, "");
+	}
+
+	public String transform(String s, String locale) {
+
+		for (int i = 0; i < transformers.size(); i++) {
+
+			Transformer transformer = transformers.get(i);
+
+			if (transformer instanceof LocalizedTransformer) {
+				s = transformer.transform(s, locale);
+			} else {
+				s = transformer.transform(s);
+			}
+		}
+
 		return s;
 	}
 	

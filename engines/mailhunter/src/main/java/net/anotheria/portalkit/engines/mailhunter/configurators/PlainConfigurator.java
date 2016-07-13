@@ -14,7 +14,7 @@ import net.anotheria.portalkit.engines.mailhunter.transformer.RemoveWhitespacesT
 import net.anotheria.portalkit.engines.mailhunter.transformer.ReverseStringTransformer;
 import net.anotheria.portalkit.engines.mailhunter.transformer.StartingLettersTransformer;
 import net.anotheria.portalkit.engines.mailhunter.transformer.ToLowerCaseTransformer;
-import net.anotheria.portalkit.engines.mailhunter.transformer.ToMailAttributesTransformer;
+import net.anotheria.portalkit.engines.mailhunter.transformer.DecryptionTransformer;
 
 public class PlainConfigurator implements EngineConfigurator{
 	
@@ -29,8 +29,8 @@ public class PlainConfigurator implements EngineConfigurator{
 		engine.addTransformation(createTransformation(new LettersOnlyTransformer(), new StartingLettersTransformer(), new ToLowerCaseTransformer()));
 		engine.addTransformation(createTransformation(new CapitalsOnlyTransformer(), new ToLowerCaseTransformer()));
 		engine.addTransformation(new Transformation(new StartingLettersTransformer()));
-		engine.addTransformation(createTransformation(new ToLowerCaseTransformer(), new RemoveWhitespacesTransformer(), new ToMailAttributesTransformer()));
-		engine.addTransformation(createTransformation(new ToLowerCaseTransformer(), new LettersOnlyTransformer(), new RemoveWhitespacesTransformer(), new ToMailAttributesTransformer()));
+		engine.addTransformation(createTransformation(new ToLowerCaseTransformer(), new RemoveWhitespacesTransformer(), new DecryptionTransformer()));
+		engine.addTransformation(createTransformation(new ToLowerCaseTransformer(), new LettersOnlyTransformer(), new RemoveWhitespacesTransformer(), new DecryptionTransformer()));
 		engine.addTransformation(new Transformation(new RemoveDuplicateLettersTransformer()));	
 		engine.addTransformation(new Transformation(new ReverseStringTransformer()));
 	}
