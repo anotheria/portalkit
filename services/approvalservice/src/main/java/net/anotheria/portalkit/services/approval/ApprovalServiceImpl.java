@@ -1,13 +1,18 @@
 package net.anotheria.portalkit.services.approval;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
+import net.anotheria.util.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -30,10 +35,21 @@ public class ApprovalServiceImpl implements ApprovalService {
 	private Cache<Long, TicketBO> cachedTickets;
 
 	/**
+	 * List of locked tickets
+	 * */
+	private Map<TicketBO, Long> lockedTickets;
+
+	/**
 	 * Default constructor.
 	 */
 	public ApprovalServiceImpl() {
+
 		cachedTickets = Caches.createHardwiredCache("cache-tickets");
+		lockedTickets = new HashMap();
+
+		Thread ticketUnlocker = new Thread(new TicketUnlocker());
+		ticketUnlocker.setDaemon(true);
+		ticketUnlocker.start();
 	}
 
 	@Override
@@ -158,15 +174,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		ticket.setAgent(agentId);
-
-		try {
-			persistenceService.updateTicket(ticket);
-		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Unable to lock ticket with id=" + ticketId + " for agent id=" + agentId, e);
-		}
-
-		cachedTickets.remove(ticket.getTicketId());
-		cachedTickets.put(ticket.getTicketId(), new TicketBO(ticket));
+		lockedTickets.put(new TicketBO(ticket), System.currentTimeMillis());
 	}
 
 	@Override
@@ -180,30 +188,64 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
 		}
 
-		ticket.setAgent(null);
+		lockedTickets.remove(new TicketBO(ticket));
+	}
 
-		try {
-			persistenceService.updateTicket(ticket);
-		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Unable to unlock ticket with id=" + ticketId, e);
+	@Override
+	public Set<TicketBO> getLockedTickets() throws ApprovalServiceException {
+		return lockedTickets.keySet();
+	}
+
+	@Override
+	public Set<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException {
+
+		Set<TicketBO> result = new HashSet<>();
+
+		for (TicketBO ticket : lockedTickets.keySet()) {
+
+			if (ticket.getAgent().equals(agentId)) {
+				result.add(ticket);
+			}
 		}
 
-		cachedTickets.remove(ticket.getTicketId());
-		cachedTickets.put(ticket.getTicketId(), new TicketBO(ticket));
+		return result;
 	}
 
-	@Override
-	public List<TicketBO> getLockedTickets() throws ApprovalServiceException {
-		return null;
-	}
 
-	@Override
-	public List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException {
-		return null;
-	}
+	/**
+	 * Unlocks tickets after some period of time.
+	 * */
+	private class TicketUnlocker implements Runnable {
 
-	@Override
-	public List<TicketBO> getUnlockedTickets() throws ApprovalServiceException {
-		return null;
+		/**
+		 * Unlocking time in minutes.
+		 * */
+		private final int RELEASE_TIME = 5;
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					Thread.sleep(TimeUnit.MINUTE.getMillis(1));
+					unlockTickets();
+				} catch (InterruptedException e) {
+					/* ignore */
+				}
+			}
+		}
+
+		public void unlockTickets() {
+
+			long currentTime = System.currentTimeMillis();
+
+			for(Iterator<Map.Entry<TicketBO, Long>> iterator = lockedTickets.entrySet().iterator(); iterator.hasNext(); ) {
+
+				Map.Entry<TicketBO, Long> entry = iterator.next();
+
+				if(currentTime - entry.getValue() > TimeUnit.MINUTE.getMillis(RELEASE_TIME)) {
+					iterator.remove();
+				}
+			}
+		}
 	}
 }

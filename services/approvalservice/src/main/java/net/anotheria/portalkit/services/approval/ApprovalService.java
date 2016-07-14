@@ -4,6 +4,7 @@ import net.anotheria.anoprise.metafactory.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Approval service interface.
@@ -87,19 +88,12 @@ public interface ApprovalService extends Service {
 	 *
 	 * @return list of {@link TicketBO}.
 	 * */
-	List<TicketBO> getLockedTickets() throws ApprovalServiceException;
+	Set<TicketBO> getLockedTickets() throws ApprovalServiceException;
 
 	/**
 	 * Gets locked tickets for agent.
 	 *
 	 * @return list of {@link TicketBO}.
 	 * */
-	List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException;
-
-	/**
-	 * Gets all unlocked tickets.
-	 *
-	 * @return list of {@link TicketBO}.
-	 * */
-	List<TicketBO> getUnlockedTickets() throws ApprovalServiceException;
+	Set<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException;
 }

@@ -30,7 +30,7 @@ import java.util.Objects;
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_TYPE,
-				query = "select t from TicketDO t where t.referenceType = :referenceType order by t.timestamp desc limit :number"
+				query = "select t from TicketDO t where t.referenceType = :referenceType order by t.timestamp desc"
 		)
 })
 public class TicketDO implements Serializable {

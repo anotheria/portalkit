@@ -61,11 +61,10 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	}
 
 	@Override
-	public List<TicketDO> getTickets(int number, long referenceType) throws ApprovalPersistenceServiceException {
+	public List<TicketDO> getTickets(long referenceType) throws ApprovalPersistenceServiceException {
 
 		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_TYPE, TicketDO.class);
 		q.setParameter("referenceType", referenceType);
-		q.setParameter("number", number);
 
 		List<TicketDO> tickets = q.getResultList();
 
