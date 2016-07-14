@@ -1,455 +1,209 @@
 package net.anotheria.portalkit.services.approval;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
-import net.anotheria.portalkit.services.approval.persistence.ReservationManager;
-import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceServiceException;
-import net.anotheria.portalkit.services.common.id.IdGenerator;
-import net.anotheria.util.StringUtils;
-import net.anotheria.util.concurrency.IdBasedLock;
-import net.anotheria.util.concurrency.IdBasedLockManager;
-import net.anotheria.util.concurrency.SafeIdBasedLockManager;
+import net.anotheria.portalkit.services.approval.persistence.TicketDO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Approval service implementation.
  * 
- * @author dagafonov
+ * @author Vlad Lukjanenko
  * 
  */
 public class ApprovalServiceImpl implements ApprovalService {
 
 	/**
-	 * Update time interval.
-	 */
-	protected static final long TICKET_RESERVATION_LIFETIME = 1000 * 60 * 3;
-
-	/**
 	 * Persistence service.
 	 */
+	@Autowired
 	private ApprovalPersistenceService persistenceService;
 
 	/**
-	 * 
+	 * Ticket cache.
 	 */
-	private Cache<String, Ticket> cacheTickets;
-
-	/**
-	 * Id based lock manager.
-	 */
-	private IdBasedLockManager<String> ticketsLockManager = new SafeIdBasedLockManager<String>();
-
-	/**
-	 * 
-	 */
-	private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
-	/**
-	 * Approval reservation manager.
-	 */
-	private ReservationManager<TicketReservationKey, TicketReservationBean, Ticket> approvalReservationManager = new ReservationManager<TicketReservationKey, TicketReservationBean, Ticket>() {
-
-		@Override
-		protected TicketReservationBean construct(TicketReservationKey key, List<Ticket> tickets) {
-			TicketReservationBean bean = new TicketReservationBean();
-			bean.setReferenceType(key.getReferenceType());
-			bean.setReservationObject(key.getReservationObject());
-			bean.setTickets(tickets);
-			return bean;
-		}
-
-		@Override
-		protected void updateCache(TicketReservationKey key, Set<Ticket> exclude, int number) throws PortalKitPersistenceServiceException {
-			Set<String> set = new HashSet<String>();
-			for (Ticket t : exclude) {
-				set.add(t.getTicketId());
-			}
-			List<Ticket> tickets = persistenceService.getTickets(set, number, key.getReferenceType());
-			updateCache(tickets);
-		}
-
-		@Override
-		protected void putBack(TicketReservationBean value) {
-			updateCache(value.getTickets());
-		}
-
-		@Override
-		protected void freeValue(TicketReservationBean value, Ticket v) {
-			if (value == null || value.getTickets() == null) {
-				return;
-			}
-			if (value.getTickets().size() > 0) {
-				value.getTickets().remove(v);
-			} else {
-				unreserve(new TicketReservationKey(value.getReservationObject(), value.getReferenceType()));
-			}
-		}
-
-		@Override
-		protected void checkReservation(TicketReservationKey key, TicketReservationBean value) {
-			if (System.currentTimeMillis() - value.getTimestamp() > TICKET_RESERVATION_LIFETIME) {
-				unreserve(key);
-			}
-		}
-
-	};
+	private Cache<Long, TicketBO> cachedTickets;
 
 	/**
 	 * Default constructor.
 	 */
 	public ApprovalServiceImpl() {
-		cacheTickets = Caches.createHardwiredCache("cache-tickets");
-		try {
-			persistenceService = MetaFactory.get(ApprovalPersistenceService.class);
-		} catch (MetaFactoryException e) {
-			throw new IllegalStateException("Can't start without persistence service ", e);
-		}
-		executorService.scheduleWithFixedDelay(new CheckReservationThread(), 60, 60, TimeUnit.SECONDS);
+		cachedTickets = Caches.createHardwiredCache("cache-tickets");
 	}
 
 	@Override
-	public Ticket createTicket(String ticketReferenceId, long referenceType) throws ApprovalServiceException {
-		if (StringUtils.isEmpty(ticketReferenceId)) {
-			throw new IllegalArgumentException("ticket reference id is not provided...");
-		}
-		Ticket newTicket = new Ticket();
-		newTicket.setReferenceId(ticketReferenceId);
-		newTicket.setReferenceType(referenceType);
-		newTicket.setStatus(TicketStatus.IN_APPROVAL);
-		newTicket.setTicketId(IdGenerator.generateUniqueRandomId());
+	public TicketBO createTicket(TicketBO ticket) throws ApprovalServiceException {
 		try {
-			persistenceService.createTicket(newTicket);
-			return newTicket;
+			ticket = new TicketBO(persistenceService.createTicket(ticket.toDO()));
+			cachedTickets.put(ticket.getTicketId(), ticket);
+
+			return ticket;
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.createTicket failed.", e);
+			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
 		}
 	}
 
 	@Override
-	public Ticket getTicketById(String ticketId) throws ApprovalServiceException {
-		if (StringUtils.isEmpty(ticketId)) {
-			throw new IllegalArgumentException("ticket id is not provided...");
+	public void deleteTicket(long ticketId) throws ApprovalServiceException {
+		try {
+			persistenceService.deleteTicket(ticketId);
+			cachedTickets.remove(ticketId);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
 		}
-		Ticket ticket = cacheTickets.get(ticketId);
+	}
+
+	@Override
+	public TicketBO getTicketById(long ticketId) throws ApprovalServiceException {
+
+		TicketBO ticket = cachedTickets.get(ticketId);
+
 		if (ticket != null) {
 			return ticket;
 		}
-		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticketId);
-		lock.lock();
+
 		try {
-			ticket = persistenceService.getTicketById(ticketId);
-			if (ticket == null) {
-				throw new ApprovalPersistenceServiceException("ticket not found");
-			}
-			cacheTickets.put(ticket.getTicketId(), ticket);
+			ticket = new TicketBO(persistenceService.getTicketById(ticketId));
+
 			return ticket;
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.getTicketById failed.", e);
-		} finally {
-			lock.unlock();
+			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
 		}
 	}
 
 	@Override
-	public void deleteTicket(String ticketId) throws ApprovalServiceException {
-		if (StringUtils.isEmpty(ticketId)) {
-			throw new IllegalArgumentException("ticket id does not set...");
-		}
-		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticketId);
-		lock.lock();
+	public void approveTicket(TicketBO ticket) throws ApprovalServiceException {
+
+		ticket.setType(TicketType.APPROVED);
+		ticket.setStatus(TicketStatus.CLOSED);
+
 		try {
-			persistenceService.deleteTicket(ticketId);
-			cacheTickets.remove(ticketId);
+			persistenceService.updateTicket(ticket.toDO());
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.deleteTicket failed.", e);
-		} finally {
-			lock.unlock();
+			throw new ApprovalServiceException("Unable to approve ticket with id=" + ticket.getTicketId(), e);
+		}
+
+		cachedTickets.remove(ticket.getTicketId());
+		cachedTickets.put(ticket.getTicketId(), ticket);
+	}
+
+	@Override
+	public void approveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException {
+
+		for (TicketBO ticket : tickets) {
+
+			ticket.setType(TicketType.APPROVED);
+			ticket.setStatus(TicketStatus.CLOSED);
+
+			try {
+				persistenceService.updateTicket(ticket.toDO());
+			} catch (ApprovalPersistenceServiceException e) {
+				continue;
+			}
+
+			cachedTickets.remove(ticket.getTicketId());
+			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
 	}
 
 	@Override
-	public void deleteTicket(Ticket ticket) throws ApprovalServiceException {
-		if (ticket == null || StringUtils.isEmpty(ticket.getTicketId())) {
-			throw new IllegalArgumentException("ticket or ticket id do not set...");
-		}
-		deleteTicket(ticket.getTicketId());
-	}
+	public void disapproveTicket(TicketBO ticket) throws ApprovalServiceException {
 
-	@Override
-	public void approveTicket(Ticket ticket, String reservationObject) throws ApprovalServiceException {
-		if (ticket == null) {
-			throw new IllegalArgumentException("ticket is null...");
-		}
-		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticket.getTicketId());
-		lock.lock();
+		ticket.setType(TicketType.DISAPPROVED);
+		ticket.setStatus(TicketStatus.CLOSED);
+
 		try {
-			persistenceService.approveTicket(ticket);
-			cacheTickets.remove(ticket.getTicketId());
-			unreserveTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
+			persistenceService.updateTicket(ticket.toDO());
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.approveTicket failed.", e);
-		} finally {
-			lock.unlock();
+			throw new ApprovalServiceException("Unable to disapprove ticket with id=" + ticket.getTicketId(), e);
+		}
+
+		cachedTickets.remove(ticket.getTicketId());
+		cachedTickets.put(ticket.getTicketId(), ticket);
+	}
+
+	@Override
+	public void disapproveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException {
+
+		for (TicketBO ticket : tickets) {
+
+			ticket.setType(TicketType.DISAPPROVED);
+			ticket.setStatus(TicketStatus.CLOSED);
+
+			try {
+				persistenceService.updateTicket(ticket.toDO());
+			} catch (ApprovalPersistenceServiceException e) {
+				continue;
+			}
+
+			cachedTickets.remove(ticket.getTicketId());
+			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
 	}
 
 	@Override
-	public void approveTickets(Collection<Ticket> tickets, String reservationObject) throws ApprovalServiceException {
-		if (tickets == null || tickets.size() == 0) {
-			return;
-		}
-		for (Ticket ticket : tickets) {
-			approveTicket(ticket, reservationObject);
-		}
-	}
+	public void lockTicket(long ticketId, String agentId) throws ApprovalServiceException {
 
-	@Override
-	public void disapproveTicket(Ticket ticket, String reservationObject) throws ApprovalServiceException {
-		if (ticket == null) {
-			throw new IllegalArgumentException("ticket is null...");
-		}
-		IdBasedLock<String> lock = ticketsLockManager.obtainLock(ticket.getTicketId());
-		lock.lock();
+		TicketDO ticket = null;
+
 		try {
-			persistenceService.disapproveTicket(ticket);
-			cacheTickets.remove(ticket.getTicketId());
-
-			unreserveTicket(new TicketReservationKey(reservationObject, ticket.getReferenceType()), ticket);
+			ticket = persistenceService.getTicketById(ticketId);
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.approveTicket failed.", e);
-		} finally {
-			lock.unlock();
+			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
 		}
-	}
 
-	@Override
-	public void disapproveTickets(Collection<Ticket> tickets, String reservationObject) throws ApprovalServiceException {
-		if (tickets == null || tickets.size() == 0) {
-			return;
-		}
-		for (Ticket ticket : tickets) {
-			disapproveTicket(ticket, reservationObject);
-		}
-	}
+		ticket.setAgent(agentId);
 
-	@Override
-	public void proceedTickets(Collection<Ticket> toApprove, Collection<Ticket> toDisapprove, String reservationObject)
-			throws ApprovalServiceException {
-		if (toApprove != null && toApprove.size() > 0) {
-			approveTickets(toApprove, reservationObject);
-		}
-		if (toDisapprove != null && toDisapprove.size() > 0) {
-			disapproveTickets(toDisapprove, reservationObject);
-		}
-	}
-
-	@Override
-	public Collection<Ticket> getAndReserveTickets(String reservationObject, int number, long referenceType) throws ApprovalServiceException {
 		try {
-			TicketReservationBean bean = approvalReservationManager.reserve(new TicketReservationKey(reservationObject, referenceType), number);
-			return new ArrayList<Ticket>(bean.getTickets());
-		} catch (PortalKitPersistenceServiceException e) {
-			throw new ApprovalServiceException("persistenceService.getTicketsForReservation failed.", e);
+			persistenceService.updateTicket(ticket);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Unable to lock ticket with id=" + ticketId + " for agent id=" + agentId, e);
 		}
+
+		cachedTickets.remove(ticket.getTicketId());
+		cachedTickets.put(ticket.getTicketId(), new TicketBO(ticket));
 	}
 
 	@Override
-	public Collection<Ticket> getReservedTickets(String reservationObject, long referenceType) throws ApprovalServiceException {
-		TicketReservationBean bean = approvalReservationManager.getReserved(new TicketReservationKey(reservationObject, referenceType));
-		if (bean == null) {
-			return new ArrayList<Ticket>();
+	public void unlockTicket(long ticketId) throws ApprovalServiceException {
+
+		TicketDO ticket = null;
+
+		try {
+			ticket = persistenceService.getTicketById(ticketId);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
 		}
-		return bean.getTickets();
+
+		ticket.setAgent(null);
+
+		try {
+			persistenceService.updateTicket(ticket);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Unable to unlock ticket with id=" + ticketId, e);
+		}
+
+		cachedTickets.remove(ticket.getTicketId());
+		cachedTickets.put(ticket.getTicketId(), new TicketBO(ticket));
 	}
 
 	@Override
-	public void unreserveTickets(String reservationObject, long referenceType) throws ApprovalServiceException {
-		approvalReservationManager.unreserve(new TicketReservationKey(reservationObject, referenceType));
+	public List<TicketBO> getLockedTickets() throws ApprovalServiceException {
+		return null;
 	}
 
-	private void unreserveTicket(TicketReservationKey key, Ticket ticket) {
-		approvalReservationManager.unreserve(key, ticket);
+	@Override
+	public List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException {
+		return null;
 	}
 
-	/**
-	 * Reservation checker Thread.
-	 */
-	public class CheckReservationThread implements Runnable {
-
-		@Override
-		public void run() {
-			approvalReservationManager.checkReservation();
-		}
+	@Override
+	public List<TicketBO> getUnlockedTickets() throws ApprovalServiceException {
+		return null;
 	}
-
-	/**
-	 * TicketReservationKey class.
-	 */
-	private class TicketReservationKey {
-
-		/**
-		 * 
-		 */
-		private long referenceType;
-		
-		/**
-		 * 
-		 */
-		private String reservationObject;
-
-		/**
-		 * Default constructor with parameters.
-		 * 
-		 * @param reservationObject
-		 * @param referenceType
-		 */
-		public TicketReservationKey(String reservationObject, long referenceType) {
-			this.reservationObject = reservationObject;
-			this.referenceType = referenceType;
-		}
-
-		public long getReferenceType() {
-			return referenceType;
-		}
-
-		public String getReservationObject() {
-			return reservationObject;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + (int) (referenceType ^ (referenceType >>> 32));
-			result = prime * result + ((reservationObject == null) ? 0 : reservationObject.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			TicketReservationKey other = (TicketReservationKey) obj;
-			if (referenceType != other.referenceType)
-				return false;
-			if (reservationObject == null) {
-				if (other.reservationObject != null)
-					return false;
-			} else if (!reservationObject.equals(other.reservationObject))
-				return false;
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return "TicketReservationKey [referenceType=" + referenceType + ", reservationObject=" + reservationObject + "]";
-		}
-
-	}
-
-	/**
-	 * TicketReservationBean
-	 */
-	private class TicketReservationBean {
-
-		/**
-		 * 
-		 */
-		private List<Ticket> tickets;
-		
-		/**
-		 * 
-		 */
-		private long referenceType;
-		
-		/**
-		 * 
-		 */
-		private String reservationObject;
-		
-		/**
-		 * 
-		 */
-		private long timestamp = System.currentTimeMillis();
-
-		public String getReservationObject() {
-			return reservationObject;
-		}
-
-		public void setReservationObject(String reservationObject) {
-			this.reservationObject = reservationObject;
-		}
-
-		public long getTimestamp() {
-			return timestamp;
-		}
-
-		public List<Ticket> getTickets() {
-			return tickets;
-		}
-
-		public void setTickets(List<Ticket> tickets) {
-			this.tickets = tickets;
-		}
-
-		public long getReferenceType() {
-			return referenceType;
-		}
-
-		public void setReferenceType(long referenceType) {
-			this.referenceType = referenceType;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + (int) (referenceType ^ (referenceType >>> 32));
-			result = prime * result + ((reservationObject == null) ? 0 : reservationObject.hashCode());
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			TicketReservationBean other = (TicketReservationBean) obj;
-			if (referenceType != other.referenceType)
-				return false;
-			if (reservationObject == null) {
-				if (other.reservationObject != null)
-					return false;
-			} else if (!reservationObject.equals(other.reservationObject))
-				return false;
-			return true;
-		}
-
-		@Override
-		public String toString() {
-			return "TicketReservationBean [tickets=" + tickets + ", referenceType=" + referenceType + ", reservationObject=" + reservationObject
-					+ ", timestamp=" + timestamp + "]";
-		}
-
-	}
-
 }

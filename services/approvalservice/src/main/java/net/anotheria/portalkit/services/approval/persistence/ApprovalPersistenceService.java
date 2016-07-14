@@ -2,86 +2,63 @@ package net.anotheria.portalkit.services.approval.persistence;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.approval.Ticket;
+import net.anotheria.moskito.aop.annotation.Monitor;
+import org.springframework.stereotype.Service;
 
 /**
  * Approval service persistence interface.
  * 
- * @author dagafonov
+ * @author Vlad Lukjanenko
  * 
  */
-public interface ApprovalPersistenceService extends Service {
+@Monitor
+@Service
+public interface ApprovalPersistenceService {
 
 	/**
 	 * Creates a ticket.
-	 * 
+	 *
 	 * @param newTicket
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	void createTicket(Ticket newTicket) throws ApprovalPersistenceServiceException;
+	TicketDO createTicket(TicketDO newTicket) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Gets tocket by ID.
-	 * 
+	 *
 	 * @param ticketId
-	 * @return {@link Ticket}
+	 * @return {@link TicketDO}
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	Ticket getTicketById(String ticketId) throws ApprovalPersistenceServiceException;
+	TicketDO getTicketById(long ticketId) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Approves a ticket.
-	 * 
+	 *
 	 * @param ticket
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	void approveTicket(Ticket ticket) throws ApprovalPersistenceServiceException;
-
-	/**
-	 * Approves list of tickets.
-	 * 
-	 * @param tickets
-	 * @throws ApprovalPersistenceServiceException
-	 */
-	void approveTickets(Collection<Ticket> tickets) throws ApprovalPersistenceServiceException;
-
-	/**
-	 * Disapproves a ticket.
-	 * 
-	 * @param ticket
-	 * @throws ApprovalPersistenceServiceException
-	 */
-	void disapproveTicket(Ticket ticket) throws ApprovalPersistenceServiceException;
-
-	/**
-	 * Disapproves list of tickets.
-	 * 
-	 * @param tickets
-	 * @throws ApprovalPersistenceServiceException
-	 */
-	void disapproveTickets(Collection<Ticket> tickets) throws ApprovalPersistenceServiceException;
+	void updateTicket(TicketDO ticket) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Deletes ticket.
-	 * 
-	 * @param ticket
+	 *
+	 * @param ticketId
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	void deleteTicket(String ticketId) throws ApprovalPersistenceServiceException;
+	void deleteTicket(long ticketId) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
 	 * descending. List will contains max {@code number} of tickets and
 	 * specified {@code referenceType}.
-	 * 
+	 *
 	 * @param number
 	 * @param referenceType
-	 * @return {@link List<Ticket>}
+	 * @return {@link List<TicketDO>}
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	List<Ticket> getTickets(Set<String> keySet, int number, long referenceType) throws ApprovalPersistenceServiceException;
+	List<TicketDO> getTickets(int number, long referenceType) throws ApprovalPersistenceServiceException;
 
 }
