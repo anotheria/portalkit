@@ -4,6 +4,9 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -30,7 +33,11 @@ import java.util.Objects;
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_TYPE,
-				query = "select t from TicketDO t where t.referenceType = :referenceType order by t.timestamp desc"
+				query = "select t from TicketDO t where t.referenceType = :referenceType order by t.created desc"
+		),
+		@NamedQuery(
+				name = TicketDO.GET_TICKETS_BY_LOCALE,
+				query = "select t from TicketDO t where t.locale = :locale and ticketType = 'IN_APPROVAL' order by t.created asc"
 		)
 })
 public class TicketDO implements Serializable {
@@ -38,11 +45,12 @@ public class TicketDO implements Serializable {
 	public static final String GET_TICKET_BY_ID = "TicketDO.getTicketById";
 	public static final String DELETE_TICKET_BY_ID = "TicketDO.deleteTicketById";
 	public static final String GET_TICKETS_BY_TYPE = "TicketDO.getTicketsByType";
+	public static final String GET_TICKETS_BY_LOCALE = "TicketDO.getTicketsByLocale";
 
 	/**
 	 * Internal ID.
 	 */
-	@Column
+	@Column @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
 	private long ticketId;
 
 	/**
@@ -52,10 +60,10 @@ public class TicketDO implements Serializable {
 	private String status;
 
 	/**
-	 * Ticket type.
+	 * Ticket ticketType.
 	 */
-	@Column
-	private String type;
+	@Column(name = "type")
+	private String ticketType;
 
 	/**
 	 * Agent.
@@ -70,7 +78,7 @@ public class TicketDO implements Serializable {
 	private String referenceId;
 
 	/**
-	 * Reference type.
+	 * Reference ticketType.
 	 */
 	@Column
 	private long referenceType;
@@ -122,11 +130,11 @@ public class TicketDO implements Serializable {
 	}
 
 	public String getType() {
-		return type;
+		return ticketType;
 	}
 
 	public void setType(String type) {
-		this.type = type;
+		this.ticketType = type;
 	}
 
 	public String getAgent() {

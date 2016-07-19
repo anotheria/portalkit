@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 @Import(JpaSpringConfiguration.class)
 @ComponentScan(ApprovalServiceConfiguration.BASE_PACKAGE)
 @Configuration
-public class ApprovalServiceConfiguration extends JpaSpringConfiguration{
+public class ApprovalServiceConfiguration extends JpaSpringConfiguration {
 
     public static final String BASE_PACKAGE = "net.anotheria.portalkit.services.approval";
 

@@ -52,20 +52,22 @@ public class TicketBO implements Serializable {
 	/**
 	 * Timestamp of created ticket.
 	 */
-	@Column
 	private long created;
 
 	/**
 	 * Timestamp of viewed ticket.
 	 */
-	@Column
 	private long presentation;
 
 	/**
 	 * Timestamp of fulfilled ticket.
 	 */
-	@Column
 	private long fulfillment;
+
+	/**
+	 * Total amount of tickets.
+	 * */
+	private int totalAmountOfTickets;
 
 
 	public TicketBO() {
@@ -167,13 +169,20 @@ public class TicketBO implements Serializable {
 		this.fulfillment = fulfillment;
 	}
 
+	public int getTotalAmountOfTickets() {
+		return totalAmountOfTickets;
+	}
+
+	public void setTotalAmountOfTickets(int totalAmountOfTickets) {
+		this.totalAmountOfTickets = totalAmountOfTickets;
+	}
+
 	public TicketDO toDO() {
 
 		TicketDO ticket = new TicketDO();
 
 		ticket.setTicketId(this.ticketId);
 		ticket.setStatus(this.status.name());
-		ticket.setCreated(this.created);
 		ticket.setPresentation(this.presentation);
 		ticket.setFulfillment(this.fulfillment);
 		ticket.setAgent(this.agent);

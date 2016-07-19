@@ -7,7 +7,7 @@ CREATE TABLE ticketsapproval
 	referenceid varchar(255) not null,
 	referencetype bigint not null,
 	locale VARCHAR(128) not null,
-	craeted bigint not null,
+	created bigint not null,
 	presentation bigint not null,
 	fulfillment bigint not null
 );

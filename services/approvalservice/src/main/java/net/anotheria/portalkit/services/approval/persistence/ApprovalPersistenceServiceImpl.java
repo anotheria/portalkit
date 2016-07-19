@@ -24,7 +24,6 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	@PersistenceContext
 	private EntityManager entityManager;
 
-
 	@Override
 	public TicketDO createTicket(TicketDO newTicket) throws ApprovalPersistenceServiceException {
 		entityManager.persist(newTicket);
@@ -65,6 +64,21 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 
 		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_TYPE, TicketDO.class);
 		q.setParameter("referenceType", referenceType);
+
+		List<TicketDO> tickets = q.getResultList();
+
+		if (tickets == null) {
+			throw new ApprovalPersistenceServiceException("Tickets not found");
+		}
+
+		return tickets;
+	}
+
+	@Override
+	public List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException {
+
+		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_LOCALE, TicketDO.class);
+		q.setParameter("locale", locale);
 
 		List<TicketDO> tickets = q.getResultList();
 

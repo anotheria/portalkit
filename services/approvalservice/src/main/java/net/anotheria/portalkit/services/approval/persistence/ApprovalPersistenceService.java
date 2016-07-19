@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.approval.persistence;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
@@ -58,5 +57,15 @@ public interface ApprovalPersistenceService {
 	 * @throws ApprovalPersistenceServiceException
 	 */
 	List<TicketDO> getTickets(long referenceType) throws ApprovalPersistenceServiceException;
+
+	/**
+	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
+	 * descending. List will contain tickets of specified locale
+	 *
+	 * @param locale
+	 * @return {@link List<TicketDO>}
+	 * @throws ApprovalPersistenceServiceException
+	 */
+	List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException;
 
 }

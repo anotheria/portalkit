@@ -41,6 +41,15 @@ public interface ApprovalService extends Service {
 	TicketBO getTicketById(long ticketId) throws ApprovalServiceException;
 
 	/**
+	 * Gets ticket by locale.
+	 *
+	 * @param locale
+	 * @return list of {@link TicketBO}
+	 * @throws ApprovalServiceException
+	 */
+	List<TicketBO> getTicketsByLocale(String locale) throws ApprovalServiceException;
+
+	/**
 	 * Approves ticket.
 	 * 
 	 * @throws ApprovalServiceException
@@ -91,9 +100,19 @@ public interface ApprovalService extends Service {
 	Set<TicketBO> getLockedTickets() throws ApprovalServiceException;
 
 	/**
+	 * Gets all unlocked tickets by locale.
+	 *
+	 * @param locale 	locale.
+	 * @param size 		number of elements to print.
+	 *
+	 * @return list of {@link TicketBO}.
+	 * */
+	List<TicketBO> getTickets(String locale, String agentId, int size) throws ApprovalServiceException;
+
+	/**
 	 * Gets locked tickets for agent.
 	 *
 	 * @return list of {@link TicketBO}.
 	 * */
-	Set<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException;
+	List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException;
 }
