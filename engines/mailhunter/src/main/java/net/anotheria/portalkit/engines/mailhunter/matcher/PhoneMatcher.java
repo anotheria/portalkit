@@ -21,6 +21,10 @@ public class PhoneMatcher extends AbstractMatcher{
 		this(aValue, 1.0);
 	}
 
+	public PhoneMatcher() {
+		this("", 1.0);
+	}
+
 	@Override public boolean doesMatch(String expression) {
 		matcher = pattern.matcher(expression);
 		return matcher.matches();
