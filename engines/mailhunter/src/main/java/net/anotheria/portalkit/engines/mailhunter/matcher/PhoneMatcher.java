@@ -9,7 +9,7 @@ public class PhoneMatcher extends AbstractMatcher{
 
 	private Matcher matcher;
 
-	private Pattern pattern = Pattern.compile("^[1-9]{9,}$");
+	private Pattern pattern = Pattern.compile("^[0-9]{9,}$");
 
 
 	public PhoneMatcher(String aValue, double aReduction){
