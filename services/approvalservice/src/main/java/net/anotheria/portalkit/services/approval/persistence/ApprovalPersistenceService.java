@@ -50,13 +50,13 @@ public interface ApprovalPersistenceService {
 
 	/**
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
-	 * descending. List will contain tickets of specified {@code referenceType}.
+	 * descending. List will contain tickets of specified {@code referenceType} and {@code ticketType}.
 	 *
 	 * @param referenceType
 	 * @return {@link List<TicketDO>}
 	 * @throws ApprovalPersistenceServiceException
 	 */
-	List<TicketDO> getTickets(long referenceType) throws ApprovalPersistenceServiceException;
+	List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp

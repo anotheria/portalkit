@@ -7,7 +7,10 @@ import java.util.List;
 
 
 public class Transformation {
+
 	private ArrayList<Transformer> transformers;
+
+	private String locale;
 	
 	public Transformation(){
 		transformers = new ArrayList<Transformer>();

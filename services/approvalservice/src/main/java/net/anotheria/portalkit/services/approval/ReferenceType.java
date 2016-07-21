@@ -11,7 +11,12 @@ public enum ReferenceType {
 	/**
 	 * Text message.
 	 */
-	MESSAGE(1);
+	MESSAGE(1),
+
+	/**
+	 * Photo.
+	 * */
+	PICTURE(2);
 
 	/**
 	 * Reference type integer representation.

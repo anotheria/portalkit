@@ -50,6 +50,16 @@ public interface ApprovalService extends Service {
 	List<TicketBO> getTicketsByLocale(String locale) throws ApprovalServiceException;
 
 	/**
+	 * Gets ticket by type.
+	 *
+	 * @param referenceType		reference type.
+	 * @param ticketType		ticket type.
+	 * @return list of {@link TicketBO}
+	 * @throws ApprovalServiceException
+	 */
+	List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType) throws ApprovalServiceException;
+
+	/**
 	 * Approves ticket.
 	 * 
 	 * @throws ApprovalServiceException

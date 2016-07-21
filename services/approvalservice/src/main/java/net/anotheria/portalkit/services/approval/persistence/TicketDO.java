@@ -33,7 +33,7 @@ import java.util.Objects;
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_TYPE,
-				query = "select t from TicketDO t where t.referenceType = :referenceType order by t.created desc"
+				query = "select t from TicketDO t where t.referenceType = :referenceType and t.ticketType = :ticketType order by t.created desc"
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_LOCALE,

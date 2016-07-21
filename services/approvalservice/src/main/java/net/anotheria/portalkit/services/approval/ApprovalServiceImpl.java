@@ -128,6 +128,30 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
+	public List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType) throws ApprovalServiceException {
+
+		List<TicketBO> result = new ArrayList<>();
+		List<TicketDO> tickets = null;
+
+		try {
+			tickets = approvalPersistenceService.getTickets(referenceType.getValue(), ticketType.name());
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while getting tickets", e);
+		}
+
+		int totalSize = tickets.size();
+
+		for (TicketDO ticket : tickets) {
+
+			TicketBO t = new TicketBO(ticket);
+			t.setTotalAmountOfTickets(totalSize);
+			result.add(t);
+		}
+
+		return result;
+	}
+
+	@Override
 	public void approveTicket(TicketBO ticket) throws ApprovalServiceException {
 
 		ticket.setType(TicketType.APPROVED);
