@@ -9,7 +9,7 @@ public class NumbersOnlyTransformer extends AbstractTransformer {
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
-            if (Character.isDigit(c) || c == ' ')
+            if (Character.isDigit(c))
                 ret.append(c);
         }
         return ret.toString();
