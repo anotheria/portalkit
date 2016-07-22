@@ -63,6 +63,8 @@ public class ApprovalServiceImplTest {
         ticket.setFulfillment(System.currentTimeMillis());
         ticket.setPresentation(System.currentTimeMillis());
 
+        when(persistenceService.getTicketById(2)).thenReturn(ticket.toDO());
+
         approvalService.approveTicket(ticket);
 
         verify(persistenceService, atLeastOnce()).updateTicket(any(TicketDO.class));
@@ -82,6 +84,8 @@ public class ApprovalServiceImplTest {
         ticket.setCreated(System.currentTimeMillis());
         ticket.setFulfillment(System.currentTimeMillis());
         ticket.setPresentation(System.currentTimeMillis());
+
+        when(persistenceService.getTicketById(3)).thenReturn(ticket.toDO());
 
         approvalService.disapproveTicket(ticket);
 

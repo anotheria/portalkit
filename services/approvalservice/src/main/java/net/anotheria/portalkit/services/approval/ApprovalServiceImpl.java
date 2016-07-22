@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.approval;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	/**
 	 * Map of locked tickets.
 	 * */
-	private Map<TicketBO, Long> lockedTickets;
+	private Map<Long, Long> lockedTickets;
 
 	/**
 	 * Map of unlocked tickets by locale.
@@ -163,7 +164,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to approve ticket with id=" + ticket.getTicketId(), e);
 		}
 
-		lockedTickets.remove(ticket);
+		unlockTicket(ticket.getTicketId());
 		cachedTickets.remove(ticket.getTicketId());
 		cachedTickets.put(ticket.getTicketId(), ticket);
 	}
@@ -182,7 +183,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 				continue;
 			}
 
-			lockedTickets.remove(ticket);
+			unlockTicket(ticket.getTicketId());
 			cachedTickets.remove(ticket.getTicketId());
 			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
@@ -200,7 +201,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to disapprove ticket with id=" + ticket.getTicketId(), e);
 		}
 
-		lockedTickets.remove(ticket);
+		unlockTicket(ticket.getTicketId());
 		cachedTickets.remove(ticket.getTicketId());
 		cachedTickets.put(ticket.getTicketId(), ticket);
 	}
@@ -219,7 +220,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 				continue;
 			}
 
-			lockedTickets.remove(ticket);
+			unlockTicket(ticket.getTicketId());
 			cachedTickets.remove(ticket.getTicketId());
 			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
@@ -237,7 +238,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		ticket.setAgent(agentId);
-		lockedTickets.put(new TicketBO(ticket), System.currentTimeMillis());
+		lockedTickets.put(ticket.getTicketId(), System.currentTimeMillis());
 	}
 
 	@Override
@@ -251,12 +252,23 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
 		}
 
-		lockedTickets.remove(new TicketBO(ticket));
+		lockedTickets.remove(ticket.getTicketId());
 	}
 
 	@Override
 	public Set<TicketBO> getLockedTickets() throws ApprovalServiceException {
-		return lockedTickets.keySet();
+
+		Set<TicketBO> tickets = new HashSet<>();
+
+		for (long ticketId : lockedTickets.keySet()) {
+			try {
+				tickets.add(new TicketBO(approvalPersistenceService.getTicketById(ticketId)));
+			} catch (ApprovalPersistenceServiceException e) {
+				continue;
+			}
+		}
+
+		return tickets;
 	}
 
 	@Override
@@ -302,7 +314,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	private boolean isLocked(TicketBO ticket) {
 
-		if (lockedTickets.containsKey(ticket)) {
+		if (lockedTickets.containsKey(ticket.getTicketId())) {
 			return true;
 		}
 
@@ -314,10 +326,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		List<TicketBO> result = new ArrayList<>();
 
-		for (TicketBO ticket : lockedTickets.keySet()) {
-
-			if (ticket.getAgent().equals(agentId)) {
-				result.add(ticket);
+		for (long ticketId : lockedTickets.keySet()) {
+			try {
+				result.add(new TicketBO(approvalPersistenceService.getTicketById(ticketId)));
+			} catch (ApprovalPersistenceServiceException e) {
+				continue;
 			}
 		}
 
@@ -351,9 +364,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 			long currentTime = System.currentTimeMillis();
 
-			for(Iterator<Map.Entry<TicketBO, Long>> iterator = lockedTickets.entrySet().iterator(); iterator.hasNext(); ) {
+			for(Iterator<Map.Entry<Long, Long>> iterator = lockedTickets.entrySet().iterator(); iterator.hasNext(); ) {
 
-				Map.Entry<TicketBO, Long> entry = iterator.next();
+				Map.Entry<Long, Long> entry = iterator.next();
 
 				if(currentTime - entry.getValue() > TimeUnit.MINUTE.getMillis(RELEASE_TIME)) {
 					iterator.remove();
