@@ -43,7 +43,6 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity is null.");
         }
         try {
-            // change the name of the hotel
             UpdateOperations<AccountEntity> ops = datastore.createUpdateOperations(AccountEntity.class)
                     .set("name", newAccountData.getName())
                     .set("email", newAccountData.getEmail())
