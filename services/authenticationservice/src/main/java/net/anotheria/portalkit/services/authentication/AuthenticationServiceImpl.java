@@ -170,6 +170,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public void deleteTokens(AccountId accountId) throws AuthenticationServiceException {
+        if (accountId == null)
+            throw new IllegalArgumentException("Incoming accountId is NULL.");
+        try {
+            persistenceService.deleteAuthTokens(accountId);
+        } catch (AuthenticationPersistenceServiceException e) {
+            log.error("Couldn't delete auth tokens for " + accountId);
+        }
+    }
+
+    @Override
     public void deleteData(AccountId accountId) {
         if (accountId == null)
             throw new IllegalArgumentException("Incoming accountId is NULL.");

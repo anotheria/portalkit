@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
+import net.anotheria.portalkit.services.common.spring.SpringHolder;
 import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
@@ -13,7 +14,6 @@ public class ApprovalServiceFactory implements ServiceFactory<ApprovalService> {
 
 	@Override
 	public ApprovalService create() {
-		return ServiceProxyUtil.createServiceProxy(ApprovalService.class, new ApprovalServiceImpl(), "service", "portal-kit", true);
+		return SpringHolder.get(ApprovalService.class);
 	}
-
 }

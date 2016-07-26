@@ -68,4 +68,13 @@ public interface AuthenticationService extends Service, DeletionService {
      */
     EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
+    /**
+     * Removes all user tokens from database.
+     *
+     * @param accountId
+     * @return
+     * @throws AuthenticationServiceException
+     */
+    void deleteTokens(AccountId accountId) throws AuthenticationServiceException;
+
 }
