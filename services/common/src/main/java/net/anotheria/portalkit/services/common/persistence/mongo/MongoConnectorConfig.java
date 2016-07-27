@@ -4,40 +4,23 @@ import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 
 /**
- * Mongo configuration
+ * Mongo configuration uri
  */
 @ConfigureMe(allfields = true)
 public class MongoConnectorConfig {
 
     @Configure
-    private String host = "localhost";
-
-    @Configure
-    private String port = "27001";
-
-    @Configure
     private String dbName;
 
     @Configure
-    private String login;
+    private String uri;
 
-    @Configure
-    private String password;
-
-    public String getHost() {
-        return host;
+    public String getUri() {
+        return uri;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     public String getDbName() {
@@ -48,30 +31,11 @@ public class MongoConnectorConfig {
         this.dbName = dbName;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String toString() {
-        return "MongoConfigurationServiceConfig{" +
-                "host='" + host + '\'' +
-                ", port='" + port + '\'' +
-                ", dbName='" + dbName + '\'' +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return "{\"_class\":\"MongoConnectorConfig\", " +
+                "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
+                "\"uri\":" + (uri == null ? "null" : "\"" + uri + "\"") +
+                "}";
     }
 }

@@ -8,29 +8,31 @@ import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersisten
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
 /**
  * Created by Roman Stetsiuk on 7/25/16.
  */
+@Ignore
 public class MongoForeignIdPersistenceServiceImplTest {
-    protected ForeignIdPersistenceService getService(String environment) throws ForeignIdPersistenceServiceException {
-        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test", environment));
+    protected ForeignIdPersistenceService getService() throws ForeignIdPersistenceServiceException {
+        ConfigurationManager.INSTANCE.setDefaultEnvironment(new DynamicEnvironment("test"));
         ForeignIdPersistenceService service = new MongoForeignIdPersistenceServiceImpl();
         return service;
     }
 
     @Test
     public void testLink() throws ForeignIdPersistenceServiceException {
-        ForeignIdPersistenceService service = getService("mongo");
+        ForeignIdPersistenceService service = getService();
         ForeignId fid = new ForeignId(new AccountId("accid1"), ForeignIdSources.FACEBOOK, "foreignid1");
         service.link(fid.getAccountId(), fid.getSourceId(), fid.getId());
     }
 
     @Test
     public void testGetAccountIdByForeignId() throws ForeignIdPersistenceServiceException {
-        ForeignIdPersistenceService service = getService("mongo");
+        ForeignIdPersistenceService service = getService();
 
         service.link(new AccountId("accid1"), ForeignIdSources.FACEBOOK, "foreignid2");
 
@@ -41,14 +43,14 @@ public class MongoForeignIdPersistenceServiceImplTest {
 
     @Test
     public void testGetAccountIdByUnknownForeignId() throws ForeignIdPersistenceServiceException {
-        ForeignIdPersistenceService service = getService("mongo");
+        ForeignIdPersistenceService service = getService();
         AccountId accid = service.getAccountIdByForeignId(ForeignIdSources.FACEBOOK, "unknownfid");
         Assert.assertNull(accid);
     }
 
     @Test
     public void testUnlink() throws ForeignIdPersistenceServiceException {
-        ForeignIdPersistenceService service = getService("mongo");
+        ForeignIdPersistenceService service = getService();
         AccountId accid = AccountId.generateNew();
         service.link(accid, ForeignIdSources.FACEBOOK, "foreignid3");
 

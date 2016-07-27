@@ -1,19 +1,17 @@
 package net.anotheria.portalkit.services.common.persistence.mongo;
 
 import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
+import com.mongodb.MongoClientURI;
 import org.configureme.ConfigurationManager;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
+ * Base mongo persistence service
+ *
  * Created by Roman Stetsiuk on 7/1/16.
  */
 public abstract class BaseMongoPersistenceServiceImpl implements BaseMongoPersistenceService {
-    private Logger log = LoggerFactory.getLogger(BaseMongoPersistenceServiceImpl.class);
-
     private MongoClient mongoClient;
     private MongoConnectorConfig config;
     private Morphia morphia;
@@ -54,9 +52,9 @@ public abstract class BaseMongoPersistenceServiceImpl implements BaseMongoPersis
 
         config = new MongoConnectorConfig();
         ConfigurationManager.INSTANCE.configureAs(config, configName);
+        MongoClientURI uri = new MongoClientURI(config.getUri());
 
-        ServerAddress addr = new ServerAddress(config.getHost(), Integer.parseInt(config.getPort()));
-        return new MongoClient(addr);
+        return new MongoClient(uri);
     }
 
 }

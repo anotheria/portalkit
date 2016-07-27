@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.authentication.persistence.mongo;
 
-import net.anotheria.portalkit.services.common.persistence.mongo.MongoConnector;
 import org.mongodb.morphia.Datastore;
 
 import java.util.List;

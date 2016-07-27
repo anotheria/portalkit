@@ -23,7 +23,7 @@ public class MongoForeignIdPersistenceServiceImpl  extends BaseMongoPersistenceS
     private final MongoForeignIdDAO foreignIdDAO;
 
     public MongoForeignIdPersistenceServiceImpl(){
-        super("pk-jdbc-foreignid");
+        super("pk-mongo-foreignid");
         foreignIdDAO = new MongoForeignIdDAOImpl();
     }
 

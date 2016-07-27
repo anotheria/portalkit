@@ -31,7 +31,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             log.error("id already exists " + entity);
             throw new MongoDaoException("Id already exists");
         } catch (MongoException e) {
-            log.error("Can't store " + entity.toString());
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't store " + entity.toString());
         }
 
@@ -53,7 +53,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
                     .set("daoUpdated", System.currentTimeMillis());
             datastore.update((AccountEntity) entity, ops);
         } catch (MongoException e) {
-            log.error("Can't update " + entity.toString());
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't update " + entity.toString());
         }
     }
@@ -70,7 +70,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             }
             return result.get(0);
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "with accid " + id);
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "with accid " + id);
         }
     }
@@ -80,7 +80,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
         try {
             return datastore.createQuery(entityClass).asList();
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "list");
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "list");
         }
 
@@ -94,7 +94,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
         try {
             datastore.delete(datastore.createQuery(entityClass).field("accid").equal(id));
         } catch (MongoException e) {
-            log.error("Can't delete " + entityClass.getSimpleName() + "with accid " + id);
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't delete " + entityClass.getSimpleName() + "with accid " + id);
         }
     }
@@ -108,7 +108,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             return datastore.createQuery(entityClass).field("externalId").equal(id).asList();
 
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "list by id");
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "list by id");
         }
     }
@@ -125,7 +125,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             }
             return result.get(0);
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "with accid: " + accountId);
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "with accid " + accountId);
         }
     }
@@ -142,7 +142,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             }
             return result.get(0);
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "with name: " + name);
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "with name " + name);
         }
     }
@@ -159,7 +159,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             }
             return result.get(0);
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "with email: " + email);
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "with email " + email);
         }
     }
@@ -175,7 +175,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
             return datastore.createQuery(entityClass).field("type").equal(type).asList();
 
         } catch (MongoException e) {
-            log.error("Can't find " + entityClass.getSimpleName() + "list by type");
+            log.error(e.getMessage());
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "list by type");
         }
     }
