@@ -109,7 +109,13 @@ public class TransformationEngine {
 		
 		details.setStart(start);
 		details.setEnd(end);
-		details.setMatchedArea(context.getToMatch().substring(start, end+1));
+
+		if (start < end) {
+			details.setMatchedArea(context.getToMatch().substring(start, end + 1));
+		} else {
+			details.setMatchedArea(context.getToMatch());
+		}
+
 		return details;
 	}
 
