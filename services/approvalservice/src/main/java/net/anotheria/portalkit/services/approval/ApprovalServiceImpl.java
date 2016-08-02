@@ -274,7 +274,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public List<TicketBO> getTickets(String locale, String agentId, int size) throws ApprovalServiceException {
 
-		List<TicketBO> result = getLockedTickets(agentId);
+		List<TicketBO> result = getLockedTickets(agentId, locale);
 		List<TicketBO> unlocked = null;
 
 		if (!result.isEmpty() && result.size() > size) {
@@ -322,13 +322,17 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException {
+	public List<TicketBO> getLockedTickets(String agentId, String locale) throws ApprovalServiceException {
 
 		List<TicketBO> result = new ArrayList<>();
 
 		for (long ticketId : lockedTickets.keySet()) {
 			try {
-				result.add(new TicketBO(approvalPersistenceService.getTicketById(ticketId)));
+				TicketDO ticket = approvalPersistenceService.getTicketById(ticketId);
+
+				if (ticket.getLocale().equals(locale)) {
+					result.add(new TicketBO(ticket));
+				}
 			} catch (ApprovalPersistenceServiceException e) {
 				continue;
 			}

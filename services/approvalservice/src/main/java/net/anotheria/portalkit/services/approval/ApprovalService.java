@@ -124,5 +124,5 @@ public interface ApprovalService extends Service {
 	 *
 	 * @return list of {@link TicketBO}.
 	 * */
-	List<TicketBO> getLockedTickets(String agentId) throws ApprovalServiceException;
+	List<TicketBO> getLockedTickets(String agentId, String locale) throws ApprovalServiceException;
 }
