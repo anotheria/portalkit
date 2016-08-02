@@ -59,7 +59,15 @@ public class Transformation {
 		}
 		return ret;
 	}
-	
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
+	}
+
 	@Override public String toString(){
 		return describe();
 	}

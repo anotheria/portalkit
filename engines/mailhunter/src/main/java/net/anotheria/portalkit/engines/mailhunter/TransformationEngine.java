@@ -37,6 +37,11 @@ public class TransformationEngine {
 		TransformationContext.getContext().setToMatch(toCheck);
 		for (int i=0; i<transformations.size(); i++){
 			Transformation t = transformations.get(i);
+
+			if (!locale.equals("") && !t.getLocale().equals(locale)) {
+				continue;
+			}
+
 			startTime = System.currentTimeMillis();
 			transStats[i].notifyRequest();
 			String transformedToCheck = t.transform(toCheck, locale);
