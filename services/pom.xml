@@ -49,6 +49,7 @@
 		<module>matchservice</module>
 		<module>subscriptionservice</module>
 		<module>relationservice</module>
+		<module>scamscoreservice</module>
 	</modules>
 
 </project>
