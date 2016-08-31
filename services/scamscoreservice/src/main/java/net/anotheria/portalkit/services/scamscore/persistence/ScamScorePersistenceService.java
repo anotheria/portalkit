@@ -89,7 +89,7 @@ public interface ScamScorePersistenceService {
      *
      * @return {@link ScoreDO}.
      * */
-    ScoreDO getScoreRecordByUserId(String userId) throws ScamScorePersistenceServiceException;
+    List<ScoreDO> getScoreRecordsByUserId(String userId) throws ScamScorePersistenceServiceException;
 
     /**
      * Delete user data.

@@ -118,17 +118,17 @@ public class ScamScorePersistenceServiceImpl implements ScamScorePersistenceServ
     }
 
     @Override
-    public ScoreDO getScoreRecordByUserId(String userId) throws ScamScorePersistenceServiceException {
+    public List<ScoreDO> getScoreRecordsByUserId(String userId) throws ScamScorePersistenceServiceException {
 
-        TypedQuery<ScoreDO> query = entityManager.createNamedQuery(ScoreDO.JPQL_GET_RECORD_BY_USER, ScoreDO.class);
+        TypedQuery<ScoreDO> query = entityManager.createNamedQuery(ScoreDO.JPQL_GET_RECORDS_BY_USER, ScoreDO.class);
         query.setParameter("userId", userId);
         List<ScoreDO> records = query.getResultList();
 
-        if (records == null || records.isEmpty()) {
+        if (records == null) {
             throw new ScamScorePersistenceServiceException("Error occurred while getting score record with user id=" + userId);
         }
 
-        return records.get(0);
+        return records;
     }
 
     @Override

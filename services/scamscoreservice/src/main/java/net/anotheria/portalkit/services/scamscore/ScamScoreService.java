@@ -86,7 +86,7 @@ public interface ScamScoreService extends Service {
      *
      * @return {@link ScoreBO}.
      * */
-    ScoreBO getScoreRecordByUserId(String userId) throws ScamScoreServiceException;
+    List<ScoreBO> getScoreRecordsByUserId(String userId) throws ScamScoreServiceException;
 
     /**
      * Delete user data.

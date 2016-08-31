@@ -32,8 +32,8 @@ import javax.persistence.Table;
                 query = "delete from ScoreDO s where s.id = :id"
         ),
         @NamedQuery(
-                name = ScoreDO.JPQL_GET_RECORD_BY_USER,
-                query = "select s from ScoreDO s where s.userId = :userId"
+                name = ScoreDO.JPQL_GET_RECORDS_BY_USER,
+                query = "select s from ScoreDO s where s.userId = :userId order by s.created desc"
         ),
         @NamedQuery(
                 name = ScoreDO.JPQL_DELETE_RECORD_BY_USER_UD,
@@ -44,7 +44,7 @@ public class ScoreDO {
 
     public static final String JPQL_GET_ALL_RECORDS = "ScoreDO.getAllRecords";
     public static final String JPQL_GET_RECORD_BY_ID = "ScoreDO.getRecordById";
-    public static final String JPQL_GET_RECORD_BY_USER = "ScoreDO.getRecordByUser";
+    public static final String JPQL_GET_RECORDS_BY_USER = "ScoreDO.getRecordsByUser";
     public static final String JPQL_DELETE_RECORD_BY_ID = "ScoreDO.deleteRecordById";
     public static final String JPQL_DELETE_RECORD_BY_USER_UD = "ScoreDO.deleteRecordByUserId";
 

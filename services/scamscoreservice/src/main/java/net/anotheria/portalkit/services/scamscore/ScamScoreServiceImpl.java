@@ -140,12 +140,26 @@ public class ScamScoreServiceImpl implements ScamScoreService {
     }
 
     @Override
-    public ScoreBO getScoreRecordByUserId(String userId) throws ScamScoreServiceException {
+    public List<ScoreBO> getScoreRecordsByUserId(String userId) throws ScamScoreServiceException {
+
+        List<ScoreBO> result = new ArrayList<>();
+        List<ScoreDO> records = null;
+
         try {
-            return new ScoreBO(scamScorePersistenceService.getScoreRecordByUserId(userId));
+            records = scamScorePersistenceService.getScoreRecordsByUserId(userId);
         } catch (ScamScorePersistenceServiceException e) {
             throw new ScamScoreServiceException("Error occurred while getting score record by user id" + userId, e);
         }
+
+        if (records == null) {
+            throw new ScamScoreServiceException("Error occurred while getting score records");
+        }
+
+        for (ScoreDO record : records) {
+            result.add(new ScoreBO(record));
+        }
+
+        return result;
     }
 
     @Override
