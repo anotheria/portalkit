@@ -59,7 +59,7 @@ public class ScoreDO {
     /**
      * Detector's name.
      * */
-    @Column
+    @Column(name = "detector_name")
     private String detector;
 
     /**
@@ -71,13 +71,13 @@ public class ScoreDO {
     /**
      * User id.
      * */
-    @Column
+    @Column(name = "user_record_id")
     private String userId;
 
     /**
      * Creation timestamp.
      * */
-    @Column
+    @Column(name = "timestamp")
     private long created = System.currentTimeMillis();
 
 

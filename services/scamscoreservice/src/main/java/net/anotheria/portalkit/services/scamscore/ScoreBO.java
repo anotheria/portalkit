@@ -32,7 +32,7 @@ public class ScoreBO {
     /**
      * Creation timestamp.
      * */
-    private long created;
+    private long created = System.currentTimeMillis();
 
 
     /**
