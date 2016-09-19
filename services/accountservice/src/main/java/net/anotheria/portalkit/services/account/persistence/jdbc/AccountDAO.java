@@ -102,7 +102,6 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			// insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
 
 			int insertResult = insertStatement.executeUpdate();
-			System.out.println("INSERT: " + insertResult);
 			return insertResult == 1;
 		} finally {
 			JDBCUtil.close(insertStatement);
