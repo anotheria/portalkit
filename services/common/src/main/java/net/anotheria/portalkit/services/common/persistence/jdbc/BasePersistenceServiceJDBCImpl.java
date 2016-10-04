@@ -73,7 +73,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 	/**
 	 * Constructor.
 	 * 
-	 * @param aConfigName
+	 * @param aConfigName	name of configuration file.
 	 */
 	protected BasePersistenceServiceJDBCImpl(String aConfigName) {
 		configName = aConfigName;
@@ -164,7 +164,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 	 * Get connection from pool.
 	 * 
 	 * @return {@link java.sql.Connection}
-	 * @throws java.sql.SQLException
+	 * @throws java.sql.SQLException	if error.
 	 */
 	protected Connection getConnection() throws SQLException {
 		if (isBeingReconnected.get())
@@ -295,7 +295,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 
 	/**
 	 * 
-	 * @param someDaos
+	 * @param someDaos list of {@link DAO} objects.
 	 */
 	protected void addDaos(DAO... someDaos) {
 		if (someDaos != null)
@@ -305,7 +305,8 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 
 	/**
 	 * 
-	 * @throws Exception
+	 * @throws SQLException if error.
+	 * @throws DAOException if error.
 	 */
 	@Override
 	public void cleanupFromUnitTests() throws SQLException, DAOException {

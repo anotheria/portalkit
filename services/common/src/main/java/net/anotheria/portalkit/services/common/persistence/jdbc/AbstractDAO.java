@@ -44,9 +44,9 @@ public abstract class AbstractDAO implements DAO {
 	 * Deletes all data that is managed by this dao. Use with care and NEVER
 	 * call live.
 	 * 
-	 * @param connection
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection	jbdc connection.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void cleanupFromUnitTests(Connection connection) throws DAOException, SQLException {
 		String[] tableNames = getTableNames();
@@ -65,9 +65,9 @@ public abstract class AbstractDAO implements DAO {
 
 	/**
 	 * Fills DAO fields.
-	 * @param statement
-	 * @param pos
-	 * @throws SQLException
+	 * @param statement	sql prepared statement.
+	 * @param pos	parameter position.
+	 * @throws SQLException	if error.
 	 */
 	protected void fillCreatedStatement(PreparedStatement statement, int pos) throws SQLException {
 		statement.setLong(pos + 1, System.currentTimeMillis()); // DAO_CREATED

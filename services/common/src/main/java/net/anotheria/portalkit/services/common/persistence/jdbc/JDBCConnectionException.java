@@ -21,7 +21,7 @@ public class JDBCConnectionException extends RuntimeException {
 
 	/**
 	 * Creates a new JDBCConnectionException.
-	 * @param message
+	 * @param message	error message.
 	 */
 	public JDBCConnectionException(String message) {
 		super(message);
@@ -29,8 +29,8 @@ public class JDBCConnectionException extends RuntimeException {
 
 	/**
 	 * Creates a new JDBCConnectionException.
-	 * @param message
-	 * @param cause
+	 * @param message	error message.
+	 * @param cause		exception cause.
 	 */
 	public JDBCConnectionException(String message, Throwable cause) {
 		super(message, cause);

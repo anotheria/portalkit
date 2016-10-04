@@ -16,8 +16,7 @@ import java.util.List;
 
 /**
  * Utility which allow wrapping of any {@link Service} into {@link MoskitoInvokationProxy}.
- * <p/>
- * Note - useful for persistence services.
+ * <p> Note - useful for persistence services. </p>
  * 
  * @author h3llka
  */

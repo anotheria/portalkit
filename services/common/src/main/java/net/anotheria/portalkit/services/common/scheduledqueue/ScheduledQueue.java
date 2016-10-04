@@ -10,24 +10,30 @@ public interface ScheduledQueue {
 	/**
 	 * Pause scheduled loading elements.
 	 * 
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException	if error.
 	 */
 	void pause() throws ScheduledQueueException;
 
 	/**
 	 * Resume scheduled loading elements.
 	 * 
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException	if error.
 	 */
 	void resume() throws ScheduledQueueException;
 
 	/**
 	 * Is scheduler started.
+	 *
+	 * @return true if scheduler started.
+	 * @throws ScheduledQueueException	if error.
 	 */
 	boolean isStarted() throws ScheduledQueueException;
 
 	/**
 	 * Is scheduler paused.
+	 *
+	 * @return true if scheduler paused.
+	 * @throws ScheduledQueueException	if error.
 	 */
 	boolean isPaused() throws ScheduledQueueException;
 
@@ -36,7 +42,7 @@ public interface ScheduledQueue {
 	 * 
 	 * @param schedule
 	 *            - cron based schedule
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException 	if error.
 	 */
 	void schedule(String schedule) throws ScheduledQueueException;
 
@@ -45,7 +51,7 @@ public interface ScheduledQueue {
 	 * 
 	 * @param interval
 	 *            - repeat interval in milliseconds
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException	if error.
 	 */
 	void schedule(long interval) throws ScheduledQueueException;
 

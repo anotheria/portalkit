@@ -18,7 +18,7 @@ public final class ScheduledQueueFactory {
 	 *            - elements processor
 	 * 
 	 * @return {@link ScheduledQueue}
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException	if error.
 	 */
 	public static ScheduledQueue create(final String configFile, final Loader loader, final Processor processor) throws ScheduledQueueException {
 		return new ScheduledQueueImpl(configFile, loader, processor);

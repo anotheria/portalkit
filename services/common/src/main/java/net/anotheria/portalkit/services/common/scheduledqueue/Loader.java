@@ -13,7 +13,7 @@ public interface Loader {
 	 * Load elements to the queue.
 	 * 
 	 * @return {@link List} of {@link Object}
-	 * @throws LoadingException
+	 * @throws LoadingException		if error.
 	 */
 	List<Object> load() throws LoadingException;
 

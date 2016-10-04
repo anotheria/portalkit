@@ -12,7 +12,7 @@ public interface Processor {
 	 * 
 	 * @param element
 	 *            - queued element
-	 * @throws ProcessingException
+	 * @throws ProcessingException	if error.
 	 */
 	void process(Object element) throws ProcessingException;
 

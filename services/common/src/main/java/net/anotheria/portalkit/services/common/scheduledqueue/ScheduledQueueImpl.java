@@ -63,7 +63,7 @@ public class ScheduledQueueImpl implements ScheduledQueue {
 	 *            - elements loader
 	 * @param aProcessor
 	 *            - elements processor
-	 * @throws ScheduledQueueException
+	 * @throws ScheduledQueueException	if error.
 	 */
 	protected ScheduledQueueImpl(final String configFile, final Loader aLoader, final Processor aProcessor) throws ScheduledQueueException {
 		if (aLoader == null)
