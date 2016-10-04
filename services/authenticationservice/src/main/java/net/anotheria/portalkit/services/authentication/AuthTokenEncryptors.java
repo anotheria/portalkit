@@ -21,7 +21,6 @@ import java.util.Random;
  * algorithms. The utility is configured via pk-auth.json.
  * Example encrypted strings:
  * B:1FBDA322F38F8D6105500A92E9D9C9F5F6A9119489E1FAF895009D4A9C9877B1ACC94EB4EB797AA29AB1861402F38602E48FF38549807301B6412DB8700CF385C505423F8629C923A77F9CF505F05CC17E397D62E8699FF79B23C0CB5921F58A6D45492DF835CE80098B9F19326D30E51EE651BD4F9A8990D53E70DDEE7313C6
- * P:t:42&exl:true&R:-7717072686164024024&expTs:9223372036854775807&mu:false&exlt:true&accId:e4a6374b-edc7-4b00-aff4-c134a2157e36
  *
  * @author lrosenberg
  * @since 28.01.13 11:19
@@ -194,8 +193,8 @@ public class AuthTokenEncryptors {
 
 	/**
 	 * Encrypt the AuthToken and returns full encryption string incl algorithm identifier.
-	 * @param token
-	 * @return
+	 * @param token	{@link AuthToken}
+	 * @return {@link String}
 	 */
 	public static String encrypt(AuthToken token) {
 		return defaultEncryptionAlgorithm+":"+getDefaultEncryptionAlgorithm().encryptAuthToken(token);
@@ -204,7 +203,7 @@ public class AuthTokenEncryptors {
 	/**
 	 * Decrypts an encrypted authentication token.
 	 * @param encryptedString the encrypted token including algorithm description (shortcut).
-	 * @return
+	 * @return {@link String}
 	 */
 	public static AuthToken decrypt(String encryptedString){
 		String[] tokens = StringUtils.tokenize(encryptedString, ':');

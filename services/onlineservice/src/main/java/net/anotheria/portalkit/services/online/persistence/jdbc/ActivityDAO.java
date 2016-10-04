@@ -50,7 +50,7 @@ public class ActivityDAO extends AbstractDAO implements DAO {
 
     /**
      * Execute save last login to DB.
-     * In case of create call - new record will be created, otherwise lastLogin & lastActivity properties will be updated.
+     * In case of create call - new record will be created, otherwise lastLogin and lastActivity properties will be updated.
      *
      * @param con           {@link Connection}
      * @param account       {@link AccountId} as target

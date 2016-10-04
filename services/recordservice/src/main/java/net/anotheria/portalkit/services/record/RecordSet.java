@@ -33,7 +33,7 @@ public class RecordSet implements Serializable {
 	/**
 	 * Constructor that extends default with this {code size}.
 	 * 
-	 * @param size
+	 * @param size	set size.
 	 */
 	public RecordSet(int size) {
 		recordMap = new ConcurrentHashMap<String, Record>(size);
@@ -42,7 +42,7 @@ public class RecordSet implements Serializable {
 	/**
 	 * Gets record by id in this record set.
 	 * 
-	 * @param id
+	 * @param id	record id.
 	 * @return {@link Record}
 	 */
 	public Record get(String id) {
@@ -52,7 +52,7 @@ public class RecordSet implements Serializable {
 	/**
 	 * Puts record into this record set.
 	 * 
-	 * @param record
+	 * @param record	record id.
 	 */
 	public void put(Record record) {
 		recordMap.put(record.getRecordId(), record);

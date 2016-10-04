@@ -31,7 +31,7 @@ public enum RecordType {
 	/**
 	 * Searches {@link RecordType} by order.
 	 * 
-	 * @param ordinal
+	 * @param ordinal	order.
 	 * @return {@link RecordType}
 	 */
 	public static RecordType find(int ordinal) {

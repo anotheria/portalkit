@@ -21,7 +21,7 @@ public class StringRecord extends Record {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param aRecordId
+	 * @param aRecordId	record id.
 	 */
 	public StringRecord(String aRecordId) {
 		this(aRecordId, "");
@@ -30,8 +30,8 @@ public class StringRecord extends Record {
 	/**
 	 * Constructor with all fields.
 	 * 
-	 * @param aRecordId
-	 * @param aValue
+	 * @param aRecordId	record id.
+	 * @param aValue	value.
 	 */
 	public StringRecord(String aRecordId, String aValue) {
 		super(aRecordId);

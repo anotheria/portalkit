@@ -77,6 +77,7 @@ public abstract class OnlineActivityEvent extends ServiceEventData {
 	 * Create {@link OnlineActivityLogoutEvent}.
 	 *
 	 * @param account {@link AccountId}
+	 * @param logoutTime	logout time.
 	 * @return {@link OnlineActivityLogoutEvent}
 	 */
 	public static OnlineActivityEvent logOut(final AccountId account, final long logoutTime) {

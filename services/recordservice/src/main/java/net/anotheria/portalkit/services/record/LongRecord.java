@@ -20,7 +20,7 @@ public class LongRecord extends Record {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param aRecordId
+	 * @param aRecordId	record id.
 	 */
 	public LongRecord(String aRecordId) {
 		this(aRecordId, 0);
@@ -29,8 +29,8 @@ public class LongRecord extends Record {
 	/**
 	 * Constructor with value.
 	 * 
-	 * @param aRecordId
-	 * @param aValue
+	 * @param aRecordId	record id.
+	 * @param aValue	value.
 	 */
 	public LongRecord(String aRecordId, long aValue) {
 		super(aRecordId);

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Persistence service for handling 'user#lastLogin' && 'user#lastActivity' properties, from {@link net.anotheria.portalkit.services.online.OnlineService}.
+ * Persistence service for handling 'user#lastLogin' and 'user#lastActivity' properties, from {@link net.anotheria.portalkit.services.online.OnlineService}.
  *
  * @author h3llka
  */
@@ -17,6 +17,7 @@ public interface ActivityPersistenceService extends Service {
      * On lastLogin save - lastActivity will be updated immediately.
      *
      * @param account {@link AccountId}
+     * @param lastLoginTime     last login time
      * @return lastLoginTime  which was just saved
      * @throws ActivityPersistenceServiceException
      *          on errors

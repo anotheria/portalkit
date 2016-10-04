@@ -21,22 +21,22 @@ public interface RecordService extends Service {
 	/**
 	 * Returns a single record.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordId
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordId record id.
 	 * @return {@link Record}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	Record getRecord(String ownerId, String collectionId, String recordId) throws RecordServiceException;
 
 	/**
 	 * Returns a single record associated with the account.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordId
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordId record id.
 	 * @return {@link Record}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	Record getRecord(AccountId ownerId, String collectionId, String recordId) throws RecordServiceException;
 
@@ -44,100 +44,100 @@ public interface RecordService extends Service {
 	 * Returns a single record associated with the default collection and
 	 * account.
 	 * 
-	 * @param ownerId
-	 * @param recordId
+	 * @param ownerId owner id.
+	 * @param recordId record id.
 	 * @return {@link Record}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	Record getRecord(AccountId ownerId, String recordId) throws RecordServiceException;
 
 	/**
 	 * Returns a recordset specified by submitted record ids.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordIds
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordIds list of {@link String}
 	 * @return {@link RecordSet}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	RecordSet getRecordSet(String ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException;
 
 	/**
 	 * Returns a recordset specified by submitted record ids.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordIds
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordIds list of {@link String}
 	 * @return {@link RecordSet}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	RecordSet getRecordSet(AccountId ownerId, String collectionId, Collection<String> recordIds) throws RecordServiceException;
 
 	/**
 	 * Returns a recordset specified by submitted record ids.
 	 * 
-	 * @param ownerId
-	 * @param recordIds
+	 * @param ownerId owner id.
+	 * @param recordIds list of {@link String}
 	 * @return {@link RecordSet}
-	 * @throws RecordServiceException
+	 * @throws RecordServiceException if error.
 	 */
 	RecordSet getRecordSet(AccountId ownerId, Collection<String> recordIds) throws RecordServiceException;
 
 	/**
 	 * Updates record.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param record
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param record	{@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecord(String ownerId, String collectionId, Record record) throws RecordServiceException;
 
 	/**
 	 * Updates record.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param record
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param record	{@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecord(AccountId ownerId, String collectionId, Record record) throws RecordServiceException;
 
 	/**
 	 * Updates records.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordSet
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordSet	set of {@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecords(AccountId ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException;
 
 	/**
 	 * Updates records.
 	 * 
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordSet
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordSet	set of {@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecords(String ownerId, String collectionId, RecordSet recordSet) throws RecordServiceException;
 
 	/**
 	 * Updates record.
 	 * 
-	 * @param ownerId
-	 * @param record
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param record	{@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecord(AccountId ownerId, Record record) throws RecordServiceException;
 
 	/**
 	 * Updates records.
 	 * 
-	 * @param ownerId
-	 * @param recordSet
-	 * @throws RecordServiceException
+	 * @param ownerId owner id.
+	 * @param recordSet	set of {@link Record}
+	 * @throws RecordServiceException if error.
 	 */
 	void setRecords(AccountId ownerId, RecordSet recordSet) throws RecordServiceException;
 }

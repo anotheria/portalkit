@@ -86,12 +86,12 @@ public class RecordDAO extends AbstractDAO implements DAO {
 	/**
 	 * Gets collection of records from storage.
 	 * 
-	 * @param connection
-	 * @param ownerId
-	 * @param collectionId
-	 * @return {@link Collection<Record>}
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @return collection of {@link Record}
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public Collection<Record> readCollection(Connection connection, String ownerId, String collectionId) throws DAOException, SQLException {
 		Collection<Record> result = new ArrayList<Record>();
@@ -119,13 +119,13 @@ public class RecordDAO extends AbstractDAO implements DAO {
 	/**
 	 * Gets single record from storage.
 	 * 
-	 * @param conn
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordId
+	 * @param conn database connection.
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordId	record id.
 	 * @return {@link Record}
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public Record getSingleRecord(Connection conn, String ownerId, String collectionId, String recordId) throws DAOException, SQLException {
 		PreparedStatement stat = null;
@@ -151,11 +151,11 @@ public class RecordDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * 
-	 * @param connection
-	 * @param ownerId
-	 * @param collectionId
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	private void deleteRecordCollection(Connection connection, String ownerId, String collectionId) throws DAOException, SQLException {
 		PreparedStatement deleteStmt = null;
@@ -172,12 +172,12 @@ public class RecordDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * 
-	 * @param connection
-	 * @param ownerId
-	 * @param collectionId
-	 * @param recordId
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param recordId	record id.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	private void deleteSingleRecord(Connection connection, String ownerId, String collectionId, String recordId) throws DAOException, SQLException {
 		PreparedStatement deleteStmt = null;
@@ -196,12 +196,12 @@ public class RecordDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * 
-	 * @param conn
-	 * @param ownerId
-	 * @param collectionId
-	 * @param collection
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param conn database connection.
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param collection	{@link RecordCollection}
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void updateCollection(Connection conn, String ownerId, String collectionId, RecordCollection collection) throws DAOException, SQLException {
 		PreparedStatement insertStmt = null;
@@ -230,12 +230,12 @@ public class RecordDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * 
-	 * @param conn
-	 * @param ownerId
-	 * @param collectionId
-	 * @param record
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param conn database connection.
+	 * @param ownerId owner id.
+	 * @param collectionId collection id.
+	 * @param record	record.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void updateSingleRecord(Connection conn, String ownerId, String collectionId, Record record) throws DAOException, SQLException {
 		PreparedStatement updateStmt = null;

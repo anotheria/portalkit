@@ -10,14 +10,14 @@ public interface AuthTokenEncryptionAlgorithm {
 
 	/**
 	 * Called after initialization and allows to make customization (for example set a key).
-	 * @param key
+	 * @param key	key.
 	 */
 	void customize(String key);
 
 	/**
 	 * Encrypt auth token.
-	 * @param token
-	 * @return
+	 * @param token	{@link AuthToken}
+	 * @return	{@link String}
 	 */
 	String encryptAuthToken(AuthToken token);
 

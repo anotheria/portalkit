@@ -21,19 +21,19 @@ public interface AuthenticationService extends Service, DeletionService {
     /**
      * Sets new password for the user.
      *
-     * @param id
-     * @param password
-     * @throws AuthenticationServiceException
+     * @param id user id.
+     * @param password user password.
+     * @throws AuthenticationServiceException if error
      */
     void setPassword(AccountId id, String password) throws AuthenticationServiceException;
 
     /**
      * Returns true if the user can authenticate with the given password.
      *
-     * @param id
-     * @param password
-     * @return
-     * @throws AuthenticationServiceException
+     * @param id user id.
+     * @param password user password.
+     * @return boolean
+     * @throws AuthenticationServiceException if error
      */
     boolean canAuthenticate(AccountId id, String password) throws AuthenticationServiceException;
 
@@ -41,9 +41,9 @@ public interface AuthenticationService extends Service, DeletionService {
      * Authenticates the user with encrypted token. Returns the id of the authenticated user or throws exception. Note,
      * if the token is one-use token, the token is considered used after the call to this method.
      *
-     * @param token
-     * @return
-     * @throws AuthenticationServiceException
+     * @param token login token.
+     * @return {@link AccountId}
+     * @throws AuthenticationServiceException if error
      */
     AccountId authenticateByEncryptedToken(String token) throws AuthenticationServiceException;
 
@@ -51,9 +51,9 @@ public interface AuthenticationService extends Service, DeletionService {
      * Returns if the user can by authenticate by the token. The difference is that this call doesn't reduce the usability of the token.
      * Use for administration perposses.
      *
-     * @param token
-     * @return
-     * @throws AuthenticationServiceException
+     * @param token login token.
+     * @return boolean
+     * @throws AuthenticationServiceException if error
      */
     boolean canAuthenticateByEncryptedToken(String token) throws AuthenticationServiceException;
 
@@ -61,19 +61,18 @@ public interface AuthenticationService extends Service, DeletionService {
      * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
      * all consequences) and can be issued to the user by calling getEncodedAuthString.
      *
-     * @param accountId
-     * @param prefilledToken
-     * @return
-     * @throws AuthenticationServiceException
+     * @param accountId account id.
+     * @param prefilledToken    {@link AuthToken}
+     * @return {@link EncryptedAuthToken}
+     * @throws AuthenticationServiceException if error
      */
     EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
     /**
      * Removes all user tokens from database.
      *
-     * @param accountId
-     * @return
-     * @throws AuthenticationServiceException
+     * @param accountId account id.
+     * @throws AuthenticationServiceException if error
      */
     void deleteTokens(AccountId accountId) throws AuthenticationServiceException;
 

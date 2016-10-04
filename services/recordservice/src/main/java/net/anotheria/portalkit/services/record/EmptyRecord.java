@@ -16,7 +16,7 @@ public final class EmptyRecord extends Record {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param aRecordId
+	 * @param aRecordId	record id.
 	 */
 	public EmptyRecord(String aRecordId) {
 		super(aRecordId);
