@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.storage.exception;
 
 import net.anotheria.portalkit.services.storage.query.Query;
+import net.anotheria.portalkit.services.storage.query.support.QuerySupport;
 
 /**
  * Runtime exception if {@link QuerySupport} can't execute given {@link Query}.

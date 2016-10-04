@@ -20,11 +20,11 @@ public final class SerializationUtils {
 	}
 
 	/**
-	 * Clone {@link Serializable} <T> {@link Collection}.
+	 * Clone {@link Serializable} T {@link Collection}.
 	 * 
 	 * @param toClone
-	 *            {@link Collection} with {@link Serializable} <T> to clone, can't be <code>null</code>
-	 * @return {@link List} of <T>
+	 *            {@link Collection} with {@link Serializable} T to clone, can't be <code>null</code>
+	 * @return {@link List} of T
 	 */
 	public static <T extends Serializable> List<T> clone(final Collection<T> toClone) {
 		if (toClone == null)
@@ -38,12 +38,12 @@ public final class SerializationUtils {
 	}
 
 	/**
-	 * Clone {@link Serializable} <T>.<br>
+	 * Clone {@link Serializable} T.<br>
 	 * {@link org.apache.commons.lang.SerializationUtils} used for cloning objects.
 	 * 
 	 * @param toClone
-	 *            {@link Serializable} <T> to clone, can't be <code>null</code>
-	 * @return <T>
+	 *            {@link Serializable} T to clone, can't be <code>null</code>
+	 * @return a cloned T.
 	 */
 	public static <T extends Serializable> T clone(final T toClone) {
 		if (toClone == null)

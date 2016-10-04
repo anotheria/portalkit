@@ -17,7 +17,6 @@ public class QuerySupportConfiguredException extends QueryRuntimeException {
 	/**
 	 * Public constructor.
 	 *
-	 * @param T	sdfsdf
 	 * @param queryType	{@link Query} type
 	 */
 	public <T extends Query> QuerySupportConfiguredException(final Class<T> queryType) {

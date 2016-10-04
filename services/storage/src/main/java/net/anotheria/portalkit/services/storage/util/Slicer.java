@@ -26,7 +26,7 @@ public final class Slicer {
 	 *            offset, minimum offset is '0', if offset less than '0' default will be used
 	 * @param amount
 	 *            result elements size
-	 * @return {@link List} of <T>
+	 * @return {@link List} of T
 	 */
 	public static <T> List<T> slice(final List<T> list, final int offset, final int amount) {
 		if (list == null || list.isEmpty())
@@ -52,7 +52,7 @@ public final class Slicer {
 	 *            page number, minimum page is '0', if page less than '0' default will be used
 	 * @param elements
 	 *            element on page
-	 * @return {@link List} of <T>
+	 * @return {@link List} of T
 	 */
 	public static <T> List<T> sliceTo(final List<T> list, final int page, final int elements) {
 		if (elements < 1)
