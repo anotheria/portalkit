@@ -39,6 +39,11 @@ public class ForeignIdSources {
 	 */
 	public static final int XING = 5;
 
+	/**
+	 * Mobile app.
+	 */
+	public static final int MOBILE_NOTIFICATION = 6;
+
 	// ...
 
 	public static final int getCustomIdWithOffset(int customId) {
