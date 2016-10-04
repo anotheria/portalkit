@@ -18,8 +18,6 @@ import java.io.Serializable;
  * - Mongo generic - check {@link GenericMongoServiceFactory} for supported parameters.
  * 
  * @author Alexandr Bolbat
- * 
- * @param <T>
  */
 public class StorageServiceFactory<T extends Serializable> extends AbstractParameterizedServiceFactory<StorageService<T>> {
 

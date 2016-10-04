@@ -8,8 +8,6 @@ import net.anotheria.portalkit.services.storage.exception.StorageException;
  * Service with basic operations on entity.
  * 
  * @author Alexandr Bolbat
- * 
- * @param <T>
  */
 public interface BasicOperationsStorageService<T extends Serializable> {
 
@@ -19,7 +17,7 @@ public interface BasicOperationsStorageService<T extends Serializable> {
 	 * @param uid
 	 *            entity unique id
 	 * @return entity
-	 * @throws StorageException
+	 * @throws StorageException if error.
 	 */
 	T read(String uid) throws StorageException;
 
@@ -29,7 +27,7 @@ public interface BasicOperationsStorageService<T extends Serializable> {
 	 * @param toSave
 	 *            entity to save
 	 * @return saved entity
-	 * @throws StorageException
+	 * @throws StorageException if error.
 	 */
 	T save(T toSave) throws StorageException;
 
@@ -39,7 +37,7 @@ public interface BasicOperationsStorageService<T extends Serializable> {
 	 * @param toCreate
 	 *            entity to create
 	 * @return created entity
-	 * @throws StorageException
+	 * @throws StorageException if error.
 	 */
 	T create(T toCreate) throws StorageException;
 
@@ -49,7 +47,7 @@ public interface BasicOperationsStorageService<T extends Serializable> {
 	 * @param toUpdate
 	 *            entity to update
 	 * @return updated entity
-	 * @throws StorageException
+	 * @throws StorageException if error.
 	 */
 	T update(T toUpdate) throws StorageException;
 
@@ -59,7 +57,7 @@ public interface BasicOperationsStorageService<T extends Serializable> {
 	 * @param uid
 	 *            entity unique id
 	 * @return deleted entity
-	 * @throws StorageException
+	 * @throws StorageException if error.
 	 */
 	T delete(String uid) throws StorageException;
 
