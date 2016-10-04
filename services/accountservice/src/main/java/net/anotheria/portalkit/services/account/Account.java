@@ -60,7 +60,7 @@ public class Account implements Serializable, Cloneable {
 
 	/**
 	 * Constructor with existing {@link AccountId}
-	 * @param anId
+	 * @param anId	account id.
 	 */
 	public Account(AccountId anId){
 		this();
@@ -69,7 +69,7 @@ public class Account implements Serializable, Cloneable {
 
 	/**
 	 * Creates a new account as copy of this account.
-	 * @param acc
+	 * @param acc	account.
 	 */
 	public Account(Account acc){
 		this();
@@ -119,7 +119,7 @@ public class Account implements Serializable, Cloneable {
 	/**
 	 * Creates a new account from account pattern. Copies all fields (except id) from the pattern account.
 	 * Use to properly create new account objects with preset attributes.
-	 * @param pattern
+	 * @param pattern	account pattern.
 	 * @return {@link Account}
 	 */
 	@Deprecated
@@ -167,7 +167,7 @@ public class Account implements Serializable, Cloneable {
 
 	/**
 	 * Add additional status (sets bit) to the internal status bitmap.
-	 * @param aStatus
+	 * @param aStatus	account status.
 	 */
 	public void addStatus(long aStatus){
 		status |= aStatus;
@@ -182,7 +182,7 @@ public class Account implements Serializable, Cloneable {
 
 	/**
 	 * Returns true if the submitted status bit is set.
-	 * @param aStatus
+	 * @param aStatus	account status.
 	 * @return boolean
 	 */
 	public boolean hasStatus(long aStatus){

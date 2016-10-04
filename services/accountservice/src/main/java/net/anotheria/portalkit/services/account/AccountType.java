@@ -4,7 +4,7 @@ package net.anotheria.portalkit.services.account;
  * 
  * @author dagafonov
  *
- * @param <T>
+ * @param <T>	type.
  */
 public interface AccountType<T extends Enum<T>> {
 	
@@ -22,7 +22,7 @@ public interface AccountType<T extends Enum<T>> {
 	
 	/**
 	 * 
-	 * @param type
+	 * @param type	account type.
 	 * @return {@link T}
 	 */
 	T find(int type);

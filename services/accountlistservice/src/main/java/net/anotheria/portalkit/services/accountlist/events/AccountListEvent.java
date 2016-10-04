@@ -121,9 +121,9 @@ public class AccountListEvent implements Serializable {
 
 	/**
 	 * Creates instance for create event operation.
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 * @return {@link AccountListEvent}
 	 */
 	public static AccountListEvent create(AccountId owner, AccountId target, String listName) {
@@ -132,9 +132,9 @@ public class AccountListEvent implements Serializable {
 
 	/**
 	 * Updates instance for create event operation.
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 * @return {@link AccountListEvent}
 	 */
 	public static AccountListEvent update(AccountId owner, AccountId target, String listName) {
@@ -143,9 +143,9 @@ public class AccountListEvent implements Serializable {
 
 	/**
 	 * Deletes instance for create event operation.
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 * @return {@link AccountListEvent}
 	 */
 	public static AccountListEvent delete(AccountId owner, AccountId target, String listName) {

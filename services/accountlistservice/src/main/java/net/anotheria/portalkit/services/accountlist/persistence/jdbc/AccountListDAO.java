@@ -65,13 +65,13 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * Gets list of accounts that belongs to specified account ant account list.
 	 * Never returs null value.
 	 * 
-	 * @param connection
+	 * @param connection batabase connection.
 	 *            current connection to DB.
-	 * @param owner
-	 * @param listName
-	 * @return {@link List<AccountIdAdditionalInfo>}
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param owner owner id.	
+	 * @param listName list name.
+	 * @return list of {@link AccountIdAdditionalInfo}
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public List<AccountIdAdditionalInfo> getList(Connection connection, AccountId owner, String listName) throws DAOException, SQLException {
 		PreparedStatement stmt = null;
@@ -99,14 +99,14 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	/**
 	 * Adds targets into specified list of accounts for specified account.
 	 * 
-	 * @param connection
+	 * @param connection batabase connection.
 	 *            current connection to DB.
-	 * @param owner
-	 * @param listName
-	 * @param targets
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets list of {@link AccountIdAdditionalInfo} list of {@link AccountIdAdditionalInfo}
 	 * @return boolean
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public boolean addToList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
 			throws DAOException, SQLException {
@@ -153,14 +153,14 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	/**
 	 * Removes targets from specified list of accounts for specified account.
 	 * 
-	 * @param connection
+	 * @param connection batabase connection.
 	 *            current connection to DB.
-	 * @param owner
-	 * @param listName
-	 * @param targets
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets list of {@link AccountIdAdditionalInfo}
 	 * @return boolean
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public boolean removeFromList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets)
 			throws DAOException, SQLException {
@@ -200,12 +200,12 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 	 * Gets list of accounts where I am in the specified list of specified
 	 * account.
 	 * 
-	 * @param connection
-	 * @param target
-	 * @param listName
+	 * @param connection batabase connection.
+	 * @param target target id.
+	 * @param listName list name.
 	 * @return boolean
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public List<AccountIdAdditionalInfo> getReverseList(Connection connection, AccountId target, String listName) throws DAOException, SQLException {
 		PreparedStatement stmt = null;
@@ -231,13 +231,13 @@ public class AccountListDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * updateInList
-	 * @param connection
-	 * @param owner
-	 * @param listName
-	 * @param targets
+	 * @param connection batabase connection.
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets list of {@link AccountIdAdditionalInfo}
 	 * @return boolean
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public boolean updateInList(Connection connection, AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws DAOException, SQLException {
 		PreparedStatement updateStmt = null;

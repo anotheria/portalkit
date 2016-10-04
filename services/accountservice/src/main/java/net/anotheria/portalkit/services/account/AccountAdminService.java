@@ -14,8 +14,8 @@ public interface AccountAdminService extends Service {
 	/**
 	 * Returns collection of registered accounts in the system.
 	 * 
-	 * @return Collection<AccountId>
-	 * @throws AccountAdminServiceException
+	 * @return collection of {@link AccountId}.
+	 * @throws AccountAdminServiceException		if error.
 	 */
 	Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException;
 
@@ -25,7 +25,7 @@ public interface AccountAdminService extends Service {
 	 * @param accountType
 	 *            {@link AccountType}
 	 * @return {@link List} of {@link Account}
-	 * @throws AccountServiceException
+	 * @throws AccountServiceException		if error.
 	 */
 	List<AccountId> getAccountsByType(@SuppressWarnings("rawtypes") AccountType accountType) throws AccountServiceException;
 
@@ -35,7 +35,7 @@ public interface AccountAdminService extends Service {
 	 * @param query
 	 *            {@link AccountQuery}
 	 * @return {@link List} of {@link Account}
-	 * @throws AccountAdminServiceException
+	 * @throws AccountAdminServiceException		if error.
 	 */
 	List<Account> getAccountsByQuery(AccountQuery query) throws AccountAdminServiceException;
 

@@ -36,7 +36,7 @@ public class AccountListData implements Serializable {
 	/**
 	 * Constructs object just with accountId value.
 	 * 
-	 * @param owner
+	 * @param owner	user id.
 	 */
 	public AccountListData(AccountId owner) {
 		this.accountId = owner;
@@ -45,9 +45,9 @@ public class AccountListData implements Serializable {
 	/**
 	 * Constructs object with all information.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param targets
+	 * @param owner	owner id.
+	 * @param listName	list name.
+	 * @param targets	collection of {@link AccountIdAdditionalInfo}
 	 */
 	public AccountListData(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) {
 		this.accountId = owner;
@@ -58,7 +58,7 @@ public class AccountListData implements Serializable {
 
 	/**
 	 * Get account id.
-	 * @return
+	 * @return	{@link AccountId}
 	 */
 	public AccountId getAccountId() {
 		return accountId;

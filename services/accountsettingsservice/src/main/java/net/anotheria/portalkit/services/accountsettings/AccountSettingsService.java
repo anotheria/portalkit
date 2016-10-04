@@ -21,8 +21,7 @@ public interface AccountSettingsService extends Service, DeletionService {
 	/**
 	 * Loads dataspace from persistence by given userId and dataspaceId.
 	 * 
-	 * @param accountId
-	 * @param dataspaceId
+	 * @param accountId account id.
 	 * @return {@link Dataspace}
 	 * @throws AccountSettingsServiceException
 	 */
@@ -38,17 +37,17 @@ public interface AccountSettingsService extends Service, DeletionService {
 
 	/**
 	 * Deletes a dataspace of user.
-	 * @param accountId
-	 * @param dataspaceType
-	 * @return
+	 * @param accountId account id.
+	 * @param dataspaceType dataspace type.
+	 * @return	boolean
 	 * @throws AccountSettingsServiceException
 	 */
 	boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException;
 
 	/**
 	 * Deletes all dataspaces of user. Returns amount of dataspaces deleted.
-	 * @param accountId
-	 * @return
+	 * @param accountId account id.
+	 * @return	int
 	 * @throws AccountSettingsServiceException
 	 */
 	int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException;

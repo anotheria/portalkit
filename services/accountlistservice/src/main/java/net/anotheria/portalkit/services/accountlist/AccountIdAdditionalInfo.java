@@ -35,7 +35,7 @@ public class AccountIdAdditionalInfo implements Serializable {
 
 	/**
 	 * 
-	 * @param accountId
+	 * @param accountId account id.
 	 */
 	public AccountIdAdditionalInfo(AccountId accountId) {
 		this.accountId = accountId;
@@ -44,8 +44,8 @@ public class AccountIdAdditionalInfo implements Serializable {
 
 	/**
 	 * 
-	 * @param accountId
-	 * @param additionalInfo
+	 * @param accountId account id.
+	 * @param additionalInfo additional info.
 	 */
 	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo) {
 		this(accountId);
@@ -54,9 +54,9 @@ public class AccountIdAdditionalInfo implements Serializable {
 
 	/**
 	 * 
-	 * @param accountId
-	 * @param additionalInfo
-	 * @param creationTimestamp
+	 * @param accountId account id.
+	 * @param additionalInfo additional info.
+	 * @param creationTimestamp	timestamp.
 	 */
 	public AccountIdAdditionalInfo(AccountId accountId, String additionalInfo, long creationTimestamp) {
 		this(accountId, additionalInfo);
@@ -73,7 +73,7 @@ public class AccountIdAdditionalInfo implements Serializable {
 	
 	/**
 	 * 
-	 * @param additionalInfo
+	 * @param additionalInfo additional info.	additional info.
 	 */
 	public void setAdditionalInfo(String additionalInfo) {
 		if (additionalInfo != null) {

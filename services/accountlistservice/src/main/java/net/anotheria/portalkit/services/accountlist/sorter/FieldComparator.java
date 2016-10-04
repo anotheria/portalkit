@@ -18,8 +18,7 @@ public interface FieldComparator<T> {
 	String getFieldName();
 
 	/**
-	 * 
-	 * @return {@link Comparator<T>}
+	 * @return {@link Comparator}
 	 */
 	Comparator<T> getComparator();
 }

@@ -230,11 +230,11 @@ public class AccountListServiceImpl implements AccountListService {
 
 	/**
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param filter
-	 * @return {@link List<AccountIdAdditionalInfo>}
-	 * @throws AccountListServiceException
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param filter {@link AccountListFilter}
+	 * @return list of {@link AccountIdAdditionalInfo}
+	 * @throws AccountListServiceException	if error.
 	 */
 	@Override
 	public Slice<AccountIdAdditionalInfo> getList(AccountId owner, String listName, AccountListFilter filter) throws AccountListServiceException {
@@ -354,9 +354,9 @@ public class AccountListServiceImpl implements AccountListService {
 	 * Perform data read - without locking, method created for internal usage,
 	 * and does not require locking.
 	 * 
-	 * @param owner
+	 * @param owner owner id.
 	 *            {@link AccountId} list owner
-	 * @param listName
+	 * @param listName list name.
 	 *            list id
 	 * @return {@link AccountIdAdditionalInfo} collection
 	 * @throws AccountListServiceException

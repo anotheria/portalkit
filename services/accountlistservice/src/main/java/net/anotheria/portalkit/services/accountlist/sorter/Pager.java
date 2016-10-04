@@ -27,8 +27,8 @@ public class Pager implements Serializable {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param pageNumber
-	 * @param elementsPerPage
+	 * @param pageNumber	page number.
+	 * @param elementsPerPage	elements per page.
 	 */
 	public Pager(int pageNumber, int elementsPerPage) {
 		setPageNumber(pageNumber);

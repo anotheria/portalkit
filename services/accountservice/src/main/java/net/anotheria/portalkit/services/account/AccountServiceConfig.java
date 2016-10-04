@@ -35,7 +35,7 @@ public final class AccountServiceConfig {
 
     /**
      * Return {@link AccountServiceConfig} configured with data from  'account-service-configuration' config.
-     * @return {@link {@link AccountServiceConfig}}
+     * @return {@link AccountServiceConfig}
      */
     public static AccountServiceConfig getInstance() {
         if (instance != null)

@@ -45,7 +45,7 @@ public enum AccountListFieldComparators implements FieldComparator<AccountIdAddi
 	/**
 	 * Gets {@link AccountListFieldComparators} by name.
 	 * 
-	 * @param orderBy
+	 * @param orderBy	order type.
 	 * @return {@link AccountListFieldComparators}
 	 */
 	public static AccountListFieldComparators find(final String orderBy) {
@@ -64,7 +64,7 @@ public enum AccountListFieldComparators implements FieldComparator<AccountIdAddi
 	/**
 	 * Gets field comparator.
 	 * 
-	 * @return {@link Comparator<AccountIdAdditionalInfo>}
+	 * @return {@link AccountIdAdditionalInfo} comparator.
 	 */
 	@Override
 	public abstract Comparator<AccountIdAdditionalInfo> getComparator();

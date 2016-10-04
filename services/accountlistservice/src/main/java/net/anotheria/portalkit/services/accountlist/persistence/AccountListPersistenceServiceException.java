@@ -18,7 +18,7 @@ public class AccountListPersistenceServiceException extends PortalKitPersistence
 	/**
 	 * Creates a new AccountListPersistenceServiceException with a message.
 	 * 
-	 * @param message
+	 * @param message	message.
 	 */
 	public AccountListPersistenceServiceException(String message) {
 		super(message);
@@ -28,8 +28,8 @@ public class AccountListPersistenceServiceException extends PortalKitPersistence
 	 * Creates a new AccountListPersistenceServiceException with a message and
 	 * cause.
 	 * 
-	 * @param message
-	 * @param cause
+	 * @param message	message.
+	 * @param cause		cause.
 	 */
 	public AccountListPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);

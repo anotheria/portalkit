@@ -25,12 +25,12 @@ public interface AccountListService extends Service {
 	 * Adds an account to the specified list of the owner. If the target account
 	 * is already in the list, the operation does nothing.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param firstTarget
-	 * @param moreTargets
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param firstTarget	{@link AccountIdAdditionalInfo}
+	 * @param moreTargets	{@link AccountIdAdditionalInfo}
 	 * @return boolean
-	 * @throws AccountListServiceException
+	 * @throws AccountListServiceException if error.
 	 */
 	boolean addToList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTargets)
 			throws AccountListServiceException;
@@ -39,12 +39,11 @@ public interface AccountListService extends Service {
 	 * Updates an account in the specified list of the owner. If the target
 	 * account is already in the list, the operation does nothing.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param firstTarget
-	 * @param moreTargets
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets	list of {@link AccountIdAdditionalInfo}.
 	 * @return boolean
-	 * @throws AccountListServiceException
+	 * @throws AccountListServiceException if error.
 	 */
 	boolean updateInList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
 
@@ -52,10 +51,10 @@ public interface AccountListService extends Service {
 	 * Adds collection of accounts to the specified list of the owner. If the
 	 * target account is already on the list, the operation does nothing.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param target
-	 * @throws AccountListServiceException
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets	list of {@link AccountIdAdditionalInfo}.
+	 * @throws AccountListServiceException if error.
 	 * @return boolean
 	 */
 	boolean addToList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
@@ -63,10 +62,10 @@ public interface AccountListService extends Service {
 	/**
 	 * Removes collection of accounts from list.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param target
-	 * @throws AccountListServiceException
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param targets	list of {@link AccountIdAdditionalInfo}.
+	 * @throws AccountListServiceException if error.
 	 * @return boolean
 	 */
 	boolean removeFromList(AccountId owner, String listName, Collection<AccountIdAdditionalInfo> targets) throws AccountListServiceException;
@@ -74,12 +73,11 @@ public interface AccountListService extends Service {
 	/**
 	 * Removes one or multiple accounts from list.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param firstTarget
-	 * @param moreTarget
-	 * @return
-	 * @throws AccountListServiceException
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param firstTarget	{@link AccountIdAdditionalInfo}
+	 * @param moreTarget	{@link AccountIdAdditionalInfo}
+	 * @throws AccountListServiceException if error.
 	 * @return boolean
 	 */
 	boolean removeFromList(AccountId owner, String listName, AccountIdAdditionalInfo firstTarget, AccountIdAdditionalInfo... moreTarget)
@@ -88,10 +86,10 @@ public interface AccountListService extends Service {
 	/**
 	 * Returns the account list with given name.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @throws AccountListServiceException
-	 * @return {@link List<AccountIdAdditionalInfo>}
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @throws AccountListServiceException if error.
+	 * @return list of {@link AccountIdAdditionalInfo}
 	 */
 	List<AccountIdAdditionalInfo> getList(AccountId owner, String listName) throws AccountListServiceException;
 
@@ -99,11 +97,11 @@ public interface AccountListService extends Service {
 	 * Returns the account list with given name. In addition can split result on
 	 * pages and can sort with any field.
 	 * 
-	 * @param owner
-	 * @param listName
-	 * @param filter
-	 * @return {@link Slice<AccountIdAdditionalInfo>}
-	 * @throws AccountListServiceException
+	 * @param owner owner id.
+	 * @param listName list name.
+	 * @param filter {@link AccountListFilter}
+	 * @return list of {@link AccountIdAdditionalInfo}
+	 * @throws AccountListServiceException if error.
 	 */
 	Slice<AccountIdAdditionalInfo> getList(AccountId owner, String listName, AccountListFilter filter) throws AccountListServiceException;
 
@@ -111,10 +109,10 @@ public interface AccountListService extends Service {
 	 * Returns the list of ownerIds that have added this account in lists with
 	 * given name. Warning: this operation is probably very expensive.
 	 * 
-	 * @param target
-	 * @param listName
-	 * @throws AccountListServiceException
-	 * @return {@link List<AccountIdAdditionalInfo>}
+	 * @param target	account id.
+	 * @param listName list name.
+	 * @throws AccountListServiceException if error.
+	 * @return list of {@link AccountIdAdditionalInfo}
 	 */
 	List<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName) throws AccountListServiceException;
 
@@ -122,12 +120,12 @@ public interface AccountListService extends Service {
 	 * Returns the list of ownerIds that have added this account in lists with
 	 * given name. Warning: this operation is probably very expensive. In
 	 * addition can split result on pages and can sort with any field.
-	 * 
-	 * @param target
-	 * @param listName
-	 * @param filter
-	 * @return {@link Slice<AccountIdAdditionalInfo>}
-	 * @throws AccountListServiceException
+	 *
+	 * @param target	account id.
+	 * @param listName list name.
+	 * @param filter {@link AccountListFilter}
+	 * @return list of {@link AccountIdAdditionalInfo}
+	 * @throws AccountListServiceException if error.
 	 */
 	Slice<AccountIdAdditionalInfo> reverseLookup(AccountId target, String listName, AccountListFilter filter) throws AccountListServiceException;
 

@@ -45,9 +45,9 @@ public class AccountListFilter implements Serializable {
 	/**
 	 * Constructor with all parameters.
 	 * 
-	 * @param sorter
-	 * @param orderBy
-	 * @param pager
+	 * @param sortBy	{@link AccountListFieldComparators}
+	 * @param orderBy	{@link SortingDirection}
+	 * @param pager		{@link Pager}
 	 */
 	public AccountListFilter(AccountListFieldComparators sortBy, SortingDirection orderBy, Pager pager) {
 		setOrderBy(orderBy);

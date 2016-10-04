@@ -33,7 +33,7 @@ public class AccountList implements Serializable {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param listName
+	 * @param listName	list name
 	 */
 	public AccountList(String listName) {
 		this.listName = listName;
@@ -46,7 +46,7 @@ public class AccountList implements Serializable {
 	/**
 	 * Gets list of stored targets.
 	 * 
-	 * @return
+	 * @return	list of {@link AccountIdAdditionalInfo}.
 	 */
 	public List<AccountIdAdditionalInfo> getTargets() {
 		if (targets == null) {
@@ -58,7 +58,7 @@ public class AccountList implements Serializable {
 	/**
 	 * Adds values to the targets list. Only new account ids will be added.
 	 * 
-	 * @param items
+	 * @param items	collection of {@link AccountIdAdditionalInfo}
 	 */
 	public void addAll(Collection<AccountIdAdditionalInfo> items) {
 		HashSet<AccountIdAdditionalInfo> set = new HashSet<AccountIdAdditionalInfo>(getTargets());
@@ -70,8 +70,8 @@ public class AccountList implements Serializable {
 
 	/**
 	 * Removes all targets from stored items.
-	 * 
-	 * @param targets
+	 *
+	 * @param items	collection of {@link AccountIdAdditionalInfo}
 	 */
 	public void removeAll(Collection<AccountIdAdditionalInfo> items) {
 		getTargets().removeAll(items);

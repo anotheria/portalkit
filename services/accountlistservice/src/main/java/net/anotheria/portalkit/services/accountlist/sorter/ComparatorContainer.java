@@ -20,8 +20,8 @@ public class ComparatorContainer<T> {
 	/**
 	 * Adds comparator to the storage.
 	 * 
-	 * @param fieldName
-	 * @param comparator
+	 * @param fieldName		field name.
+	 * @param comparator	comparator.
 	 */
 	public void addComparator(String fieldName, Comparator<T> comparator) {
 		comparators.putIfAbsent(fieldName, comparator);
@@ -29,8 +29,7 @@ public class ComparatorContainer<T> {
 
 	/**
 	 * 
-	 * @param fieldName
-	 * @param comparator
+	 * @param fieldComparator 	field comparator.
 	 */
 	public void addComparator(FieldComparator<T> fieldComparator) {
 		comparators.putIfAbsent(fieldComparator.getFieldName(), fieldComparator.getComparator());
@@ -47,11 +46,11 @@ public class ComparatorContainer<T> {
 	};
 
 	/**
-	 * Returns {@link Comparator<T>}. If this comparator does not exist in
+	 * Returns {@link Comparator}. If this comparator does not exist in
 	 * storage - return default string comparator.
 	 * 
-	 * @param fieldName
-	 * @return {@link Comparator<T>}
+	 * @param fieldName		field name
+	 * @return {@link Comparator}
 	 */
 	public Comparator<T> getComparator(String fieldName) {
 		Comparator<T> comp = comparators.get(fieldName);
@@ -62,11 +61,11 @@ public class ComparatorContainer<T> {
 	}
 
 	/**
-	 * Returns {@link Comparator<T>}. If this comparator does not exist in
+	 * Returns {@link Comparator}. If this comparator does not exist in
 	 * storage - return default string comparator.
 	 * 
-	 * @param sortBy
-	 * @return {@link Comparator<T>}
+	 * @param sortBy	sort type.
+	 * @return {@link Comparator}
 	 */
 	public Comparator<T> getComparator(FieldComparator<T> sortBy) {
 		if (sortBy == null) {

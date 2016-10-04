@@ -61,9 +61,9 @@ public class AccountListServiceEventAnnouncer implements EventServicePushSupplie
 	/**
 	 * Create event type.
 	 * 
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 */
 	public void accountListCreate(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.create(owner, target, listName));
@@ -72,9 +72,9 @@ public class AccountListServiceEventAnnouncer implements EventServicePushSupplie
 	/**
 	 * Update event type.
 	 * 
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 */
 	public void accountListUpdate(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.update(owner, target, listName));
@@ -83,9 +83,9 @@ public class AccountListServiceEventAnnouncer implements EventServicePushSupplie
 	/**
 	 * Delete event type.
 	 * 
-	 * @param owner
-	 * @param target
-	 * @param listName
+	 * @param owner owner id.
+	 * @param target target id.
+	 * @param listName list name.
 	 */
 	public void accountListDelete(AccountId owner, AccountId target, String listName) {
 		deliver(AccountListEvent.delete(owner, target, listName));

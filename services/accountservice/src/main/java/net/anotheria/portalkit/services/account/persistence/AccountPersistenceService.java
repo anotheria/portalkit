@@ -19,34 +19,34 @@ public interface AccountPersistenceService extends Service {
 	/**
 	 * Returns the account with that account id.
 	 * 
-	 * @param id
+	 * @param id account id.
 	 * @return Account
-	 * @throws AccountPersistenceServiceException
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	Account getAccount(AccountId id) throws AccountPersistenceServiceException;
 
 	/**
 	 * Saves the account.
 	 * 
-	 * @param account
-	 * @throws AccountPersistenceServiceException
+	 * @param account	{@link	Account}
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	void saveAccount(Account account) throws AccountPersistenceServiceException;
 
 	/**
 	 * Deletes the account with submitted id.
 	 * 
-	 * @param id
-	 * @throws AccountPersistenceServiceException
+	 * @param id account id
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	void deleteAccount(AccountId id) throws AccountPersistenceServiceException;
 
 	/**
 	 * Returns the id of the account with the given name.
 	 * 
-	 * @param name
+	 * @param name	user name.
 	 * @return AccountId
-	 * @throws AccountPersistenceServiceException
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	AccountId getIdByName(String name) throws AccountPersistenceServiceException;
 
@@ -55,7 +55,7 @@ public interface AccountPersistenceService extends Service {
 	 * 
 	 * @param email
 	 * @return AccountId
-	 * @throws AccountPersistenceServiceException
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	AccountId getIdByEmail(String email) throws AccountPersistenceServiceException;
 
@@ -63,15 +63,15 @@ public interface AccountPersistenceService extends Service {
 	 * Get all account id's.
 	 * 
 	 * @return {@link Collection} of {@link AccountId}
-	 * @throws AccountPersistenceServiceException
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException;
 
 	/**
 	 * 
-	 * @param id
-	 * @return List<AccountId>
-	 * @throws AccountPersistenceServiceException
+	 * @param id account id
+	 * @return list of {@link AccountId}.
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	List<AccountId> getAccountsByType(int id) throws AccountPersistenceServiceException;
 	
@@ -81,7 +81,7 @@ public interface AccountPersistenceService extends Service {
 	 * @param query
 	 *            {@link AccountQuery}
 	 * @return {@link List} of {@link Account}
-	 * @throws AccountPersistenceServiceException
+	 * @throws AccountPersistenceServiceException if error.
 	 */
 	List<Account> getAccountsByQuery(AccountQuery query) throws AccountPersistenceServiceException;
 
