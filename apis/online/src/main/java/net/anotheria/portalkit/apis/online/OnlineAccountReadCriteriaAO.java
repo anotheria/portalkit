@@ -45,8 +45,9 @@ public final class OnlineAccountReadCriteriaAO implements Serializable {
         /**
          * Build is not supported on API layer cause {@link OnlineAccountReadCriteria} is business object.
          * Please use {@link Builder#buildCriteria()} instead - to receive {@link OnlineAccountReadCriteriaAO} instance.
-         * <p/>
+         * <p>
          * On call attempt {@link UnsupportedOperationException} will be thrown.
+         * </p>
          *
          * @return {@link OnlineAccountReadCriteria}
          */

@@ -28,7 +28,7 @@ public enum TicketType {
 	/**
 	 * Searches {@link TicketType} by name.
 	 * 
-	 * @param s
+	 * @param s	ticket type name.
 	 * @return {@link TicketType}
 	 */
 	public static TicketType find(String s) {

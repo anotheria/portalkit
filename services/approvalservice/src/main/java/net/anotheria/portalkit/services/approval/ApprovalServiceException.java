@@ -17,7 +17,7 @@ public class ApprovalServiceException extends PortalKitServiceException {
 
 	/**
 	 * Constructor with message.
-	 * @param message
+	 * @param message	message.
 	 */
 	public ApprovalServiceException(String message) {
 		super(message);
@@ -25,8 +25,8 @@ public class ApprovalServiceException extends PortalKitServiceException {
 
 	/**
 	 * Constructor with message and {@link Throwable}.
-	 * @param message
-	 * @param cause
+	 * @param message	message.
+	 * @param cause		cause.
 	 */
 	public ApprovalServiceException(String message, Throwable cause) {
 		super(message, cause);

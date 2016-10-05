@@ -44,6 +44,7 @@ public enum ReferenceType {
 	/**
 	 * Gets {@link ReferenceType} acording to value.
 	 *
+	 * @param value value.
 	 * @return {@link ReferenceType}
 	 * */
 	public static ReferenceType valueOf(long value) {

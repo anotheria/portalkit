@@ -15,7 +15,7 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param uid entity unique _id
      * @return entity
-     * @throws ProfileServiceException
+     * @throws ProfileServiceException if error occurs
      */
     T read(String uid) throws ProfileServiceException;
 
@@ -24,7 +24,7 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param toSave entity to save
      * @return saved entity
-     * @throws ProfileServiceException
+     * @throws ProfileServiceException if error occurs
      */
     T save(T toSave) throws ProfileServiceException;
 
@@ -33,7 +33,7 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param toCreate entity to create
      * @return created entity
-     * @throws ProfileServiceException
+     * @throws ProfileServiceException if error occurs
      */
     T create(T toCreate) throws ProfileServiceException;
 
@@ -42,7 +42,7 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param toUpdate entity to update
      * @return updated entity
-     * @throws ProfileServiceException
+     * @throws ProfileServiceException if error occurs
      */
     T update(T toUpdate) throws ProfileServiceException;
 
@@ -51,15 +51,15 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param uid entity unique _id
      * @return deleted entity
-     * @throws ProfileServiceException
+     * @throws ProfileServiceException if error occurs
      */
     T delete(String uid) throws ProfileServiceException;
 
     /**
      * Find all entities.
      *
-     * @return {@link List} of <T>
-     * @throws ProfileServiceException
+     * @return {@link List} of T
+     * @throws ProfileServiceException if error occurs
      */
     List<T> findAll() throws ProfileServiceException;
 
@@ -68,8 +68,8 @@ public interface ProfileService<T extends Profile> extends Service {
      *
      * @param query
      *            query
-     * @return {@link List} of <T>
-     * @throws ProfileServiceException
+     * @return {@link List} of T
+     * @throws ProfileServiceException if error occurs
      */
     List<T> find(BasicDBObject query) throws ProfileServiceException;
 }

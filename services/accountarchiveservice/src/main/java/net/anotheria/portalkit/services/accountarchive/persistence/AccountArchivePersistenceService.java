@@ -18,7 +18,7 @@ public interface AccountArchivePersistenceService extends Service {
      *
      * @param id account identity
      * @return {@link ArchivedAccount}
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     ArchivedAccount getAccount(AccountId id) throws ArchivedAccountPersistenceServiceException;
 
@@ -30,12 +30,15 @@ public interface AccountArchivePersistenceService extends Service {
      */
     List<ArchivedAccount> getAccounts(List<AccountId> identities) throws ArchivedAccountPersistenceServiceException;
 
+    /**
+     * @return list of {@link AccountId}
+     * */
     List<ArchivedAccount> getAllAccounts() throws  ArchivedAccountPersistenceServiceException;
     /**
      * Saves the account.
      *
      * @param account {@link ArchivedAccount} to be saved
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     void saveAccount(ArchivedAccount account) throws ArchivedAccountPersistenceServiceException;
 
@@ -43,7 +46,7 @@ public interface AccountArchivePersistenceService extends Service {
      * Deletes the account with submitted id.
      *
      * @param id account identity
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     void deleteAccount(AccountId id) throws ArchivedAccountPersistenceServiceException;
 
@@ -52,7 +55,7 @@ public interface AccountArchivePersistenceService extends Service {
      *
      * @param name account name to find
      * @return {@link AccountId}
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     AccountId getIdByName(String name) throws ArchivedAccountPersistenceServiceException;
 
@@ -61,7 +64,7 @@ public interface AccountArchivePersistenceService extends Service {
      *
      * @param email account email to find
      * @return AccountId
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     AccountId getIdByEmail(String email) throws ArchivedAccountPersistenceServiceException;
 
@@ -69,15 +72,15 @@ public interface AccountArchivePersistenceService extends Service {
      * Get all account id's.
      *
      * @return {@link java.util.Collection} of {@link AccountId}
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     Collection<AccountId> getAllAccountIds() throws ArchivedAccountPersistenceServiceException;
 
     /**
      *
-     * @param id
-     * @return List<AccountId>
-     * @throws ArchivedAccountPersistenceServiceException
+     * @param id    account id.
+     * @return list of {@link AccountId}
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     List<AccountId> getAccountsByType(int id) throws ArchivedAccountPersistenceServiceException;
 
@@ -87,7 +90,7 @@ public interface AccountArchivePersistenceService extends Service {
      * @param query
      *            {@link ArchivedAccountQuery}
      * @return {@link List} of {@link ArchivedAccount}
-     * @throws ArchivedAccountPersistenceServiceException
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     List<ArchivedAccount> getAccountsByQuery(ArchivedAccountQuery query) throws ArchivedAccountPersistenceServiceException;
 

@@ -43,9 +43,9 @@ public class ForeignId implements Serializable {
 	/**
 	 * Additional constructor that fills needed fields.
 	 * 
-	 * @param accountId
-	 * @param sourceId
-	 * @param id
+	 * @param accountId	account id.
+	 * @param sourceId source id.
+	 * @param id	foreign id.
 	 */
 	public ForeignId(AccountId accountId, int sourceId, String id) {
 		this.accountId = accountId;

@@ -54,12 +54,12 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	/**
 	 * Links account to foreign system.
 	 * 
-	 * @param connection
-	 * @param accId
-	 * @param sid
-	 * @param fid
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param accId account id.
+	 * @param sid source id.
+	 * @param fid foreign id.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void link(Connection connection, AccountId accId, int sid, String fid) throws DAOException, SQLException {
 		PreparedStatement insertStatement = null;
@@ -78,12 +78,12 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	/**
 	 * Gets {@link AccountId} by foreign id fields.
 	 * 
-	 * @param connection
-	 * @param sid
-	 * @param fid
+	 * @param connection database connection.
+	 * @param sid source id.
+	 * @param fid foreign id.
 	 * @return {@link AccountId}
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public AccountId getAccountIdByForeignId(Connection connection, int sid, String fid) throws DAOException, SQLException {
 		PreparedStatement stat = null;
@@ -109,11 +109,11 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	/**
 	 * Gets list of linked {@link ForeignId}'s by {@link AccountId}.
 	 * 
-	 * @param connection
-	 * @param accId
-	 * @return {@link List<ForeignId>}
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param accId account id.
+	 * @return list of {@link ForeignId}
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public List<ForeignId> getForeignIdsByAccountId(Connection connection, AccountId accId) throws DAOException, SQLException {
 		PreparedStatement stat = null;
@@ -137,12 +137,12 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 	/**
 	 * Unlink {@link AccountId} from foreign system.
 	 * 
-	 * @param connection
-	 * @param accId
-	 * @param sid
-	 * @param fid
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param accId account id.
+	 * @param sid source id.
+	 * @param fid foreign id.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void unlink(Connection connection, AccountId accId, int sid, String fid) throws DAOException, SQLException {
 		PreparedStatement deleteStatement = null;
@@ -160,11 +160,11 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 
 	/**
 	 * 
-	 * @param connection
-	 * @param sid
-	 * @param fid
-	 * @throws DAOException
-	 * @throws SQLException
+	 * @param connection database connection.
+	 * @param sid source id.
+	 * @param fid foreign id.
+	 * @throws DAOException if error.
+	 * @throws SQLException if error.
 	 */
 	public void unlink(Connection connection, int sid, String fid) throws DAOException, SQLException {
 		AccountId accid = getAccountIdByForeignId(connection, sid, fid);

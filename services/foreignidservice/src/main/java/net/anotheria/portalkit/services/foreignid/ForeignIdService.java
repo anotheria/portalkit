@@ -20,39 +20,39 @@ public interface ForeignIdService extends Service {
 	/**
 	 * Creates a new association between our account and another account.
 	 * 
-	 * @param accId
-	 * @param foreignId
-	 * @param sourceId
-	 * @throws ForeignIdServiceException
+	 * @param accId account id.
+	 * @param foreignId foreign id.
+	 * @param sourceId source id.
+	 * @throws ForeignIdServiceException if error.
 	 */
 	void addForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Removes previously created association with another account.
 	 * 
-	 * @param accId
-	 * @param foreignId
-	 * @param sourceId
-	 * @throws ForeignIdServiceException
+	 * @param accId account id.
+	 * @param foreignId foreign id.
+	 * @param sourceId source id.
+	 * @throws ForeignIdServiceException if error.
 	 */
 	void removeForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Returns the associated account id for this source/foreign Id combination.
 	 * 
-	 * @param foreignId
-	 * @param sourceId
+	 * @param foreignId foreign id.
+	 * @param sourceId source id.
 	 * @return {@link AccountId}
-	 * @throws ForeignIdServiceException
+	 * @throws ForeignIdServiceException if error.
 	 */
 	AccountId getAccountIdByForeignId(String foreignId, int sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Returns all associations for given account id.
 	 * 
-	 * @param accountId
-	 * @return {@link List<AccountId>}
-	 * @throws ForeignIdServiceException
+	 * @param accountId account id.
+	 * @return list of {@link AccountId}
+	 * @throws ForeignIdServiceException if error.
 	 */
 	List<ForeignId> getForeignIds(AccountId accountId) throws ForeignIdServiceException;
 }

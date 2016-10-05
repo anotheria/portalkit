@@ -18,17 +18,17 @@ public interface ApprovalPersistenceService {
 	/**
 	 * Creates a ticket.
 	 *
-	 * @param newTicket
-	 * @throws ApprovalPersistenceServiceException
+	 * @param newTicket	new ticket.
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	TicketDO createTicket(TicketDO newTicket) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Gets tocket by ID.
 	 *
-	 * @param ticketId
+	 * @param ticketId ticket id.
 	 * @return {@link TicketDO}
-	 * @throws ApprovalPersistenceServiceException
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	TicketDO getTicketById(long ticketId) throws ApprovalPersistenceServiceException;
 
@@ -36,15 +36,15 @@ public interface ApprovalPersistenceService {
 	 * Approves a ticket.
 	 *
 	 * @param ticket
-	 * @throws ApprovalPersistenceServiceException
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	void updateTicket(TicketDO ticket) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Deletes ticket.
 	 *
-	 * @param ticketId
-	 * @throws ApprovalPersistenceServiceException
+	 * @param ticketId ticket id.
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	void deleteTicket(long ticketId) throws ApprovalPersistenceServiceException;
 
@@ -52,9 +52,10 @@ public interface ApprovalPersistenceService {
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
 	 * descending. List will contain tickets of specified {@code referenceType} and {@code ticketType}.
 	 *
-	 * @param referenceType
-	 * @return {@link List<TicketDO>}
-	 * @throws ApprovalPersistenceServiceException
+	 * @param referenceType	reference type.
+	 * @param ticketType 	ticket type.
+	 * @return list of {@link TicketDO}
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
 
@@ -62,9 +63,9 @@ public interface ApprovalPersistenceService {
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
 	 * descending. List will contain tickets of specified locale
 	 *
-	 * @param locale
-	 * @return {@link List<TicketDO>}
-	 * @throws ApprovalPersistenceServiceException
+	 * @param locale	locale.
+	 * @return list of {@link TicketDO}
+	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException;
 

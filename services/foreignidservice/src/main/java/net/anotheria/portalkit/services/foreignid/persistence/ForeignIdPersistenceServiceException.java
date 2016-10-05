@@ -17,7 +17,7 @@ public class ForeignIdPersistenceServiceException extends PortalKitPersistenceSe
 
 	/**
 	 * With message.
-	 * @param message
+	 * @param message	message.
 	 */
 	public ForeignIdPersistenceServiceException(String message) {
 		super(message);
@@ -25,8 +25,8 @@ public class ForeignIdPersistenceServiceException extends PortalKitPersistenceSe
 
 	/**
 	 * With message and cause exception.
-	 * @param message
-	 * @param cause
+	 * @param message	message.
+	 * @param cause		cause.
 	 */
 	public ForeignIdPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);

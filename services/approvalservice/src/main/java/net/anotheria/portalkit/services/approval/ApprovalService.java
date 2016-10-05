@@ -19,33 +19,33 @@ public interface ApprovalService extends Service {
 	 * 
 	 * @param ticket	new ticket
 	 * @return {@link TicketBO}
-	 * @throws ApprovalServiceException
+	 * @throws ApprovalServiceException if error.
 	 */
 	TicketBO createTicket(TicketBO ticket) throws ApprovalServiceException;
 
 	/**
 	 * Removes ticket.
 	 * 
-	 * @param ticketId
-	 * @throws ApprovalServiceException
+	 * @param ticketId ticket id.
+	 * @throws ApprovalServiceException if error.
 	 */
 	void deleteTicket(long ticketId) throws ApprovalServiceException;
 
 	/**
 	 * Gets ticket by internal ID.
 	 * 
-	 * @param ticketId
+	 * @param ticketId ticket id.
 	 * @return {@link TicketBO}
-	 * @throws ApprovalServiceException
+	 * @throws ApprovalServiceException if error.
 	 */
 	TicketBO getTicketById(long ticketId) throws ApprovalServiceException;
 
 	/**
 	 * Gets ticket by locale.
 	 *
-	 * @param locale
+	 * @param locale locale
 	 * @return list of {@link TicketBO}
-	 * @throws ApprovalServiceException
+	 * @throws ApprovalServiceException if error.
 	 */
 	List<TicketBO> getTicketsByLocale(String locale) throws ApprovalServiceException;
 
@@ -55,35 +55,36 @@ public interface ApprovalService extends Service {
 	 * @param referenceType		reference type.
 	 * @param ticketType		ticket type.
 	 * @return list of {@link TicketBO}
-	 * @throws ApprovalServiceException
+	 * @throws ApprovalServiceException if error.
 	 */
 	List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType) throws ApprovalServiceException;
 
 	/**
 	 * Approves ticket.
 	 * 
-	 * @throws ApprovalServiceException
+	 * @throws ApprovalServiceException if error.
 	 */
 	void approveTicket(TicketBO ticket) throws ApprovalServiceException;
 
 	/**
 	 * 
-	 * @param tickets
-	 * @throws ApprovalServiceException
+	 * @param tickets tickets
+	 * @throws ApprovalServiceException if error.
 	 */
 	void approveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException;
 
 	/**
 	 * Disapprove ticket.
-	 * 
-	 * @throws ApprovalServiceException
+	 *
+	 * @param ticket	ticket
+	 * @throws ApprovalServiceException if error.
 	 */
 	void disapproveTicket(TicketBO ticket) throws ApprovalServiceException;
 
 	/**
 	 * 
-	 * @param tickets
-	 * @throws ApprovalServiceException
+	 * @param tickets tickets
+	 * @throws ApprovalServiceException if error.
 	 */
 	void disapproveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException;
 
@@ -91,14 +92,14 @@ public interface ApprovalService extends Service {
 	 * Locks ticket for agent.
 	 *
 	 * @param agentId 	agent id.
-	 * @param ticketId 	ticket id.
+	 * @param ticketId ticket id.
 	 * */
 	void lockTicket(long ticketId, String agentId) throws ApprovalServiceException;
 
 	/**
 	 * Unlocks ticket.
 	 *
-	 * @param ticketId 	ticket id.
+	 * @param ticketId ticket id.
 	 * */
 	void unlockTicket(long ticketId) throws ApprovalServiceException;
 
@@ -112,7 +113,7 @@ public interface ApprovalService extends Service {
 	/**
 	 * Gets all unlocked tickets by locale.
 	 *
-	 * @param locale 	locale.
+	 * @param locale locale 	locale.
 	 * @param size 		number of elements to print.
 	 *
 	 * @return list of {@link TicketBO}.
