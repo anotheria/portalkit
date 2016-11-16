@@ -63,6 +63,7 @@
 		<module>subscriptionservice</module>
 		<module>relationservice</module>
 		<module>scamscoreservice</module>
+		<module>personaldata</module>
 	</modules>
 
 </project>
