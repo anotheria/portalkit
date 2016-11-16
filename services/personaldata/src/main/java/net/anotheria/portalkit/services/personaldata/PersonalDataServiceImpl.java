@@ -38,11 +38,20 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
         PersonalData personalData = datastore.createQuery(PersonalData.class).field("_id").equal(accountId.getInternalId()).get();
 
+        if (personalData == null) {
+            return null;
+        }
+
         return decryptPersonalData(personalData);
     }
 
     @Override
     public void save(PersonalData personalData) throws PersonalDataServiceException {
+
+        if (personalData == null) {
+            return;
+        }
+
         personalData.set_id(personalData.getAccountId().getInternalId());
         datastore.save(encryptPersonalData(personalData));
     }
