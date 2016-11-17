@@ -69,8 +69,8 @@ public final class PersonalDataServiceConfig {
             LOGGER.warn("Configuration fail[" + e.getMessage() + "]. Relaying on defaults.");
         }
 
-        CryptTool cryptTool = new CryptTool(configurationReadKey.toString());
-        this.applicationSecret = cryptTool.decryptFromHex(this.applicationSecret);
+        CryptTool cryptTool = new CryptTool(new String(configurationReadKey));
+        this.applicationSecret = cryptTool.decryptFromHexTrim(this.applicationSecret);
     }
 
 
