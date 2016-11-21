@@ -4,6 +4,8 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
 import org.mongodb.morphia.Datastore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +14,11 @@ import java.util.Map;
  * @author Vlad Lukjanenko
  */
 public class PersonalDataServiceImpl implements PersonalDataService {
+
+    /**
+     * {@link Logger} instance.
+     */
+    protected static final Logger LOGGER = LoggerFactory.getLogger(PersonalDataServiceImpl.class);
 
     /**
      * {@link Datastore} instance.
@@ -89,6 +96,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         CryptTool cryptTool = new CryptTool(config.getApplicationSecret() + toEncrypt.getAccountId().getInternalId());
 
         for (Map.Entry<String, String> entry : toEncrypt.getPersonalData().entrySet()) {
+            LOGGER.info("key=[" + entry.getKey() + "], value=[" + entry.getValue() + "]");
             encrypted.put(entry.getKey(), cryptTool.encryptToHex(entry.getValue()));
         }
 
