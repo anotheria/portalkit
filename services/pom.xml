@@ -64,6 +64,7 @@
 		<module>relationservice</module>
 		<module>scamscoreservice</module>
 		<module>personaldata</module>
+		<module>bounce</module>
 	</modules>
 
 </project>
