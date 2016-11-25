@@ -96,7 +96,6 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         CryptTool cryptTool = new CryptTool(config.getApplicationSecret() + toEncrypt.getAccountId().getInternalId());
 
         for (Map.Entry<String, String> entry : toEncrypt.getPersonalData().entrySet()) {
-            LOGGER.info("key=[" + entry.getKey() + "], value=[" + entry.getValue() + "]");
             encrypted.put(entry.getKey(), cryptTool.encryptToHex(entry.getValue()));
         }
 
