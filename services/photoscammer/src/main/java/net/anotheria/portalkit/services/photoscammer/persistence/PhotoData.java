@@ -18,12 +18,17 @@ import javax.persistence.*;
         @NamedQuery(
                 name = PhotoData.JPQL_GET_ALL_PHOTO_DATA_BY_USER,
                 query = "select p from PhotoData p where p.userId = :userId"
+        ),
+        @NamedQuery(
+                name = PhotoData.JPQL_GET_ALL_PHOTO_DATA_BY_PHOTO_ID,
+                query = "select p from PhotoData p where p.photoId = :photoId"
         )
 })
 public class PhotoData {
 
     public static final String JPQL_GET_ALL_PHOTO_DATA = "PhotoData.getAllPhotoData";
     public static final String JPQL_GET_ALL_PHOTO_DATA_BY_USER = "PhotoData.getAllPhotoDataByUser";
+    public static final String JPQL_GET_ALL_PHOTO_DATA_BY_PHOTO_ID = "PhotoData.getAllPhotoDataByPhotoId";
 
     /**
      * Id.

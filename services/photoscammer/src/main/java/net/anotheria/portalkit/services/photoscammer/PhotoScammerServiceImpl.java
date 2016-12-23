@@ -18,8 +18,12 @@ public class PhotoScammerServiceImpl implements PhotoScammerService {
 
 
     @Override
-    public PhotoDataBO getPhotoData(long id) throws PhotoScammerServiceException {
-        return null;
+    public PhotoDataBO getPhotoData(long photoId) throws PhotoScammerServiceException {
+        try {
+            return photoScammerPersistenceService.getPhotoData(photoId);
+        } catch (PhotoScammerPersistenceServiceException e) {
+            throw new PhotoScammerServiceException("Error occurred while getting photo data by id=" + photoId, e);
+        }
     }
 
     @Override

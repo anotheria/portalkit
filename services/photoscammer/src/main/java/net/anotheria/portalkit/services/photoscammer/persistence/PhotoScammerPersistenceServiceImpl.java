@@ -30,8 +30,17 @@ public class PhotoScammerPersistenceServiceImpl implements PhotoScammerPersisten
 
 
     @Override
-    public PhotoDataBO getPhotoData(long id) throws PhotoScammerPersistenceServiceException {
-        return null;
+    public PhotoDataBO getPhotoData(long photoId) throws PhotoScammerPersistenceServiceException {
+
+        TypedQuery<PhotoData> query = entityManager.createNamedQuery(PhotoData.JPQL_GET_ALL_PHOTO_DATA_BY_PHOTO_ID, PhotoData.class)
+                .setParameter("photoId", photoId);
+        List<PhotoData> photoData = query.getResultList();
+
+        if (photoData == null || photoData.isEmpty()) {
+            return null;
+        }
+
+        return new PhotoDataBO(photoData.get(0));
     }
 
     @Override

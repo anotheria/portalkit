@@ -20,7 +20,7 @@ public interface PhotoScammerPersistenceService {
      * @return {@link PhotoDataBO}
      * @throws PhotoScammerPersistenceServiceException if error.
      * */
-    PhotoDataBO getPhotoData(long id) throws PhotoScammerPersistenceServiceException;
+    PhotoDataBO getPhotoData(long photoId) throws PhotoScammerPersistenceServiceException;
 
     /**
      * Saves {@link PhotoDataBO}.
