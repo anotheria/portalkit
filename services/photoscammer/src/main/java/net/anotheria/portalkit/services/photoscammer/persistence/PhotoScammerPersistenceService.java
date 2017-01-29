@@ -48,7 +48,6 @@ public interface PhotoScammerPersistenceService {
     /**
      * Gets all {@link PhotoDataBO}.
      *
-     * @return list of {@link PhotoDataBO}.
      * @throws PhotoScammerPersistenceServiceException if error.
      * */
     void deletePhotoData(long id) throws PhotoScammerPersistenceServiceException;
@@ -78,9 +77,8 @@ public interface PhotoScammerPersistenceService {
     List<PhotoScammerBO> getAllPhotoScammerData() throws PhotoScammerPersistenceServiceException;
 
     /**
-     * Gets all {@link PhotoScammer}.
+     * deletePhotoScammerData.
      *
-     * @return list of {@link PhotoScammer}.
      * @throws PhotoScammerPersistenceServiceException if error.
      * */
     void deletePhotoScammerData(long id) throws PhotoScammerPersistenceServiceException;

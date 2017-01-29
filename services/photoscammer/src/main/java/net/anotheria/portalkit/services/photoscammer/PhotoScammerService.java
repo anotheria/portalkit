@@ -44,7 +44,7 @@ public interface PhotoScammerService extends Service {
     /**
      * Gets all {@link PhotoDataBO}.
      *
-     * @return list of {@link PhotoDataBO}.
+	 * @param id scammer data id.
      * @throws PhotoScammerServiceException if error.
      * */
     void deletePhotoData(long id) throws PhotoScammerServiceException;
@@ -53,6 +53,7 @@ public interface PhotoScammerService extends Service {
     /**
      * Gets {@link PhotoScammerBO} by id.
      *
+	 * @param id scammer data id.
      * @return {@link PhotoScammerBO}
      * @throws PhotoScammerServiceException if error.
      * */
@@ -61,6 +62,7 @@ public interface PhotoScammerService extends Service {
     /**
      * Saves {@link PhotoScammerBO}.
      *
+	 * @param photoScammer photo scammer data.
      * @throws PhotoScammerServiceException if error.
      * */
     void savePhotoScammerData(PhotoScammerBO photoScammer) throws PhotoScammerServiceException;
@@ -74,9 +76,9 @@ public interface PhotoScammerService extends Service {
     List<PhotoScammerBO> getAllPhotoScammerData() throws PhotoScammerServiceException;
 
     /**
-     * Gets all {@link PhotoScammer}.
+     * DeletePhotoScammerData by id.
      *
-     * @return list of {@link PhotoScammer}.
+	 * @param id scammer data id.
      * @throws PhotoScammerServiceException if error.
      * */
     void deletePhotoScammerData(long id) throws PhotoScammerServiceException;
@@ -84,7 +86,6 @@ public interface PhotoScammerService extends Service {
     /**
      * Move all user photo data to scammer db.
      *
-     * @return list of {@link PhotoScammer}.
      * @throws PhotoScammerServiceException if error.
      * */
     void addAllPhotoScammer(String userId) throws PhotoScammerServiceException;

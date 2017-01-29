@@ -20,7 +20,6 @@ public interface PersonalDataService extends Service {
     /**
      * Saves user personal data.
      *
-     * @param accountId user account id.
      * @param personalData  user personal data.
      * @throws PersonalDataServiceException id error occurs.
      * */
