@@ -1,10 +1,19 @@
 package net.anotheria.portalkit.engines.mailhunter;
 
 public class MatchDetails {
+	private String transformedText;
 	private String matchedPattern;
 	private String matchedArea;
 	private int start;
 	private int end;
+
+	public String getTransformedText() {
+		return transformedText;
+	}
+
+	public void setTransformedText(String transformedText) {
+		this.transformedText = transformedText;
+	}
 
 	public String getMatchedPattern() {
 		return matchedPattern;

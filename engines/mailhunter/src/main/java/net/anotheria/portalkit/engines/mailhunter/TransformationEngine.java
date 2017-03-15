@@ -79,12 +79,25 @@ public class TransformationEngine {
 		String toMatch = context.getToMatch(); 
 		String toCheck = null; 
 		Transformation t = context.getFiredTransformation();
-		details.setMatchedPattern(t.transform(toMatch));
+		details.setTransformedText(t.transform(toMatch));
 		Matcher m = context.getFiredMatcher();
+
+		int end = toMatch.length();
+		boolean foundEnd = false;
+		while(!foundEnd){
+			toCheck = t.transform(toMatch);
+			foundEnd = !m.doesMatch(toCheck);
+			if (!foundEnd){
+				end--; toMatch = toMatch.substring(0, end);
+			}
+		}
+
+		if (end<toMatch.length()-1)
+			end++;
+
 		int start = 0;
 		boolean foundStart = false;
-		
-		toMatch = context.getToMatch();
+		toMatch = context.getToMatch().substring(0, end + 1);
 		while(!foundStart){
 			toCheck = t.transform(toMatch);
 			
@@ -97,29 +110,10 @@ public class TransformationEngine {
 		if (start>0)
 			start--;
 
-		
-		toMatch = context.getToMatch();
-		int end = toMatch.length();
-		boolean foundEnd = false;
-		while(!foundEnd){
-			toCheck = t.transform(toMatch);
-			foundEnd = !m.doesMatch(toCheck);
-			if (!foundEnd){
-				end--; toMatch = toMatch.substring(0, end);
-			}
-		}
-		
-		if (end<toMatch.length()-1)
-			end++;
-		
 		details.setStart(start);
 		details.setEnd(end);
-
-		if (start < end) {
-			details.setMatchedArea(context.getToMatch().substring(start, end + 1));
-		} else {
-			details.setMatchedArea(context.getToMatch());
-		}
+		details.setMatchedPattern(t.transform(context.getToMatch().substring(start, end + 1)));
+		details.setMatchedArea(context.getToMatch().substring(start, end + 1));
 
 		return details;
 	}
