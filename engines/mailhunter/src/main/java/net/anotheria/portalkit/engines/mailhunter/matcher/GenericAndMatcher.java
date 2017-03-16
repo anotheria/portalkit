@@ -30,15 +30,14 @@ public class GenericAndMatcher extends AbstractMatcher{
 	}
 
 	public boolean doesMatch(String expression) {
-		for (int i=0; i<firstValues.size(); i++){
-			String val1 = firstValues.get(i);
-			if (expression.indexOf(val1)!=-1){
-				for (int y=0; y<secondValues.size(); y++){
-					String val2 = secondValues.get(y);
-					if (expression.indexOf(val2)!=-1)
+		for (String val1 : firstValues) {
+			int index1 = expression.indexOf(val1);
+			if (index1 != -1) {
+				for (String val2 : secondValues) {
+					int index2 = expression.indexOf(val2);
+					if (index2 > index1)
 						return true;
 				}
-				return false;
 			}
 		}
 		return false;
