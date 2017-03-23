@@ -44,7 +44,7 @@ public class MatchServiceImpl implements MatchService {
     private Cache<String, Boolean> isMatchedCache;
 
     public MatchServiceImpl() {
-        isMatchedCache = Caches.createConfigurableHardwiredCache("matchservice-cache");
+        isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
     }
 
     @Override

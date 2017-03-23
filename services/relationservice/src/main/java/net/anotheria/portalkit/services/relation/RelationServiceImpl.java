@@ -46,7 +46,7 @@ public class RelationServiceImpl implements RelationService {
     private Cache<String, Relation> relationCache;
 
     public RelationServiceImpl() {
-        relationCache = Caches.createConfigurableHardwiredCache("relationservice-cache");
+        relationCache = Caches.createConfigurableHardwiredCache("pk-cache-relation-service");
     }
 
     @Override

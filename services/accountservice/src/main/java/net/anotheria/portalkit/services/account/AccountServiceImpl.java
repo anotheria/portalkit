@@ -69,8 +69,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	public AccountServiceImpl() {
 		config = AccountServiceConfig.getInstance();
 
-		cache = Caches.createConfigurableHardwiredCache("accountservice-cache");
-		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("accountservice-nullcache");
+		cache = Caches.createConfigurableHardwiredCache("pk-cache-account-service");
+		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("pk-cache-null-account-service");
 		name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
 		email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
 
