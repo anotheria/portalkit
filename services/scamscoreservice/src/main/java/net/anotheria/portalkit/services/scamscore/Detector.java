@@ -81,6 +81,7 @@ public abstract class Detector {
             userScamRecord.setUpdated(System.currentTimeMillis());
             userScamRecord.setUpdated(System.currentTimeMillis());
             userScamRecord.setTotal_score(score);
+            userScamRecord.setChecked(false);
 
             try {
                 scamScoreService.createUserScamRecord(userScamRecord);
@@ -95,6 +96,7 @@ public abstract class Detector {
 
         int totalScore = userScamRecord.getTotal_score();
         userScamRecord.setTotal_score(totalScore + score);
+        userScamRecord.setChecked(false);
         addScore(userId, score);
 
         try {

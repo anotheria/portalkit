@@ -61,7 +61,7 @@ public interface ScamScorePersistenceService {
      *
      * @return list of {@link UserScamRecordDO}.
      * */
-    List<UserScamRecordDO> getScamRecords() throws ScamScorePersistenceServiceException;
+    List<UserScamRecordDO> getScamRecords(boolean notCheckedOnly) throws ScamScorePersistenceServiceException;
 
     /**
      * Returns scam record by id.

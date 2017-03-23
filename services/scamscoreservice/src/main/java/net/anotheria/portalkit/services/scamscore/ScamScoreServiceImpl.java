@@ -77,12 +77,21 @@ public class ScamScoreServiceImpl implements ScamScoreService {
 
     @Override
     public List<UserScamRecordBO> getScamRecords() throws ScamScoreServiceException {
+        return getScamRecords(false);
+    }
+
+    @Override
+    public List<UserScamRecordBO> getScamRecordsNotChecked() throws ScamScoreServiceException {
+        return getScamRecords(true);
+    }
+
+    private List<UserScamRecordBO> getScamRecords(boolean notCheckedOnly) throws ScamScoreServiceException {
 
         List<UserScamRecordBO> result = new ArrayList<>();
         List<UserScamRecordDO> records = null;
 
         try {
-            records = scamScorePersistenceService.getScamRecords();
+            records = scamScorePersistenceService.getScamRecords(notCheckedOnly);
         } catch (ScamScorePersistenceServiceException e) {
             throw new ScamScoreServiceException("Error occurred while getting scam records", e);
         }

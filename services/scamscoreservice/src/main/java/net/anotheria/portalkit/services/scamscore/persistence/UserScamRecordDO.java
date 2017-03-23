@@ -21,6 +21,10 @@ import javax.persistence.Table;
                 query = "select u from UserScamRecordDO u"
         ),
         @NamedQuery(
+                name = UserScamRecordDO.JPQL_GET_ALL_RECORDS_NOT_CHECKED,
+                query = "select u from UserScamRecordDO u where u.checked = false"
+        ),
+        @NamedQuery(
                 name = UserScamRecordDO.JPQL_GET_RECORD_BY_ID,
                 query = "select u from UserScamRecordDO u where u.id = :id"
         ),
@@ -32,6 +36,7 @@ import javax.persistence.Table;
 public class UserScamRecordDO {
 
     public static final String JPQL_GET_ALL_RECORDS = "UserScamRecordDO.getAllRecords";
+    public static final String JPQL_GET_ALL_RECORDS_NOT_CHECKED = "UserScamRecordDO.getAllRecordsNotChecked";
     public static final String JPQL_GET_RECORD_BY_ID = "UserScamRecordDO.getRecordById";
     public static final String JPQL_DELETE_RECORD_BY_ID = "UserScamRecordDO.deleteRecordById";
 
@@ -47,6 +52,12 @@ public class UserScamRecordDO {
      * */
     @Column
     private int total_score;
+
+    /**
+     * Profile was manually checked.
+     * */
+    @Column
+    private boolean checked;
 
     /**
      * Creation timestamp.
@@ -83,6 +94,14 @@ public class UserScamRecordDO {
 
     public void setTotal_score(int total_score) {
         this.total_score = total_score;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public long getCreated() {
