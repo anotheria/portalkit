@@ -18,6 +18,11 @@ public class UserScamRecordBO {
     private int total_score;
 
     /**
+     * Profile was manually checked.
+     * */
+    private boolean checked;
+
+    /**
      * Creation timestamp.
      * */
     private long created = System.currentTimeMillis();
@@ -42,6 +47,7 @@ public class UserScamRecordBO {
 
         this.id = record.getId();
         this.total_score = record.getTotal_score();
+        this.checked = record.isChecked();
         this.created = record.getCreated();
         this.updated = record.getUpdated();
     }
@@ -61,6 +67,14 @@ public class UserScamRecordBO {
 
     public void setTotal_score(int total_score) {
         this.total_score = total_score;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public long getCreated() {
@@ -85,6 +99,7 @@ public class UserScamRecordBO {
 
         scamRecord.setId(this.id);
         scamRecord.setTotal_score(this.total_score);
+        scamRecord.setChecked(this.checked);
         scamRecord.setCreated(this.created);
         scamRecord.setUpdated(this.updated);
 

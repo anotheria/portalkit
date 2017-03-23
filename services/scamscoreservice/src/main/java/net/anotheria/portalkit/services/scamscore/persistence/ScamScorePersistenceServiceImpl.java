@@ -64,9 +64,9 @@ public class ScamScorePersistenceServiceImpl implements ScamScorePersistenceServ
     }
 
     @Override
-    public List<UserScamRecordDO> getScamRecords() throws ScamScorePersistenceServiceException {
+    public List<UserScamRecordDO> getScamRecords(boolean notCheckedOnly) throws ScamScorePersistenceServiceException {
 
-        TypedQuery<UserScamRecordDO> query = entityManager.createNamedQuery(UserScamRecordDO.JPQL_GET_ALL_RECORDS, UserScamRecordDO.class);
+        TypedQuery<UserScamRecordDO> query = entityManager.createNamedQuery(notCheckedOnly ? UserScamRecordDO.JPQL_GET_ALL_RECORDS_NOT_CHECKED : UserScamRecordDO.JPQL_GET_ALL_RECORDS, UserScamRecordDO.class);
         List<UserScamRecordDO> records = query.getResultList();
 
         if (records == null) {

@@ -61,6 +61,13 @@ public interface ScamScoreService extends Service {
     List<UserScamRecordBO> getScamRecords() throws ScamScoreServiceException;
 
     /**
+     * Returns only not checked scam records.
+     *
+     * @return list of {@link UserScamRecordBO}.
+     * */
+    List<UserScamRecordBO> getScamRecordsNotChecked() throws ScamScoreServiceException;
+
+    /**
      * Returns scam record by id.
      *
      * @return {@link UserScamRecordBO}.
