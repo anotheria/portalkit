@@ -82,7 +82,11 @@ public class ForeignIdServiceImpl implements ForeignIdService {
 		try {
 			persistenceService.unlink(accId, sourceId, foreignId);
 			List<ForeignId> list = cacheByAccountId.get(accId);
-			list.remove(new ForeignId(accId, sourceId, foreignId));
+
+			if (list != null) {
+				list.remove(new ForeignId(accId, sourceId, foreignId));
+			}
+
 			cacheByForeignId.remove(getForeignIdString(foreignId, sourceId));
 		} catch (ForeignIdPersistenceServiceException e) {
 			throw new ForeignIdServiceException("persistenceService.unlink failed", e);
