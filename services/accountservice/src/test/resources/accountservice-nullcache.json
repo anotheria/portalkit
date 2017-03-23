@@ -1,5 +1,0 @@
-{
-    cacheOn: true,
-    startSize: 100,
-    maxSize: 1000,
-}

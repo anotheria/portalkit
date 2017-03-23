@@ -51,7 +51,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
             throw new IllegalStateException("Can't instantiate persistence", e);
         }
 
-        cache = Caches.createConfigurableHardwiredCache("accountsettingsservice-cache");
+        cache = Caches.createConfigurableHardwiredCache("pk-cache-account-settings-service");
         Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
 
     }
