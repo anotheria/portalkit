@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.account.persistence.jdbc;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountBuilder;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
@@ -65,17 +66,19 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	public static final int POS_STATUS = 6;
 
 	public static final int POS_TENANT = 7;
+
+	public static final int POS_RANDOM_UID = 8;
 	/**
 	 * Max value of the position field.
 	 */
-	public static final int MAX_POS = POS_TENANT;
+	public static final int MAX_POS = POS_RANDOM_UID;
 
 	/**
 	 * Internal create account operation.
 	 */
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException {
-		String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
-				+ "VALUES ( ?,?,?,?,?,?,?,?,? )";
+		String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, randomUID, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
+				+ "VALUES ( ?,?,?,?,?,?,?,?,?,? )";
 
 		try {
 			Account acc = getAccount(connection, toSave.getId());
@@ -97,6 +100,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			insertStatement.setLong(POS_REG, toSave.getRegistrationTimestamp());
 			insertStatement.setLong(POS_STATUS, toSave.getStatus());
 			insertStatement.setString(POS_TENANT, toSave.getTenant());
+			insertStatement.setInt(POS_RANDOM_UID, toSave.getRandomUID());
 			insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 			insertStatement.setLong(MAX_POS + 2, 0);
 			// insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
@@ -150,7 +154,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		PreparedStatement stat = null;
 		ResultSet result = null;
 		try {
-			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status, tenant from " + TABLE_NAME + " WHERE id = ?;");
+			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status, tenant, randomUID from " + TABLE_NAME + " WHERE id = ?;");
 			stat.setString(1, id.getInternalId());
 			result = stat.executeQuery();
 			if (!result.next()) {

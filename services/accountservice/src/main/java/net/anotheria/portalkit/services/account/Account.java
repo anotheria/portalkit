@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  * Representation of a user account.
@@ -15,6 +16,8 @@ public class Account implements Serializable, Cloneable {
 	 * Basic serialVersionUID variable.
 	 */
 	private static final long serialVersionUID = -2199455445180759484L;
+
+	private static final Random RAND = new Random();
 	/**
 	 * The account id.
 	 */
@@ -52,10 +55,16 @@ public class Account implements Serializable, Cloneable {
 	private String tenant;
 
 	/**
+	 * Random UID.
+	 */
+	private int randomUID;
+
+	/**
 	 * Default constructor.
 	 */
 	public Account(){
 		registrationTimestamp = System.currentTimeMillis();
+		randomUID = RAND.nextInt(100) + 1;
 	}
 
 	/**
@@ -116,6 +125,14 @@ public class Account implements Serializable, Cloneable {
 		this.registrationTimestamp = registrationTimestamp;
 	}
 
+	public int getRandomUID() {
+		return randomUID;
+	}
+
+	void setRandomUID(int randomUID) {
+		this.randomUID = randomUID;
+	}
+
 	/**
 	 * Creates a new account from account pattern. Copies all fields (except id) from the pattern account.
 	 * Use to properly create new account objects with preset attributes.
@@ -136,6 +153,7 @@ public class Account implements Serializable, Cloneable {
 		status = anotherAccount.status;
         tenant = anotherAccount.tenant;
         registrationTimestamp = anotherAccount.registrationTimestamp;
+		randomUID = anotherAccount.randomUID;
 	}
 
 	@Override public String toString(){
