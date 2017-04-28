@@ -161,14 +161,18 @@ public class AccountDAO extends AbstractDAO implements DAO {
 				return null;
 			}
 
-			Account acc = new Account(id);
-			acc.setName(result.getString(POS_NAME));
-			acc.setEmail(result.getString(POS_EMAIL));
-			acc.setRegistrationTimestamp(result.getLong(POS_REG));
-			acc.setType(result.getInt(POS_TYPE));
-			acc.setStatus(result.getLong(POS_STATUS));
-			acc.setTenant(result.getString(POS_TENANT));
-			return acc;
+			AccountBuilder builder = new AccountBuilder();
+
+			builder.id(id);
+			builder.name(result.getString(POS_NAME));
+			builder.email(result.getString(POS_EMAIL));
+			builder.registrationTimestamp(result.getLong(POS_REG));
+			builder.type(result.getInt(POS_TYPE));
+			builder.status(result.getLong(POS_STATUS));
+			builder.tenant(result.getString(POS_TENANT));
+			builder.randomUID(result.getInt(POS_RANDOM_UID));
+
+			return builder.build();
 		} finally {
 			JDBCUtil.close(result);
 			JDBCUtil.close(stat);
