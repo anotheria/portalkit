@@ -130,6 +130,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			updateStatement.setLong(i++, toSave.getRegistrationTimestamp());
 			updateStatement.setLong(i++, toSave.getStatus());
 			updateStatement.setString(i++, toSave.getTenant());
+			updateStatement.setInt(i++, toSave.getRandomUID());
 			updateStatement.setLong(i++, System.currentTimeMillis());
 			updateStatement.setString(i++, toSave.getId().getInternalId());
 			// */
