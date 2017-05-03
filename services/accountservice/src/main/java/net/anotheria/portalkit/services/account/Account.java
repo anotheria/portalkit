@@ -17,7 +17,6 @@ public class Account implements Serializable, Cloneable {
 	 */
 	private static final long serialVersionUID = -2199455445180759484L;
 
-	private static final Random RAND = new Random();
 	/**
 	 * The account id.
 	 */
@@ -64,7 +63,6 @@ public class Account implements Serializable, Cloneable {
 	 */
 	public Account(){
 		registrationTimestamp = System.currentTimeMillis();
-		randomUID = RAND.nextInt(100) + 1;
 	}
 
 	/**
@@ -129,7 +127,7 @@ public class Account implements Serializable, Cloneable {
 		return randomUID;
 	}
 
-	void setRandomUID(int randomUID) {
+	public void setRandomUID(int randomUID) {
 		this.randomUID = randomUID;
 	}
 
