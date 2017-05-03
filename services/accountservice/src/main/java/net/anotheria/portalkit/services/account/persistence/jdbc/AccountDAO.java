@@ -116,7 +116,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	 * Internal update operation.
 	 */
 	private boolean updateAccount(Connection connection, Account toSave) throws SQLException, DAOException {
-		String update = "UPDATE " + TABLE_NAME + " set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, " + ATT_DAO_UPDATED + " = ? WHERE id = ?";
+		String update = "UPDATE " + TABLE_NAME + " set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, randomUID = ?," + ATT_DAO_UPDATED + " = ? WHERE id = ?";
 		PreparedStatement updateStatement = null;
 		try {
 			updateStatement = connection.prepareStatement(update);
