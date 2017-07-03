@@ -75,6 +75,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
+	public void deleteTicketByreferenceId(String referenceId) throws ApprovalServiceException {
+		try {
+			TicketBO ticket = new TicketBO(approvalPersistenceService.getTicketByReferenceId(referenceId));
+
+			lockedTickets.remove(getTicketById(ticket.getTicketId()));
+			approvalPersistenceService.deleteTicket(ticket.getTicketId());
+			cachedTickets.remove(ticket.getTicketId());
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
+		}
+	}
+
+	@Override
 	public void deleteTicket(long ticketId) throws ApprovalServiceException {
 		try {
 			lockedTickets.remove(getTicketById(ticketId));

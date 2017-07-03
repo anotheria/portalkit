@@ -28,6 +28,14 @@ import java.util.Objects;
 				query = "select t from TicketDO t where t.ticketId = :ticketId"
 		),
 		@NamedQuery(
+				name = TicketDO.GET_TICKET_BY_REFERENCE_ID,
+				query = "select t from TicketDO t where t.referenceId = :referenceId"
+		),
+		@NamedQuery(
+				name = TicketDO.DELETE_TICKET_BY_REFERENCE_ID,
+				query = "delete from TicketDO t where t.referenceId = :referenceId"
+		),
+		@NamedQuery(
 				name = TicketDO.DELETE_TICKET_BY_ID,
 				query = "delete from TicketDO t where t.ticketId = :ticketId"
 		),
@@ -43,6 +51,8 @@ import java.util.Objects;
 public class TicketDO implements Serializable {
 
 	public static final String GET_TICKET_BY_ID = "TicketDO.getTicketById";
+	public static final String DELETE_TICKET_BY_REFERENCE_ID = "TicketDO.deleteTicketByReferenceId";
+	public static final String GET_TICKET_BY_REFERENCE_ID = "TicketDO.getTicketByReferenceId";
 	public static final String DELETE_TICKET_BY_ID = "TicketDO.deleteTicketById";
 	public static final String GET_TICKETS_BY_TYPE = "TicketDO.getTicketsByType";
 	public static final String GET_TICKETS_BY_LOCALE = "TicketDO.getTicketsByLocale";

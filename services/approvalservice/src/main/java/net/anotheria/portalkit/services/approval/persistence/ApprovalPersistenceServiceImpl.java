@@ -46,6 +46,29 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	}
 
 	@Override
+	public TicketDO getTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException {
+		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKET_BY_REFERENCE_ID, TicketDO.class);
+		q.setParameter("referenceId", referenceId);
+
+		List<TicketDO> tickets = q.getResultList();
+
+		if (tickets == null || tickets.isEmpty()) {
+			throw new ApprovalPersistenceServiceException("Ticket not found");
+		}
+
+		return tickets.get(0);
+	}
+
+	@Override
+	public void deleteTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException {
+
+		Query query = entityManager.createNamedQuery(TicketDO.DELETE_TICKET_BY_REFERENCE_ID)
+				.setParameter("referenceId", referenceId);
+
+		query.executeUpdate();
+	}
+
+	@Override
 	public void updateTicket(TicketDO ticket) throws ApprovalPersistenceServiceException {
 		entityManager.merge(ticket);
 	}

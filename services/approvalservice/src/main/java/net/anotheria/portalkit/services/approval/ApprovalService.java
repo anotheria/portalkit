@@ -26,6 +26,14 @@ public interface ApprovalService extends Service {
 	/**
 	 * Removes ticket.
 	 * 
+	 * @param referenceId ticket id.
+	 * @throws ApprovalServiceException if error.
+	 */
+	void deleteTicketByreferenceId(String referenceId) throws ApprovalServiceException;
+
+	/**
+	 * Removes ticket.
+	 *
 	 * @param ticketId ticket id.
 	 * @throws ApprovalServiceException if error.
 	 */

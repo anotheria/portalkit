@@ -33,6 +33,23 @@ public interface ApprovalPersistenceService {
 	TicketDO getTicketById(long ticketId) throws ApprovalPersistenceServiceException;
 
 	/**
+	 * Gets tocket by ID.
+	 *
+	 * @param referenceId reference id.
+	 * @return {@link TicketDO}
+	 * @throws ApprovalPersistenceServiceException if error.
+	 */
+	TicketDO getTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException;
+
+	/**
+	 * Deletes ticket by ID.
+	 *
+	 * @param referenceId reference id.
+	 * @throws ApprovalPersistenceServiceException if error.
+	 */
+	void deleteTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException;
+
+	/**
 	 * Approves a ticket.
 	 *
 	 * @param ticket
