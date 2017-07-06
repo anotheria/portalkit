@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Access(AccessType.FIELD)
-@Table(name = "sub_transaction")
+@Table(name = "cancellation")
 @NamedQueries({
         @NamedQuery(
                 name = CancellationDO.JPQL_GET_BY_ACCOUNT_ID,
