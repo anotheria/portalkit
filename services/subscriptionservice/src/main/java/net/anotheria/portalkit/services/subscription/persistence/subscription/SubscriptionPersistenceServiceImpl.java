@@ -60,7 +60,7 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
 
     @Override
     public void saveCancellation(Cancellation cancellation) throws SubscriptionPersistenceException {
-        entityManager.persist(cancellation);
+        entityManager.persist(cancellation.toPersist());
     }
 
     @Override
