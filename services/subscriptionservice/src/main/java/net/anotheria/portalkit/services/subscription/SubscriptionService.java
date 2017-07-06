@@ -111,5 +111,34 @@ public interface SubscriptionService extends Service {
 	 * */
 	void deleteTransactionLogs(AccountId accountId) throws SubscriptionServiceException;
 
+	/**
+	 * Saves cancellation.
+	 *
+	 * @param cancellation 	transaction cancellation.
+	 * @throws 	   SubscriptionServiceException if error.
+	 * */
+	void saveCancellation(Cancellation cancellation) throws SubscriptionServiceException;
 
+	/**
+	 * Deletes cancellation.
+	 *
+	 * @param accountId 	user id.
+	 * @throws 	   SubscriptionServiceException if error.
+	 * */
+	void deleteCancellation(String accountId) throws SubscriptionServiceException;
+
+	/**
+	 * Gets cancellation.
+	 *
+	 * @param accountId 	user id.
+	 * @throws 	   SubscriptionServiceException if error.
+	 * */
+	Cancellation getCancellationById(String accountId) throws SubscriptionServiceException;
+
+	/**
+	 * Gets all cancellations.
+	 *
+	 * @throws 	   SubscriptionServiceException if error.
+	 * */
+	List<Cancellation> getCancellations() throws SubscriptionServiceException;
 }

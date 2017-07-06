@@ -192,6 +192,42 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 		}
 	}
 
+	@Override
+	public void saveCancellation(Cancellation cancellation) throws SubscriptionServiceException {
+		try {
+			subscriptionPersistenceService.saveCancellation(cancellation);
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Unable to save cancellation", e);
+		}
+	}
+
+	@Override
+	public void deleteCancellation(String accountId) throws SubscriptionServiceException {
+		try {
+			subscriptionPersistenceService.deleteCancellation(accountId);
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Unable to delete cancellation", e);
+		}
+	}
+
+	@Override
+	public Cancellation getCancellationById(String accountId) throws SubscriptionServiceException {
+		try {
+			return subscriptionPersistenceService.getCancellationById(accountId);
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Unable to get cancellation by id", e);
+		}
+	}
+
+	@Override
+	public List<Cancellation> getCancellations() throws SubscriptionServiceException {
+		try {
+			return subscriptionPersistenceService.getCancellations();
+		} catch (SubscriptionPersistenceException e) {
+			throw new SubscriptionServiceException("Unable to get all cancellations", e);
+		}
+	}
+
 	private List<TransactionLogEntry> convertToTransactionLogEntry(List<TransactionLogEntryEntity> fromService) {
 
 		if (fromService == null || fromService.size() == 0)

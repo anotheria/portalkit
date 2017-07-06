@@ -1,10 +1,12 @@
 package net.anotheria.portalkit.services.subscription.persistence.subscription;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.subscription.Cancellation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,6 +59,19 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     }
 
     @Override
+    public void saveCancellation(Cancellation cancellation) throws SubscriptionPersistenceException {
+        entityManager.persist(cancellation);
+    }
+
+    @Override
+    public void deleteCancellation(String accountId) throws SubscriptionPersistenceException {
+        Query query = entityManager.createNamedQuery(CancellationDO.JPQL_DELETE_CANCELLATION)
+                .setParameter("userId", accountId);
+
+        query.executeUpdate();
+    }
+
+    @Override
     public SubscriptionDO getActiveSubscriptionForAccount(String accountId) throws SubscriptionPersistenceException {
         TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_ACTIVE_BY_ACCOUNT_ID, SubscriptionDO.class);
         q.setParameter("accountId", accountId);
@@ -86,6 +101,21 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     }
 
     @Override
+    public Cancellation getCancellationById(String accountId) throws SubscriptionPersistenceException {
+
+        TypedQuery<CancellationDO> q = entityManager.createNamedQuery(CancellationDO.JPQL_GET_BY_ACCOUNT_ID, CancellationDO.class);
+        q.setParameter("userId", accountId);
+
+        List<CancellationDO> cancellations = q.getResultList();
+
+        if (cancellations == null || cancellations.isEmpty()) {
+            throw new SubscriptionPersistenceException("Error occurred while getting cancellation. No cancellation found");
+        }
+
+        return Cancellation.getInstance(cancellations.get(0));
+    }
+
+    @Override
     public List<TransactionDO> getTransactionForAccount(String accountId) throws SubscriptionPersistenceException {
         TypedQuery<TransactionDO> q = entityManager.createNamedQuery(TransactionDO.JPQL_GET_BY_ACCOUNT_ID, TransactionDO.class);
         q.setParameter("accountId", accountId);
@@ -102,6 +132,19 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     public List<SubscriptionDO> getSubscriptions() throws SubscriptionPersistenceException {
         TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_ALL, SubscriptionDO.class);
         return q.getResultList();
+    }
+
+    @Override
+    public List<Cancellation> getCancellations() throws SubscriptionPersistenceException {
+
+        TypedQuery<CancellationDO> q = entityManager.createNamedQuery(CancellationDO.JPQL_GET_ALL, CancellationDO.class);
+        List<Cancellation> cancellations = new ArrayList<>();
+
+        for (CancellationDO cancellation : q.getResultList()) {
+            cancellations.add(Cancellation.getInstance(cancellation));
+        }
+
+        return cancellations;
     }
 
     private boolean subscriptionExists(long subscriptionId) {
