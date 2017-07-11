@@ -57,7 +57,7 @@ public class CancellationDO {
      * Registration timestamp.
      * */
     @Column
-    private int cancellationReason;
+    private String cancellationReason;
 
     /**
      * Registration timestamp.
@@ -98,11 +98,11 @@ public class CancellationDO {
         this.cancellationExecutionDate = cancellationExecutionDate;
     }
 
-    public int getCancellationReason() {
+    public String getCancellationReason() {
         return cancellationReason;
     }
 
-    public void setCancellationReason(int cancellationReason) {
+    public void setCancellationReason(String cancellationReason) {
         this.cancellationReason = cancellationReason;
     }
 
