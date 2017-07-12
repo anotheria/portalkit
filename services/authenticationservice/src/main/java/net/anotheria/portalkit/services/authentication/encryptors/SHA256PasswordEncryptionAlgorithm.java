@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @author lrosenberg
  * @since 15.06.14 19:56
  */
-public class SHA256AuthTokenEncryptionAlgorithm implements PasswordEncryptionAlgorithm {
+public class SHA256PasswordEncryptionAlgorithm implements PasswordEncryptionAlgorithm {
 
 	@Override
 	public void customize(String key) {
