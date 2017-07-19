@@ -2,10 +2,15 @@ package net.anotheria.portalkit.services.personaldata;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 /**
  * @author Vlad Lukjanenko
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface PersonalDataService extends Service {
 
     /**

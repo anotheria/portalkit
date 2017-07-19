@@ -2,12 +2,17 @@ package net.anotheria.portalkit.services.photoscammer;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.photoscammer.persistence.PhotoScammer;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.List;
 
 /**
  * @author Vlad Lukjanenko
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface PhotoScammerService extends Service {
 
     /**

@@ -5,6 +5,9 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
 import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.List;
 
@@ -13,6 +16,8 @@ import java.util.List;
  *
  * @author bvanchuhov
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface MatchService extends Service {
 
     /**

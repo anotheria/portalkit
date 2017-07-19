@@ -5,12 +5,17 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
 import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.Set;
 
 /**
  * @author bvanchuhov
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface RelationService extends Service {
 
     /**

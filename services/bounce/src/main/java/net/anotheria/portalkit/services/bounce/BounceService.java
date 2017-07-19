@@ -1,6 +1,9 @@
 package net.anotheria.portalkit.services.bounce;
 
 import net.anotheria.anoprise.metafactory.Service;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.List;
 import java.util.Map;
@@ -8,6 +11,8 @@ import java.util.Map;
 /**
  * @author Vlad Lukjanenko
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface BounceService extends Service {
 
     /**

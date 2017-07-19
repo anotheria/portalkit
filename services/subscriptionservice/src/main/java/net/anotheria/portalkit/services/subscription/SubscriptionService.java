@@ -2,6 +2,9 @@ package net.anotheria.portalkit.services.subscription;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ import java.util.List;
  * @author lrosenberg
  * @since 12.03.16 15:50
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface SubscriptionService extends Service {
 	/**
 	 * Returns active subscription of the account or null if there is no active subscription.
