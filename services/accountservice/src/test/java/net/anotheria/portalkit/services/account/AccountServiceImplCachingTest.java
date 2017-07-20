@@ -68,7 +68,9 @@ public class AccountServiceImplCachingTest {
 
 	@Test
 	public void testNotExistingCache() throws AccountServiceException {
-		AccountServiceImpl service = new AccountServiceImpl();
+		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		service.unitTestReset();
+
 		AccountId id = AccountId.generateNew();
 		try {
 			service.getAccount(id);
@@ -86,7 +88,8 @@ public class AccountServiceImplCachingTest {
 
 	@Test
 	public void testGetByNameCache() throws AccountServiceException {
-		AccountServiceImpl service = new AccountServiceImpl();
+		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		service.unitTestReset();
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
 		service.createAccount(toCreate);

@@ -45,7 +45,10 @@ public class AccountServiceTest {
 	@Test
 	public void testNotExistingAccount() throws MetaFactoryException, AccountServiceException {
 		AccountId newAccountId = AccountId.generateNew();
-		AccountService service = MetaFactory.get(AccountService.class);
+		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		service.unitTestReset();
+
+
 		try {
 			Account existing = service.getAccount(newAccountId);
 			fail("Exception expected");
@@ -72,7 +75,8 @@ public class AccountServiceTest {
 		accountIds.add(second);
 		accountIds.add(third);
 
-		AccountService service = MetaFactory.get(AccountService.class);
+		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		service.unitTestReset();
 		List<Account> accounts1 = service.getAccounts(accountIds);
 		assertNotNull(accounts1);
 		for (Account acc : accounts1) {
@@ -119,7 +123,8 @@ public class AccountServiceTest {
 
 	@Test
 	public void testGetByName() throws AccountServiceException, MetaFactoryException {
-		AccountService service = MetaFactory.get(AccountService.class);
+		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		service.unitTestReset();
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
 		service.createAccount(toCreate);

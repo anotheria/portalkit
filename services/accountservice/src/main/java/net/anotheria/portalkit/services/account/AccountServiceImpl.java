@@ -21,7 +21,8 @@ import java.util.List;
  * @since 12.12.12 11:28
  */
 @Monitor (subsystem = "account", category = "portalkit-service")
-public class AccountServiceImpl implements AccountService, AccountAdminService {
+public enum AccountServiceImpl implements AccountService, AccountAdminService {
+	INSTANCE;
 
 	/**
 	 * Config.
@@ -66,19 +67,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 	/**
 	 * Default constructor.
 	 */
-	public AccountServiceImpl() {
-		config = AccountServiceConfig.getInstance();
-
-		cache = Caches.createConfigurableHardwiredCache("pk-cache-account-service");
-		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("pk-cache-null-account-service");
-		name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
-		email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
-
-		try {
-			persistenceService = MetaFactory.get(AccountPersistenceService.class);
-		} catch (MetaFactoryException e) {
-			throw new IllegalStateException("Can't start without persistence service ", e);
-		}
+	private AccountServiceImpl() {
+		init();
 	}
 
 	private Account getAccountInternally(AccountId accountId) throws AccountServiceException {
@@ -271,6 +261,26 @@ public class AccountServiceImpl implements AccountService, AccountAdminService {
 		} catch (AccountPersistenceServiceException e) {
 			throw new AccountAdminServiceException(e);
 		}
+	}
+
+	private void init(){
+		config = AccountServiceConfig.getInstance();
+
+		cache = Caches.createConfigurableHardwiredCache("pk-cache-account-service");
+		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("pk-cache-null-account-service");
+		name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
+		email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
+
+		try {
+			persistenceService = MetaFactory.get(AccountPersistenceService.class);
+		} catch (MetaFactoryException e) {
+			throw new IllegalStateException("Can't start without persistence service ", e);
+		}
+
+	}
+
+	void unitTestReset(){
+		init();
 	}
 
 }

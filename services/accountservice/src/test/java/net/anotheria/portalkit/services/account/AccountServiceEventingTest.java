@@ -1,8 +1,6 @@
 package net.anotheria.portalkit.services.account;
 
-import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventConsumer;
 import net.anotheria.portalkit.services.account.event.data.AccountCreateEventData;
 import net.anotheria.portalkit.services.account.event.data.AccountDeleteEventData;
@@ -37,22 +35,15 @@ public final class AccountServiceEventingTest {
 	/**
 	 * {@link AccountService} instance.
 	 */
-	private AccountService accountService;
+	private AccountServiceImpl accountService = null;
 
 	@Before
 	public void init() {
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
 
-		MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);
-		MetaFactory.addAlias(AccountService.class, Extension.LOCAL);
-
-		try {
-			accountService = MetaFactory.get(AccountService.class);
-		} catch (MetaFactoryException e) {
-			throw new RuntimeException(e);
-		}
-
+		accountService = AccountServiceImpl.INSTANCE;
+		accountService.unitTestReset();
 		eventConsumer = new AccountServiceTestEventConsumer();
 	}
 

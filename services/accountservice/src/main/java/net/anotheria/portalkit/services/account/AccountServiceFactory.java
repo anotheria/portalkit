@@ -12,7 +12,7 @@ public class AccountServiceFactory implements ServiceFactory<AccountService> {
 
 	@Override
 	public AccountService create() {
-		return ServiceProxyUtil.createServiceProxy(AccountService.class, new AccountServiceImpl(), "service", "portal-kit", true, AccountAdminService.class);
+		return ServiceProxyUtil.createServiceProxy(AccountService.class, AccountServiceImpl.INSTANCE, "service", "portal-kit", true, AccountAdminService.class);
 	}
 
 }
