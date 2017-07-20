@@ -14,7 +14,11 @@ import java.util.List;
  * @author lrosenberg
  * @since 12.03.16 15:50
  */
-@DistributeMe()
+@DistributeMe(
+		initcode = {
+				"net.anotheria.portalkit.services.subscription.SubscriptionServiceSpringConfigurator.configure();"
+		}
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface SubscriptionService extends Service {
 	/**

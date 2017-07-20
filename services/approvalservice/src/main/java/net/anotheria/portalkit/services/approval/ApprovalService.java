@@ -15,7 +15,11 @@ import java.util.Set;
  * @author dagafonov
  * 
  */
-@DistributeMe()
+@DistributeMe(
+		initcode = {
+				"net.anotheria.portalkit.services.approval.ApprovingServiceSpringConfigurator.configure();"
+		}
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface ApprovalService extends Service {
 

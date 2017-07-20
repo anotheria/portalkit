@@ -11,7 +11,11 @@ import java.util.List;
 /**
  * @author Vlad Lukjanenko
  */
-@DistributeMe()
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.photoscammer.PhotoScammerServiceSpringConfigurator.configure();"
+        }
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface PhotoScammerService extends Service {
 

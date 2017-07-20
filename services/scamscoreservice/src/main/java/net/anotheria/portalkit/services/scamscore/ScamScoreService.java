@@ -12,7 +12,11 @@ import java.util.List;
  *
  * @author Vlad Lukjanenko
  */
-@DistributeMe()
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.scamscore.ScamScoreServiceSpringConfigurator.configure();"
+        }
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface ScamScoreService extends Service {
 

@@ -16,7 +16,11 @@ import java.util.List;
  *
  * @author bvanchuhov
  */
-@DistributeMe()
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.match.MatchServiceSpringConfigurator.configure();"
+        }
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface MatchService extends Service {
 
