@@ -1,14 +1,19 @@
 package net.anotheria.portalkit.services.account;
 
-import java.util.Collection;
-import java.util.List;
-
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.distributeme.annotation.DistributeMe;
+import org.distributeme.annotation.FailBy;
+import org.distributeme.core.failing.RetryCallOnce;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Administrative interface for {@link AccountService}.
  */
+@DistributeMe()
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface AccountAdminService extends Service {
 
 	/**
