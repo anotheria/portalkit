@@ -11,7 +11,11 @@ import java.util.Map;
 /**
  * @author Vlad Lukjanenko
  */
-@DistributeMe()
+@DistributeMe(
+		initcode = {
+				"net.anotheria.portalkit.services.bounce.BounceServiceSpringConfigurator.configure();"
+		}
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface BounceService extends Service {
 
