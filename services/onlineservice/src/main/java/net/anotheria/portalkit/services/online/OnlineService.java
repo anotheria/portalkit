@@ -14,7 +14,11 @@ import java.util.Map;
  *
  * @author h3llka
  */
-@DistributeMe
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.online.OnlineServiceConfigurator.configure();"
+        }
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface OnlineService extends Service {
     /**
