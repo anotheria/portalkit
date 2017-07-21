@@ -14,7 +14,11 @@ import java.util.Set;
 /**
  * @author bvanchuhov
  */
-@DistributeMe()
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.relation.RelationServiceSpringConfigurator.configure();"
+        }
+)
 @FailBy(strategyClass=RetryCallOnce.class)
 public interface RelationService extends Service {
 
