@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.subscription;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.SubscriptionDO;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,13 @@ import java.util.Objects;
  * @author lrosenberg
  * @since 12.03.16 16:05
  */
-public class Subscription {
+public class Subscription implements Serializable {
+
+	/**
+	 * Generated serial version UID.
+	 * */
+	private static final long serialVersionUID = 3076240992969499175L;
+
 	/**
 	 * AccountId of the subscription owner.
 	 */

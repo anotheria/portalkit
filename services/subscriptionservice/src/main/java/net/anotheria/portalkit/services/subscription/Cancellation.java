@@ -2,10 +2,17 @@ package net.anotheria.portalkit.services.subscription;
 
 import net.anotheria.portalkit.services.subscription.persistence.subscription.CancellationDO;
 
+import java.io.Serializable;
+
 /**
  * @author Vlad Lukjanenko
  */
-public class Cancellation {
+public class Cancellation implements Serializable {
+
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -5047295234114893900L;
 
     /**
      * User id.

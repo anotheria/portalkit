@@ -15,6 +15,11 @@ import java.util.Objects;
 public class TicketBO implements Serializable {
 
 	/**
+	 * Generated serial version UID.
+	 * */
+	private static final long serialVersionUID = -4624725802665813986L;
+
+	/**
 	 * Internal ID.
 	 */
 	private long ticketId;

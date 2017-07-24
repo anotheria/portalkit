@@ -11,6 +11,11 @@ import java.util.Objects;
  */
 public class Relation implements Serializable {
 
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -8647974212069449297L;
+
     private AccountId owner;
     private AccountId partner;
     private String relationName;

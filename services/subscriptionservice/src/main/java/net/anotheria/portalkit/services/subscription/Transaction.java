@@ -3,12 +3,18 @@ package net.anotheria.portalkit.services.subscription;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.TransactionDO;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author Vlad Lukjanenko
  */
-public class Transaction {
+public class Transaction implements Serializable {
+
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -2790016342493218046L;
 
     /**
      * Id of transaction.

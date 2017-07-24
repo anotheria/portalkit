@@ -2,10 +2,17 @@ package net.anotheria.portalkit.services.photoscammer;
 
 import net.anotheria.portalkit.services.photoscammer.persistence.PhotoData;
 
+import java.io.Serializable;
+
 /**
  * @author Vlad Lukjanenko
  */
-public class PhotoDataBO {
+public class PhotoDataBO implements Serializable {
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -1360523560444827112L;
+
     /**
      * Id.
      * */

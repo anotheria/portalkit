@@ -13,6 +13,9 @@ import java.util.Objects;
  */
 public class Match implements Serializable {
 
+    /**
+     * Generated serial version UID.
+     * */
     private static final long serialVersionUID = -5247613267567452168L;
 
     private AccountId owner;

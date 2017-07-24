@@ -14,6 +14,10 @@ public class BounceBO implements Serializable {
     public static final String JPQL_GET_BOUNCE_BY_ID = "BounceDO.getBounceById";
     public static final String JPQL_DELETE_BOUNCE_BY_ID = "BounceDO.deleteBounceById";
 
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = 8035181712036584617L;
 
     /**
      * User email.

@@ -2,12 +2,18 @@ package net.anotheria.portalkit.services.scamscore;
 
 import net.anotheria.portalkit.services.scamscore.persistence.ScoreDO;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * @author Vlad Lukjanenko
  */
-public class ScoreBO {
+public class ScoreBO implements Serializable {
+
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -8958293312297340881L;
 
     /**
      * Id.
