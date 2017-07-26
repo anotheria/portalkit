@@ -2,11 +2,17 @@ package net.anotheria.portalkit.services.scamscore;
 
 import net.anotheria.portalkit.services.scamscore.persistence.UserScamRecordDO;
 
+import java.io.Serializable;
+
 /**
  * @author Vlad Lukjanenko
  */
-public class UserScamRecordBO {
+public class UserScamRecordBO implements Serializable {
 
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = -3223855773269550710L;
     /**
      * Id.
      * */
