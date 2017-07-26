@@ -5,6 +5,7 @@ import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +14,12 @@ import java.util.Objects;
  * @author Vlad Lukjanenko
  */
 @Entity(value = "personal_data",noClassnameStored = true)
-public class PersonalData {
+public class PersonalData implements Serializable {
+
+    /**
+     * Generated serial version UID.
+     * */
+    private static final long serialVersionUID = 5509007099048106610L;
 
     /**
      * User account id.
