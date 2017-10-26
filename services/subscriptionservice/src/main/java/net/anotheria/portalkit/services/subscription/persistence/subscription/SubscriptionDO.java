@@ -117,6 +117,12 @@ public class SubscriptionDO {
     @Column
     private String duration;
 
+    /**
+     * Payment device type.
+     */
+    @Column
+    private String paymentDevice;
+
 
     public SubscriptionDO() {
 
@@ -241,6 +247,14 @@ public class SubscriptionDO {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getPaymentDevice() {
+        return paymentDevice;
+    }
+
+    public void setPaymentDevice(String paymentDevice) {
+        this.paymentDevice = paymentDevice;
     }
 
     @Override

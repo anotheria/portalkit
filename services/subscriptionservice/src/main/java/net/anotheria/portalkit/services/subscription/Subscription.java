@@ -87,6 +87,11 @@ public class Subscription implements Serializable {
 	 */
 	private String duration;
 
+	/**
+	 * Payment device type.
+	 */
+	private String paymentDevice;
+
 
 	public Subscription() {}
 
@@ -107,6 +112,7 @@ public class Subscription implements Serializable {
 		this.prolongationCount = subscriptionDO.getProlongationCount();
 		this.purchaseTimestamp = subscriptionDO.getPurchaseTimestamp();
 		this.subscriptionId = subscriptionDO.getSubscriptionId();
+		this.paymentDevice = subscriptionDO.getPaymentDevice();
 	}
 
 
@@ -230,6 +236,14 @@ public class Subscription implements Serializable {
 		this.duration = duration;
 	}
 
+	public String getPaymentDevice() {
+		return paymentDevice;
+	}
+
+	public void setPaymentDevice(String paymentDevice) {
+		this.paymentDevice = paymentDevice;
+	}
+
 	public SubscriptionDO toDO() {
 
 		SubscriptionDO subscriptionDO = new SubscriptionDO();
@@ -249,6 +263,7 @@ public class Subscription implements Serializable {
 		subscriptionDO.setProlongationCount(this.prolongationCount);
 		subscriptionDO.setPurchaseTimestamp(this.purchaseTimestamp);
 		subscriptionDO.setSubscriptionId(this.subscriptionId);
+		subscriptionDO.setPaymentDevice(this.paymentDevice);
 
 		return subscriptionDO;
 	}
