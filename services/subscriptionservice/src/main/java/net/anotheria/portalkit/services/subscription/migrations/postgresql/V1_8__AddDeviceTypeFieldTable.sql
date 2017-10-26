@@ -1,1 +1,1 @@
-ALTER TABLE cancellation ADD COLUMN paymentDevice VARCHAR(64);
+ALTER TABLE sub_subscription ADD COLUMN paymentDevice VARCHAR(64);
