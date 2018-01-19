@@ -6,6 +6,7 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +41,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
      */
     public AuthenticationServiceImpl() {
         AuthenticationServiceConfig config = new AuthenticationServiceConfig();
+        try {
+			ConfigurationManager.INSTANCE.configure(config);
+		}catch(IllegalArgumentException e){
+        	log.warn("Couldn't find configuration file for auth config (pk-auth) will work with default values");
+		}
         //initialize with configureme.
         try {
             passwordAlgorithm = PasswordEncryptionAlgorithm.class.cast(Class.forName(config.getPasswordAlgorithm()).newInstance());
