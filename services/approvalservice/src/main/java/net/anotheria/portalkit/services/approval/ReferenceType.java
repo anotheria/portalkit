@@ -16,7 +16,12 @@ public enum ReferenceType {
 	/**
 	 * Photo.
 	 * */
-	PICTURE(2);
+	PICTURE(2),
+
+	/**
+	 * Hello message text.
+	 */
+	HELLO_MESSAGE(3);
 
 	/**
 	 * Reference type integer representation.
