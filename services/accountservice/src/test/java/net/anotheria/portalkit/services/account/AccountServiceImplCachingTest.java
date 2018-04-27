@@ -4,11 +4,15 @@ import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
 import net.anotheria.portalkit.services.account.persistence.inmemory.InMemoryAccountPersistenceServiceImpl;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -62,6 +66,18 @@ public class AccountServiceImplCachingTest {
 			public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
 				getbyemail++;
 				return super.getIdByEmail(email);
+			}
+		});
+
+		MetaFactory.createOnTheFlyFactory(AccountAuditPersistenceService.class, Extension.NONE, new AccountAuditPersistenceService() {
+			@Override
+			public void saveAccountAudit(AccountAudit accountAudit) throws AccountAuditPersistenceServiceException {
+
+			}
+
+			@Override
+			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
+				return null;
 			}
 		});
 	}

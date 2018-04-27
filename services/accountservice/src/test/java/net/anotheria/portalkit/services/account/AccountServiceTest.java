@@ -4,6 +4,8 @@ import junit.framework.Assert;
 import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
@@ -28,6 +30,18 @@ public class AccountServiceTest {
 	public void setup() {
 		MetaFactory.reset();
 		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
+
+		MetaFactory.createOnTheFlyFactory(AccountAuditPersistenceService.class, Extension.NONE, new AccountAuditPersistenceService() {
+			@Override
+			public void saveAccountAudit(AccountAudit accountAudit) throws AccountAuditPersistenceServiceException {
+
+			}
+
+			@Override
+			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
+				return null;
+			}
+		});
 
 		MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);
 		MetaFactory.addAlias(AccountService.class, Extension.LOCAL);
