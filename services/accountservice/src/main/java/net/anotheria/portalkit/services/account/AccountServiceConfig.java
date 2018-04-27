@@ -28,7 +28,7 @@ public final class AccountServiceConfig {
      * If true all status changes for account will be stored. Default false.
      */
     @Configure
-    private boolean isAuditEnabled = false;
+    private boolean auditEnabled = false;
     /**
      * Config instance.
      */
@@ -81,11 +81,11 @@ public final class AccountServiceConfig {
 	}
 
     public boolean isAuditEnabled() {
-        return isAuditEnabled;
+        return auditEnabled;
     }
 
     public void setAuditEnabled(boolean auditEnabled) {
-        isAuditEnabled = auditEnabled;
+        this.auditEnabled = auditEnabled;
     }
 
     @Override
@@ -93,7 +93,7 @@ public final class AccountServiceConfig {
         return "AccountServiceConfig{" +
                 "exclusiveMail=" + exclusiveMail +
                 ", exclusiveName=" + exclusiveName +
-                ", isAuditEnabled=" + isAuditEnabled +
+                ", auditEnabled=" + auditEnabled +
                 '}';
     }
 }
