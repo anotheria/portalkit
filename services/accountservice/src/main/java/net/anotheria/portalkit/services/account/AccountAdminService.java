@@ -44,4 +44,12 @@ public interface AccountAdminService extends Service {
 	 */
 	List<Account> getAccountsByQuery(AccountQuery query) throws AccountAdminServiceException;
 
+	/**
+	 * Returns {@link List} of {@link AccountAudit} for {@link AccountId} user.
+	 *
+	 * @param accountId					given {@link AccountId}
+	 * @return							{@link List} of {@link AccountAudit}
+	 * @throws AccountAdminServiceException	if error
+	 */
+	List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAdminServiceException;
 }

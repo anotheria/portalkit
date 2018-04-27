@@ -8,6 +8,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplier;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
+import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.ArrayList;
@@ -33,6 +35,11 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 	 * Persistence service.
 	 */
 	private AccountPersistenceService persistenceService;
+
+	/**
+	 * {@link AccountAuditPersistenceService} service.
+	 */
+	private AccountAuditPersistenceService accountAuditPersistenceService;
 
 	/**
 	 * {@link AccountServiceEventSupplier} instance.
@@ -167,6 +174,9 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 	public Account updateAccount(Account toUpdate) throws AccountServiceException {
 		Account oldAccount = getAccountInternally(toUpdate.getId());
 		saveAccount(toUpdate);
+		if(config.isAuditEnabled()) {
+			createAuditForAccount(oldAccount, toUpdate);
+		}
 		eventSupplier.accountUpdated(oldAccount, toUpdate);
 		return getAccount(toUpdate.getId());
 	}
@@ -182,6 +192,9 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 		@SuppressWarnings("deprecation")
 		Account newAccount = Account.newAccountFromPattern(toCreate);
 		saveAccount(newAccount);
+		if (config.isAuditEnabled()) {
+			createAuditForAccount(newAccount);
+		}
 		eventSupplier.accountCreated(newAccount);
 		nonExistingAccountCache.remove(newAccount.getId());
 		return getAccount(newAccount.getId());
@@ -263,6 +276,58 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 		}
 	}
 
+	private void createAuditForAccount(Account account) throws AccountServiceException {
+		saveAccountAudit(account.getId(), 0L, account.getStatus(), 0L, account.getStatus(), System.currentTimeMillis());
+	}
+
+	private void createAuditForAccount(Account oldAccount, Account newAccount) throws AccountServiceException {
+		if (!oldAccount.getId().equals(newAccount.getId())) {
+			return;
+		}
+
+		long timestamp = System.currentTimeMillis();
+
+		for (int i = 0; i <= 64; i++) {
+			long currentStatus = (long) Math.pow(2, i);
+			if (oldAccount.hasStatus(currentStatus) && !newAccount.hasStatus(currentStatus)) {
+				saveAccountAudit(newAccount.getId(), oldAccount.getStatus(), newAccount.getStatus(), currentStatus, 0L, timestamp);
+			}
+			if (!oldAccount.hasStatus(currentStatus) && newAccount.hasStatus(currentStatus)) {
+				saveAccountAudit(newAccount.getId(), oldAccount.getStatus(), newAccount.getStatus(),0L, currentStatus, timestamp);
+			}
+		}
+	}
+
+	private void saveAccountAudit(AccountId accountId, long oldStatus, long newStatus, long statusRemoved, long statusAdded, long timestamp) throws AccountServiceException {
+
+		AccountAudit accountAudit = new AccountAudit();
+		accountAudit.setAccountId(accountId);
+		accountAudit.setOldStatus(oldStatus);
+		accountAudit.setNewStatus(newStatus);
+		accountAudit.setStatusRemoved(statusRemoved);
+		accountAudit.setStatusAdded(statusAdded);
+		accountAudit.setCreated(timestamp);
+
+		try {
+			accountAuditPersistenceService.saveAccountAudit(accountAudit);
+		} catch (AccountAuditPersistenceServiceException e) {
+			throw new AccountServiceException("Fail save account audit", e);
+		}
+	}
+
+	@Override
+	public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAdminServiceException {
+		if (!config.isAuditEnabled()) {
+			return null;
+		}
+
+		try {
+			return accountAuditPersistenceService.getAccountAudits(accountId);
+		} catch (AccountAuditPersistenceServiceException e) {
+			throw new AccountAdminServiceException("Account audit persistence error", e);
+		}
+	}
+
 	private void init(){
 		config = AccountServiceConfig.getInstance();
 
@@ -273,6 +338,7 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 
 		try {
 			persistenceService = MetaFactory.get(AccountPersistenceService.class);
+			accountAuditPersistenceService = MetaFactory.get(AccountAuditPersistenceService.class);
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}

@@ -25,6 +25,11 @@ public final class AccountServiceConfig {
     @Configure
 	private boolean exclusiveName = true;
     /**
+     * If true all status changes for account will be stored. Default false.
+     */
+    @Configure
+    private boolean isAuditEnabled = false;
+    /**
      * Config instance.
      */
     private static volatile AccountServiceConfig instance;
@@ -75,11 +80,20 @@ public final class AccountServiceConfig {
 		this.exclusiveName = exclusiveName;
 	}
 
+    public boolean isAuditEnabled() {
+        return isAuditEnabled;
+    }
+
+    public void setAuditEnabled(boolean auditEnabled) {
+        isAuditEnabled = auditEnabled;
+    }
+
     @Override
     public String toString() {
         return "AccountServiceConfig{" +
                 "exclusiveMail=" + exclusiveMail +
                 ", exclusiveName=" + exclusiveName +
+                ", isAuditEnabled=" + isAuditEnabled +
                 '}';
     }
 }
