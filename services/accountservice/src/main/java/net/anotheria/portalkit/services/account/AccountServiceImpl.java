@@ -338,7 +338,9 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 
 		try {
 			persistenceService = MetaFactory.get(AccountPersistenceService.class);
-			accountAuditPersistenceService = MetaFactory.get(AccountAuditPersistenceService.class);
+			if (config.isAuditEnabled()) {
+				accountAuditPersistenceService = MetaFactory.get(AccountAuditPersistenceService.class);
+			}
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
