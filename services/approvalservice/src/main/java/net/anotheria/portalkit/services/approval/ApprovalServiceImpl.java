@@ -339,9 +339,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		List<TicketBO> result = new ArrayList<>();
 
-		for (long ticketId : lockedTickets.keySet()) {
+		for (Iterator<Long> iterator = lockedTickets.keySet().iterator(); iterator.hasNext(); ) {
 			try {
-				TicketDO ticket = approvalPersistenceService.getTicketById(ticketId);
+				TicketDO ticket = approvalPersistenceService.getTicketById(iterator.next());
 
 				if (ticket.getLocale().equals(locale)) {
 					result.add(new TicketBO(ticket));
