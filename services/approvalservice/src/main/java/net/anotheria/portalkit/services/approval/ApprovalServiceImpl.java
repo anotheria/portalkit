@@ -272,8 +272,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public Set<TicketBO> getLockedTickets() throws ApprovalServiceException {
 
 		Set<TicketBO> tickets = new HashSet<>();
+		Set<Long> ids = new HashSet<>(lockedTickets.keySet());
 
-		for (long ticketId : lockedTickets.keySet()) {
+		for (long ticketId : ids) {
 			try {
 				tickets.add(new TicketBO(approvalPersistenceService.getTicketById(ticketId)));
 			} catch (ApprovalPersistenceServiceException e) {
@@ -338,10 +339,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public List<TicketBO> getLockedTickets(String agentId, String locale) throws ApprovalServiceException {
 
 		List<TicketBO> result = new ArrayList<>();
+		Set<Long> ids = new HashSet<>(lockedTickets.keySet());
 
-		for (Iterator<Long> iterator = lockedTickets.keySet().iterator(); iterator.hasNext(); ) {
+		for (Long id : ids) {
 			try {
-				TicketDO ticket = approvalPersistenceService.getTicketById(iterator.next());
+				TicketDO ticket = approvalPersistenceService.getTicketById(id);
 
 				if (ticket.getLocale().equals(locale)) {
 					result.add(new TicketBO(ticket));
