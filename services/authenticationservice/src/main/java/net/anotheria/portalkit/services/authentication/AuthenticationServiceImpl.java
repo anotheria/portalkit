@@ -201,4 +201,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             log.error("Couldn't delete encrypt password for " + accountId);
         }
     }
+
+	@Override
+	public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {
+		Set<String> tokens = null;
+		try {
+			tokens = persistenceService.getAuthTokens(accountId);
+		}catch(AuthenticationPersistenceServiceException e){
+    		throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
+		}
+
+		for (String token : tokens){
+			AuthToken authToken = decrypt(token);
+			if (authToken.getType() == type){
+				try{
+					persistenceService.deleteAuthToken(accountId, token);
+				}catch(AuthenticationPersistenceServiceException e){
+					log.error("Can't delete token for user "+accountId+", type "+type+", token: "+token, e);
+				}
+			}
+		}
+	}
 }

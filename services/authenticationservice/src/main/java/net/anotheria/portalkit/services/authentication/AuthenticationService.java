@@ -76,4 +76,12 @@ public interface AuthenticationService extends Service, DeletionService {
      */
     void deleteTokens(AccountId accountId) throws AuthenticationServiceException;
 
+	/**
+	 * Removes all user tokens of given type from database.
+	 *
+	 * @param accountId account id.
+	 * @param type token type.
+	 * @throws AuthenticationServiceException if error
+	 */
+	void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException;
 }
