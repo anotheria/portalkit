@@ -24,6 +24,12 @@
 			<!-- TODO move version to dep management -->
 			<version>1.9.12</version>
 		</dependency>
+		<dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
+          <scope>test</scope>
+      </dependency>
+      
 	</dependencies>
 
 </project>
