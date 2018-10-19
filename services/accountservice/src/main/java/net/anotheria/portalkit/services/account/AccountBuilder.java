@@ -55,38 +55,38 @@ public final class AccountBuilder {
     }
 
 
-    public AccountBuilder name(String name) {
-        this.name = name;
+    public AccountBuilder name(String aName) {
+        name = aName;
         return this;
     }
 
-    public AccountBuilder email(String email) {
-        this.email = email;
+    public AccountBuilder email(String anEmail) {
+        email = anEmail;
         return this;
     }
 
-    public AccountBuilder type(int type) {
-        this.type = type;
+    public AccountBuilder type(int aType) {
+        type = aType;
         return this;
     }
 
-    public AccountBuilder status(long status) {
-        this.status = status;
+    public AccountBuilder status(long aStatus) {
+        status = aStatus;
         return this;
     }
 
-    public AccountBuilder registrationTimestamp(long registrationTimestamp) {
-        this.registrationTimestamp = registrationTimestamp;
+    public AccountBuilder registrationTimestamp(long aRegistrationTimestamp) {
+        registrationTimestamp = aRegistrationTimestamp;
         return this;
     }
 
-    public AccountBuilder tenant(String tenant) {
-        this.tenant = tenant;
+    public AccountBuilder tenant(String aTenant) {
+        tenant = aTenant;
         return this;
     }
 
-    public AccountBuilder randomUID(int randomUID) {
-        this.randomUID = randomUID;
+    public AccountBuilder randomUID(int aRandomUID) {
+        randomUID = aRandomUID;
         return this;
     }
 
@@ -94,12 +94,12 @@ public final class AccountBuilder {
 
         Account acc = new Account(id);
 
-        acc.setName(this.name);
-        acc.setEmail(this.email);
-        acc.setRegistrationTimestamp(this.registrationTimestamp);
-        acc.setType(this.type);
-        acc.setStatus(this.status);
-        acc.setTenant(this.tenant);
+        acc.setName(name);
+        acc.setEmail(email);
+        acc.setRegistrationTimestamp(registrationTimestamp);
+        acc.setType(type);
+        acc.setStatus(status);
+        acc.setTenant(tenant);
         acc.setRandomUID(randomUID);
 
         return acc;
