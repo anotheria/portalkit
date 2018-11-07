@@ -40,6 +40,8 @@ public interface AccountArchiveService extends Service {
      */
     void deleteAccount(AccountId accountId) throws AccountArchiveServiceException;
 
+    void deleteAccountsByEmail(String pattern) throws AccountArchiveServiceException;
+
     /**
      * Updates acrchived account.
      * @param toUpdate  archive to update.

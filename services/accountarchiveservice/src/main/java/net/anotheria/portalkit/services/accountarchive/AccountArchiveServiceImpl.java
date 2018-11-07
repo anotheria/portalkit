@@ -9,6 +9,8 @@ import net.anotheria.portalkit.services.accountarchive.persistence.ArchivedAccou
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author VKoulakov
@@ -58,6 +60,19 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
             eventSupplier.accountDeleted(account);
         } catch (ArchivedAccountPersistenceServiceException e) {
             throw new AccountArchiveServiceException(e);
+        }
+    }
+
+    @Override
+    public void deleteAccountsByEmail(String pattern) throws AccountArchiveServiceException {
+        List<ArchivedAccount> accounts = getAllAccounts();
+        Pattern p = Pattern.compile(pattern);
+        Matcher matcher;
+        for(ArchivedAccount account : accounts){
+            matcher = p.matcher(account.getEmail());
+            if(matcher.matches()){
+                deleteAccount(account.getId());
+            }
         }
     }
 
