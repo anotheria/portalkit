@@ -40,6 +40,11 @@ public interface AccountArchiveService extends Service {
      */
     void deleteAccount(AccountId accountId) throws AccountArchiveServiceException;
 
+    /**
+     * Deletes archived accounts from database whose emails match pattern.
+     * @param pattern email pattern string
+     * @throws AccountArchiveServiceException
+     */
     void deleteAccountsByEmail(String pattern) throws AccountArchiveServiceException;
 
     /**
