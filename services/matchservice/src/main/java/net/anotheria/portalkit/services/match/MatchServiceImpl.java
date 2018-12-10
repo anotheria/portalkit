@@ -7,6 +7,9 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
 import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
+import net.anotheria.util.concurrency.IdBasedLock;
+import net.anotheria.util.concurrency.IdBasedLockManager;
+import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.apache.http.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +45,24 @@ public class MatchServiceImpl implements MatchService {
      * (owner, target, type) -> isMatched cache.
      */
     private Cache<String, Boolean> isMatchedCache;
+    /**
+     * Data cache. Maps {@link AccountId} to {@link List} of {@link Match} according to ownerId of {@link Match}.
+     */
+    private Cache<AccountId, List<Match>> ownersCache;
+    /**
+     * Data cache. Maps {@link AccountId} to {@link List} of {@link Match} according to targetId of {@link Match}.
+     */
+    private Cache<AccountId, List<Match>> targetsCache;
+    /**
+     * Lock manager.
+     */
+    private IdBasedLockManager<AccountId> accountsLockManager = new SafeIdBasedLockManager<AccountId>();
+
 
     public MatchServiceImpl() {
         isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
+        ownersCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
+        targetsCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
     }
 
     @Override
@@ -57,17 +75,24 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void addMatch(Match match) throws MatchAlreadyExistsException {
-        checkMatchNotExists(match);
+        Args.notNull(match, "match id");
+
+        if (isMatched(match.getOwner(), match.getTarget(), match.getType())) {
+            throw new MatchAlreadyExistsException(match);
+        }
 
         MatchEntity matchEntity = matchBO2matchEntity(match);
         entityManager.persist(matchEntity);
 
         isMatchedCache.put(getMatchedCacheKey(match), true);
-    }
 
-    private void checkMatchNotExists(Match match) throws MatchAlreadyExistsException {
-        if (isMatched(match)) {
-            throw new MatchAlreadyExistsException(match);
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(match.getOwner());
+        lock.lock();
+        try {
+            putInCache(ownersCache, match.getOwner(), match);
+            putInCache(targetsCache, match.getTarget(), match);
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -76,35 +101,67 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner id");
         Args.notNull(target, "target id");
 
-        MatchId matchId = new MatchId(owner, target, type);
-        MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
-        if (matchEntity == null) {
-            throw new MatchNotFoundException(owner, target, type);
-        }
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(owner);
+        lock.lock();
+        try {
 
-        return matchEntity2matchBO(matchEntity);
+            Match match = null;
+            MatchId matchId = new MatchId(owner, target, type);
+            List<Match> fromCache = ownersCache.get(owner);
+
+            if (fromCache != null) {
+                match = fromCache.stream().filter(x -> x.getTarget().equals(target) && x.getType() == type).findFirst().orElse(null);
+            }
+
+            if (match != null) {
+                return match;
+            }
+
+            MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
+            if (matchEntity == null) {
+                throw new MatchNotFoundException(owner, target, type);
+            }
+
+            match = matchEntity2matchBO(matchEntity);
+            putInCache(ownersCache, match.getOwner(), match);
+            putInCache(targetsCache, match.getTarget(), match);
+            return match;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public List<Match> getMatches(AccountId owner) {
-        Args.notNull(owner, "owner id");
-
-        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(JPQL_GET_BY_OWNER, MatchEntity.class)
-                .setParameter(PARAM_OWNER_ID, owner.getInternalId());
-        List<MatchEntity> matchEntities = query.getResultList();
-
-        return matchEntities2matchBOs(matchEntities);
+        return getMatches(owner, ownersCache, JPQL_GET_BY_OWNER, PARAM_OWNER_ID);
     }
 
     @Override
     public List<Match> getTargetMatches(AccountId target) throws MatchServiceException {
-        Args.notNull(target, "target id");
+        return getMatches(target, targetsCache, JPQL_GET_BY_TARGET, PARAM_TARGET_ID);
+    }
 
-        TypedQuery<MatchEntity> query = entityManager.createNamedQuery(JPQL_GET_BY_TARGET, MatchEntity.class)
-                .setParameter(PARAM_TARGET_ID, target.getInternalId());
-        List<MatchEntity> matchEntities = query.getResultList();
 
-        return matchEntities2matchBOs(matchEntities);
+    private List<Match> getMatches(AccountId accountId, Cache<AccountId, List<Match>> cache, String namedQuery, String paramAccount) {
+        Args.notNull(accountId, "account id");
+
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
+        try {
+            List<Match> matches = cache.get(accountId);
+            if (matches != null)
+                return matches;
+
+            TypedQuery<MatchEntity> query = entityManager.createNamedQuery(namedQuery, MatchEntity.class)
+                    .setParameter(paramAccount, accountId.getInternalId());
+            List<MatchEntity> matchEntities = query.getResultList();
+
+            matches = matchEntities2matchBOs(matchEntities);
+            putInCache(cache, accountId, matches);
+            return matches;
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -179,6 +236,8 @@ public class MatchServiceImpl implements MatchService {
         entityManager.remove(matchEntity);
 
         isMatchedCache.put(getMatchedCacheKey(owner, target, type), false);
+        ownersCache.remove(owner);
+        targetsCache.remove(target);
     }
 
     @Override
@@ -192,6 +251,8 @@ public class MatchServiceImpl implements MatchService {
                 .executeUpdate();
 
         isMatchedCache.clear();
+        ownersCache.remove(owner);
+        targetsCache.remove(target);
 
         LOGGER.info("Deleted {} matches for owner={}, target={}", deletedCount, owner, target);
     }
@@ -205,6 +266,7 @@ public class MatchServiceImpl implements MatchService {
                 .executeUpdate();
 
         isMatchedCache.clear();
+        ownersCache.remove(owner);
 
         LOGGER.info("Deleted {} matches for owner={}", deletedCount, owner);
     }
@@ -218,6 +280,7 @@ public class MatchServiceImpl implements MatchService {
                 .executeUpdate();
 
         isMatchedCache.clear();
+        targetsCache.remove(target);
 
         LOGGER.info("Deleted {} matches for target={}", deletedCount, target);
     }
@@ -232,6 +295,8 @@ public class MatchServiceImpl implements MatchService {
         entityManager.merge(matchBO2matchEntity(match));
 
         isMatchedCache.put(getMatchedCacheKey(owner, target, type), false);
+        ownersCache.remove(owner);
+        targetsCache.remove(target);
     }
 
     @Override
@@ -272,12 +337,6 @@ public class MatchServiceImpl implements MatchService {
         return entityManager.find(MatchEntity.class, matchId);
     }
 
-    private boolean isMatched(Match match) {
-        Args.notNull(match, "match id");
-
-        return isMatched(match.getOwner(), match.getTarget(), match.getType());
-    }
-
     private List<Match> matchEntities2matchBOs(List<MatchEntity> matchEntities) {
         List<Match> results = new ArrayList<>(matchEntities.size());
 
@@ -287,6 +346,26 @@ public class MatchServiceImpl implements MatchService {
         }
 
         return results;
+    }
+
+    //this method is unsafe, it should be called from locked areas only.
+    private void putInCache(Cache<AccountId, List<Match>> cache, AccountId accountId, Match match) {
+        List<Match> list = cache.get(accountId);
+        if (list == null) {
+            list = new ArrayList<>();
+            cache.put(accountId, list);
+        }
+        list.add(match);
+    }
+
+    //this method is unsafe, it should be called from locked areas only.
+    private void putInCache(Cache<AccountId, List<Match>> cache, AccountId accountId, List<Match> matches) {
+        List<Match> list = cache.get(accountId);
+        if (list == null) {
+            list = new ArrayList<>();
+            cache.put(accountId, list);
+        }
+        list.addAll(matches);
     }
 
     private Match matchEntity2matchBO(MatchEntity matchEntity) {
