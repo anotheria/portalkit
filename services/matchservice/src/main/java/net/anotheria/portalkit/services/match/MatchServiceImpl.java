@@ -61,8 +61,8 @@ public class MatchServiceImpl implements MatchService {
 
     public MatchServiceImpl() {
         isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
-        ownersCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
-        targetsCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
+        ownersCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
+        targetsCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
     }
 
     @Override
