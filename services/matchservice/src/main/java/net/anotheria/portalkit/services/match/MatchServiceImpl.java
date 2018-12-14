@@ -358,6 +358,7 @@ public class MatchServiceImpl implements MatchService {
         if (list == null || list.isEmpty()) {
             list = getMatchesInternally(accountId, namedQuery, paramAccount);
             cache.put(accountId, list);
+            return;
         }
         list.add(match);
     }
@@ -368,6 +369,7 @@ public class MatchServiceImpl implements MatchService {
         if (list == null || list.isEmpty()) {
             list = getMatchesInternally(accountId, namedQuery, paramAccount);;
             cache.put(accountId, list);
+            return;
         }
         list.addAll(matches);
     }
