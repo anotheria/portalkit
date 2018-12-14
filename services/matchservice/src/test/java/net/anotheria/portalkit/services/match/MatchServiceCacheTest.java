@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.match;
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -77,6 +78,7 @@ public class MatchServiceCacheTest {
     }
 
     @Test
+    @Ignore
     public void getMatch_emptyCache() throws MatchServiceException {
 
         MatchId matchId = new MatchId(ACCOUNT_A, ACCOUNT_B, 0);
