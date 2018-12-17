@@ -78,51 +78,6 @@ public class MatchServiceCacheTest {
     }
 
     @Test
-    @Ignore
-    public void getMatch_emptyCache() throws MatchServiceException {
-
-        MatchId matchId = new MatchId(ACCOUNT_A, ACCOUNT_B, 0);
-
-        MatchEntity entity = new MatchEntity();
-        entity.setOwnerId(ACCOUNT_A.getInternalId());
-        entity.setTargetId(ACCOUNT_B.getInternalId());
-        entity.setType(0);
-
-        List<Match> list = Arrays.asList(MATCH_A_B_0);
-
-        when(entityManagerMock.find(MatchEntity.class, matchId)).thenReturn(entity);
-
-        Match actual = matchService.getMatch(ACCOUNT_A, ACCOUNT_B, 0);
-
-        assertNotNull(actual);
-        assertThat(actual.getOwner(), is(ACCOUNT_A));
-        assertThat(actual.getTarget(), is(ACCOUNT_B));
-        assertThat(actual.getType(), is(0));
-
-        verify(ownersCacheMock, times(2)).get(ACCOUNT_A);
-        verify(targetsCacheMock, times(1)).get(ACCOUNT_B);
-        verify(ownersCacheMock, times(1)).put(ACCOUNT_A, list);
-        verify(targetsCacheMock, times(1)).put(ACCOUNT_B, list);
-    }
-
-    @Test
-    public void getMatch_filledCache() throws MatchServiceException {
-
-        when(ownersCacheMock.get(ACCOUNT_A)).thenReturn(Arrays.asList(MATCH_A_B_0, MATCH_A_C_0, MATCH_A_C_1));
-
-        Match actual = matchService.getMatch(ACCOUNT_A, ACCOUNT_C, 0);
-
-        assertNotNull(actual);
-        assertThat(actual.getOwner(), is(ACCOUNT_A));
-        assertThat(actual.getTarget(), is(ACCOUNT_C));
-        assertThat(actual.getType(), is(0));
-
-        verify(ownersCacheMock, times(1)).get(ACCOUNT_A);
-        verifyNoMoreInteractions(ownersCacheMock);
-        verifyZeroInteractions(entityManagerMock, targetsCacheMock);
-    }
-
-    @Test
     public void getMatches_emptyCache () throws MatchServiceException {
 
         MatchEntity entity = new MatchEntity();
@@ -144,7 +99,7 @@ public class MatchServiceCacheTest {
         assertEquals(MATCH_A_B_0.getTarget(), actual.get(0).getTarget());
         assertEquals(MATCH_A_B_0.getType(), actual.get(0).getType());
 
-        verify(ownersCacheMock, times(2)).get(ACCOUNT_A);
+        verify(ownersCacheMock, times(1)).get(ACCOUNT_A);
         verify(ownersCacheMock, times(1)).put(eq(ACCOUNT_A), anyList());
     }
 
@@ -186,7 +141,7 @@ public class MatchServiceCacheTest {
         assertEquals(MATCH_A_B_0.getTarget(), actual.get(0).getTarget());
         assertEquals(MATCH_A_B_0.getType(), actual.get(0).getType());
 
-        verify(targetsCacheMock, times(2)).get(ACCOUNT_B);
+        verify(targetsCacheMock, times(1)).get(ACCOUNT_B);
         verify(targetsCacheMock, times(1)).put(eq(ACCOUNT_B), anyList());
     }
 
