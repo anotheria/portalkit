@@ -101,34 +101,13 @@ public class MatchServiceImpl implements MatchService {
         Args.notNull(owner, "owner id");
         Args.notNull(target, "target id");
 
-        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(owner);
-        lock.lock();
-        try {
-
-            Match match = null;
-            MatchId matchId = new MatchId(owner, target, type);
-            List<Match> fromCache = ownersCache.get(owner);
-
-            if (fromCache != null) {
-                match = fromCache.stream().filter(x -> x.getTarget().equals(target) && x.getType() == type).findFirst().orElse(null);
-            }
-
-            if (match != null) {
-                return match;
-            }
-
-            MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
-            if (matchEntity == null) {
-                throw new MatchNotFoundException(owner, target, type);
-            }
-
-            match = matchEntity2matchBO(matchEntity);
-            putInCache(ownersCache, match.getOwner(), match, JPQL_GET_BY_OWNER, PARAM_OWNER_ID);
-            putInCache(targetsCache, match.getTarget(), match, JPQL_GET_BY_TARGET, PARAM_TARGET_ID);
-            return match;
-        } finally {
-            lock.unlock();
+        MatchId matchId = new MatchId(owner, target, type);
+        MatchEntity matchEntity = entityManager.find(MatchEntity.class, matchId);
+        if (matchEntity == null) {
+            throw new MatchNotFoundException(owner, target, type);
         }
+
+        return matchEntity2matchBO(matchEntity);
     }
 
     @Override
@@ -153,7 +132,7 @@ public class MatchServiceImpl implements MatchService {
                 return matches;
 
             matches = getMatchesInternally(accountId, namedQuery, paramAccount);
-            putInCache(cache, accountId, matches, namedQuery, paramAccount);
+            cache.put(accountId, matches);
             return matches;
         } finally {
             lock.unlock();
@@ -361,17 +340,6 @@ public class MatchServiceImpl implements MatchService {
             return;
         }
         list.add(match);
-    }
-
-    //this method is unsafe, it should be called from locked areas only.
-    private void putInCache(Cache<AccountId, List<Match>> cache, AccountId accountId, List<Match> matches, String namedQuery, String paramAccount) {
-        List<Match> list = cache.get(accountId);
-        if (list == null || list.isEmpty()) {
-            list = getMatchesInternally(accountId, namedQuery, paramAccount);;
-            cache.put(accountId, list);
-            return;
-        }
-        list.addAll(matches);
     }
 
     private Match matchEntity2matchBO(MatchEntity matchEntity) {
