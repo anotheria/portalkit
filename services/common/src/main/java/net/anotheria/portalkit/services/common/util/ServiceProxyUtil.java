@@ -2,17 +2,7 @@ package net.anotheria.portalkit.services.common.util;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.moskito.core.dynamic.MoskitoInvokationProxy;
-import net.anotheria.moskito.core.logging.DefaultStatsLogger;
-import net.anotheria.moskito.core.logging.IntervalStatsLogger;
-import net.anotheria.moskito.core.logging.SLF4JLogOutput;
-import net.anotheria.moskito.core.predefined.ServiceStatsCallHandler;
-import net.anotheria.moskito.core.predefined.ServiceStatsFactory;
-import net.anotheria.moskito.core.stats.DefaultIntervals;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import net.anotheria.moskito.core.dynamic.ProxyUtils;
 
 /**
  * Utility which allow wrapping of any {@link Service} into {@link MoskitoInvokationProxy}.
@@ -22,26 +12,6 @@ import java.util.List;
  */
 public final class ServiceProxyUtil {
 
-	/**
-	 * Moskito default logger name.
-	 */
-	private static final String MOSKITO_DEFAULT = "MoskitoDefault";
-	/**
-	 * Moskito 5m logger name.
-	 */
-	private static final String MOSKITO_5_M = "Moskito5m";
-	/**
-	 * Moskito 15m logger name.
-	 */
-	private static final String MOSKITO_15_M = "Moskito15m";
-	/**
-	 * Moskito 1h logger name.
-	 */
-	private static final String MOSKITO_1_H = "Moskito1h";
-	/**
-	 * Moskito 1d logger name.
-	 */
-	private static final String MOSKITO_1_D = "Moskito1d";
 	/**
 	 * Default category for persistence services.
 	 */
@@ -123,25 +93,7 @@ public final class ServiceProxyUtil {
 	 */
 	public static <T extends Service> T createMoskitoProxy(final Class<T> interfaceClazz, final T implementation, final String producerId,
 			final String category, final String subSystem, final boolean isLog, final Class<?>... additionalInterfaces) {
-		final List<Class<?>> interfaces = new ArrayList<Class<?>>();
-		interfaces.add(interfaceClazz);
-		if (additionalInterfaces != null && additionalInterfaces.length != 0)
-			interfaces.addAll(Arrays.asList(additionalInterfaces));
-		interfaces.add(Service.class);
-
-		final MoskitoInvokationProxy proxy = new MoskitoInvokationProxy(implementation, new ServiceStatsCallHandler(), new ServiceStatsFactory(), producerId,
-				category, subSystem, interfaces.toArray(new Class<?>[interfaces.size()]));
-
-		final T result = interfaceClazz.cast(proxy.createProxy());
-
-		if (isLog) {
-			new DefaultStatsLogger(proxy.getProducer(), new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_DEFAULT)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIVE_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_5_M)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.FIFTEEN_MINUTES, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_15_M)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_HOUR, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_1_H)));
-			new IntervalStatsLogger(proxy.getProducer(), DefaultIntervals.ONE_DAY, new SLF4JLogOutput(LoggerFactory.getLogger(MOSKITO_1_D)));
-		}
-
+		final T result = ProxyUtils.createServiceInstance(implementation, producerId, category, subSystem, isLog, interfaceClazz, additionalInterfaces);
 		return result;
 	}
 
