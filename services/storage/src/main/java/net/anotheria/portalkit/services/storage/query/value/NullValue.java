@@ -32,7 +32,7 @@ public class NullValue implements QueryValue {
 
 	@Override
 	public String toString() {
-		return null;
+		return "null";
 	}
 
 	/**
