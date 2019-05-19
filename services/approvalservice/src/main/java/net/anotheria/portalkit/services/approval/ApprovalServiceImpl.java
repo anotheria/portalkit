@@ -1,14 +1,5 @@
 package net.anotheria.portalkit.services.approval;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
@@ -17,6 +8,15 @@ import net.anotheria.portalkit.services.approval.persistence.TicketDO;
 import net.anotheria.util.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Approval service implementation.
@@ -83,7 +83,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			approvalPersistenceService.deleteTicket(ticket.getTicketId());
 			cachedTickets.remove(ticket.getTicketId());
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
+			throw new ApprovalServiceException("Error occurred while deleteTicketByreferenceId("+referenceId+")", e);
 		}
 	}
 
@@ -95,7 +95,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 			approvalPersistenceService.deleteTicket(ticketId);
 			cachedTickets.remove(ticketId);
 		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
+			throw new ApprovalServiceException("Error occurred while deleteTicket("+ticketId+")", e);
 		}
 	}
 
