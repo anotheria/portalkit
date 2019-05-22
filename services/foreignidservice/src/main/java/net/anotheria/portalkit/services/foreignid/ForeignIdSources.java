@@ -47,7 +47,7 @@ public class ForeignIdSources {
 	// ...
 
 	public static final int getCustomIdWithOffset(int customId) {
-		if (customId < CUSTOM_ID_OFFSET)
+		if (customId > CUSTOM_ID_OFFSET)
 			return customId;
 		return CUSTOM_ID_OFFSET + customId;
 	}
