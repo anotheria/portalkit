@@ -104,7 +104,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
             options.put(Index.MONGO_INDEX_PROPERTY_SPARSE, index.isSparse());
             options.put(Index.MONGO_INDEX_PROPERTY_BACKGROUND, index.isBackground());
 
-            getCollection().ensureIndex(fields, options);
+            getCollection().createIndex(fields, options);
         }
     }
 

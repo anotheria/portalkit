@@ -9,7 +9,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,14 +28,10 @@ public class ProfileServiceTest {
 
     @Test
     public void dd() {
-        try {
-            MongoClient mongoClient = new MongoClient("localhost", 27017);
-            DB my_test_db = mongoClient.getDB("test_profile_db");
-            DBCollection test_profiles = my_test_db.getCollection("test_profiles_collection");
-            test_profiles.drop();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+		MongoClient mongoClient = new MongoClient("localhost", 27017);
+		DB my_test_db = mongoClient.getDB("test_profile_db");
+		DBCollection test_profiles = my_test_db.getCollection("test_profiles_collection");
+		test_profiles.drop();
 //        try {
 //            ProfileBO profile18 = createProfile(18);
 //            ProfileBO profile19 = createProfile(19);
