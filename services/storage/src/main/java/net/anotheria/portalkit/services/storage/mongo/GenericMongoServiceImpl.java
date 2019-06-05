@@ -5,6 +5,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.util.JSON;
 import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
@@ -22,6 +23,7 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
+import org.bson.Document;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -159,7 +161,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			options.put(Index.MONGO_INDEX_PROPERTY_SPARSE, index.isSparse());
 			options.put(Index.MONGO_INDEX_PROPERTY_BACKGROUND, index.isBackground());
 
-			getCollection().ensureIndex(fields, options);
+			getCollection().createIndex(fields, options);
 		}
 	}
 

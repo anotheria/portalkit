@@ -86,9 +86,9 @@ public final class MongoClientUtil {
 
 			WriteConcernType writeConcernType = configuration.getWriteConcernType() != null ? configuration.getWriteConcernType() : WriteConcernType.DEFAULT;
 			switch (writeConcernType) {
-			case ERRORS_IGNORED:
-				optionsBuilder.writeConcern(WriteConcern.ERRORS_IGNORED);
-				break;
+//			case ERRORS_IGNORED:
+//				optionsBuilder.writeConcern(WriteConcern.ERRORS_IGNORED);
+//				break;
 			case ACKNOWLEDGED:
 				optionsBuilder.writeConcern(WriteConcern.ACKNOWLEDGED);
 				break;
@@ -113,7 +113,7 @@ public final class MongoClientUtil {
 				boolean forceFsync = configuration.isWriteConcernForceFSyncToDisk();
 				boolean waitGroupCommit = configuration.isWriteConcernWaitGroupCommitToJournal();
 				boolean continueOnErrors = configuration.isWriteConcernContinueOnInsertError();
-				optionsBuilder.writeConcern(new WriteConcern(strategy, timeout, forceFsync, waitGroupCommit, continueOnErrors));
+				optionsBuilder.writeConcern(new WriteConcern(strategy, timeout, forceFsync, waitGroupCommit));
 				break;
 			default:
 				throw new UnsupportedOperationException("WriteConcernType[" + writeConcernType + "] is unsupported.");

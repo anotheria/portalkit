@@ -102,12 +102,12 @@ public abstract class AbstractMongoService {
 			}
 
 		// performing authentication if required
-		DB database = mongoClientConfiguration.getDatabase(getDBName());
-		if (database.isAuthenticate()) {
-			boolean authenticated = mongoClient.getDB(getDBName()).authenticate(database.getUsername(), database.getPassword().toCharArray());
-			if (!authenticated)
-				throw new StorageRuntimeException("Can't authenticate for database[" + database.getName() + "] with username[" + database.getUsername() + "].");
-		}
+//		DB database = mongoClientConfiguration.getDatabase(getDBName());
+//		if (database.isAuthenticate()) {
+//			boolean authenticated = mongoClient.getDB(getDBName()).authenticate(database.getUsername(), database.getPassword().toCharArray());
+//			if (!authenticated)
+//				throw new StorageRuntimeException("Can't authenticate for database[" + database.getName() + "] with username[" + database.getUsername() + "].");
+//		}
 
 		serviceInitialized.set(true);
 	}
