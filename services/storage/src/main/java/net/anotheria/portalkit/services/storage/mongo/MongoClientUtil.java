@@ -58,8 +58,9 @@ public final class MongoClientUtil {
 			optionsBuilder.connectTimeout(configuration.getConnectionTimeout());
 			optionsBuilder.socketTimeout(configuration.getSocketTimeout());
 			optionsBuilder.socketKeepAlive(configuration.isSocketKeepAlive());
-			optionsBuilder.autoConnectRetry(configuration.isAutoConnectRetry());
-			optionsBuilder.maxAutoConnectRetryTime(configuration.getAutoConnectRetryMaxTimeout());
+			//LEON: removed this in migration to 3.6
+			//optionsBuilder.autoConnectRetry(configuration.isAutoConnectRetry());
+			//optionsBuilder.maxAutoConnectRetryTime(configuration.getAutoConnectRetryMaxTimeout());
 
 
 			ReadConcernType readConcernType = configuration.getReadConcernType() != null ? configuration.getReadConcernType() : ReadConcernType.DEFAULT;
