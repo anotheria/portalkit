@@ -80,7 +80,7 @@ public abstract class AbstractMongoService {
 		Thread initializationVerifier = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mongoClient.getDatabaseNames(); // now this thread will wait mongo client if it initialization still in progress
+				mongoClient.listDatabaseNames(); // now this thread will wait mongo client if it initialization still in progress
 				mongoClientInitialized.set(true);
 			}
 		});
