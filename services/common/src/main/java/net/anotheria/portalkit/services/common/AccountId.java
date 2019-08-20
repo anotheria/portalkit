@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.common;
 
-import java.io.Serializable;
-
 import net.anotheria.portalkit.services.common.id.IdGenerator;
 import net.anotheria.util.StringUtils;
+
+import java.io.Serializable;
 
 /**
  * Account unique identifier.
@@ -83,7 +83,21 @@ public class AccountId implements Serializable, Cloneable {
 		} catch (CloneNotSupportedException e) {
 			throw new AssertionError("Clone not supported but it should be in AccountId");
 		}
+	}
+
+	/**
+	 * Returns a lexigraphically sorted pair of account ids. This is useful if you need a lock on two objects (user a writes to user b) and you want to do it
+	 * always in the same order to prevent deadlocks.
+	 * @param first
+	 * @param second
+	 * @return
+	 */
+	public static AccountIdPair getSortedPair(AccountId first, AccountId second){
+		return (first.internalId.compareTo(second.internalId)<0) ?
+				new AccountIdPair(first, second) :
+				new AccountIdPair(second, first);
 
 	}
+
 
 }
