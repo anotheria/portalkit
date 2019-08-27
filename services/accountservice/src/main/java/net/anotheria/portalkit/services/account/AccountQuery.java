@@ -11,62 +11,64 @@ import net.anotheria.portalkit.services.common.AccountId;
  * 
  * @author Alexandr Bolbat
  */
-public class AccountQuery implements Serializable {
-
+public final class AccountQuery implements Serializable {
 	/**
 	 * Basic serialVersionUID variable.
 	 */
 	private static final long serialVersionUID = -559248313830424493L;
-
 	/**
 	 * Account identifiers.
 	 */
-	private final List<AccountId> ids = new ArrayList<AccountId>();
-
+	private final List<AccountId> ids;
 	/**
 	 * Account name mask.
 	 */
-	private String nameMask;
-
+	private final String nameMask;
 	/**
 	 * Account email mask.
 	 */
-	private String emailMask;
-
+	private final String emailMask;
 	/**
 	 * Account identifier mask.
 	 */
-	private String idMask;
-
+	private final String idMask;
 	/**
 	 * Included types.
 	 */
-	private final List<Integer> typesIncluded = new ArrayList<Integer>();
-
+	private final List<Integer> typesIncluded;
 	/**
 	 * Excluded types.
 	 */
-	private final List<Integer> typesExcluded = new ArrayList<Integer>();
-
+	private final List<Integer> typesExcluded;
 	/**
 	 * Included statuses.
 	 */
-	private final List<Long> statusesIncluded = new ArrayList<Long>();
-
+	private final List<Long> statusesIncluded;
 	/**
 	 * Excluded statuses.
 	 */
-	private final List<Long> statusesExcluded = new ArrayList<Long>();
-
+	private final List<Long> statusesExcluded;
 	/**
 	 * Registered from.
 	 */
-	private Long registeredFrom;
-
+	private final Long registeredFrom;
 	/**
 	 * Registered till.
 	 */
-	private Long registeredTill;
+	private final Long registeredTill;
+
+	private AccountQuery(Builder builder) {
+		this.ids = builder.getIds();
+		this.nameMask = builder.getNameMask();
+		this.emailMask = builder.getEmailMask();
+		this.idMask = builder.getIdMask();
+		this.typesIncluded = builder.getTypesIncluded();
+		this.typesExcluded = builder.getTypesExcluded();
+		this.statusesIncluded = builder.getStatusesIncluded();
+		this.statusesExcluded = builder.getStatusesExcluded();
+		this.registeredFrom = builder.getRegisteredFrom();
+		this.registeredTill = builder.getRegisteredTill();
+	}
 
 	public List<AccountId> getIds() {
 		return ids;
@@ -76,24 +78,12 @@ public class AccountQuery implements Serializable {
 		return nameMask;
 	}
 
-	public void setNameMask(final String aNameMask) {
-		this.nameMask = aNameMask;
-	}
-
 	public String getEmailMask() {
 		return emailMask;
 	}
 
-	public void setEmailMask(final String aEmailMask) {
-		this.emailMask = aEmailMask;
-	}
-
 	public String getIdMask() {
 		return idMask;
-	}
-
-	public void setIdMask(final String aIdMask) {
-		this.idMask = aIdMask;
 	}
 
 	public List<Integer> getTypesIncluded() {
@@ -116,16 +106,143 @@ public class AccountQuery implements Serializable {
 		return registeredFrom;
 	}
 
-	public void setRegisteredFrom(final Long aRegisteredFrom) {
-		this.registeredFrom = aRegisteredFrom;
-	}
-
 	public Long getRegisteredTill() {
 		return registeredTill;
 	}
 
-	public void setRegisteredTill(final Long aRegisteredTill) {
-		this.registeredTill = aRegisteredTill;
+	@Override
+	public String toString() {
+		return "AccountQuery{" +
+				"ids=" + ids +
+				", nameMask='" + nameMask + '\'' +
+				", emailMask='" + emailMask + '\'' +
+				", idMask='" + idMask + '\'' +
+				", typesIncluded=" + typesIncluded +
+				", typesExcluded=" + typesExcluded +
+				", statusesIncluded=" + statusesIncluded +
+				", statusesExcluded=" + statusesExcluded +
+				", registeredFrom=" + registeredFrom +
+				", registeredTill=" + registeredTill +
+				'}';
 	}
 
+	/**
+	 * Builder for {@link AccountQuery}.
+	 */
+	public static class Builder {
+		private List<AccountId> ids = new ArrayList<>();
+		private String nameMask;
+		private String emailMask;
+		private String idMask;
+		private List<Integer> typesIncluded = new ArrayList<>();
+		private List<Integer> typesExcluded = new ArrayList<>();
+		private List<Long> statusesIncluded = new ArrayList<>();
+		private List<Long> statusesExcluded = new ArrayList<>();
+		private Long registeredFrom;
+		private Long registeredTill;
+
+		/**
+		 * Default constructor of builder.
+		 */
+		public Builder() {}
+
+		/**
+		 * Build {@link AccountQuery}.
+		 *
+		 * @return  constructed {@link AccountQuery}
+		 */
+		public AccountQuery build() {
+			return new AccountQuery(this);
+		}
+
+		public Builder setIds(List<AccountId> ids) {
+			this.ids = ids;
+			return this;
+		}
+
+		public Builder setNameMask(String nameMask) {
+			this.nameMask = nameMask;
+			return this;
+		}
+
+		public Builder setEmailMask(String emailMask) {
+			this.emailMask = emailMask;
+			return this;
+		}
+
+		public Builder setIdMask(String idMask) {
+			this.idMask = idMask;
+			return this;
+		}
+
+		public Builder setTypesIncluded(List<Integer> typesIncluded) {
+			this.typesIncluded = typesIncluded;
+			return this;
+		}
+
+		public Builder setTypesExcluded(List<Integer> typesExcluded) {
+			this.typesExcluded = typesExcluded;
+			return this;
+		}
+
+		public Builder setStatusesIncluded(List<Long> statusesIncluded) {
+			this.statusesIncluded = statusesIncluded;
+			return this;
+		}
+
+		public Builder setStatusesExcluded(List<Long> statusesExcluded) {
+			this.statusesExcluded = statusesExcluded;
+			return this;
+		}
+
+		public Builder setRegisteredFrom(Long registeredFrom) {
+			this.registeredFrom = registeredFrom;
+			return this;
+		}
+
+		public Builder setRegisteredTill(Long registeredTill) {
+			this.registeredTill = registeredTill;
+			return this;
+		}
+
+		List<AccountId> getIds() {
+			return ids;
+		}
+
+		String getNameMask() {
+			return nameMask;
+		}
+
+		String getEmailMask() {
+			return emailMask;
+		}
+
+		String getIdMask() {
+			return idMask;
+		}
+
+		List<Integer> getTypesIncluded() {
+			return typesIncluded;
+		}
+
+		List<Integer> getTypesExcluded() {
+			return typesExcluded;
+		}
+
+		List<Long> getStatusesIncluded() {
+			return statusesIncluded;
+		}
+
+		List<Long> getStatusesExcluded() {
+			return statusesExcluded;
+		}
+
+		Long getRegisteredFrom() {
+			return registeredFrom;
+		}
+
+		Long getRegisteredTill() {
+			return registeredTill;
+		}
+	}
 }
