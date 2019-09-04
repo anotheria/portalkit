@@ -13,7 +13,7 @@ public class AuthenticationServiceFactory implements ServiceFactory<Authenticati
 
 	@Override
 	public AuthenticationService create() {
-		return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new AuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
+		return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
 	}
 
 }
