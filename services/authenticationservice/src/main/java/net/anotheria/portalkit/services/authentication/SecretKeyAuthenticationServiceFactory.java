@@ -7,11 +7,11 @@ import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 /**
  * {@link AuthenticationService} factory for secret key implementation.*
  */
-public class SecretKeyAuthenticationServiceFactory implements ServiceFactory<AuthenticationService> {
+public class SecretKeyAuthenticationServiceFactory implements ServiceFactory<SecretKeyAuthenticationService> {
 
     @Override
-    public AuthenticationService create() {
-        return ServiceProxyUtil.createServiceProxy(AuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
+    public SecretKeyAuthenticationService create() {
+        return ServiceProxyUtil.createServiceProxy(SecretKeyAuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
     }
 
 }

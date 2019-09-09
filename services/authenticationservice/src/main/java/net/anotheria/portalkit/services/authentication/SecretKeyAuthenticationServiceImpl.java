@@ -17,12 +17,9 @@ import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * Implementation of the AuthenticationService.
- *
- * @author lrosenberg
- * @since 13.12.12 09:30
  */
 @Monitor(subsystem = "authentication", category = "portalkit-service")
-public class SecretKeyAuthenticationServiceImpl implements AuthenticationService {
+public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticationService {
 
     /**
      * The currently used password enhashing algorithm.
