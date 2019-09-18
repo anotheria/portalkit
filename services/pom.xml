@@ -65,6 +65,7 @@
 		<module>scamscoreservice</module>
 		<module>personaldata</module>
 		<module>bounce</module>
+		<module>coinservice</module>
         <module>photoscammer</module>
     </modules>
 
