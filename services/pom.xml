@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>portalkit</groupId>
 		<artifactId>portalkit</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
+		<version>1.2.0</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -52,7 +52,7 @@
 		<module>authenticationservice</module>
 		<module>onlineservice</module>
 		<module>recordservice</module>
-		<!-- module>notificationservice</module  -->
+		<!-- module>notificationservice</module -->
 		<!-- module>messagingservice</module -->
 		<module>foreignidservice</module>
 		<module>approvalservice</module>
