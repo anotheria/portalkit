@@ -467,13 +467,13 @@
 		<repository>
 			<id>portalkit-release</id>
 			<name>Portalkit Release Repository</name>
-			<url> http://repository.anotheria.net/content/repositories/portalkit-releases/</url>
+			<url> https://repository.anotheria.net/content/repositories/portalkit-releases/</url>
 		</repository>
 		<!-- use the following if you ARE using a snapshot version. -->
 		<snapshotRepository>
 			<id>portalkit-snapshot</id>
 			<name>Portalkit Snapshot Repository</name>
-			<url>http://repository.anotheria.net/content/repositories/portalkit-snapshots/</url>
+			<url>https://repository.anotheria.net/content/repositories/portalkit-snapshots/</url>
 			<uniqueVersion>true</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
