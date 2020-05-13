@@ -84,4 +84,14 @@ public interface AuthenticationService extends Service, DeletionService {
 	 * @throws AuthenticationServiceException if error
 	 */
 	void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException;
+
+    /**
+     * Returns token for given user and type.
+     *
+     * @param accountId account id
+     * @param type  token type
+     * @return  token
+     * @throws AuthenticationServiceException if error
+     */
+	String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException;
 }

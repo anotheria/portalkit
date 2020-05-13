@@ -222,4 +222,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			}
 		}
 	}
+
+    @Override
+    public String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException {
+        Set<String> tokens = null;
+        try {
+            tokens = persistenceService.getAuthTokens(accountId);
+        }catch(AuthenticationPersistenceServiceException e){
+            throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
+        }
+
+        for (String token : tokens){
+            AuthToken authToken = decrypt(token);
+            if (authToken.getType() == type) {
+               return token;
+            }
+        }
+        return null;
+    }
 }
