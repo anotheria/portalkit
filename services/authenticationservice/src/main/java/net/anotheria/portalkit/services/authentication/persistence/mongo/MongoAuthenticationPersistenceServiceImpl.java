@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication.persistence.mongo;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthPasswordEntity;
@@ -90,6 +91,29 @@ public class MongoAuthenticationPersistenceServiceImpl extends BaseMongoPersiste
 			authToken.setToken(encryptedToken);
 			authToken.setDaoCreated(System.currentTimeMillis());
 			authToken.setDaoUpdated(System.currentTimeMillis());
+
+			tokenDao.createEntity(datastore, authToken);
+		} catch (MongoDaoException e) {
+			log.error("Can't create campaign", e);
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
+		try {
+			Datastore datastore = connect();
+			//create new entity
+			AuthTokenEntity authToken = new AuthTokenEntity(new ObjectId());
+			authToken.setAccid(owner.getInternalId());
+			authToken.setToken(encryptedToken.getEncryptedVersion());
+			authToken.setDaoCreated(System.currentTimeMillis());
+			authToken.setDaoUpdated(System.currentTimeMillis());
+			authToken.setExpiryTimestamp(encryptedToken.getAuthToken().getExpiryTimestamp());
+			authToken.setMultiUse(encryptedToken.getAuthToken().isMultiUse());
+			authToken.setExclusive(encryptedToken.getAuthToken().isExclusive());
+			authToken.setExclusiveInType(encryptedToken.getAuthToken().isExclusiveInType());
+			authToken.setType(encryptedToken.getAuthToken().getType());
 
 			tokenDao.createEntity(datastore, authToken);
 		} catch (MongoDaoException e) {

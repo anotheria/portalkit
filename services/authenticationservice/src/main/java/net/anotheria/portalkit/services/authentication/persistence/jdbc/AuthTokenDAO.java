@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication.persistence.jdbc;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.AbstractDAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
@@ -97,6 +98,29 @@ public class AuthTokenDAO extends AbstractDAO implements DAO {
 			insert.setString(1, id.getInternalId());
 			insert.setString(2, encryptedToken);
 			insert.setLong(3, System.currentTimeMillis());
+			int result = insert.executeUpdate();
+			if (result!=1){
+				throw new DAOException("Inserting token failed (rows updated: "+result+" on "+id+", "+encryptedToken);
+			}
+		} finally {
+			JDBCUtil.close(insert);
+		}
+	}
+
+	public void saveAuthToken(Connection connection, AccountId id, EncryptedAuthToken encryptedToken) throws SQLException, DAOException{
+		String insertSQL = "INSERT INTO "+TABLE_NAME+" (accid, token, "+ATT_DAO_CREATED+", expiryTimestamp,multiUse,exclusive,exclusiveInType,type) VALUES (?,?,?,?,?,?,?,?)";
+		PreparedStatement insert = null;
+		try {
+			insert = connection.prepareStatement(insertSQL);
+			insert.setString(1, id.getInternalId());
+			insert.setString(2, encryptedToken.getEncryptedVersion());
+			insert.setLong(3, System.currentTimeMillis());
+			insert.setLong(4, encryptedToken.getAuthToken().getExpiryTimestamp());
+			insert.setBoolean(5, encryptedToken.getAuthToken().isMultiUse());
+			insert.setBoolean(6, encryptedToken.getAuthToken().isExclusive());
+			insert.setBoolean(7, encryptedToken.getAuthToken().isExclusiveInType());
+			insert.setInt(8, encryptedToken.getAuthToken().getType());
+
 			int result = insert.executeUpdate();
 			if (result!=1){
 				throw new DAOException("Inserting token failed (rows updated: "+result+" on "+id+", "+encryptedToken);

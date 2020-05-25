@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication.persistence;
 
 import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.Set;
@@ -21,6 +22,8 @@ public interface AuthenticationPersistenceService extends Service {
 
 	// the interface part for auth token handling. it will probably be subject of change in the future.
 	void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException;
+
+	void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException;
 
 	Set<String> getAuthTokens(AccountId owner) throws AuthenticationPersistenceServiceException;
 

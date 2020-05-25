@@ -23,6 +23,16 @@ public class AuthTokenEntity extends BaseEntity {
 
     private long daoUpdated;
 
+    private long expiryTimestamp;
+
+    private boolean multiUse;
+
+    private boolean exclusive;
+
+    private boolean exclusiveInType;
+
+    private int type;
+
     public AuthTokenEntity() {
     }
 
@@ -72,14 +82,59 @@ public class AuthTokenEntity extends BaseEntity {
         this.daoUpdated = daoUpdated;
     }
 
+    public long getExpiryTimestamp() {
+        return expiryTimestamp;
+    }
+
+    public void setExpiryTimestamp(long expiryTimestamp) {
+        this.expiryTimestamp = expiryTimestamp;
+    }
+
+    public boolean isMultiUse() {
+        return multiUse;
+    }
+
+    public void setMultiUse(boolean multiUse) {
+        this.multiUse = multiUse;
+    }
+
+    public boolean isExclusive() {
+        return exclusive;
+    }
+
+    public void setExclusive(boolean exclusive) {
+        this.exclusive = exclusive;
+    }
+
+    public boolean isExclusiveInType() {
+        return exclusiveInType;
+    }
+
+    public void setExclusiveInType(boolean exclusiveInType) {
+        this.exclusiveInType = exclusiveInType;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
-        return "{\"_class\":\"AuthPasswordEntity\", " +
-                "\"id\":" + (id == null ? "null" : "\"" + id + "\"") + ", " +
-                "\"accid\":" + (accid == null ? "null" : "\"" + accid + "\"") + ", " +
-                "\"token\":" + (token == null ? "null" : "\"" + token + "\"") + ", " +
-                "\"daoCreated\":\"" + daoCreated + "\"" + ", " +
-                "\"daoUpdated\":\"" + daoUpdated + "\"" +
-                "}";
+        return "AuthTokenEntity{" +
+                "id=" + id +
+                ", accid='" + accid + '\'' +
+                ", token='" + token + '\'' +
+                ", daoCreated=" + daoCreated +
+                ", daoUpdated=" + daoUpdated +
+                ", expiryTimestamp=" + expiryTimestamp +
+                ", multiUse=" + multiUse +
+                ", exclusive=" + exclusive +
+                ", exclusiveInType=" + exclusiveInType +
+                ", type=" + type +
+                '}';
     }
 }

@@ -176,6 +176,33 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public EncryptedAuthToken saveEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
+        AuthToken newToken = (AuthToken) prefilledToken.clone();
+        String encryption = AuthTokenEncryptors.encrypt(newToken);
+
+        EncryptedAuthToken encToken = new EncryptedAuthToken();
+        encToken.setAuthToken(newToken);
+        encToken.setEncryptedVersion(encryption);
+
+        try {
+            if (newToken.isExclusive())
+                persistenceService.deleteAuthTokens(accountId);
+
+            if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
+                for (String token: persistenceService.getAuthTokens(newToken.getAccountId())) {
+                    AuthToken t = AuthTokenEncryptors.decrypt(token);
+                    if (t.getType() == newToken.getType())
+                        persistenceService.deleteAuthToken(newToken.getAccountId(), token);
+                }
+            }
+            persistenceService.saveAuthTokenAdditional(accountId, encToken);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException(e);
+        }
+        return encToken;
+    }
+
+    @Override
     public void deleteTokens(AccountId accountId) throws AuthenticationServiceException {
         if (accountId == null)
             throw new IllegalArgumentException("Incoming accountId is NULL.");

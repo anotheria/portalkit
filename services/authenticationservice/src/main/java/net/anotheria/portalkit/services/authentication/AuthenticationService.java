@@ -69,6 +69,17 @@ public interface AuthenticationService extends Service, DeletionService {
     EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
     /**
+     * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
+     * all consequences and parameters) and can be issued to the user by calling getEncodedAuthString.
+     *
+     * @param accountId account id.
+     * @param prefilledToken    {@link AuthToken}
+     * @return {@link EncryptedAuthToken}
+     * @throws AuthenticationServiceException if error
+     */
+    EncryptedAuthToken saveEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
+
+    /**
      * Removes all user tokens from database.
      *
      * @param accountId account id.

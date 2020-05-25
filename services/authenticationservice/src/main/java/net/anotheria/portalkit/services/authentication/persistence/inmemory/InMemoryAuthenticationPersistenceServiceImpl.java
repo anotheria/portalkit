@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.authentication.persistence.inmemory;
 
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -51,6 +52,11 @@ public class InMemoryAuthenticationPersistenceServiceImpl implements Authenticat
 		}
 		accountsTokens.add(encryptedToken);
 		authTokensSet.add(encryptedToken);
+	}
+
+	@Override
+	public void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
+		saveAuthToken(owner, encryptedToken.getEncryptedVersion());
 	}
 
 	@Override

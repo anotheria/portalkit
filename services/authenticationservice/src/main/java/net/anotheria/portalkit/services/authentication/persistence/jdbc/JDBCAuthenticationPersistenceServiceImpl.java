@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.authentication.persistence.jdbc;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -82,6 +83,21 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 
 	@Override
 	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
+		try{
+			con = getConnection();
+			authTokenDAO.saveAuthToken(con, owner, encryptedToken);
+		}catch(SQLException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}catch(DAOException e){
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}finally{
+			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
 		Connection con = null;
 		try{
 			con = getConnection();
