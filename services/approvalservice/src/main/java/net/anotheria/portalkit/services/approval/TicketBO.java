@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -101,7 +102,7 @@ public class TicketBO implements Serializable {
 		this.created = ticket.getCreated();
 		this.presentation = ticket.getPresentation();
 		this.fulfillment = ticket.getFulfillment();
-		this.accountId = new AccountId(ticket.getAccountId());
+		this.accountId = StringUtils.isEmpty(ticket.getAccountId()) ? null : new AccountId(ticket.getAccountId());
 	}
 
 
@@ -214,7 +215,7 @@ public class TicketBO implements Serializable {
 		ticket.setReferenceId(this.referenceId);
 		ticket.setReferenceType(this.referenceType.getValue());
 		ticket.setType(this.type.name());
-		ticket.setAccountId(this.accountId.getInternalId());
+		ticket.setAccountId(this.accountId == null ? null : this.accountId.getInternalId());
 
 		return ticket;
 	}
