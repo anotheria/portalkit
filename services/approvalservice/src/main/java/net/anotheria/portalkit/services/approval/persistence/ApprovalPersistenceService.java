@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.approval.persistence;
 import java.util.List;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.stereotype.Service;
 
 /**
@@ -85,5 +86,22 @@ public interface ApprovalPersistenceService {
 	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException;
+
+	/**
+	 * Retrieve list of all tickets for given {@link AccountId}.
+	 *
+	 * @param accountId		{@link AccountId} of tickets owner
+	 * @return				list of {@link TicketDO}
+	 * @throws ApprovalPersistenceServiceException if any error
+	 */
+	List<TicketDO> getTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException;
+
+	/**
+	 * Delete all tickets, where owner is given account id.
+	 *
+	 * @param accountId			{@link AccountId} of tickets owner
+	 * @throws ApprovalPersistenceServiceException if any error
+	 */
+	void deleteTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException;
 
 }

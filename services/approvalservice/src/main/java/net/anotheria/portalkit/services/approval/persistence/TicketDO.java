@@ -46,6 +46,14 @@ import java.util.Objects;
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_LOCALE,
 				query = "select t from TicketDO t where t.locale = :locale and ticketType = 'IN_APPROVAL' order by t.created asc"
+		),
+		@NamedQuery(
+				name = TicketDO.GET_TICKETS_BY_ACCOUNT_ID,
+				query = "select t from TicketDO t where t.accountId = :accountId"
+		),
+		@NamedQuery(
+				name = TicketDO.DELETE_TICKETS_BY_ACCOUNT_ID,
+				query = "delete from TicketDO t where t.accountId = :accountId"
 		)
 })
 public class TicketDO implements Serializable {
@@ -56,6 +64,8 @@ public class TicketDO implements Serializable {
 	public static final String DELETE_TICKET_BY_ID = "TicketDO.deleteTicketById";
 	public static final String GET_TICKETS_BY_TYPE = "TicketDO.getTicketsByType";
 	public static final String GET_TICKETS_BY_LOCALE = "TicketDO.getTicketsByLocale";
+	public static final String GET_TICKETS_BY_ACCOUNT_ID = "TicketDO.getTicketsByAccountId";
+	public static final String DELETE_TICKETS_BY_ACCOUNT_ID = "TicketDO.deleteTicketsByAccountId";
 
 	/**
 	 * Internal ID.
@@ -116,6 +126,12 @@ public class TicketDO implements Serializable {
 	 */
 	@Column
 	private long fulfillment;
+
+	/**
+	 * Account id of ticket owner's.
+	 */
+	@Column
+	private String accountId;
 
 
 	public TicketDO() {
@@ -201,6 +217,14 @@ public class TicketDO implements Serializable {
 
 	public void setFulfillment(long fulfillment) {
 		this.fulfillment = fulfillment;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 
 	@Override

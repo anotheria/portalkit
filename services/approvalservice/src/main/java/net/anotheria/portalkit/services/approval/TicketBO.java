@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
+import net.anotheria.portalkit.services.common.AccountId;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -74,11 +74,21 @@ public class TicketBO implements Serializable {
 	 * */
 	private int totalAmountOfTickets;
 
+	/**
+	 * Owner of ticket.
+	 */
+	private AccountId accountId;
 
-	public TicketBO() {
+	/**
+	 * Default constructor.
+	 */
+	public TicketBO() {}
 
-	}
-
+	/**
+	 * Constructor.
+	 *
+	 * @param ticket	{@link TicketDO} instance.
+	 */
 	public TicketBO(TicketDO ticket) {
 
 		this.ticketId = ticket.getTicketId();
@@ -91,6 +101,7 @@ public class TicketBO implements Serializable {
 		this.created = ticket.getCreated();
 		this.presentation = ticket.getPresentation();
 		this.fulfillment = ticket.getFulfillment();
+		this.accountId = new AccountId(ticket.getAccountId());
 	}
 
 
@@ -182,6 +193,14 @@ public class TicketBO implements Serializable {
 		this.totalAmountOfTickets = totalAmountOfTickets;
 	}
 
+	public AccountId getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(AccountId accountId) {
+		this.accountId = accountId;
+	}
+
 	public TicketDO toDO() {
 
 		TicketDO ticket = new TicketDO();
@@ -195,6 +214,7 @@ public class TicketBO implements Serializable {
 		ticket.setReferenceId(this.referenceId);
 		ticket.setReferenceType(this.referenceType.getValue());
 		ticket.setType(this.type.name());
+		ticket.setAccountId(this.accountId.getInternalId());
 
 		return ticket;
 	}

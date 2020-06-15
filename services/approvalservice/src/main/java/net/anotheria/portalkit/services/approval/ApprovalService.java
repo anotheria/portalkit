@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -47,6 +48,14 @@ public interface ApprovalService extends Service {
 	 * @throws ApprovalServiceException if error.
 	 */
 	void deleteTicket(long ticketId) throws ApprovalServiceException;
+
+	/**
+	 * Removes all tickets for given {@link AccountId}.
+	 *
+	 * @param accountId		{@link AccountId} owner of tickets
+	 * @throws ApprovalServiceException	if any errors
+	 */
+	void deleteTicketsByAccountId(AccountId accountId) throws ApprovalServiceException;
 
 	/**
 	 * Gets ticket by internal ID.

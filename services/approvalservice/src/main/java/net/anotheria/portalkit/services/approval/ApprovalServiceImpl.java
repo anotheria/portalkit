@@ -5,6 +5,7 @@ import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
+import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Approval service implementation.
@@ -90,12 +92,29 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public void deleteTicket(long ticketId) throws ApprovalServiceException {
 		try {
-			lockedTickets.remove(getTicketById(ticketId));
-
+			lockedTickets.remove(ticketId);
 			approvalPersistenceService.deleteTicket(ticketId);
 			cachedTickets.remove(ticketId);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while deleteTicket("+ticketId+")", e);
+		}
+	}
+
+	@Override
+	public void deleteTicketsByAccountId(AccountId accountId) throws ApprovalServiceException {
+		try {
+			List<Long> ids = approvalPersistenceService.getTicketsByAccountId(accountId).stream()
+					.map(TicketDO::getTicketId)
+					.collect(Collectors.toList());
+
+			for (Long id: ids) {
+				lockedTickets.remove(id);
+				cachedTickets.remove(id);
+				unlockedTickets.values().forEach(v -> v.removeIf(x -> x.getTicketId() == id));
+			}
+			approvalPersistenceService.deleteTicketsByAccountId(accountId);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while delete tickets for " + accountId);
 		}
 	}
 

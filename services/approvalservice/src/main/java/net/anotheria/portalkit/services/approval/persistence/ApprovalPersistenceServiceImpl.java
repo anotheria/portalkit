@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.approval.persistence;
 import java.util.List;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,5 +112,23 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 		}
 
 		return tickets;
+	}
+
+	@Override
+	public List<TicketDO> getTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException {
+		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_ACCOUNT_ID, TicketDO.class);
+		q.setParameter("accountId", accountId.getInternalId());
+		List<TicketDO> tickets = q.getResultList();
+		if (tickets == null) {
+			throw new ApprovalPersistenceServiceException(String.format("Tickets for %s not found", accountId.getInternalId()));
+		}
+		return tickets;
+	}
+
+	@Override
+	public void deleteTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException {
+		Query query = entityManager.createNamedQuery(TicketDO.DELETE_TICKETS_BY_ACCOUNT_ID)
+				.setParameter("accountId", accountId.getInternalId());
+		query.executeUpdate();
 	}
 }
