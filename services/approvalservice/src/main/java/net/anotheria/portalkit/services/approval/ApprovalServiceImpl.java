@@ -56,7 +56,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public ApprovalServiceImpl() {
 
 		cachedTickets = Caches.createHardwiredCache("cache-tickets");
-		lockedTickets = new HashMap();
+		lockedTickets = new HashMap<>();
 		unlockedTickets = new HashMap<>();
 
 		Thread ticketUnlocker = new Thread(new TicketUnlocker());
@@ -69,7 +69,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 		try {
 			ticket = new TicketBO(approvalPersistenceService.createTicket(ticket.toDO()));
 			cachedTickets.put(ticket.getTicketId(), ticket);
-
 			return ticket;
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while creating new ticket", e);
@@ -80,8 +79,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public void deleteTicketByreferenceId(String referenceId) throws ApprovalServiceException {
 		try {
 			TicketBO ticket = new TicketBO(approvalPersistenceService.getTicketByReferenceId(referenceId));
-
-			lockedTickets.remove(getTicketById(ticket.getTicketId()));
+			lockedTickets.remove(ticket.getTicketId());
 			approvalPersistenceService.deleteTicket(ticket.getTicketId());
 			cachedTickets.remove(ticket.getTicketId());
 		} catch (ApprovalPersistenceServiceException e) {
@@ -307,7 +305,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	@Override
 	public List<TicketBO> getTickets(String locale, String agentId, int size) throws ApprovalServiceException {
 
-		List<TicketBO> result = getLockedTickets(agentId, locale);
+		List<TicketBO> result = getLockedTickets(locale);
 		List<TicketBO> unlocked = null;
 
 		if (!result.isEmpty() && result.size() > size) {
@@ -328,8 +326,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 				TicketBO ticket = iterator.next();
 
-				if (!result.contains(ticket) && !isLocked(ticket)) {
-
+				if (!result.contains(ticket) && !lockedTickets.containsKey(ticket.getTicketId())) {
 					lockTicket(ticket.getTicketId(), agentId);
 					result.add(ticket);
 					iterator.remove();
@@ -345,17 +342,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 		return result;
 	}
 
-	private boolean isLocked(TicketBO ticket) {
-
-		if (lockedTickets.containsKey(ticket.getTicketId())) {
-			return true;
-		}
-
-		return false;
-	}
-
 	@Override
-	public List<TicketBO> getLockedTickets(String agentId, String locale) throws ApprovalServiceException {
+	public List<TicketBO> getLockedTickets(String locale) throws ApprovalServiceException {
 
 		List<TicketBO> result = new ArrayList<>();
 		Set<Long> ids = new HashSet<>(lockedTickets.keySet());
@@ -399,17 +387,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		public void unlockTickets() {
-
 			long currentTime = System.currentTimeMillis();
-
-			for(Iterator<Map.Entry<Long, Long>> iterator = lockedTickets.entrySet().iterator(); iterator.hasNext(); ) {
-
-				Map.Entry<Long, Long> entry = iterator.next();
-
-				if(currentTime - entry.getValue() > TimeUnit.MINUTE.getMillis(RELEASE_TIME)) {
-					iterator.remove();
-				}
-			}
+			lockedTickets.entrySet().removeIf(entry -> currentTime - entry.getValue() > TimeUnit.MINUTE.getMillis(RELEASE_TIME));
 		}
 	}
 }
