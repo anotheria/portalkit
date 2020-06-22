@@ -67,7 +67,7 @@ public interface ApprovalPersistenceService {
 	void deleteTicket(long ticketId) throws ApprovalPersistenceServiceException;
 
 	/**
-	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
+	 * Retrieve list of tickets ordered by timestamp
 	 * descending. List will contain tickets of specified {@code referenceType} and {@code ticketType}.
 	 *
 	 * @param referenceType	reference type.
@@ -76,6 +76,18 @@ public interface ApprovalPersistenceService {
 	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
+
+	/**
+	 * Retrieve list of tickets ordered by timestamp descending. List will contain tickets
+	 * of specified {@param referenceType}, {@param ticketType} and {@param locale}.
+	 *
+	 * @param referenceType	reference type
+	 * @param ticketType	ticket type
+	 * @param locale		locale
+	 * @return				list of {@link TicketDO}
+	 * @throws ApprovalPersistenceServiceException if any errors occurs
+	 */
+	List<TicketDO> getTickets(long referenceType, String ticketType, String locale) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
@@ -103,5 +115,4 @@ public interface ApprovalPersistenceService {
 	 * @throws ApprovalPersistenceServiceException if any error
 	 */
 	void deleteTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException;
-
 }

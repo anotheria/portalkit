@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,26 +37,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 	/**
 	 * Ticket cache.
 	 */
-	private Cache<Long, TicketBO> cachedTickets;
+	private final Cache<Long, TicketBO> cachedTickets;
 
 	/**
 	 * Map of locked tickets.
 	 * */
-	private Map<Long, Long> lockedTickets;
-
-	/**
-	 * Map of unlocked tickets by locale.
-	 * */
-	private Map<String, List<TicketBO>> unlockedTickets;
+	private final Map<Long, LockedTicket> lockedTickets;
 
 	/**
 	 * Default constructor.
 	 */
 	public ApprovalServiceImpl() {
-
 		cachedTickets = Caches.createHardwiredCache("cache-tickets");
 		lockedTickets = new HashMap<>();
-		unlockedTickets = new HashMap<>();
 
 		Thread ticketUnlocker = new Thread(new TicketUnlocker());
 		ticketUnlocker.setDaemon(true);
@@ -76,7 +68,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public void deleteTicketByreferenceId(String referenceId) throws ApprovalServiceException {
+	public void deleteTicketByReferenceId(String referenceId) throws ApprovalServiceException {
 		try {
 			TicketBO ticket = new TicketBO(approvalPersistenceService.getTicketByReferenceId(referenceId));
 			lockedTickets.remove(ticket.getTicketId());
@@ -108,7 +100,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 			for (Long id: ids) {
 				lockedTickets.remove(id);
 				cachedTickets.remove(id);
-				unlockedTickets.values().forEach(v -> v.removeIf(x -> x.getTicketId() == id));
 			}
 			approvalPersistenceService.deleteTicketsByAccountId(accountId);
 		} catch (ApprovalPersistenceServiceException e) {
@@ -120,14 +111,12 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public TicketBO getTicketById(long ticketId) throws ApprovalServiceException {
 
 		TicketBO ticket = cachedTickets.get(ticketId);
-
 		if (ticket != null) {
 			return ticket;
 		}
 
 		try {
 			ticket = new TicketBO(approvalPersistenceService.getTicketById(ticketId));
-
 			return ticket;
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
@@ -135,50 +124,65 @@ public class ApprovalServiceImpl implements ApprovalService {
 	}
 
 	@Override
-	public List<TicketBO> getTicketsByLocale(String locale) throws ApprovalServiceException {
-
-		List<TicketBO> result = new ArrayList<>();
-		List<TicketDO> tickets = null;
-
+	public List<TicketBO> getTicketsByLocale(String locale, String agentId) throws ApprovalServiceException {
+		List<TicketDO> tickets;
 		try {
 			tickets = approvalPersistenceService.getTickets(locale);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets by locale=" + locale, e);
 		}
+		return mapWithoutLockedTickets(tickets, agentId);
+	}
 
-		int totalSize = tickets.size();
-
-		for (TicketDO ticket : tickets) {
-
-			TicketBO t = new TicketBO(ticket);
-			t.setTotalAmountOfTickets(totalSize);
-			result.add(t);
+	@Override
+	public List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType, String agentId) throws ApprovalServiceException {
+		List<TicketDO> tickets = null;
+		try {
+			tickets = approvalPersistenceService.getTickets(referenceType.getValue(), ticketType.name());
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}
+		return mapWithoutLockedTickets(tickets, agentId);
+	}
 
+	@Override
+	public List<TicketBO> getTicketsByTypeAndLocale(TicketType ticketType, ReferenceType referenceType, String locale, String agentId) throws ApprovalServiceException {
+		List<TicketDO> tickets = null;
+		try {
+			tickets = approvalPersistenceService.getTickets(referenceType.getValue(), ticketType.name(), locale);
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while getting tickets", e);
+		}
+		return mapWithoutLockedTickets(tickets, agentId);
+	}
+
+	private List<TicketBO> mapWithoutLockedTickets(List<TicketDO> tickets, String agentId) {
+		List<TicketBO> result = new ArrayList<>();
+		for (TicketDO ticket: tickets) {
+			LockedTicket lock = lockedTickets.get(ticket.getTicketId());
+			if (lock != null && !lock.getAgentId().equals(agentId)) {
+				continue;
+			}
+
+			lockedTickets.put(ticket.getTicketId(), new LockedTicket(agentId, System.currentTimeMillis()));
+			result.add(new TicketBO(ticket));
+		}
 		return result;
 	}
 
 	@Override
 	public List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType) throws ApprovalServiceException {
-
-		List<TicketBO> result = new ArrayList<>();
 		List<TicketDO> tickets = null;
-
+		List<TicketBO> result = new ArrayList<>();
 		try {
 			tickets = approvalPersistenceService.getTickets(referenceType.getValue(), ticketType.name());
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}
 
-		int totalSize = tickets.size();
-
-		for (TicketDO ticket : tickets) {
-
-			TicketBO t = new TicketBO(ticket);
-			t.setTotalAmountOfTickets(totalSize);
-			result.add(t);
+		for (TicketDO ticketDO: tickets) {
+			result.add(new TicketBO(ticketDO));
 		}
-
 		return result;
 	}
 
@@ -194,28 +198,19 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to approve ticket with id=" + ticket.getTicketId(), e);
 		}
 
-		unlockTicket(ticket.getTicketId());
+		lockedTickets.remove(ticket.getTicketId());
 		cachedTickets.remove(ticket.getTicketId());
 		cachedTickets.put(ticket.getTicketId(), ticket);
 	}
 
 	@Override
 	public void approveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException {
-
-		for (TicketBO ticket : tickets) {
-
-			ticket.setType(TicketType.APPROVED);
-			ticket.setStatus(TicketStatus.CLOSED);
-
+		for (TicketBO ticket: tickets) {
 			try {
-				approvalPersistenceService.updateTicket(ticket.toDO());
-			} catch (ApprovalPersistenceServiceException e) {
-				continue;
+				approveTicket(ticket);
+			} catch (ApprovalServiceException e) {
+				//ignore
 			}
-
-			unlockTicket(ticket.getTicketId());
-			cachedTickets.remove(ticket.getTicketId());
-			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
 	}
 
@@ -231,58 +226,20 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new ApprovalServiceException("Unable to disapprove ticket with id=" + ticket.getTicketId(), e);
 		}
 
-		unlockTicket(ticket.getTicketId());
+		lockedTickets.remove(ticket.getTicketId());
 		cachedTickets.remove(ticket.getTicketId());
 		cachedTickets.put(ticket.getTicketId(), ticket);
 	}
 
 	@Override
 	public void disapproveTickets(Collection<TicketBO> tickets) throws ApprovalServiceException {
-
-		for (TicketBO ticket : tickets) {
-
-			ticket.setType(TicketType.DISAPPROVED);
-			ticket.setStatus(TicketStatus.CLOSED);
-
+		for (TicketBO ticket: tickets) {
 			try {
-				approvalPersistenceService.updateTicket(ticket.toDO());
-			} catch (ApprovalPersistenceServiceException e) {
-				continue;
+				disapproveTicket(ticket);
+			} catch (ApprovalServiceException e) {
+				//ignore
 			}
-
-			unlockTicket(ticket.getTicketId());
-			cachedTickets.remove(ticket.getTicketId());
-			cachedTickets.put(ticket.getTicketId(), ticket);
 		}
-	}
-
-	@Override
-	public void lockTicket(long ticketId, String agentId) throws ApprovalServiceException {
-
-		TicketDO ticket = null;
-
-		try {
-			ticket = approvalPersistenceService.getTicketById(ticketId);
-		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
-		}
-
-		ticket.setAgent(agentId);
-		lockedTickets.put(ticket.getTicketId(), System.currentTimeMillis());
-	}
-
-	@Override
-	public void unlockTicket(long ticketId) throws ApprovalServiceException {
-
-		TicketDO ticket = null;
-
-		try {
-			ticket = approvalPersistenceService.getTicketById(ticketId);
-		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Unable to get ticket by id=" + ticketId, e);
-		}
-
-		lockedTickets.remove(ticket.getTicketId());
 	}
 
 	@Override
@@ -300,46 +257,6 @@ public class ApprovalServiceImpl implements ApprovalService {
 		}
 
 		return tickets;
-	}
-
-	@Override
-	public List<TicketBO> getTickets(String locale, String agentId, int size) throws ApprovalServiceException {
-
-		List<TicketBO> result = getLockedTickets(locale);
-		List<TicketBO> unlocked = null;
-
-		if (!result.isEmpty() && result.size() > size) {
-			return result.subList(0, size);
-		}
-
-		unlocked = unlockedTickets.get(locale);
-
-		/* try to get form persistence */
-		if (unlocked == null || unlocked.isEmpty()) {
-			unlocked = getTicketsByLocale(locale);
-			unlockedTickets.remove(locale);
-		}
-
-		if (unlocked != null && !unlocked.isEmpty()) {
-
-			for (Iterator<TicketBO> iterator = unlocked.iterator(); iterator.hasNext(); ) {
-
-				TicketBO ticket = iterator.next();
-
-				if (!result.contains(ticket) && !lockedTickets.containsKey(ticket.getTicketId())) {
-					lockTicket(ticket.getTicketId(), agentId);
-					result.add(ticket);
-					iterator.remove();
-				}
-
-				if (result.size() == size) {
-					unlockedTickets.put(locale, unlocked);
-					break;
-				}
-			}
-		}
-
-		return result;
 	}
 
 	@Override
@@ -388,7 +305,40 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		public void unlockTickets() {
 			long currentTime = System.currentTimeMillis();
-			lockedTickets.entrySet().removeIf(entry -> currentTime - entry.getValue() > TimeUnit.MINUTE.getMillis(RELEASE_TIME));
+			lockedTickets.entrySet().removeIf(entry -> currentTime - entry.getValue().getTime() > TimeUnit.MINUTE.getMillis(RELEASE_TIME));
+		}
+	}
+
+	/**
+	 * Ticket lock object.
+	 */
+	private static class LockedTicket {
+		/**
+		 * Agent id.
+		 */
+		private final String agentId;
+		/**
+		 * time.
+		 */
+		private final long time;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param agentId	agent id
+		 * @param time		time, when lock
+		 */
+		public LockedTicket(String agentId, long time) {
+			this.agentId = agentId;
+			this.time = time;
+		}
+
+		public String getAgentId() {
+			return agentId;
+		}
+
+		public long getTime() {
+			return time;
 		}
 	}
 }

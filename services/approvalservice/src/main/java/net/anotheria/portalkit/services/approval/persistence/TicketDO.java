@@ -54,6 +54,10 @@ import java.util.Objects;
 		@NamedQuery(
 				name = TicketDO.DELETE_TICKETS_BY_ACCOUNT_ID,
 				query = "delete from TicketDO t where t.accountId = :accountId"
+		),
+		@NamedQuery(
+				name = TicketDO.GET_TICKETS_BY_TYPE_AND_LOCALE,
+				query = "select t from TicketDO t where t.referenceType = :referenceType and t.ticketType = :ticketType and t.locale = :locale order by t.created desc"
 		)
 })
 public class TicketDO implements Serializable {
@@ -66,6 +70,7 @@ public class TicketDO implements Serializable {
 	public static final String GET_TICKETS_BY_LOCALE = "TicketDO.getTicketsByLocale";
 	public static final String GET_TICKETS_BY_ACCOUNT_ID = "TicketDO.getTicketsByAccountId";
 	public static final String DELETE_TICKETS_BY_ACCOUNT_ID = "TicketDO.deleteTicketsByAccountId";
+	public static final String GET_TICKETS_BY_TYPE_AND_LOCALE = "TicketDO.getTicketsByTypeLocale";
 
 	/**
 	 * Internal ID.

@@ -100,6 +100,22 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	}
 
 	@Override
+	public List<TicketDO> getTickets(long referenceType, String ticketType, String locale) throws ApprovalPersistenceServiceException {
+		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_TYPE_AND_LOCALE, TicketDO.class);
+		q.setParameter("referenceType", referenceType);
+		q.setParameter("ticketType", ticketType);
+		q.setParameter("locale", locale);
+
+		List<TicketDO> tickets = q.getResultList();
+
+		if (tickets == null) {
+			throw new ApprovalPersistenceServiceException("Tickets not found");
+		}
+
+		return tickets;
+	}
+
+	@Override
 	public List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException {
 
 		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_LOCALE, TicketDO.class);

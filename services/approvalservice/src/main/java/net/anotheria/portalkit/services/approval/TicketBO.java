@@ -71,11 +71,6 @@ public class TicketBO implements Serializable {
 	private long fulfillment;
 
 	/**
-	 * Total amount of tickets.
-	 * */
-	private int totalAmountOfTickets;
-
-	/**
 	 * Owner of ticket.
 	 */
 	private AccountId accountId;
@@ -184,14 +179,6 @@ public class TicketBO implements Serializable {
 
 	public void setFulfillment(long fulfillment) {
 		this.fulfillment = fulfillment;
-	}
-
-	public int getTotalAmountOfTickets() {
-		return totalAmountOfTickets;
-	}
-
-	public void setTotalAmountOfTickets(int totalAmountOfTickets) {
-		this.totalAmountOfTickets = totalAmountOfTickets;
 	}
 
 	public AccountId getAccountId() {
