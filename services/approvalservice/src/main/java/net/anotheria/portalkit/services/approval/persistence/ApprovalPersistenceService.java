@@ -20,6 +20,7 @@ public interface ApprovalPersistenceService {
 	 * Creates a ticket.
 	 *
 	 * @param newTicket	new ticket
+	 * @return crated {@link TicketDO}
 	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	TicketDO createTicket(TicketDO newTicket) throws ApprovalPersistenceServiceException;
@@ -79,7 +80,7 @@ public interface ApprovalPersistenceService {
 
 	/**
 	 * Retrieve list of tickets ordered by timestamp descending. List will contain tickets
-	 * of specified {@param referenceType}, {@param ticketType} and {@param locale}.
+	 * of specified referenceType, ticketType and locale.
 	 *
 	 * @param referenceType	reference type
 	 * @param ticketType	ticket type

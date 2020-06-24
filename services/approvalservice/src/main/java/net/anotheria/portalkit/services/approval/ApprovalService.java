@@ -143,7 +143,8 @@ public interface ApprovalService extends Service {
 	/**
 	 * Gets all locked tickets.
 	 *
-	 * @return list of {@link TicketBO}.
+	 * @return list of {@link TicketBO} instances.
+	 * @throws ApprovalServiceException if any errors
 	 * */
 	Set<TicketBO> getLockedTickets() throws ApprovalServiceException;
 
@@ -151,7 +152,8 @@ public interface ApprovalService extends Service {
 	 * Gets locked tickets for agent.
 	 *
 	 * @param locale locale
-	 * @return list of {@link TicketBO}.
+	 * @return list of {@link TicketBO} instances
+	 * @throws ApprovalServiceException if any errors
 	 * */
 	List<TicketBO> getLockedTickets(String locale) throws ApprovalServiceException;
 }

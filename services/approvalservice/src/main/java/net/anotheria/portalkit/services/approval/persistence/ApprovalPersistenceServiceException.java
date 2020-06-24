@@ -17,7 +17,8 @@ public class ApprovalPersistenceServiceException extends PortalKitPersistenceSer
 
 	/**
 	 * Constructor with message.
-	 * @param message
+	 *
+	 * @param message fail message
 	 */
 	public ApprovalPersistenceServiceException(String message) {
 		super(message);
@@ -25,8 +26,9 @@ public class ApprovalPersistenceServiceException extends PortalKitPersistenceSer
 
 	/**
 	 * Constructor with message and {@link Throwable}.
-	 * @param message
-	 * @param cause
+	 *
+	 * @param message fail message
+	 * @param cause fail cause
 	 */
 	public ApprovalPersistenceServiceException(String message, Throwable cause) {
 		super(message, cause);
