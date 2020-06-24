@@ -19,42 +19,42 @@ public interface ApprovalPersistenceService {
 	/**
 	 * Creates a ticket.
 	 *
-	 * @param newTicket	new ticket.
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param newTicket	new ticket
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	TicketDO createTicket(TicketDO newTicket) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Gets tocket by ID.
 	 *
-	 * @param ticketId ticket id.
-	 * @return {@link TicketDO}
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param ticketId ticket id
+	 * @return {@link TicketDO} instance
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	TicketDO getTicketById(long ticketId) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Gets tocket by ID.
 	 *
-	 * @param referenceId reference id.
-	 * @return {@link TicketDO}
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param referenceId reference id
+	 * @return {@link TicketDO} instance
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	TicketDO getTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Deletes ticket by ID.
 	 *
-	 * @param referenceId reference id.
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param referenceId reference id
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	void deleteTicketByReferenceId(String referenceId) throws ApprovalPersistenceServiceException;
 
 	/**
 	 * Approves a ticket.
 	 *
-	 * @param ticket
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param ticket {@link TicketDO} instance
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	void updateTicket(TicketDO ticket) throws ApprovalPersistenceServiceException;
 
@@ -72,7 +72,7 @@ public interface ApprovalPersistenceService {
 	 *
 	 * @param referenceType	reference type.
 	 * @param ticketType 	ticket type.
-	 * @return list of {@link TicketDO}
+	 * @return list of {@link TicketDO} instances
 	 * @throws ApprovalPersistenceServiceException if error.
 	 */
 	List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
@@ -84,7 +84,7 @@ public interface ApprovalPersistenceService {
 	 * @param referenceType	reference type
 	 * @param ticketType	ticket type
 	 * @param locale		locale
-	 * @return				list of {@link TicketDO}
+	 * @return				list of {@link TicketDO} instances
 	 * @throws ApprovalPersistenceServiceException if any errors occurs
 	 */
 	List<TicketDO> getTickets(long referenceType, String ticketType, String locale) throws ApprovalPersistenceServiceException;
@@ -93,9 +93,9 @@ public interface ApprovalPersistenceService {
 	 * Retrieve list of tickets IN_APPROVAL status ordered by timestamp
 	 * descending. List will contain tickets of specified locale
 	 *
-	 * @param locale	locale.
-	 * @return list of {@link TicketDO}
-	 * @throws ApprovalPersistenceServiceException if error.
+	 * @param locale	locale
+	 * @return list of {@link TicketDO} instances
+	 * @throws ApprovalPersistenceServiceException if error
 	 */
 	List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException;
 
@@ -103,7 +103,7 @@ public interface ApprovalPersistenceService {
 	 * Retrieve list of all tickets for given {@link AccountId}.
 	 *
 	 * @param accountId		{@link AccountId} of tickets owner
-	 * @return				list of {@link TicketDO}
+	 * @return				list of {@link TicketDO} instances
 	 * @throws ApprovalPersistenceServiceException if any error
 	 */
 	List<TicketDO> getTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException;
