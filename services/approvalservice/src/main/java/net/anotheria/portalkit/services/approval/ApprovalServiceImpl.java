@@ -131,7 +131,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets by locale=" + locale, e);
 		}
-		return mapWithoutLockedTickets(tickets, agentId);
+		return mapTickets(tickets, agentId);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}
-		return mapWithoutLockedTickets(tickets, agentId);
+		return mapTickets(tickets, agentId);
 	}
 
 	@Override
@@ -153,10 +153,14 @@ public class ApprovalServiceImpl implements ApprovalService {
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}
-		return mapWithoutLockedTickets(tickets, agentId);
+		return mapTickets(tickets, agentId);
 	}
 
-	private List<TicketBO> mapWithoutLockedTickets(List<TicketDO> tickets, String agentId) {
+	private List<TicketBO> mapTickets(List<TicketDO> tickets, String agentId) {
+
+		if ( !ApprovalServiceConfig.getInstance().isAgentTicketsLockEnabled())
+			return tickets.stream().map(TicketBO::new).collect(Collectors.toList());
+
 		List<TicketBO> result = new ArrayList<>();
 		for (TicketDO ticket: tickets) {
 			LockedTicket lock = lockedTickets.get(ticket.getTicketId());
