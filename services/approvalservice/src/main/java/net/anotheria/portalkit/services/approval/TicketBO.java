@@ -48,7 +48,7 @@ public class TicketBO implements Serializable {
 	/**
 	 * Reference type.
 	 */
-	private ReferenceType referenceType;
+	private IReferenceType referenceType;
 
 	/**
 	 * Locale.
@@ -141,11 +141,11 @@ public class TicketBO implements Serializable {
 		this.referenceId = referenceId;
 	}
 
-	public ReferenceType getReferenceType() {
+	public IReferenceType getReferenceType() {
 		return referenceType;
 	}
 
-	public void setReferenceType(ReferenceType referenceType) {
+	public void setReferenceType(IReferenceType referenceType) {
 		this.referenceType = referenceType;
 	}
 
@@ -200,7 +200,7 @@ public class TicketBO implements Serializable {
 		ticket.setAgent(this.agent);
 		ticket.setLocale(this.locale);
 		ticket.setReferenceId(this.referenceId);
-		ticket.setReferenceType(this.referenceType.getValue());
+		ticket.setReferenceType(this.referenceType.getId());
 		ticket.setType(this.type.name());
 		ticket.setAccountId(this.accountId == null ? null : this.accountId.getInternalId());
 

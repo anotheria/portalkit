@@ -6,7 +6,7 @@ package net.anotheria.portalkit.services.approval;
  * @author Vlad Lukjanenko
  * 
  */
-public enum ReferenceType {
+public enum ReferenceType implements IReferenceType {
 
 	/**
 	 * Text message.
@@ -62,5 +62,15 @@ public enum ReferenceType {
 		}
 
 		return null;
+	}
+
+	@Override
+	public long getId() {
+		return value;
+	}
+
+	@Override
+	public String getName() {
+		return this.name();
 	}
 }
