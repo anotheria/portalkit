@@ -92,7 +92,7 @@ public class TicketBO implements Serializable {
 		this.type = TicketType.valueOf(ticket.getType());
 		this.agent = ticket.getAgent();
 		this.referenceId = ticket.getReferenceId();
-		this.referenceType = ReferenceType.valueOf(ticket.getReferenceType());
+		this.referenceType = new ReferenceType(ticket.getReferenceType());
 		this.locale = ticket.getLocale();
 		this.created = ticket.getCreated();
 		this.presentation = ticket.getPresentation();
@@ -234,5 +234,28 @@ public class TicketBO implements Serializable {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Default implementation for {@link IReferenceType}
+	 *
+	 * @author ynikonchuk
+	 */
+	private class ReferenceType implements IReferenceType, Serializable {
+		/**
+		 * Serail version uid.
+		 */
+		private static final long serialVersionUID = 6823770476502457947L;
+
+		private long id;
+
+		private ReferenceType(long id) {
+			this.id = id;
+		}
+
+		@Override
+		public long getId() {
+			return id;
+		}
 	}
 }

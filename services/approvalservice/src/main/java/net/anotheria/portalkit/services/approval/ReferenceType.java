@@ -68,9 +68,4 @@ public enum ReferenceType implements IReferenceType {
 	public long getId() {
 		return value;
 	}
-
-	@Override
-	public String getName() {
-		return this.name();
-	}
 }

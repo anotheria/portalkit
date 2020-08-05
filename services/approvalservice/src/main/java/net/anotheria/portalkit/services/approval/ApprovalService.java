@@ -85,7 +85,7 @@ public interface ApprovalService extends Service {
 	 * @return list of {@link TicketBO} instances
 	 * @throws ApprovalServiceException if error
 	 */
-	List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType, String agentId) throws ApprovalServiceException;
+	List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType, String agentId) throws ApprovalServiceException;
 
 	/**
 	 * Gets ticket by type and locale with lock for given agent id.
@@ -97,7 +97,7 @@ public interface ApprovalService extends Service {
 	 * @return					list of {@link TicketBO} instances
 	 * @throws ApprovalServiceException if any errors occurs
 	 */
-	List<TicketBO> getTicketsByTypeAndLocale(TicketType ticketType, ReferenceType referenceType, String locale, String agentId) throws ApprovalServiceException;
+	List<TicketBO> getTicketsByTypeAndLocale(TicketType ticketType, IReferenceType referenceType, String locale, String agentId) throws ApprovalServiceException;
 
 	/**
 	 * Gets ticket by type.
@@ -107,7 +107,7 @@ public interface ApprovalService extends Service {
 	 * @return list of {@link TicketBO} instances
 	 * @throws ApprovalServiceException if error.
 	 */
-	List<TicketBO> getTicketsByType(TicketType ticketType, ReferenceType referenceType) throws ApprovalServiceException;
+	List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType) throws ApprovalServiceException;
 	/**
 	 * Approves ticket.
 	 *
