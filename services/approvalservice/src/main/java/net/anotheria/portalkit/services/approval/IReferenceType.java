@@ -13,11 +13,4 @@ public interface IReferenceType {
      * @return int
      */
     long getId();
-
-    /**
-     * Get reference type name.
-     *
-     * @return String
-     */
-    String getName();
 }
