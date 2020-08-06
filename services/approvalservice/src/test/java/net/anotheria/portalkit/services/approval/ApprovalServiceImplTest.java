@@ -37,7 +37,7 @@ public class ApprovalServiceImplTest {
 
         ticket.setTicketId(1);
         ticket.setLocale("EN");
-        ticket.setReferenceType(ReferenceType.MESSAGE);
+        ticket.setReferenceType(1);
         ticket.setReferenceId("1");
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setType(TicketType.IN_APPROVAL);
@@ -60,7 +60,7 @@ public class ApprovalServiceImplTest {
 
         ticket.setTicketId(2);
         ticket.setLocale("EN");
-        ticket.setReferenceType(ReferenceType.MESSAGE);
+        ticket.setReferenceType(1);
         ticket.setReferenceId("2");
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setType(TicketType.IN_APPROVAL);
@@ -83,7 +83,7 @@ public class ApprovalServiceImplTest {
 
         ticket.setTicketId(3);
         ticket.setLocale("EN");
-        ticket.setReferenceType(ReferenceType.MESSAGE);
+        ticket.setReferenceType(1);
         ticket.setReferenceId("3");
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setType(TicketType.IN_APPROVAL);
@@ -107,7 +107,7 @@ public class ApprovalServiceImplTest {
 
         ticket.setTicketId(4);
         ticket.setLocale("EN");
-        ticket.setReferenceType(ReferenceType.MESSAGE);
+        ticket.setReferenceType(1);
         ticket.setReferenceId("4");
         ticket.setStatus(TicketStatus.OPEN);
         ticket.setType(TicketType.IN_APPROVAL);
@@ -134,7 +134,7 @@ public class ApprovalServiceImplTest {
         TicketBO ticket1 = new TicketBO();
         ticket1.setTicketId(5);
         ticket1.setLocale("EN");
-        ticket1.setReferenceType(ReferenceType.MESSAGE);
+        ticket1.setReferenceType(1);
         ticket1.setReferenceId("4");
         ticket1.setStatus(TicketStatus.OPEN);
         ticket1.setType(TicketType.IN_APPROVAL);
@@ -146,7 +146,7 @@ public class ApprovalServiceImplTest {
         TicketBO ticket2 = new TicketBO();
         ticket2.setTicketId(5);
         ticket2.setLocale("EN");
-        ticket2.setReferenceType(ReferenceType.MESSAGE);
+        ticket2.setReferenceType(1);
         ticket2.setReferenceId("4");
         ticket2.setStatus(TicketStatus.OPEN);
         ticket2.setType(TicketType.IN_APPROVAL);
