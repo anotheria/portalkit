@@ -84,4 +84,13 @@ public interface SecretKeyAuthenticationService extends Service, DeletionService
 	 */
 	void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException;
 
+    /**
+     * Removes one user token from database.
+     *
+     * @param accountId account id.
+     * @param token token.
+     * @throws AuthenticationServiceException if error
+     */
+    void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException;
+
 }

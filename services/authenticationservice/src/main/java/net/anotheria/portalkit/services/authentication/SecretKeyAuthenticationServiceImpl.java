@@ -235,6 +235,27 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
 		}
 	}
 
+    @Override
+    public void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException {
+        Set<String> tokens = null;
+        AccountId encrypted = getEncrypted(accountId);
+        try {
+            tokens = persistenceService.getAuthTokens(encrypted);
+        } catch(AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
+        }
+
+        for (String tokenFromDB : tokens) {
+            if (tokenFromDB.equals(token)) {
+                try {
+                    persistenceService.deleteAuthToken(encrypted, token);
+                } catch(AuthenticationPersistenceServiceException e) {
+                    log.error("Can't delete token for user "+accountId+", token: "+token, e);
+                }
+            }
+        }
+    }
+
     /**
      * Returns new instance of encrypted version of AccountId.
      *
