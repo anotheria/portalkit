@@ -289,6 +289,17 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			final String types = StringUtils.concatenateTokens(query.getTypesExcluded(), ",");
 			sqlRawQuery.append(" AND type NOT IN (").append(types).append(")");
 		}
+
+		if (!query.getTenants().isEmpty()) {
+			StringBuilder ret = new StringBuilder();
+			for (int i = 0; i < query.getTenants().size(); i++) {
+				ret.append("'").append(query.getTenants().get(i)).append("'");
+				if (i < query.getTenants().size() - 1)
+					ret.append(",");
+			}
+			sqlRawQuery.append(" AND tenant IN (").append(ret.toString()).append(")");
+		}
+
 		// ordering part
 		sqlRawQuery.append(sqlOrderPart);
 

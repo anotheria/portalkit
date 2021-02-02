@@ -56,6 +56,10 @@ public final class AccountQuery implements Serializable {
 	 * Registered till.
 	 */
 	private final Long registeredTill;
+	/**
+	 * {@link List} of {@link String} tenants.
+	 */
+	private final List<String> tenants;
 
 	private AccountQuery(Builder builder) {
 		this.ids = builder.getIds();
@@ -68,6 +72,7 @@ public final class AccountQuery implements Serializable {
 		this.statusesExcluded = builder.getStatusesExcluded();
 		this.registeredFrom = builder.getRegisteredFrom();
 		this.registeredTill = builder.getRegisteredTill();
+		this.tenants = builder.getTenants();
 	}
 
 	public List<AccountId> getIds() {
@@ -110,6 +115,10 @@ public final class AccountQuery implements Serializable {
 		return registeredTill;
 	}
 
+	public List<String> getTenants() {
+		return tenants;
+	}
+
 	@Override
 	public String toString() {
 		return "AccountQuery{" +
@@ -123,6 +132,7 @@ public final class AccountQuery implements Serializable {
 				", statusesExcluded=" + statusesExcluded +
 				", registeredFrom=" + registeredFrom +
 				", registeredTill=" + registeredTill +
+				", tenants=" + tenants +
 				'}';
 	}
 
@@ -140,6 +150,7 @@ public final class AccountQuery implements Serializable {
 		private List<Long> statusesExcluded = new ArrayList<>();
 		private Long registeredFrom;
 		private Long registeredTill;
+		private List<String> tenants = new ArrayList<>();
 
 		/**
 		 * Default constructor of builder.
@@ -205,6 +216,16 @@ public final class AccountQuery implements Serializable {
 			return this;
 		}
 
+		public Builder addTenants(List<String> tenants) {
+			this.tenants.addAll(tenants);
+			return this;
+		}
+
+		public Builder addTenant(String tenant) {
+			tenants.add(tenant);
+			return this;
+		}
+
 		List<AccountId> getIds() {
 			return ids;
 		}
@@ -243,6 +264,10 @@ public final class AccountQuery implements Serializable {
 
 		Long getRegisteredTill() {
 			return registeredTill;
+		}
+
+		List<String> getTenants() {
+			return tenants;
 		}
 	}
 }
