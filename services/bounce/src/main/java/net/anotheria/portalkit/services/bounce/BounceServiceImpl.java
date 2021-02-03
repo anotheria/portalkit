@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.bounce;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.bounce.persistence.BounceDO;
 import net.anotheria.portalkit.services.bounce.persistence.BouncePersistenceService;
 import net.anotheria.portalkit.services.bounce.persistence.BouncePersistenceServiceException;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author Vlad Lukjanenko
  */
 @Service
+@Monitor(subsystem = "mail", category = "portalkit-service")
 public class BounceServiceImpl implements BounceService {
 
     @Autowired
