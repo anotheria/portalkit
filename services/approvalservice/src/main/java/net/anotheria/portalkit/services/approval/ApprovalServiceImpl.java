@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * 
  */
 @Service
+@Monitor(subsystem = "approval", category = "portalkit-service")
 public class ApprovalServiceImpl implements ApprovalService {
 
 	/**
