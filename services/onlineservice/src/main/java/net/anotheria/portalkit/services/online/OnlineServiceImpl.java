@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.online;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.stats.TimeUnit;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPersistenceServiceException;
@@ -27,6 +28,7 @@ import java.util.TimerTask;
  *
  * @author h3llka
  */
+@Monitor(subsystem = "online", category = "portalkit-service")
 public class OnlineServiceImpl implements OnlineService {
 	/**
 	 * Logging util instance.
