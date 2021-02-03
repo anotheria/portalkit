@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.online.persistence.jdbc;
 
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.jdbc.BasePersistenceServiceJDBCImpl;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
@@ -22,6 +23,7 @@ import java.util.Map;
  *
  * @author h3llka
  */
+@Monitor(subsystem = "account", category = "portalkit-service")
 public class JDBCActivityPersistenceServiceImpl extends BasePersistenceServiceJDBCImpl implements ActivityPersistenceService {
     /**
      * Logging utility instance.
