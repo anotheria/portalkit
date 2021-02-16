@@ -237,7 +237,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
     }
 
     public List<ArchivedAccount> getAccountsByQuery(Connection connection, ArchivedAccountQuery query) throws SQLException {
-        final String sqlSelectPart = "SELECT id, name, email, type, status, regts, deleted_at, deleted_note FROM " + TABLE_NAME;
+        final String sqlSelectPart = "SELECT id, name, email, type, status, regts, deleted_at, deleted_note, tenant FROM " + TABLE_NAME;
         final String sqlWherePart = " WHERE 1=1";
         final String sqlOrderPart = " ORDER BY regts DESC";
         // general selection part
@@ -274,6 +274,11 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         if (query.getDeletedTill() != null) {
             sqlRawQuery.append(" AND deleted_at <= ").append(query.getDeletedTill());
         }
+
+        if (!query.getTenants().isEmpty()) {
+            String tenantsStr = StringUtils.concatenateTokens(query.getTenants(), ',', '\'', '\'');
+            sqlRawQuery.append("AND tenant in (").append(tenantsStr).append(")");
+        }
         // ordering part
         sqlRawQuery.append(sqlOrderPart);
 
@@ -296,6 +301,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
                 account.setRegistrationTimestamp(rs.getLong("regts"));
                 account.setDeletionTimestamp(rs.getLong("deleted_at"));
                 account.setDeletionNote(rs.getString("deleted_note"));
+                account.setTenant(rs.getString("tenant"));
                 rawResult.add(account);
             }
         } finally {

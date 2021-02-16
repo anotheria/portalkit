@@ -65,6 +65,10 @@ public class ArchivedAccountQuery implements Serializable {
      * The highest bound when account was deleted.
      */
     private Long deletedTill;
+    /**
+     * Tenants.
+     */
+    private final List<String> tenants = new ArrayList<>();
 
     public Long getDeletedTill() {
         return deletedTill;
@@ -142,4 +146,7 @@ public class ArchivedAccountQuery implements Serializable {
         this.registeredTill = aRegisteredTill;
     }
 
+    public List<String> getTenants() {
+        return tenants;
+    }
 }
