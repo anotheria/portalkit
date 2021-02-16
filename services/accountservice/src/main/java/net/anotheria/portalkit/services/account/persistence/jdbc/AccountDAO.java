@@ -291,13 +291,8 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		}
 
 		if (!query.getTenants().isEmpty()) {
-			StringBuilder ret = new StringBuilder();
-			for (int i = 0; i < query.getTenants().size(); i++) {
-				ret.append("'").append(query.getTenants().get(i)).append("'");
-				if (i < query.getTenants().size() - 1)
-					ret.append(",");
-			}
-			sqlRawQuery.append(" AND tenant IN (").append(ret.toString()).append(")");
+			String tenantsStr = StringUtils.concatenateTokens(query.getTenants(), ',', '\'', '\'');
+			sqlRawQuery.append(" AND tenant IN (").append(tenantsStr).append(")");
 		}
 
 		// ordering part
