@@ -51,15 +51,6 @@ public interface PhotoScammerService extends Service {
     List<PhotoDataBO> getAllPhotoDataByUser(String userId) throws PhotoScammerServiceException;
 
     /**
-     * Gets all {@link PhotoDataBO}.
-     *
-	 * @param id scammer data id.
-     * @throws PhotoScammerServiceException if error.
-     * */
-    void deletePhotoData(long id) throws PhotoScammerServiceException;
-
-
-    /**
      * Gets {@link PhotoScammerBO} by id.
      *
 	 * @param id scammer data id.
@@ -85,17 +76,18 @@ public interface PhotoScammerService extends Service {
     List<PhotoScammerBO> getAllPhotoScammerData() throws PhotoScammerServiceException;
 
     /**
-     * DeletePhotoScammerData by id.
-     *
-	 * @param id scammer data id.
-     * @throws PhotoScammerServiceException if error.
-     * */
-    void deletePhotoScammerData(long id) throws PhotoScammerServiceException;
-
-    /**
      * Move all user photo data to scammer db.
      *
      * @throws PhotoScammerServiceException if error.
      * */
     void addAllPhotoScammer(String userId) throws PhotoScammerServiceException;
+
+    /**
+     * Check if photo belongs to scammer.
+     *
+     * @param photoId       photo id
+     * @return              {@code true} if this id photo is scammer photo, {@code false} - otherwise
+     * @throws PhotoScammerServiceException if error
+     */
+    boolean isScammerPhoto(long photoId) throws PhotoScammerServiceException;
 }

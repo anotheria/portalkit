@@ -54,13 +54,12 @@ public class PhotoScammerServiceImpl implements PhotoScammerService {
     }
 
     @Override
-    public void deletePhotoData(long id) throws PhotoScammerServiceException {
-
-    }
-
-    @Override
     public PhotoScammerBO getPhotoScammerData(long id) throws PhotoScammerServiceException {
-        return null;
+        try {
+            return photoScammerPersistenceService.getPhotoScammerData(id);
+        } catch (PhotoScammerPersistenceServiceException e) {
+            throw new PhotoScammerServiceException("Unable to get photo scammer by id: " + id, e);
+        }
     }
 
     @Override
@@ -82,11 +81,6 @@ public class PhotoScammerServiceImpl implements PhotoScammerService {
     }
 
     @Override
-    public void deletePhotoScammerData(long id) throws PhotoScammerServiceException {
-
-    }
-
-    @Override
     public void addAllPhotoScammer(String userId) throws PhotoScammerServiceException {
 
         List<PhotoDataBO> photoData = getAllPhotoDataByUser(userId);
@@ -105,6 +99,16 @@ public class PhotoScammerServiceImpl implements PhotoScammerService {
             } catch(PhotoScammerServiceException ea) {
                 continue;
             }
+        }
+    }
+
+    @Override
+    public boolean isScammerPhoto(long photoId) throws PhotoScammerServiceException {
+        PhotoDataBO photoDataBO = getPhotoData(photoId);
+        try {
+            return photoScammerPersistenceService.isPhotoScammerExistsForPerseptiveHash(photoDataBO.getPerseptiveHash());
+        } catch (PhotoScammerPersistenceServiceException e) {
+            throw new PhotoScammerServiceException("Unable to check photo scammer perseptive cash for photo " + photoId, e);
         }
     }
 }

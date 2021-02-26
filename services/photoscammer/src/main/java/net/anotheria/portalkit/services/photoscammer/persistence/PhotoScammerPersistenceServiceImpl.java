@@ -83,13 +83,9 @@ public class PhotoScammerPersistenceServiceImpl implements PhotoScammerPersisten
     }
 
     @Override
-    public void deletePhotoData(long id) throws PhotoScammerPersistenceServiceException {
-
-    }
-
-    @Override
     public PhotoScammerBO getPhotoScammerData(long id) throws PhotoScammerPersistenceServiceException {
-        return null;
+        PhotoScammer exist = entityManager.find(PhotoScammer.class, id);
+        return exist == null ? null : new PhotoScammerBO(exist);
     }
 
     @Override
@@ -117,7 +113,15 @@ public class PhotoScammerPersistenceServiceImpl implements PhotoScammerPersisten
     }
 
     @Override
-    public void deletePhotoScammerData(long id) throws PhotoScammerPersistenceServiceException {
+    public boolean isPhotoScammerExistsForPerseptiveHash(String perseptiveHash) throws PhotoScammerPersistenceServiceException {
+        String queryStr = "select p from PhotoScammer p where p.perseptiveHash = :perseptiveHash";
+        TypedQuery<PhotoScammer> query = entityManager.createQuery(queryStr, PhotoScammer.class)
+                .setParameter("perseptiveHash", perseptiveHash);
 
+        List<PhotoScammer> ret = query.getResultList();
+        if (ret == null)
+            throw new PhotoScammerPersistenceServiceException("Unable to get PhotoScammer by perseptiveHash: " + perseptiveHash);
+
+        return !ret.isEmpty();
     }
 }

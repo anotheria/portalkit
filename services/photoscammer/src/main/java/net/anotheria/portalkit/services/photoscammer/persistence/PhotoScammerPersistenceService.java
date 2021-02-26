@@ -46,14 +46,6 @@ public interface PhotoScammerPersistenceService {
     List<PhotoDataBO> getAllPhotoDataByUser(String userId) throws PhotoScammerPersistenceServiceException;
 
     /**
-     * Gets all {@link PhotoDataBO}.
-     *
-     * @throws PhotoScammerPersistenceServiceException if error.
-     * */
-    void deletePhotoData(long id) throws PhotoScammerPersistenceServiceException;
-
-
-    /**
      * Gets {@link PhotoScammerBO} by id.
      *
      * @return {@link PhotoScammerBO}
@@ -77,9 +69,11 @@ public interface PhotoScammerPersistenceService {
     List<PhotoScammerBO> getAllPhotoScammerData() throws PhotoScammerPersistenceServiceException;
 
     /**
-     * deletePhotoScammerData.
+     * Get {@link PhotoScammerBO} by perseptiveHash.
      *
-     * @throws PhotoScammerPersistenceServiceException if error.
-     * */
-    void deletePhotoScammerData(long id) throws PhotoScammerPersistenceServiceException;
+     * @param perseptiveHash    photo perseptiveHash
+     * @return                  {@code true} if this id photo is scammer photo, {@code false} - otherwise
+     * @throws PhotoScammerPersistenceServiceException  if error
+     */
+    boolean isPhotoScammerExistsForPerseptiveHash(String perseptiveHash) throws PhotoScammerPersistenceServiceException;
 }
