@@ -106,7 +106,10 @@ public class PhotoScammerServiceImpl implements PhotoScammerService {
     public boolean isScammerPhoto(long photoId) throws PhotoScammerServiceException {
         PhotoDataBO photoDataBO = getPhotoData(photoId);
         try {
-            return photoScammerPersistenceService.isPhotoScammerExistsForPerseptiveHash(photoDataBO.getPerseptiveHash());
+            if(photoDataBO != null) {
+                return photoScammerPersistenceService.isPhotoScammerExistsForPerseptiveHash(photoDataBO.getPerseptiveHash());
+            }
+            return false;
         } catch (PhotoScammerPersistenceServiceException e) {
             throw new PhotoScammerServiceException("Unable to check photo scammer perseptive cash for photo " + photoId, e);
         }
