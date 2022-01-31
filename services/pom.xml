@@ -67,6 +67,7 @@
 		<module>bounce</module>
 		<module>coinservice</module>
         <module>photoscammer</module>
+        <module>sessionservice</module>
     </modules>
 
 </project>
