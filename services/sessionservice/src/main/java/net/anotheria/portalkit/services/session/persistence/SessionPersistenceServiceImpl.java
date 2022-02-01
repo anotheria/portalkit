@@ -36,7 +36,7 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     public Session loadSession(String authToken) throws SessionPersistenceServiceException {
         QueryBuilder builder = QueryBuilder.create();
         try {
-            builder.add(CompositeQuery.create(EqualQuery.create("authToken", authToken)));
+            builder.add(CompositeQuery.create(EqualQuery.create("key.authToken", authToken)));
             List<Session> sessions = find(builder.build());
             if (sessions.isEmpty()) {
                 return null;
