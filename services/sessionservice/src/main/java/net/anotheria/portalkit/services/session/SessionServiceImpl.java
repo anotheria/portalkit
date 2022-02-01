@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.session;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.session.bean.Session;
+import net.anotheria.portalkit.services.session.bean.SessionKey;
 import net.anotheria.portalkit.services.session.bean.SessionNotFoundException;
 import net.anotheria.portalkit.services.session.bean.SessionServiceException;
 import net.anotheria.portalkit.services.session.persistence.SessionPersistenceService;
@@ -28,7 +29,7 @@ public class SessionServiceImpl implements SessionService {
     /**
      * Lock manager.
      */
-    private final IdBasedLockManager<String> authTokenLockManager = new SafeIdBasedLockManager<String>();
+    private final IdBasedLockManager<SessionKey> authTokenLockManager = new SafeIdBasedLockManager<SessionKey>();
 
     /**
      *
@@ -42,13 +43,28 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void saveSession(Session session) throws SessionServiceException {
-        IdBasedLock<String> lock = authTokenLockManager.obtainLock(session.getKey());
+    public void createSession(Session session) throws SessionServiceException {
+        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(session.getKey());
         lock.lock();
         try {
+            session.setCreationTimestamp(System.currentTimeMillis());
             persistence.saveSession(session);
         } catch (SessionPersistenceServiceException e) {
-            throw new SessionServiceException("persistence.saveSession failed", e);
+            throw new SessionServiceException("persistence.createSession failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public void updateSession(Session session) throws SessionServiceException {
+        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(session.getKey());
+        lock.lock();
+        try {
+            session.setModifiedTimestamp(System.currentTimeMillis());
+            persistence.saveSession(session);
+        } catch (SessionPersistenceServiceException e) {
+            throw new SessionServiceException("persistence.updateSession failed", e);
         } finally {
             lock.unlock();
         }
@@ -56,7 +72,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Session getSession(String authToken) throws SessionServiceException, SessionNotFoundException {
-        IdBasedLock<String> lock = authTokenLockManager.obtainLock(authToken);
+        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(new SessionKey(authToken));
         lock.lock();
         try {
 

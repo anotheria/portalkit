@@ -1,6 +1,6 @@
 package net.anotheria.portalkit.services.session.bean;
 
-import net.anotheria.anoprise.dataspace.attribute.Attribute;
+import net.anotheria.portalkit.services.session.bean.attribute.Attribute;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -13,30 +13,52 @@ public class Session implements Serializable {
      */
     private static final long serialVersionUID = 518948669364600729L;
 
-    private String key;
+    private SessionKey key;
+
+    private long creationTimestamp;
+
+    private long modifiedTimestamp;
+
+    public Session() {
+    }
+
+    public Session(String authToken) {
+        this.key = new SessionKey(authToken);
+    }
 
     /**
      * Session extra attributes.
      */
     private HashMap<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-    public Session(String key) {
-        this.key = key;
-    }
-
-    public String getKey() {
+    public SessionKey getKey() {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(SessionKey key) {
         this.key = key;
+    }
+
+    public long getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(long creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public long getModifiedTimestamp() {
+        return modifiedTimestamp;
+    }
+
+    public void setModifiedTimestamp(long modifiedTimestamp) {
+        this.modifiedTimestamp = modifiedTimestamp;
     }
 
     /**
      * Get attribute by given name from dataspace.
      *
-     * @param attributeName
-     *            - attribute name
+     * @param attributeName - attribute name
      * @return - attribute or null if no attribute with given name
      */
     public Attribute getAttribute(String attributeName) {
@@ -46,10 +68,8 @@ public class Session implements Serializable {
     /**
      * Add new attribute to dataspace.
      *
-     * @param attributeName
-     *            - new attribute name
-     * @param attribute
-     *            - new attribute
+     * @param attributeName - new attribute name
+     * @param attribute     - new attribute
      */
     public void addAttribute(String attributeName, Attribute attribute) {
         attributes.put(attributeName, attribute);
@@ -58,8 +78,7 @@ public class Session implements Serializable {
     /**
      * Remove attribute by given name from dataspace.
      *
-     * @param attributeName
-     *            - given attribute name
+     * @param attributeName - given attribute name
      */
     public void removeAttribute(String attributeName) {
         attributes.remove(attributeName);

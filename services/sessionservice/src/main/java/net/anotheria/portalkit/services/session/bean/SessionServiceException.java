@@ -2,7 +2,9 @@ package net.anotheria.portalkit.services.session.bean;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 
-public class SessionServiceException extends PortalKitServiceException {
+import java.io.Serializable;
+
+public class SessionServiceException extends PortalKitServiceException implements Serializable {
 
     /**
      * Generated serialVersionUID.

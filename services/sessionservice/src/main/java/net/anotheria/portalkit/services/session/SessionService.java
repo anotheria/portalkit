@@ -12,7 +12,9 @@ import org.distributeme.core.failing.RetryCallOnce;
 @FailBy(strategyClass= RetryCallOnce.class)
 public interface SessionService extends Service {
 
-    void saveSession(Session session) throws SessionServiceException;
+    void createSession(Session session) throws SessionServiceException;
+
+    void updateSession(Session session) throws SessionServiceException;
 
     Session getSession(String authToken) throws SessionServiceException, SessionNotFoundException;
 

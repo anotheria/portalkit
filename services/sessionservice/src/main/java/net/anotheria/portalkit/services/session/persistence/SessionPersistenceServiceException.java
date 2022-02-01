@@ -2,7 +2,9 @@ package net.anotheria.portalkit.services.session.persistence;
 
 import net.anotheria.portalkit.services.common.exceptions.PortalKitPersistenceServiceException;
 
-public class SessionPersistenceServiceException extends PortalKitPersistenceServiceException {
+import java.io.Serializable;
+
+public class SessionPersistenceServiceException extends PortalKitPersistenceServiceException implements Serializable {
 
     /**
      *
