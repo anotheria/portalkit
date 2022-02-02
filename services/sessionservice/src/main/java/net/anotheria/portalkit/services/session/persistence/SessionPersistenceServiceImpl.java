@@ -58,10 +58,13 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
 
     @Override
     public boolean deleteSession(String authToken) throws SessionPersistenceServiceException {
+        QueryBuilder builder = QueryBuilder.create();
         try {
-            return delete(authToken) != null;
+            builder.add(CompositeQuery.create(EqualQuery.create("key.authToken", authToken)));
+            delete(builder.build());
         } catch (StorageException ex) {
-            throw new SessionPersistenceServiceException("deleteDataspace(" + authToken + ") failed", ex);
+            throw new SessionPersistenceServiceException("deleteSession(" + authToken + ") failed", ex);
         }
+        return true;
     }
 }
