@@ -14,6 +14,8 @@ import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class SessionServiceImpl implements SessionService {
 
     /**
@@ -86,6 +88,15 @@ public class SessionServiceImpl implements SessionService {
             throw new SessionServiceException("persistence.loadSession failed", e);
         } finally {
             lock.unlock();
+        }
+    }
+
+    @Override
+    public List<Session> getSessions() throws SessionServiceException {
+        try {
+            return persistence.loadSessions();
+        } catch (SessionPersistenceServiceException ex) {
+            throw new SessionServiceException("persistence.loadSessions failed", ex);
         }
     }
 

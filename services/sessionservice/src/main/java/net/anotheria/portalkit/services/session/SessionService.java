@@ -8,6 +8,8 @@ import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
 
+import java.util.List;
+
 @DistributeMe
 @FailBy(strategyClass= RetryCallOnce.class)
 public interface SessionService extends Service {
@@ -17,6 +19,8 @@ public interface SessionService extends Service {
     void updateSession(Session session) throws SessionServiceException;
 
     Session getSession(String authToken) throws SessionServiceException, SessionNotFoundException;
+
+    List<Session> getSessions() throws SessionServiceException;
 
     boolean deleteSession(String authToken) throws SessionServiceException;
 

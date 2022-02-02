@@ -48,6 +48,15 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     }
 
     @Override
+    public List<Session> loadSessions() throws SessionPersistenceServiceException {
+        try {
+            return findAll();
+        } catch (StorageException ex) {
+            throw new SessionPersistenceServiceException("findAll() failed", ex);
+        }
+    }
+
+    @Override
     public boolean deleteSession(String authToken) throws SessionPersistenceServiceException {
         try {
             return delete(authToken) != null;
