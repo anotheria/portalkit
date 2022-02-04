@@ -63,8 +63,10 @@ public class SessionServiceImpl implements SessionService {
         IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(session.getKey());
         lock.lock();
         try {
-            session.setModifiedTimestamp(System.currentTimeMillis());
-            persistence.saveSession(session);
+            Session toUpdate = persistence.loadSession(session.getKey().getAuthToken());
+            toUpdate.setAttributes(session.getAttributes());
+            toUpdate.setModifiedTimestamp(System.currentTimeMillis());
+            persistence.saveSession(toUpdate);
         } catch (SessionPersistenceServiceException e) {
             throw new SessionServiceException("persistence.updateSession failed", e);
         } finally {
