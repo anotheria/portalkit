@@ -103,7 +103,7 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	@Override
 	public long getTicketsCount(long referenceType, String ticketType) throws ApprovalPersistenceServiceException {
 		String queryStr = "select count(*) from TicketDO t where t.referenceType = :referenceType and t.ticketType = :ticketType";
-		TypedQuery<Long> q = entityManager.createNamedQuery(queryStr, Long.class)
+		TypedQuery<Long> q = entityManager.createQuery(queryStr, Long.class)
 				.setParameter("referenceType", referenceType)
 				.setParameter("ticketType", ticketType);
 
