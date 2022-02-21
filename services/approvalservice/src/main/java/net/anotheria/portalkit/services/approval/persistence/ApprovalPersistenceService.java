@@ -73,11 +73,22 @@ public interface ApprovalPersistenceService {
 	 *
 	 * @param referenceType	reference type.
 	 * @param ticketType 	ticket type.
+	 * @param limit 		limit of tickets
 	 * @return list of {@link TicketDO} instances
 	 * @throws ApprovalPersistenceServiceException if error.
 	 */
-	List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
+	List<TicketDO> getTickets(long referenceType, String ticketType, int limit) throws ApprovalPersistenceServiceException;
 
+
+	/**
+	 * Get count of tickets according to ticket and reference types.
+	 *
+	 * @param referenceType	reference type
+	 * @param ticketType    ticket type
+	 * @return				count of corresponding tickets
+	 * @throws ApprovalPersistenceServiceException if error
+	 */
+	long getTicketsCount(long referenceType, String ticketType) throws ApprovalPersistenceServiceException;
 	/**
 	 * Retrieve list of tickets ordered by timestamp descending. List will contain tickets
 	 * of specified referenceType, ticketType and locale.

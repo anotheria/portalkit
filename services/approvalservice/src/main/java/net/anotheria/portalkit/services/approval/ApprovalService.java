@@ -88,6 +88,27 @@ public interface ApprovalService extends Service {
 	List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType, String agentId) throws ApprovalServiceException;
 
 	/**
+	 * Gets ticket by type with lock for given agent id.
+	 *
+	 * @param referenceType		reference type
+	 * @param ticketType		ticket type
+	 * @param agentId 			agent id
+	 * @param limit 			limit of tickets
+	 * @return list of {@link TicketBO} instances
+	 * @throws ApprovalServiceException if error
+	 */
+	List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType, String agentId, int limit) throws ApprovalServiceException;
+
+	/**
+	 * Get count of tickets according to ticket and reference types.
+	 *
+	 * @param ticketType		reference type
+	 * @param referenceType		ticket type
+	 * @return					count of corresponding tickets
+	 * @throws ApprovalServiceException	if error
+	 */
+	long getTicketsCount(TicketType ticketType, IReferenceType referenceType) throws ApprovalServiceException;
+	/**
 	 * Gets ticket by type and locale with lock for given agent id.
 	 *
 	 * @param ticketType		reference type

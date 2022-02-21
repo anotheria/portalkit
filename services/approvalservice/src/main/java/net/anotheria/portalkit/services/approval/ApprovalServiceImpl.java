@@ -138,13 +138,27 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Override
 	public List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType, String agentId) throws ApprovalServiceException {
+		return getTicketsByType(ticketType, referenceType, agentId, 0);
+	}
+
+	@Override
+	public List<TicketBO> getTicketsByType(TicketType ticketType, IReferenceType referenceType, String agentId, int limit) throws ApprovalServiceException {
 		List<TicketDO> tickets = null;
 		try {
-			tickets = approvalPersistenceService.getTickets(referenceType.getId(), ticketType.name());
+			tickets = approvalPersistenceService.getTickets(referenceType.getId(), ticketType.name(), limit);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}
 		return mapTickets(tickets, agentId);
+	}
+
+	@Override
+	public long getTicketsCount(TicketType ticketType, IReferenceType referenceType) throws ApprovalServiceException {
+		try {
+			return approvalPersistenceService.getTicketsCount(referenceType.getId(), ticketType.name());
+		} catch (ApprovalPersistenceServiceException e) {
+			throw new ApprovalServiceException("Error occurred while getting tickets", e);
+		}
 	}
 
 	@Override
@@ -181,7 +195,7 @@ public class ApprovalServiceImpl implements ApprovalService {
 		List<TicketDO> tickets = null;
 		List<TicketBO> result = new ArrayList<>();
 		try {
-			tickets = approvalPersistenceService.getTickets(referenceType.getId(), ticketType.name());
+			tickets = approvalPersistenceService.getTickets(referenceType.getId(), ticketType.name(), 0);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while getting tickets", e);
 		}

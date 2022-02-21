@@ -45,7 +45,7 @@ import java.util.Objects;
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_LOCALE,
-				query = "select t from TicketDO t where t.locale = :locale and ticketType = 'IN_APPROVAL' order by t.created asc"
+				query = "select t from TicketDO t where t.locale = :locale and t.ticketType = 'IN_APPROVAL' order by t.created asc"
 		),
 		@NamedQuery(
 				name = TicketDO.GET_TICKETS_BY_ACCOUNT_ID,

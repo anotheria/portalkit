@@ -84,11 +84,12 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	}
 
 	@Override
-	public List<TicketDO> getTickets(long referenceType, String ticketType) throws ApprovalPersistenceServiceException {
-
+	public List<TicketDO> getTickets(long referenceType, String ticketType, int limit) throws ApprovalPersistenceServiceException {
 		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_TYPE, TicketDO.class);
 		q.setParameter("referenceType", referenceType);
 		q.setParameter("ticketType", ticketType);
+		if (limit > 0)
+			q.setMaxResults(limit);
 
 		List<TicketDO> tickets = q.getResultList();
 
@@ -97,6 +98,20 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 		}
 
 		return tickets;
+	}
+
+	@Override
+	public long getTicketsCount(long referenceType, String ticketType) throws ApprovalPersistenceServiceException {
+		String queryStr = "select count(*) from TicketDO t where t.referenceType = :referenceType and t.ticketType = :ticketType";
+		TypedQuery<Long> q = entityManager.createNamedQuery(queryStr, Long.class)
+				.setParameter("referenceType", referenceType)
+				.setParameter("ticketType", ticketType);
+
+		Long ret = q.getSingleResult();
+		if (ret == null)
+			throw new ApprovalPersistenceServiceException("Count is null");
+
+		return ret;
 	}
 
 	@Override
