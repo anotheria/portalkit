@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.session.persistence;
 
 import net.anotheria.portalkit.services.session.bean.Session;
+import net.anotheria.portalkit.services.session.bean.attribute.Attribute;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
 import net.anotheria.portalkit.services.storage.mongo.GenericMongoServiceImpl;
 import net.anotheria.portalkit.services.storage.query.CompositeQuery;
@@ -33,10 +34,28 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     }
 
     @Override
-    public Session loadSession(String authToken) throws SessionPersistenceServiceException {
+    public Session loadSessionByAttribute(Attribute attribute) throws SessionPersistenceServiceException {
         QueryBuilder builder = QueryBuilder.create();
         try {
-            builder.add(CompositeQuery.create(EqualQuery.create("key.authToken", authToken)));
+            builder.add(CompositeQuery.create(EqualQuery.create(
+                    "attributes." + attribute.getName() + ".value",
+                    attribute.getValueAsString()))
+            );
+            List<Session> sessions = find(builder.build());
+            if (sessions.isEmpty()) {
+                return null;
+            }
+            return sessions.get(0);
+        } catch (StorageException ex) {
+            throw new SessionPersistenceServiceException("find(" + builder + ") failed", ex);
+        }
+    }
+
+    @Override
+    public Session loadSession(String accountId) throws SessionPersistenceServiceException {
+        QueryBuilder builder = QueryBuilder.create();
+        try {
+            builder.add(CompositeQuery.create(EqualQuery.create("key.accountId", accountId)));
             List<Session> sessions = find(builder.build());
             if (sessions.isEmpty()) {
                 return null;
@@ -57,13 +76,13 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     }
 
     @Override
-    public boolean deleteSession(String authToken) throws SessionPersistenceServiceException {
+    public boolean deleteSession(String accountId) throws SessionPersistenceServiceException {
         QueryBuilder builder = QueryBuilder.create();
         try {
-            builder.add(CompositeQuery.create(EqualQuery.create("key.authToken", authToken)));
+            builder.add(CompositeQuery.create(EqualQuery.create("key.accountId", accountId)));
             delete(builder.build());
         } catch (StorageException ex) {
-            throw new SessionPersistenceServiceException("deleteSession(" + authToken + ") failed", ex);
+            throw new SessionPersistenceServiceException("deleteSession(" + accountId + ") failed", ex);
         }
         return true;
     }
