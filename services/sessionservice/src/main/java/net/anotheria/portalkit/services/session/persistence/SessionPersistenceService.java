@@ -12,7 +12,9 @@ public interface SessionPersistenceService extends Service {
 
     Session loadSessionByAttribute(Attribute attribute) throws SessionPersistenceServiceException;
 
-    Session loadSession(String accountId) throws SessionPersistenceServiceException;
+    List<Session> loadSessionsByAccountId(String accountId) throws SessionPersistenceServiceException;
+
+    Session loadSession(String authToken) throws SessionPersistenceServiceException;
 
     List<Session> loadSessions() throws SessionPersistenceServiceException;
 

@@ -23,8 +23,8 @@ public class Session implements Serializable {
     public Session() {
     }
 
-    public Session(AccountId accountId) {
-        this.key = new SessionKey(accountId.getInternalId());
+    public Session(AccountId accountId, String authToken) {
+        this.key = new SessionKey(accountId.getInternalId(), authToken);
     }
 
     /**

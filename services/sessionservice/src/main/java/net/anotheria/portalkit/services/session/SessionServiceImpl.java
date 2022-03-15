@@ -33,7 +33,7 @@ public class SessionServiceImpl implements SessionService {
     /**
      * Lock manager.
      */
-    private final IdBasedLockManager<SessionKey> authTokenLockManager = new SafeIdBasedLockManager<SessionKey>();
+    private final IdBasedLockManager<String> authTokenLockManager = new SafeIdBasedLockManager<String>();
 
     /**
      *
@@ -48,7 +48,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void createSession(Session session) throws SessionServiceException {
-        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(session.getKey());
+        IdBasedLock<String> lock = authTokenLockManager.obtainLock(session.getKey().getAuthToken());
         lock.lock();
         try {
             session.setCreationTimestamp(System.currentTimeMillis());
@@ -62,10 +62,10 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public void updateSession(Session session) throws SessionServiceException {
-        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(session.getKey());
+        IdBasedLock<String> lock = authTokenLockManager.obtainLock(session.getKey().getAuthToken());
         lock.lock();
         try {
-            Session toUpdate = persistence.loadSession(session.getKey().getAccountId());
+            Session toUpdate = persistence.loadSession(session.getKey().getAuthToken());
             toUpdate.setAttributes(session.getAttributes());
             toUpdate.setModifiedTimestamp(System.currentTimeMillis());
             persistence.saveSession(toUpdate);
@@ -77,14 +77,27 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session getSession(AccountId accountId) throws SessionServiceException, SessionNotFoundException {
-        IdBasedLock<SessionKey> lock = authTokenLockManager.obtainLock(new SessionKey(accountId.getInternalId()));
+    public List<Session> getSessionsByAccountId(AccountId accountId) throws SessionServiceException {
+        IdBasedLock<String> lock = authTokenLockManager.obtainLock(accountId.getInternalId());
+        lock.lock();
+        try {
+            return persistence.loadSessionsByAccountId(accountId.getInternalId());
+        } catch (SessionPersistenceServiceException e) {
+            throw new SessionServiceException("persistence.loadSession failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public Session getSessionByToken(String authToken) throws SessionNotFoundException, SessionServiceException {
+        IdBasedLock<String> lock = authTokenLockManager.obtainLock(authToken);
         lock.lock();
         try {
 
-            Session session = persistence.loadSession(accountId.getInternalId());
+            Session session = persistence.loadSession(authToken);
             if (session == null) {
-                throw new SessionNotFoundException("Cannot find session for accountId" + accountId);
+                throw new SessionNotFoundException("Cannot find session for auth token" + authToken);
             }
 
             return session;

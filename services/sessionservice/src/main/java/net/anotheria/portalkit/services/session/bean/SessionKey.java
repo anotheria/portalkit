@@ -1,7 +1,5 @@
 package net.anotheria.portalkit.services.session.bean;
 
-import net.anotheria.portalkit.services.common.AccountId;
-
 import java.io.Serializable;
 
 public class SessionKey implements Serializable {
@@ -16,11 +14,17 @@ public class SessionKey implements Serializable {
      */
     private String accountId;
 
+    /**
+     * Auth token
+     */
+    private String authToken;
+
     public SessionKey() {
     }
 
-    public SessionKey(String accountId) {
+    public SessionKey(String accountId, String authToken) {
         this.accountId = accountId;
+        this.authToken = authToken;
     }
 
     public String getAccountId() {
@@ -31,6 +35,14 @@ public class SessionKey implements Serializable {
         this.accountId = accountId;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,18 +50,22 @@ public class SessionKey implements Serializable {
 
         SessionKey that = (SessionKey) o;
 
-        return accountId != null ? accountId.equals(that.accountId) : that.accountId == null;
+        if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) return false;
+        return authToken != null ? authToken.equals(that.authToken) : that.authToken == null;
     }
 
     @Override
     public int hashCode() {
-        return accountId != null ? accountId.hashCode() : 0;
+        int result = accountId != null ? accountId.hashCode() : 0;
+        result = 31 * result + (authToken != null ? authToken.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "SessionKey{" +
                 "accountId='" + accountId + '\'' +
+                ", authToken='" + authToken + '\'' +
                 '}';
     }
 }

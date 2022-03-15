@@ -20,7 +20,9 @@ public interface SessionService extends Service {
 
     void updateSession(Session session) throws SessionServiceException;
 
-    Session getSession(AccountId accountId) throws SessionServiceException, SessionNotFoundException;
+    List<Session> getSessionsByAccountId(AccountId accountId) throws SessionServiceException;
+
+    Session getSessionByToken(String authToken) throws SessionNotFoundException, SessionServiceException;
 
     Session getSessionByAttribute(Attribute attribute) throws SessionServiceException, SessionNotFoundException;
 
