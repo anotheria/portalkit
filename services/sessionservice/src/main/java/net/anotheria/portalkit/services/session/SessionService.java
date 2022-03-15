@@ -28,6 +28,6 @@ public interface SessionService extends Service {
 
     List<Session> getSessions() throws SessionServiceException;
 
-    boolean deleteSession(AccountId accountId) throws SessionServiceException;
+    boolean deleteSession(String authToken) throws SessionServiceException;
 
 }

@@ -133,9 +133,9 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public boolean deleteSession(AccountId accountId) throws SessionServiceException {
+    public boolean deleteSession(String authToken) throws SessionServiceException {
         try {
-            return persistence.deleteSession(accountId.getInternalId());
+            return persistence.deleteSession(authToken);
         } catch (SessionPersistenceServiceException e) {
             throw new SessionServiceException("persistence failed ", e);
         }
