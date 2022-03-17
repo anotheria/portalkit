@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.services.session;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.session.bean.Session;
 import net.anotheria.portalkit.services.session.bean.SessionNotFoundException;
 import net.anotheria.portalkit.services.session.bean.SessionServiceException;
@@ -20,9 +19,9 @@ public interface SessionService extends Service {
 
     void updateSession(Session session) throws SessionServiceException;
 
-    List<Session> getSessionsByAccountId(AccountId accountId) throws SessionServiceException;
+    void updateSessionByAttribute(Session session, Attribute attribute) throws SessionServiceException;
 
-    Session getSessionByToken(String authToken) throws SessionNotFoundException, SessionServiceException;
+    Session getSessionByToken(String authToken) throws SessionServiceException, SessionNotFoundException;
 
     Session getSessionByAttribute(Attribute attribute) throws SessionServiceException, SessionNotFoundException;
 

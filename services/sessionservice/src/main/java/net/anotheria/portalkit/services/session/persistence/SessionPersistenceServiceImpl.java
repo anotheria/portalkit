@@ -52,17 +52,6 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     }
 
     @Override
-    public List<Session> loadSessionsByAccountId(String accountId) throws SessionPersistenceServiceException {
-        QueryBuilder builder = QueryBuilder.create();
-        try {
-            builder.add(CompositeQuery.create(EqualQuery.create("key.accountId", accountId)));
-            return find(builder.build());
-        } catch (StorageException ex) {
-            throw new SessionPersistenceServiceException("find(" + builder + ") failed", ex);
-        }
-    }
-
-    @Override
     public Session loadSession(String authToken) throws SessionPersistenceServiceException {
         QueryBuilder builder = QueryBuilder.create();
         try {

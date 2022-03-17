@@ -4,7 +4,6 @@ import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.session.bean.Session;
-import net.anotheria.portalkit.services.session.bean.SessionKey;
 import net.anotheria.portalkit.services.session.bean.SessionNotFoundException;
 import net.anotheria.portalkit.services.session.bean.SessionServiceException;
 import net.anotheria.portalkit.services.session.bean.attribute.Attribute;
@@ -77,32 +76,36 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<Session> getSessionsByAccountId(AccountId accountId) throws SessionServiceException {
-        IdBasedLock<String> lock = authTokenLockManager.obtainLock(accountId.getInternalId());
+    public void updateSessionByAttribute(Session session, Attribute attribute) throws SessionServiceException {
+        IdBasedLock<String> lock = authTokenLockManager.obtainLock(session.getKey().getAuthToken());
         lock.lock();
         try {
-            return persistence.loadSessionsByAccountId(accountId.getInternalId());
-        } catch (SessionPersistenceServiceException e) {
-            throw new SessionServiceException("persistence.loadSession failed", e);
+            Session toUpdate = persistence.loadSessionByAttribute(attribute);
+            persistence.deleteSession(toUpdate.getKey().getAuthToken());
+            session.getKey().setAuthToken(toUpdate.getKey().getAuthToken());
+            session.setModifiedTimestamp(System.currentTimeMillis());
+            persistence.saveSession(session);
+        } catch (SessionPersistenceServiceException ex) {
+            throw new SessionServiceException("Cannot update session by attribute", ex);
         } finally {
             lock.unlock();
         }
     }
 
     @Override
-    public Session getSessionByToken(String authToken) throws SessionNotFoundException, SessionServiceException {
+    public Session getSessionByToken(String authToken) throws SessionServiceException, SessionNotFoundException {
         IdBasedLock<String> lock = authTokenLockManager.obtainLock(authToken);
         lock.lock();
         try {
 
             Session session = persistence.loadSession(authToken);
             if (session == null) {
-                throw new SessionNotFoundException("Cannot find session for auth token" + authToken);
+                throw new SessionNotFoundException("Cannot get session by accountId: " + authToken);
             }
 
             return session;
-        } catch (SessionPersistenceServiceException e) {
-            throw new SessionServiceException("persistence.loadSession failed", e);
+        } catch (SessionPersistenceServiceException ex) {
+            throw new SessionServiceException("persistence.loadSession failed", ex);
         } finally {
             lock.unlock();
         }

@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.session.bean;
 
-import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.session.bean.attribute.Attribute;
 
 import java.io.Serializable;
@@ -23,8 +22,8 @@ public class Session implements Serializable {
     public Session() {
     }
 
-    public Session(AccountId accountId, String authToken) {
-        this.key = new SessionKey(accountId.getInternalId(), authToken);
+    public Session(String authToken) {
+        this.key = new SessionKey(authToken);
     }
 
     /**
