@@ -34,7 +34,7 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
     }
 
     @Override
-    public Session loadSessionByAttribute(Attribute attribute) throws SessionPersistenceServiceException {
+    public List<Session> loadSessionsByAttribute(Attribute attribute) throws SessionPersistenceServiceException {
         QueryBuilder builder = QueryBuilder.create();
         try {
             builder.add(CompositeQuery.create(EqualQuery.create(
@@ -45,7 +45,7 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
             if (sessions.isEmpty()) {
                 return null;
             }
-            return sessions.get(0);
+            return sessions;
         } catch (StorageException ex) {
             throw new SessionPersistenceServiceException("find(" + builder + ") failed", ex);
         }

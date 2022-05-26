@@ -10,7 +10,7 @@ public interface SessionPersistenceService extends Service {
 
     void saveSession(Session session) throws SessionPersistenceServiceException;
 
-    Session loadSessionByAttribute(Attribute attribute) throws SessionPersistenceServiceException;
+    List<Session> loadSessionsByAttribute(Attribute attribute) throws SessionPersistenceServiceException;
 
     Session loadSession(String authToken) throws SessionPersistenceServiceException;
 

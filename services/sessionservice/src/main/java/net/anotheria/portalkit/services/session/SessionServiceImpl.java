@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.session;
 
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.session.bean.Session;
 import net.anotheria.portalkit.services.session.bean.SessionNotFoundException;
 import net.anotheria.portalkit.services.session.bean.SessionServiceException;
@@ -76,23 +75,6 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public void updateSessionByAttribute(Session session, Attribute attribute) throws SessionServiceException {
-        IdBasedLock<String> lock = authTokenLockManager.obtainLock(session.getKey().getAuthToken());
-        lock.lock();
-        try {
-            Session toUpdate = persistence.loadSessionByAttribute(attribute);
-            persistence.deleteSession(toUpdate.getKey().getAuthToken());
-            session.getKey().setAuthToken(toUpdate.getKey().getAuthToken());
-            session.setModifiedTimestamp(System.currentTimeMillis());
-            persistence.saveSession(session);
-        } catch (SessionPersistenceServiceException ex) {
-            throw new SessionServiceException("Cannot update session by attribute", ex);
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    @Override
     public Session getSessionByToken(String authToken) throws SessionServiceException, SessionNotFoundException {
         IdBasedLock<String> lock = authTokenLockManager.obtainLock(authToken);
         lock.lock();
@@ -112,15 +94,9 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public Session getSessionByAttribute(Attribute attribute) throws SessionServiceException, SessionNotFoundException {
+    public List<Session> getSessionsByAttribute(Attribute attribute) throws SessionServiceException {
         try {
-
-            Session session = persistence.loadSessionByAttribute(attribute);
-            if (session == null) {
-                throw new SessionNotFoundException("Cannot get session by provided attribute:" + attribute);
-            }
-
-            return session;
+            return persistence.loadSessionsByAttribute(attribute);
         } catch (SessionPersistenceServiceException e) {
             throw new SessionServiceException("persistence.loadSession failed", e);
         }
