@@ -41,11 +41,7 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
                     "attributes." + attribute.getName() + ".value",
                     attribute.getValueAsString()))
             );
-            List<Session> sessions = find(builder.build());
-            if (sessions.isEmpty()) {
-                return null;
-            }
-            return sessions;
+            return find(builder.build());
         } catch (StorageException ex) {
             throw new SessionPersistenceServiceException("find(" + builder + ") failed", ex);
         }
