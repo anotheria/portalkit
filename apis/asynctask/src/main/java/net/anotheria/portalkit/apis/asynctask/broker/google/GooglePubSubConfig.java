@@ -12,77 +12,52 @@ public class GooglePubSubConfig {
 
     private static final Logger log = LoggerFactory.getLogger(AmazonSqsConfig.class);
 
-    /**
-     * If enabled amazon client will try to get credentials from node environment.
-     */
     @Configure
-    private boolean useEnvironmentCredentials;
+    private String projectId;
 
     @Configure
-    private String accessKey;
+    private String topicId;
 
     @Configure
-    private String secretKey;
+    private String subscriptionId;
 
     @Configure
-    private String region;
-
-    @Configure
-    private String queueName;
-
-    @Configure
-    private int messageDelaySeconds = 5;
+    private int maxMessagesPerPacket = 10;
 
     public static GooglePubSubConfig getInstance() {
         return GooglePubSubConfig.HolderClass.INSTANCE;
     }
 
-    public boolean isUseEnvironmentCredentials() {
-        return useEnvironmentCredentials;
+    public String getProjectId() {
+        return projectId;
     }
 
-    public void setUseEnvironmentCredentials(boolean useEnvironmentCredentials) {
-        this.useEnvironmentCredentials = useEnvironmentCredentials;
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
-    public String getAccessKey() {
-        return accessKey;
+    public String getTopicId() {
+        return topicId;
     }
 
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
+    public void setTopicId(String topicId) {
+        this.topicId = topicId;
     }
 
-    public String getSecretKey() {
-        return secretKey;
+    public String getSubscriptionId() {
+        return subscriptionId;
     }
 
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
-    public String getRegion() {
-        return region;
+    public int getMaxMessagesPerPacket() {
+        return maxMessagesPerPacket;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-    public String getQueueName() {
-        return queueName;
-    }
-
-    public void setQueueName(String queueName) {
-        this.queueName = queueName;
-    }
-
-    public int getMessageDelaySeconds() {
-        return messageDelaySeconds;
-    }
-
-    public void setMessageDelaySeconds(int messageDelaySeconds) {
-        this.messageDelaySeconds = messageDelaySeconds;
+    public void setMaxMessagesPerPacket(int maxMessagesPerPacket) {
+        this.maxMessagesPerPacket = maxMessagesPerPacket;
     }
 
     /**
@@ -108,13 +83,10 @@ public class GooglePubSubConfig {
     @Override
     public String toString() {
         return "GooglePubSubConfig{" +
-                "devEnvironment=" + useEnvironmentCredentials +
-                ", accessKey='" + accessKey + '\'' +
-                ", secretKey='" + secretKey + '\'' +
-                ", region='" + region + '\'' +
-                ", queueName='" + queueName + '\'' +
-                ", messageDelaySeconds=" + messageDelaySeconds +
+                "projectId='" + projectId + '\'' +
+                ", topicId='" + topicId + '\'' +
+                ", subscriptionId='" + subscriptionId + '\'' +
+                ", maxMessagesPerPacket=" + maxMessagesPerPacket +
                 '}';
     }
-
 }
