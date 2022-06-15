@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.common.spring;
 
 import com.googlecode.flyway.core.Flyway;
 import net.anotheria.portalkit.services.common.flyway.FlywayUtils;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.configureme.ConfigurationManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
