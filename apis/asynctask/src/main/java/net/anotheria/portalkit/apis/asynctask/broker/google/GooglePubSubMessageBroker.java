@@ -91,7 +91,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
                             .build();
 
             try (SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings)) {
-                String subscriptionName = ProjectSubscriptionName.format(config.getTopicId(), config.getSubscriptionId());
+                String subscriptionName = ProjectSubscriptionName.format(config.getProjectId(), config.getSubscriptionId());
                 PullRequest pullRequest =
                         PullRequest.newBuilder()
                                 .setMaxMessages(config.getMaxMessagesPerPacket())
