@@ -6,6 +6,7 @@ import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.*;
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.apis.asynctask.broker.AsyncTaskConfig;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,13 @@ public class GooglePubSubMessageBrokerInitializer {
     private static final Logger log = LoggerFactory.getLogger(GooglePubSubMessageBrokerInitializer.class);
 
     public static void initialize(Map<String, AsyncTaskConfig> taskConfigsByType) throws APIException {
+        try {
+            validateConfig();
+        } catch (Exception any) {
+            log.error(any.getMessage(), any);
+            throw new APIException(any.getMessage(), any);
+        }
+
         if (GooglePubSubConfig.getInstance().isAutoCreate()) {
             initializeTopics(taskConfigsByType);
             initializeSubscriptions(taskConfigsByType);
@@ -114,5 +122,14 @@ public class GooglePubSubMessageBrokerInitializer {
     }
     // SUBSCRIPTIONS RELATED METHODS -- END
 
+    private static void validateConfig() {
+        GooglePubSubConfig config = GooglePubSubConfig.getInstance();
+        if (StringUtils.isEmpty(config.getTopicPrefix())) {
+            throw new IllegalArgumentException("Topic prefix is null. Please, check config file");
+        }
+        if (StringUtils.isEmpty(config.getSubscriptionPrefix())) {
+            throw new IllegalArgumentException("Subscription prefix is null. Please, check config file");
+        }
+    }
 
 }
