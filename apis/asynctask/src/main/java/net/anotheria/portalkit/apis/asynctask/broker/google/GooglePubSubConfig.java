@@ -13,6 +13,9 @@ public class GooglePubSubConfig {
     private static final Logger log = LoggerFactory.getLogger(AmazonSqsConfig.class);
 
     @Configure
+    private boolean autoCreate = Boolean.TRUE;
+
+    @Configure
     private String projectId;
 
     @Configure
@@ -26,6 +29,14 @@ public class GooglePubSubConfig {
 
     public static GooglePubSubConfig getInstance() {
         return GooglePubSubConfig.HolderClass.INSTANCE;
+    }
+
+    public boolean isAutoCreate() {
+        return autoCreate;
+    }
+
+    public void setAutoCreate(boolean autoCreate) {
+        this.autoCreate = autoCreate;
     }
 
     public String getProjectId() {
@@ -83,7 +94,8 @@ public class GooglePubSubConfig {
     @Override
     public String toString() {
         return "GooglePubSubConfig{" +
-                "projectId='" + projectId + '\'' +
+                "autoCreate=" + autoCreate +
+                ", projectId='" + projectId + '\'' +
                 ", topicId='" + topicId + '\'' +
                 ", subscriptionId='" + subscriptionId + '\'' +
                 ", maxMessagesPerPacket=" + maxMessagesPerPacket +

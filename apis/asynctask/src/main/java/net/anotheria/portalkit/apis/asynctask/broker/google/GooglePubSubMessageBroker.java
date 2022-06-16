@@ -25,9 +25,16 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
     private static final Logger log = LoggerFactory.getLogger(AmazonSqsMessageBroker.class);
 
     private final Map<String, AsyncTaskConfig> taskConfigByType;
+    private final String environmentName;
 
-    GooglePubSubMessageBroker(Map<String, AsyncTaskConfig> taskConfigByType) {
+    GooglePubSubMessageBroker(Map<String, AsyncTaskConfig> taskConfigByType, String environmentName) {
         this.taskConfigByType = taskConfigByType;
+        this.environmentName = environmentName;
+        try {
+            GooglePubSubMessageBrokerInitializer.initialize(taskConfigByType, environmentName);
+        } catch (Exception any) {
+            log.error("Cannot initialize GooglePubSubMessageBroker", any);
+        }
     }
 
     @Override
@@ -35,7 +42,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
         log.info("sendInternal({}) started", asyncTask.getTaskType());
         try {
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
-            TopicName topicName = TopicName.of(config.getProjectId(), config.getTopicId());
+            TopicName topicName = TopicName.of(config.getProjectId(), environmentName + "_" + asyncTask.getTaskType());
 
             Publisher publisher = null;
             try {
@@ -80,6 +87,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
     @Override
     public List<AsyncTask> getTasks() throws APIException {
         try {
+            List<AsyncTask> result = new LinkedList<>();
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
 
             SubscriberStubSettings subscriberStubSettings =
@@ -90,57 +98,60 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
                                             .build())
                             .build();
 
-            try (SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings)) {
-                String subscriptionName = ProjectSubscriptionName.format(config.getProjectId(), config.getSubscriptionId());
-                PullRequest pullRequest =
-                        PullRequest.newBuilder()
-                                .setMaxMessages(config.getMaxMessagesPerPacket())
-                                .setSubscription(subscriptionName)
-                                .build();
+            for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigByType.entrySet()) {
+                try (SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings)) {
+                    String subscriptionName = ProjectSubscriptionName.format(
+                            config.getProjectId(), environmentName + "_subscription_" + entry.getKey()
+                    );
+                    PullRequest pullRequest =
+                            PullRequest.newBuilder()
+                                    .setMaxMessages(config.getMaxMessagesPerPacket())
+                                    .setSubscription(subscriptionName)
+                                    .build();
 
-                PullResponse pullResponse = subscriber.pullCallable().call(pullRequest);
+                    PullResponse pullResponse = subscriber.pullCallable().call(pullRequest);
 
-                if (pullResponse.getReceivedMessagesList().isEmpty()) {
-                    log.info("Message list is empty");
-                    return new LinkedList<>();
+                    if (pullResponse.getReceivedMessagesList().isEmpty()) {
+                        log.info("Message list is empty for {}", entry.getKey());
+                        continue;
+                    }
+
+                    List<String> ackIds = new ArrayList<>();
+                    for (ReceivedMessage message : pullResponse.getReceivedMessagesList()) {
+                        Map<String, String> messageAttributes = message.getMessage().getAttributesMap();
+                        String taskType = messageAttributes.get("taskType");
+                        if (taskType == null) {
+                            continue;
+                        }
+
+                        AsyncTaskConfig asyncTaskConfig = taskConfigByType.get(taskType);
+                        if (asyncTaskConfig == null) {
+                            log.error("no asyncTaskConfig for task: " + taskType);
+                            continue;
+                        }
+
+                        AsyncTaskDeserializer deserializer = asyncTaskConfig.getDeserializer();
+                        if (deserializer == null) {
+                            log.error("no deserializer for task: " + taskType);
+                            continue;
+                        }
+
+                        result.add(deserializer.deserialize(message.getMessage().getData().toStringUtf8()));
+                        ackIds.add(message.getAckId());
+                    }
+
+                    AcknowledgeRequest acknowledgeRequest =
+                            AcknowledgeRequest.newBuilder()
+                                    .setSubscription(subscriptionName)
+                                    .addAllAckIds(ackIds)
+                                    .build();
+
+                    subscriber.acknowledgeCallable().call(acknowledgeRequest);
                 }
-
-                List<AsyncTask> result = new ArrayList<>(pullResponse.getReceivedMessagesList().size());
-                List<String> ackIds = new ArrayList<>();
-                for (ReceivedMessage message : pullResponse.getReceivedMessagesList()) {
-                    Map<String, String> messageAttributes = message.getMessage().getAttributesMap();
-                    String taskType = messageAttributes.get("taskType");
-                    if (taskType == null) {
-                        continue;
-                    }
-
-                    AsyncTaskConfig asyncTaskConfig = taskConfigByType.get(taskType);
-                    if (asyncTaskConfig == null) {
-                        log.error("no asyncTaskConfig for task: " + taskType);
-                        continue;
-                    }
-
-                    AsyncTaskDeserializer deserializer = asyncTaskConfig.getDeserializer();
-                    if (deserializer == null) {
-                        log.error("no deserializer for task: " + taskType);
-                        continue;
-                    }
-
-                    result.add(deserializer.deserialize(message.getMessage().getData().toStringUtf8()));
-                    ackIds.add(message.getAckId());
-                }
-
-                AcknowledgeRequest acknowledgeRequest =
-                        AcknowledgeRequest.newBuilder()
-                                .setSubscription(subscriptionName)
-                                .addAllAckIds(ackIds)
-                                .build();
-
-                subscriber.acknowledgeCallable().call(acknowledgeRequest);
-
-                return result;
             }
+            return result;
         } catch (Exception any) {
+            log.error("Cannot pull async tasks", any);
             throw new APIException(any.getMessage(), any);
         }
     }
