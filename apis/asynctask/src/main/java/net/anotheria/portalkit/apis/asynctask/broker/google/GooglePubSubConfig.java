@@ -62,17 +62,11 @@ public class GooglePubSubConfig {
     }
 
     public String getSubscriptionPrefix() {
-        return subscriptionPrefix;
+        return subscriptionPrefix + "_subscription";
     }
 
     public void setSubscriptionPrefix(String subscriptionPrefix) {
         this.subscriptionPrefix = subscriptionPrefix;
-    }
-
-    @AfterConfiguration
-    @AfterReConfiguration
-    public void setSubscriptionPrefix() {
-        this.subscriptionPrefix = this.subscriptionPrefix + "_subscription";
     }
 
     public int getMaxMessagesPerPacket() {
