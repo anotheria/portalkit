@@ -1,7 +1,10 @@
 package net.anotheria.portalkit.apis.asynctask.broker.google;
 
 import net.anotheria.portalkit.apis.asynctask.broker.amazon.AmazonSqsConfig;
+import net.anotheria.util.TimeUnit;
 import org.configureme.ConfigurationManager;
+import org.configureme.annotations.AfterConfiguration;
+import org.configureme.annotations.AfterReConfiguration;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.slf4j.Logger;
@@ -19,13 +22,16 @@ public class GooglePubSubConfig {
     private String projectId;
 
     @Configure
-    private String topicId;
+    private String topicPrefix;
 
     @Configure
-    private String subscriptionId;
+    private String subscriptionPrefix;
 
     @Configure
     private int maxMessagesPerPacket = 10;
+
+    @Configure
+    private int maximumMessageSize = 24 * 1024 * 1024;
 
     public static GooglePubSubConfig getInstance() {
         return GooglePubSubConfig.HolderClass.INSTANCE;
@@ -47,20 +53,26 @@ public class GooglePubSubConfig {
         this.projectId = projectId;
     }
 
-    public String getTopicId() {
-        return topicId;
+    public String getTopicPrefix() {
+        return topicPrefix;
     }
 
-    public void setTopicId(String topicId) {
-        this.topicId = topicId;
+    public void setTopicPrefix(String topicPrefix) {
+        this.topicPrefix = topicPrefix;
     }
 
-    public String getSubscriptionId() {
-        return subscriptionId;
+    public String getSubscriptionPrefix() {
+        return subscriptionPrefix;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
-        this.subscriptionId = subscriptionId;
+    public void setSubscriptionPrefix(String subscriptionPrefix) {
+        this.subscriptionPrefix = subscriptionPrefix;
+    }
+
+    @AfterConfiguration
+    @AfterReConfiguration
+    public void setSubscriptionPrefix() {
+        this.subscriptionPrefix = this.subscriptionPrefix + "_subscription";
     }
 
     public int getMaxMessagesPerPacket() {
@@ -69,6 +81,14 @@ public class GooglePubSubConfig {
 
     public void setMaxMessagesPerPacket(int maxMessagesPerPacket) {
         this.maxMessagesPerPacket = maxMessagesPerPacket;
+    }
+
+    public int getMaximumMessageSize() {
+        return maximumMessageSize;
+    }
+
+    public void setMaximumMessageSize(int maximumMessageSize) {
+        this.maximumMessageSize = maximumMessageSize;
     }
 
     /**
@@ -96,8 +116,6 @@ public class GooglePubSubConfig {
         return "GooglePubSubConfig{" +
                 "autoCreate=" + autoCreate +
                 ", projectId='" + projectId + '\'' +
-                ", topicId='" + topicId + '\'' +
-                ", subscriptionId='" + subscriptionId + '\'' +
                 ", maxMessagesPerPacket=" + maxMessagesPerPacket +
                 '}';
     }

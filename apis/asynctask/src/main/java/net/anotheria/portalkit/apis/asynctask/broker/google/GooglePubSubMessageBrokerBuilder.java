@@ -20,12 +20,12 @@ public class GooglePubSubMessageBrokerBuilder {
         return this;
     }
 
-    public GooglePubSubMessageBroker build(String environmentName) {
+    public GooglePubSubMessageBroker build() {
         Map<String, AsyncTaskConfig> taskConfigByType = new HashMap<>(taskConfigs.size());
         for (AsyncTaskConfig taskConfig : taskConfigs) {
             taskConfigByType.putIfAbsent(taskConfig.getTaskType(), taskConfig);
         }
-        return new GooglePubSubMessageBroker(taskConfigByType, environmentName);
+        return new GooglePubSubMessageBroker(taskConfigByType);
     }
 
 }

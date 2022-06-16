@@ -25,13 +25,11 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
     private static final Logger log = LoggerFactory.getLogger(AmazonSqsMessageBroker.class);
 
     private final Map<String, AsyncTaskConfig> taskConfigByType;
-    private final String environmentName;
 
-    GooglePubSubMessageBroker(Map<String, AsyncTaskConfig> taskConfigByType, String environmentName) {
+    GooglePubSubMessageBroker(Map<String, AsyncTaskConfig> taskConfigByType) {
         this.taskConfigByType = taskConfigByType;
-        this.environmentName = environmentName;
         try {
-            GooglePubSubMessageBrokerInitializer.initialize(taskConfigByType, environmentName);
+            GooglePubSubMessageBrokerInitializer.initialize(taskConfigByType);
         } catch (Exception any) {
             log.error("Cannot initialize GooglePubSubMessageBroker", any);
         }
@@ -42,7 +40,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
         log.info("sendInternal({}) started", asyncTask.getTaskType());
         try {
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
-            TopicName topicName = TopicName.of(config.getProjectId(), environmentName + "_" + asyncTask.getTaskType());
+            TopicName topicName = TopicName.of(config.getProjectId(), GooglePubSubConfig.getInstance().getTopicPrefix() + "_" + asyncTask.getTaskType());
 
             Publisher publisher = null;
             try {
@@ -76,7 +74,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
             } finally {
                 if (publisher != null) {
                     publisher.shutdown();
-                    publisher.awaitTermination(1, TimeUnit.MINUTES);
+                    publisher.awaitTermination(30, TimeUnit.SECONDS);
                 }
             }
         } catch (Exception any) {
@@ -94,14 +92,14 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
                     SubscriberStubSettings.newBuilder()
                             .setTransportChannelProvider(
                                     SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
-                                            .setMaxInboundMessageSize(20 * 1024 * 1024) // 20MB (maximum message size).
+                                            .setMaxInboundMessageSize(GooglePubSubConfig.getInstance().getMaximumMessageSize())
                                             .build())
                             .build();
 
             for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigByType.entrySet()) {
                 try (SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings)) {
                     String subscriptionName = ProjectSubscriptionName.format(
-                            config.getProjectId(), environmentName + "_subscription_" + entry.getKey()
+                            config.getProjectId(), GooglePubSubConfig.getInstance().getSubscriptionPrefix() + "_" + entry.getKey()
                     );
                     PullRequest pullRequest =
                             PullRequest.newBuilder()

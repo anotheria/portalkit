@@ -116,6 +116,7 @@ public class AsyncTaskQueueProcessor implements Runnable {
             } catch (Throwable e) {
                 producer.getDefaultStats().incErrorTasks();
                 LOGGER.error("Unable to execute async task", e);
+                sleepTime();
             }
         }
     }

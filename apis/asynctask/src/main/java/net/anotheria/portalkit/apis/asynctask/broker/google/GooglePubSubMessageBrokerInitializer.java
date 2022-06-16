@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.apis.asynctask.broker.google;
 
+import com.google.api.gax.rpc.NotFoundException;
 import com.google.cloud.pubsub.v1.SubscriptionAdminClient;
 import com.google.cloud.pubsub.v1.TopicAdminClient;
 import com.google.pubsub.v1.*;
@@ -16,20 +17,17 @@ public class GooglePubSubMessageBrokerInitializer {
 
     private static final Logger log = LoggerFactory.getLogger(GooglePubSubMessageBrokerInitializer.class);
 
-    public static void initialize(Map<String, AsyncTaskConfig> taskConfigsByType, String environmentName) throws APIException {
+    public static void initialize(Map<String, AsyncTaskConfig> taskConfigsByType) throws APIException {
         if (GooglePubSubConfig.getInstance().isAutoCreate()) {
-            initializeTopics(taskConfigsByType, environmentName);
-            initializeSubscriptions(taskConfigsByType, environmentName);
+            initializeTopics(taskConfigsByType);
+            initializeSubscriptions(taskConfigsByType);
         }
     }
 
-    private static void initializeTopics(Map<String, AsyncTaskConfig> taskConfigsByType, String environmentName) throws APIException {
+    private static void initializeTopics(Map<String, AsyncTaskConfig> taskConfigsByType) throws APIException {
         try {
-            Set<String> topics = getTopicsList();
             for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigsByType.entrySet()) {
-                if (!topics.contains(environmentName + "_" + entry.getKey())) {
-                    createTopic(environmentName + "_" + entry.getKey());
-                }
+                createTopic(GooglePubSubConfig.getInstance().getTopicPrefix() + "_" + entry.getKey());
             }
         } catch (Exception any) {
             log.error("Cannot initialize topic", any);
@@ -37,15 +35,12 @@ public class GooglePubSubMessageBrokerInitializer {
         }
     }
 
-    private static void initializeSubscriptions(Map<String, AsyncTaskConfig> taskConfigsByType, String environmentName) throws APIException {
+    private static void initializeSubscriptions(Map<String, AsyncTaskConfig> taskConfigsByType) throws APIException {
         try {
-            Set<String> subscriptions = getSubscriptionsList();
             for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigsByType.entrySet()) {
-                String subscriptionName = environmentName + "_subscription_" + entry.getKey();
-                String topicName = environmentName + "_" + entry.getKey();
-                if (!subscriptions.contains(subscriptionName)) {
-                    createPullSubscription(subscriptionName, topicName);
-                }
+                String subscriptionName = GooglePubSubConfig.getInstance().getSubscriptionPrefix() + "_" + entry.getKey();
+                String topicName = GooglePubSubConfig.getInstance().getTopicPrefix() + "_" + entry.getKey();
+                createPullSubscription(subscriptionName, topicName);
             }
         } catch (Exception any) {
             log.error("Cannot initialize subscriptions", any);
@@ -71,8 +66,12 @@ public class GooglePubSubMessageBrokerInitializer {
     private static void createTopic(String toCreate) throws APIException {
         try (TopicAdminClient topicAdminClient = TopicAdminClient.create()) {
             TopicName topicName = TopicName.of(GooglePubSubConfig.getInstance().getProjectId(), toCreate);
-            Topic topic = topicAdminClient.createTopic(topicName);
-            log.info("Created topic: {}", topic.getName());
+            try {
+                topicAdminClient.getTopic(topicName);
+            } catch (NotFoundException ex) {
+                topicAdminClient.createTopic(topicName);
+                log.info("Created topic: {}", toCreate);
+            }
         } catch (Exception any) {
             log.error("Cannot create a topic", any);
             throw new APIException("Cannot create a topic", any);
@@ -100,10 +99,14 @@ public class GooglePubSubMessageBrokerInitializer {
             TopicName topicName = TopicName.of(GooglePubSubConfig.getInstance().getProjectId(), topicId);
             SubscriptionName subscriptionName = SubscriptionName.of(GooglePubSubConfig.getInstance().getProjectId(), toCreate);
 
-            Subscription subscription = subscriptionAdminClient.createSubscription(
-                    subscriptionName, topicName, PushConfig.getDefaultInstance(), 10
-            );
-            log.info("Created pull subscription with name: {}", subscription.getName());
+            try {
+                subscriptionAdminClient.getSubscription(subscriptionName);
+            } catch (NotFoundException ex) {
+                Subscription subscription = subscriptionAdminClient.createSubscription(
+                        subscriptionName, topicName, PushConfig.getDefaultInstance(), 10
+                );
+                log.info("Created pull subscription with name: {}", subscription.getName());
+            }
         } catch (Exception any) {
             log.error("Cannot create pull subscription", any);
             throw new APIException("Cannot create pull subscription", any);
