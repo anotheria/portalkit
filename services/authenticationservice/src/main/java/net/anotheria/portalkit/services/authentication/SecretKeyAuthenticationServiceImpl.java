@@ -235,6 +235,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
 		}
 	}
 
+    /*
     @Override
     public void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException {
         Set<String> tokens = null;
@@ -255,7 +256,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
             }
         }
     }
-
+*/
     /**
      * Returns new instance of encrypted version of AccountId.
      *
@@ -266,5 +267,50 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         return new AccountId(accountIdAlgorithm.encryptPassword(id.getInternalId()));
     }
 
+    @Override
+    public EncryptedAuthToken saveEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
+        accountId = getEncrypted(accountId);
+        AuthToken newToken = (AuthToken) prefilledToken.clone();
+        String encryption = AuthTokenEncryptors.encrypt(newToken);
 
+        EncryptedAuthToken encToken = new EncryptedAuthToken();
+        encToken.setAuthToken(newToken);
+        encToken.setEncryptedVersion(encryption);
+
+        try {
+            if (newToken.isExclusive())
+                persistenceService.deleteAuthTokens(accountId);
+
+            if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
+                for (String token: persistenceService.getAuthTokens(newToken.getAccountId())) {
+                    AuthToken t = AuthTokenEncryptors.decrypt(token);
+                    if (t.getType() == newToken.getType())
+                        persistenceService.deleteAuthToken(newToken.getAccountId(), token);
+                }
+            }
+            persistenceService.saveAuthTokenAdditional(accountId, encToken);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException(e);
+        }
+        return encToken;
+    }
+
+    @Override
+    public String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException {
+        accountId = getEncrypted(accountId);
+        Set<String> tokens = null;
+        try {
+            tokens = persistenceService.getAuthTokens(accountId);
+        }catch(AuthenticationPersistenceServiceException e){
+            throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
+        }
+
+        for (String token : tokens){
+            AuthToken authToken = decrypt(token);
+            if (authToken.getType() == type) {
+                return token;
+            }
+        }
+        return null;
+    }
 }
