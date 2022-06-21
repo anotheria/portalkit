@@ -2,18 +2,18 @@
     <parent>
         <groupId>portalkit</groupId>
         <artifactId>services</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>services-scamscoreservice</artifactId>
+    <artifactId>pk-scamscoreservice</artifactId>
     <name>services - scam score service</name>
     <description>Scam score service manages user score for spam actions of the user</description>
 
     <dependencies>
         <dependency>
             <groupId>portalkit</groupId>
-            <artifactId>services-common</artifactId>
+            <artifactId>pk-services-common</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

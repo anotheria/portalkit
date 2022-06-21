@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>portalkit</groupId>
 		<artifactId>portalkit</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -18,7 +18,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>portalkit</groupId>
-			<artifactId>services-common</artifactId>
+			<artifactId>pk-services-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

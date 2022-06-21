@@ -2,11 +2,11 @@
 	<parent>
 		<groupId>portalkit</groupId>
 		<artifactId>services</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
+		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>services-foreignidservice</artifactId>
+	<artifactId>pk-foreignidservice</artifactId>
 	<name>services - foreign id service</name>
 	<description>Services: ForeignId Service. This service is used to store references to another internet services like g+, fb, twitter etc, and to connect accounts to foreign services.</description>
 
@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>portalkit</groupId>
-			<artifactId>services-common</artifactId>
+			<artifactId>pk-services-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
