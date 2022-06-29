@@ -9,7 +9,7 @@ public class BasePortalKitAPIImpl extends AbstractAPIImpl {
      * Returns current account id as AccountId object.
      * @return
      */
-    AccountId getCurrentAccountId() {
+    protected AccountId getCurrentAccountId() {
         return new AccountId(getCurrentUserId());
     }
 
@@ -17,7 +17,7 @@ public class BasePortalKitAPIImpl extends AbstractAPIImpl {
      * Returns currently logged in AccountId. If there is no logged in user an exception is thrown (this way the extending code doesn't need to check itself).
      * @return
      */
-    AccountId getCurrentLoggedInAccountId() throws APIException {
+    protected AccountId getCurrentLoggedInAccountId() throws APIException {
         return new AccountId(getLoggedInUserId());
     }
 }
