@@ -91,6 +91,7 @@ public class AsyncTaskQueueProcessor implements Runnable {
                 //if the tasks is null, get new tasks, otherwise retry the last task.
                 if (tasks.isEmpty()) {
                     tasks = asyncTaskAPI.getTasks();
+                    LOGGER.info("Got async tasks: {}", tasks.size());
                 }
 
                 if (tasks.isEmpty()) {
