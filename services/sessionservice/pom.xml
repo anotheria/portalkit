@@ -8,7 +8,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>services-sessionservice</artifactId>
-    <name>services - current sessions service</name>
+    <name>services - sessions service</name>
     <description>Services: Session Service</description>
 
     <dependencies>
