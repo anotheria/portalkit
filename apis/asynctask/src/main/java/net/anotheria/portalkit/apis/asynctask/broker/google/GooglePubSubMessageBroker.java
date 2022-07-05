@@ -87,16 +87,15 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
         try {
             List<AsyncTask> result = new LinkedList<>();
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
-
-            SubscriberStubSettings subscriberStubSettings =
-                    SubscriberStubSettings.newBuilder()
-                            .setTransportChannelProvider(
-                                    SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
-                                            .setMaxInboundMessageSize(GooglePubSubConfig.getInstance().getMaximumMessageSize())
-                                            .build())
-                            .build();
-            SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings);
             for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigByType.entrySet()) {
+                SubscriberStubSettings subscriberStubSettings =
+                        SubscriberStubSettings.newBuilder()
+                                .setTransportChannelProvider(
+                                        SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
+                                                .setMaxInboundMessageSize(GooglePubSubConfig.getInstance().getMaximumMessageSize())
+                                                .build())
+                                .build();
+                SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings);
                 String subscriptionName = ProjectSubscriptionName.format(
                         config.getProjectId(), GooglePubSubConfig.getInstance().getSubscriptionPrefix() + "_" + entry.getKey()
                 );
