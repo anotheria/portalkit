@@ -15,10 +15,21 @@ public final class GooglePubSubSubscribers {
     private static final Logger log = LoggerFactory.getLogger(GooglePubSubSubscribers.class);
     private static GooglePubSubSubscribers INSTANCE;
 
-    private final GooglePubSubConfig config;
+    private SubscriberStubSettings subscriberStubSettings;
 
     public GooglePubSubSubscribers() {
-        this.config = GooglePubSubConfig.getInstance();
+        GooglePubSubConfig config = GooglePubSubConfig.getInstance();
+
+        try {
+            subscriberStubSettings = SubscriberStubSettings.newBuilder()
+                    .setTransportChannelProvider(
+                            SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
+                                    .setMaxInboundMessageSize(config.getMaximumMessageSize())
+                                    .build())
+                    .build();
+        } catch (Exception any) {
+            log.error("Cannot init GooglePubSubSubscribers", any);
+        }
     }
 
     public SubscriberStub getSubscriber(String subscriptionName) throws APIException {
@@ -27,14 +38,6 @@ public final class GooglePubSubSubscribers {
         }
 
         try {
-            SubscriberStubSettings subscriberStubSettings =
-                    SubscriberStubSettings.newBuilder()
-                            .setTransportChannelProvider(
-                                    SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
-                                            .setMaxInboundMessageSize(config.getMaximumMessageSize())
-                                            .build())
-                            .build();
-
             SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings);
             subscribers.put(subscriptionName, subscriber);
             return subscriber;
