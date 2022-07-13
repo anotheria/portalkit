@@ -98,6 +98,7 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
                         PullRequest.newBuilder()
                                 .setMaxMessages(config.getMaxMessagesPerPacket())
                                 .setSubscription(subscriptionName)
+                                .setReturnImmediately(true)
                                 .build();
 
                 PullResponse pullResponse = subscriber.pullCallable().call(pullRequest);
