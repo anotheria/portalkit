@@ -18,16 +18,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
 
     private static final Logger log = LoggerFactory.getLogger(AmazonSqsMessageBroker.class);
 
     private final Map<String, AsyncTaskConfig> taskConfigByType;
+    private final GooglePubSubConfig config;
+    private final GooglePubSubPublishers publishers;
+    private final GooglePubSubSubscribers subscribers;
 
     GooglePubSubMessageBroker(Map<String, AsyncTaskConfig> taskConfigByType) {
         this.taskConfigByType = taskConfigByType;
+        this.config = GooglePubSubConfig.getInstance();
+        this.publishers = GooglePubSubPublishers.getInstance();
+        this.subscribers = GooglePubSubSubscribers.getInstance();
+
         try {
             GooglePubSubMessageBrokerInitializer.initialize(taskConfigByType);
         } catch (Exception any) {
@@ -40,42 +46,34 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
         log.info("sendInternal({}) started", asyncTask.getTaskType());
         try {
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
-            TopicName topicName = TopicName.of(config.getProjectId(), GooglePubSubConfig.getInstance().getTopicPrefix() + "_" + asyncTask.getTaskType());
+            TopicName topicName = TopicName.of(config.getProjectId(), config.getTopicPrefix() + "_" + asyncTask.getTaskType());
 
-            Publisher publisher = null;
+            Publisher publisher = publishers.getPublisher(topicName);
+
+            AsyncTaskConfig asyncTaskConfig = taskConfigByType.get(asyncTask.getTaskType());
+            if (asyncTaskConfig == null) {
+                throw new APIException("no asyncTaskConfig for task: " + asyncTask.getTaskType());
+            }
+
+            AsyncTaskSerializer serializer = asyncTaskConfig.getSerializer();
+            if (serializer == null) {
+                throw new APIException("no serializer for task: " + asyncTask.getTaskType());
+            }
+
+            ByteString data = ByteString.copyFromUtf8(serializer.serialize(asyncTask));
+            Map<String, String> messageAttributes = new HashMap<>(1);
+            messageAttributes.put("taskType", asyncTask.getTaskType());
+
+            PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
+                    .putAllAttributes(messageAttributes)
+                    .setData(data)
+                    .build();
+
             try {
-                publisher = Publisher.newBuilder(topicName).build();
-
-                AsyncTaskConfig asyncTaskConfig = taskConfigByType.get(asyncTask.getTaskType());
-                if (asyncTaskConfig == null) {
-                    throw new APIException("no asyncTaskConfig for task: " + asyncTask.getTaskType());
-                }
-
-                AsyncTaskSerializer serializer = asyncTaskConfig.getSerializer();
-                if (serializer == null) {
-                    throw new APIException("no serializer for task: " + asyncTask.getTaskType());
-                }
-
-                ByteString data = ByteString.copyFromUtf8(serializer.serialize(asyncTask));
-                Map<String, String> messageAttributes = new HashMap<>(1);
-                messageAttributes.put("taskType", asyncTask.getTaskType());
-
-                PubsubMessage pubsubMessage = PubsubMessage.newBuilder()
-                        .putAllAttributes(messageAttributes)
-                        .setData(data)
-                        .build();
-
-                try {
-                    ApiFuture<String> messageIdFuture = publisher.publish(pubsubMessage);
-                    log.info("Published message {}", messageIdFuture.get());
-                } catch (Exception any) {
-                    log.error("ERROR, cannot publish a message {}. \n{}", asyncTask, any.getMessage());
-                }
-            } finally {
-                if (publisher != null) {
-                    publisher.shutdown();
-                    publisher.awaitTermination(30, TimeUnit.SECONDS);
-                }
+                ApiFuture<String> messageIdFuture = publisher.publish(pubsubMessage);
+                log.info("Published message {}", messageIdFuture.get());
+            } catch (Exception any) {
+                log.error("ERROR, cannot publish a message {}. \n{}", asyncTask, any.getMessage());
             }
         } catch (Exception any) {
             throw new APIException(any.getMessage(), any);
@@ -88,17 +86,11 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
             List<AsyncTask> result = new LinkedList<>();
             GooglePubSubConfig config = GooglePubSubConfig.getInstance();
             for (Map.Entry<String, AsyncTaskConfig> entry : taskConfigByType.entrySet()) {
-                SubscriberStubSettings subscriberStubSettings =
-                        SubscriberStubSettings.newBuilder()
-                                .setTransportChannelProvider(
-                                        SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
-                                                .setMaxInboundMessageSize(GooglePubSubConfig.getInstance().getMaximumMessageSize())
-                                                .build())
-                                .build();
-                SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings);
                 String subscriptionName = ProjectSubscriptionName.format(
-                        config.getProjectId(), GooglePubSubConfig.getInstance().getSubscriptionPrefix() + "_" + entry.getKey()
+                        config.getProjectId(), config.getSubscriptionPrefix() + "_" + entry.getKey()
                 );
+
+                SubscriberStub subscriber = subscribers.getSubscriber(subscriptionName);
 
                 log.info("Trying to get messages for subscription: {}", subscriptionName);
 

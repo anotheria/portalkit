@@ -1,0 +1,54 @@
+package net.anotheria.portalkit.apis.asynctask.broker.google;
+
+import com.google.cloud.pubsub.v1.stub.GrpcSubscriberStub;
+import com.google.cloud.pubsub.v1.stub.SubscriberStub;
+import com.google.cloud.pubsub.v1.stub.SubscriberStubSettings;
+import net.anotheria.anoplass.api.APIException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ConcurrentHashMap;
+
+public final class GooglePubSubSubscribers {
+
+    private static final ConcurrentHashMap<String, SubscriberStub> subscribers = new ConcurrentHashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(GooglePubSubSubscribers.class);
+    private static GooglePubSubSubscribers INSTANCE;
+
+    private final GooglePubSubConfig config;
+
+    public GooglePubSubSubscribers() {
+        this.config = GooglePubSubConfig.getInstance();
+    }
+
+    public SubscriberStub getSubscriber(String subscriptionName) throws APIException {
+        if (subscribers.containsKey(subscriptionName)) {
+            return subscribers.get(subscriptionName);
+        }
+
+        try {
+            SubscriberStubSettings subscriberStubSettings =
+                    SubscriberStubSettings.newBuilder()
+                            .setTransportChannelProvider(
+                                    SubscriberStubSettings.defaultGrpcTransportProviderBuilder()
+                                            .setMaxInboundMessageSize(config.getMaximumMessageSize())
+                                            .build())
+                            .build();
+
+            SubscriberStub subscriber = GrpcSubscriberStub.create(subscriberStubSettings);
+            subscribers.put(subscriptionName, subscriber);
+            return subscriber;
+        } catch (Exception any) {
+            log.error("Cannot get subscriber", any);
+            throw new APIException("Cannot get subscriber", any);
+        }
+    }
+
+    public static GooglePubSubSubscribers getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new GooglePubSubSubscribers();
+        }
+        return INSTANCE;
+    }
+
+}
