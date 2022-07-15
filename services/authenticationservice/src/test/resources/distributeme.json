@@ -1,0 +1,7 @@
+{
+  "registryContainerHost": "127.0.0.1",
+  "registryContainerPort": 9229,
+  "listener.1": "net.anotheria.casedrive.biz.util.MoSKitoRemoteInitializerListener",
+  "listener.2": "org.distributeme.core.listener.ServerLifecycleSysOutPrinterListener",
+  "logServerSideExceptions": true
+}

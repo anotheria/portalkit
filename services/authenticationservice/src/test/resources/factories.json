@@ -1,0 +1,3 @@
+{
+  "net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService": "net.anotheria.portalkit.services.authentication.persistence.jdbc.JDBCAuthenticationPersistenceServiceFactory"
+}

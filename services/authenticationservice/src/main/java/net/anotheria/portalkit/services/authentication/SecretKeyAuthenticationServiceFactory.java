@@ -11,7 +11,7 @@ public class SecretKeyAuthenticationServiceFactory implements ServiceFactory<Sec
 
     @Override
     public SecretKeyAuthenticationService create() {
-        return ServiceProxyUtil.createServiceProxy(SecretKeyAuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class);
+        return ServiceProxyUtil.createServiceProxy(SecretKeyAuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, DeletionService.class, AuthenticationService.class);
     }
 
 }

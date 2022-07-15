@@ -1,7 +1,7 @@
 {
-	//"driver": "org.postgresql.Driver",
-	//"url": "jdbc:postgresql://localhost/pk_test",
-	//"username": "another",
+	"driver": "org.postgresql.Driver",
+	"url": "jdbc:postgresql://localhost/pktest",
+	"username": "another",
 
 	"test": {
 
