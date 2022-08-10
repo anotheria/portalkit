@@ -63,9 +63,14 @@ public class ForeignIdServiceImpl implements ForeignIdService {
 
 	@Override
 	public void addForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException {
-		try {
-			persistenceService.link(accId, sourceId, foreignId);
-			List<ForeignId> list = cacheByAccountId.get(accId);
+        try {
+            AccountId accountIdByForeignId = persistenceService.getAccountIdByForeignId(sourceId, foreignId);
+            if (accountIdByForeignId != null) {
+                throw new ForeignIdAlreadyExistsServiceException("Account already exists by provided foreign id and source id.");
+            }
+
+            persistenceService.link(accId, sourceId, foreignId);
+            List<ForeignId> list = cacheByAccountId.get(accId);
 			if (list == null) {
 				list = new ArrayList<ForeignId>();
 				cacheByAccountId.put(accId, list);
