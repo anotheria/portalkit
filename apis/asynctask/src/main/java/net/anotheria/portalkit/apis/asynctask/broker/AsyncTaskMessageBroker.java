@@ -9,5 +9,5 @@ public interface AsyncTaskMessageBroker {
 
     void send(AsyncTask asyncTask) throws APIException;
 
-    List<AsyncTask> getTasks() throws APIException;
+    List<AsyncTask> getTasks(String topicName) throws APIException;
 }

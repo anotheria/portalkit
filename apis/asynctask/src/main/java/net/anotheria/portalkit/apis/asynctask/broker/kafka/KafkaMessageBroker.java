@@ -115,24 +115,12 @@ public class KafkaMessageBroker implements AsyncTaskMessageBroker {
     }
 
     @Override
-    public List<AsyncTask> getTasks() throws APIException {
+    public List<AsyncTask> getTasks(String topicName) throws APIException {
         List<AsyncTask> result = new LinkedList<>();
-        List<Future<AsyncTask>> topicTaskExecutors = new LinkedList<>();
-        for (String taskType : taskConfigByType.keySet()) {
-            Future<AsyncTask> topicTaskExecutor = executorService.submit(() -> getTopicTask(taskType));
-            topicTaskExecutors.add(topicTaskExecutor);
-        }
+        AsyncTask task = getTopicTask(topicName);
+        if (task != null)
+            result.add(task);
 
-        for (Future<AsyncTask> topicTaskExecutor : topicTaskExecutors) {
-            try {
-                AsyncTask task = topicTaskExecutor.get();
-                if (task != null) {
-                    result.add(task);
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                log.error("getTopicTask execution failed: {}", e.getMessage(), e);
-            }
-        }
         return result;
     }
 

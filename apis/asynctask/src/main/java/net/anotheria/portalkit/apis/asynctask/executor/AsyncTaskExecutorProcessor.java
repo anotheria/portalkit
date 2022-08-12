@@ -45,6 +45,11 @@ public abstract class AsyncTaskExecutorProcessor implements Runnable {
     protected final OnDemandStatsProducer<AsyncTaskQueueProcessorStats> producer;
 
     /**
+     * Task type (by default is topic name).
+     */
+    protected final String taskType;
+
+    /**
      * Default constructor.
      *
      * @param taskType                              {@link String} name of task type
@@ -54,6 +59,7 @@ public abstract class AsyncTaskExecutorProcessor implements Runnable {
      */
     public AsyncTaskExecutorProcessor(String taskType, AsyncTaskExecutor asyncTaskExecutor, int executorThreadsSleepTimeInSeconds, Logger logger) {
         this.logger = logger;
+        this.taskType = taskType;
         this.asyncTaskExecutor = asyncTaskExecutor;
         this.executorThreadsSleepTimeInSeconds = executorThreadsSleepTimeInSeconds;
 

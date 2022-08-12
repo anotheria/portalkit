@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Single implementation for {@link AsyncTaskExecutorProcessor}.
@@ -39,7 +38,7 @@ public class AsyncTaskSingleExecutorProcessor extends AsyncTaskExecutorProcessor
                 LOGGER.info("Trying to get async task (AsyncProcessor)...");
                 //if the task is null, get new task, otherwise retry the last task.
                 if (tasks.isEmpty()) {
-                    tasks = asyncTaskAPI.getTasks();
+                    tasks = asyncTaskAPI.getTasks(taskType);
                     LOGGER.info("Got async tasks: {}", tasks.size());
                 }
 

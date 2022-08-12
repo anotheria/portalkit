@@ -61,7 +61,7 @@ public class AsyncTaskQueueExecutorProcessor extends AsyncTaskExecutorProcessor 
                 LOGGER.info("Trying to get async task (AsyncProcessor)...");
                 //if the task is null, get new task, otherwise retry the last task.
                 if (tasks.isEmpty()) {
-                    tasks = asyncTaskAPI.getTasks();
+                    tasks = asyncTaskAPI.getTasks(taskType);
                     LOGGER.info("Got async tasks: {}", tasks.size());
                 }
 
