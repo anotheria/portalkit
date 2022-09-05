@@ -21,7 +21,7 @@ import java.util.*;
 
 public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
 
-    private static final Logger log = LoggerFactory.getLogger(AmazonSqsMessageBroker.class);
+    private static final Logger log = LoggerFactory.getLogger(GooglePubSubMessageBroker.class);
 
     private final Map<String, AsyncTaskConfig> taskConfigByType;
     private final GooglePubSubConfig config;
