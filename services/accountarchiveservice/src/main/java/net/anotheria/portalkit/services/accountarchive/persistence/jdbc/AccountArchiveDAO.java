@@ -177,6 +177,34 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         }
     }
 
+    public String getCustomNoteById(Connection connection, AccountId id) throws SQLException, DAOException {
+        String sql = "SELECT custom_note FROM " + TABLE_NAME + " WHERE id = ?";
+        PreparedStatement select = null;
+        ResultSet result = null;
+        try {
+            select = connection.prepareStatement(sql);
+            select.setString(1, id.getInternalId());
+            result = select.executeQuery();
+            return !result.next() ? "" : result.getString(1);
+        } finally {
+            JDBCUtil.close(result);
+            JDBCUtil.close(select);
+        }
+    }
+
+    public boolean saveCustomNote(Connection connection, AccountId accountId, String customNote) throws SQLException, DAOException {
+        String update = "UPDATE " + TABLE_NAME + " set custom_note = ?, " + ATT_DAO_UPDATED + " = ? WHERE id = ?";
+        PreparedStatement query = connection.prepareStatement(update);
+        query.setString(1, customNote);
+        query.setLong(2, System.currentTimeMillis());
+        query.setString(3, accountId.getInternalId());
+        int updated = query.executeUpdate();
+        if (updated > 1) {
+            throw new DAOException("There is more than 1 records update by Query: " + query);
+        }
+        return updated == 1;
+    }
+
     public AccountId getIdByName(Connection connection, String name) throws SQLException, DAOException {
         return getIdByField(connection, "name", name);
     }

@@ -58,7 +58,22 @@ public interface AccountArchivePersistenceService extends Service {
      * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
     AccountId getIdByName(String name) throws ArchivedAccountPersistenceServiceException;
+    /**
+     * Returns the custom note of the account with the given id.
+     *
+     * @param id account id to find
+     * @return custom note
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
+     */
+    String getCustomNoteById(AccountId id) throws ArchivedAccountPersistenceServiceException;
 
+    /**
+     * Save custom note.
+     * @param id account id
+     * @param customNote custom note
+     * @throws ArchivedAccountPersistenceServiceException if some error occurred
+     */
+    void saveCustomNote(AccountId id, String customNote) throws ArchivedAccountPersistenceServiceException;
     /**
      * Returns the id of the account with the given email.
      *
