@@ -100,6 +100,24 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
     }
 
     @Override
+    public String getCustomNote(AccountId accountId) throws AccountArchiveServiceException {
+        try {
+            return persistenceService.getCustomNote(accountId);
+        } catch (ArchivedAccountPersistenceServiceException e) {
+            throw new AccountArchiveServiceException(e);
+        }
+    }
+
+    @Override
+    public void saveCustomNote(AccountId accountId, String customNote) throws AccountArchiveServiceException {
+        try {
+            persistenceService.saveCustomNote(accountId, customNote);
+        } catch (ArchivedAccountPersistenceServiceException e) {
+            throw new AccountArchiveServiceException(e);
+        }
+    }
+
+    @Override
     public ArchivedAccount getAccountByName(String name) throws AccountArchiveServiceException {
         try {
             AccountId id = persistenceService.getIdByName(name);

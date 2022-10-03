@@ -63,6 +63,24 @@ public interface AccountArchiveService extends Service {
     ArchivedAccount createAccount(ArchivedAccount toUpdate) throws AccountArchiveServiceException;
 
     /**
+     * Get custom note by account id.
+     *
+     * @param accountId account id
+     * @return custom note
+     * @throws AccountArchiveServiceException if error
+     */
+    String getCustomNote(AccountId accountId) throws AccountArchiveServiceException;
+
+    /**
+     * Save custom note by account id.
+     *
+     * @param accountId  account id
+     * @param customNote custom note
+     * @throws AccountArchiveServiceException if error
+     */
+    void saveCustomNote(AccountId accountId, String customNote) throws AccountArchiveServiceException;
+
+    /**
      *
      * @param name  account name.
      * @return  {@link ArchivedAccount}

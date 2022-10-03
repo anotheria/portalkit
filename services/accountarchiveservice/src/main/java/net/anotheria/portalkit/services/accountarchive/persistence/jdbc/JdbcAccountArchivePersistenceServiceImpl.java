@@ -112,6 +112,16 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
     }
 
     @Override
+    public String getCustomNote(AccountId id) throws ArchivedAccountPersistenceServiceException {
+        return callDao(connection -> dao.getCustomNote(connection, id));
+    }
+
+    @Override
+    public void saveCustomNote(AccountId id, String customNote) throws ArchivedAccountPersistenceServiceException {
+        callDao(connection -> dao.saveCustomNote(connection, id, customNote));
+    }
+
+    @Override
     public AccountId getIdByEmail(final String email) throws ArchivedAccountPersistenceServiceException {
         return callDao(new SQLConnectionAware<AccountId>() {
             @Override
