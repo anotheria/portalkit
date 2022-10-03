@@ -65,7 +65,7 @@ public interface AccountArchivePersistenceService extends Service {
      * @return custom note
      * @throws ArchivedAccountPersistenceServiceException if some error occurred
      */
-    String getCustomNoteById(AccountId id) throws ArchivedAccountPersistenceServiceException;
+    String getCustomNote(AccountId id) throws ArchivedAccountPersistenceServiceException;
 
     /**
      * Save custom note.

@@ -100,9 +100,9 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
     }
 
     @Override
-    public String getCustomNoteById(AccountId accountId) throws AccountArchiveServiceException {
+    public String getCustomNote(AccountId accountId) throws AccountArchiveServiceException {
         try {
-            return persistenceService.getCustomNoteById(accountId);
+            return persistenceService.getCustomNote(accountId);
         } catch (ArchivedAccountPersistenceServiceException e) {
             throw new AccountArchiveServiceException(e);
         }

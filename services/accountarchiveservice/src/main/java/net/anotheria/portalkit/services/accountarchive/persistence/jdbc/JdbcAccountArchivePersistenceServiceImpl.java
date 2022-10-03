@@ -112,8 +112,8 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
     }
 
     @Override
-    public String getCustomNoteById(AccountId id) throws ArchivedAccountPersistenceServiceException {
-        return callDao(connection -> dao.getCustomNoteById(connection, id));
+    public String getCustomNote(AccountId id) throws ArchivedAccountPersistenceServiceException {
+        return callDao(connection -> dao.getCustomNote(connection, id));
     }
 
     @Override

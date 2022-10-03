@@ -69,7 +69,7 @@ public interface AccountArchiveService extends Service {
      * @return custom note
      * @throws AccountArchiveServiceException if error
      */
-    String getCustomNoteById(AccountId accountId) throws AccountArchiveServiceException;
+    String getCustomNote(AccountId accountId) throws AccountArchiveServiceException;
 
     /**
      * Save custom note by account id.

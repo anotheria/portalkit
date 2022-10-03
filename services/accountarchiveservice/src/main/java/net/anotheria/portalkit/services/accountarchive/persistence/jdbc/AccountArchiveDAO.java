@@ -177,7 +177,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         }
     }
 
-    public String getCustomNoteById(Connection connection, AccountId id) throws SQLException, DAOException {
+    public String getCustomNote(Connection connection, AccountId id) throws SQLException, DAOException {
         String sql = "SELECT custom_note FROM " + TABLE_NAME + " WHERE id = ?";
         PreparedStatement select = null;
         ResultSet result = null;
