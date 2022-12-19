@@ -35,6 +35,10 @@ public class JDBCConfig {
 	 * Max opened connections.
 	 */
 	private int maxConnections;
+    /**
+     * Data source name.
+     */
+    private String datasourceName;
 
 	public int getMaxConnections() {
 		return maxConnections;
@@ -76,8 +80,23 @@ public class JDBCConfig {
 		this.password = password;
 	}
 
-	@Override
-	public String toString() {
-		return getDriver() + ", " + getUrl() + ", " + getUsername();
-	}
+    public String getDatasourceName() {
+        return datasourceName;
+    }
+
+    public void setDatasourceName(String datasourceName) {
+        this.datasourceName = datasourceName;
+    }
+
+    @Override
+    public String toString() {
+        return "JDBCConfig{" +
+                "url='" + url + '\'' +
+                ", driver='" + driver + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", maxConnections=" + maxConnections +
+                ", datasourceName='" + datasourceName + '\'' +
+                '}';
+    }
 }
