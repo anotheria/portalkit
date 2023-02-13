@@ -1,10 +1,7 @@
 package net.anotheria.portalkit.apis.asynctask.broker.google;
 
 import net.anotheria.portalkit.apis.asynctask.broker.amazon.AmazonSqsConfig;
-import net.anotheria.util.TimeUnit;
 import org.configureme.ConfigurationManager;
-import org.configureme.annotations.AfterConfiguration;
-import org.configureme.annotations.AfterReConfiguration;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.slf4j.Logger;
@@ -22,10 +19,10 @@ public class GooglePubSubConfig {
     private String projectId;
 
     @Configure
-    private String topicPrefix;
+    private String[] topicPrefix;
 
     @Configure
-    private String subscriptionPrefix;
+    private String[] subscriptionPrefix;
 
     @Configure
     private int maxMessagesPerPacket = 10;
@@ -53,19 +50,19 @@ public class GooglePubSubConfig {
         this.projectId = projectId;
     }
 
-    public String getTopicPrefix() {
+    public String[] getTopicPrefix() {
         return topicPrefix;
     }
 
-    public void setTopicPrefix(String topicPrefix) {
+    public void setTopicPrefix(String[] topicPrefix) {
         this.topicPrefix = topicPrefix;
     }
 
-    public String getSubscriptionPrefix() {
-        return subscriptionPrefix + "_subscription";
+    public String[] getSubscriptionPrefix() {
+        return subscriptionPrefix;
     }
 
-    public void setSubscriptionPrefix(String subscriptionPrefix) {
+    public void setSubscriptionPrefix(String[] subscriptionPrefix) {
         this.subscriptionPrefix = subscriptionPrefix;
     }
 
