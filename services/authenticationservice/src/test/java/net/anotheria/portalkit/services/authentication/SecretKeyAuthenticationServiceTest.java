@@ -39,8 +39,6 @@ public class SecretKeyAuthenticationServiceTest {
         oldToken.setType(1);
         oldToken.setAccountId(dummyAccountId);
         oldToken.setExclusiveInType(true);
-        oldToken.setMultiUse(false);
-        oldToken.setExclusive(false);
 
         EncryptedAuthToken oldEncrypted = service.generateEncryptedToken(dummyAccountId, oldToken);
 
@@ -48,8 +46,6 @@ public class SecretKeyAuthenticationServiceTest {
         newToken.setType(1);
         newToken.setAccountId(dummyAccountId);
         newToken.setExclusiveInType(true);
-        newToken.setMultiUse(false);
-        newToken.setExclusive(false);
 
         EncryptedAuthToken newEncrypted = service.generateEncryptedToken(dummyAccountId, newToken);
 
