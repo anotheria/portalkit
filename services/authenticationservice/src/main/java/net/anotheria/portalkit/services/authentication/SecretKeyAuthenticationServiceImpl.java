@@ -165,7 +165,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
 
             if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
                 //this is maybe suboptimal, but no other chance to fix it otherways for now
-                Set<String> tokens = persistenceService.getAuthTokens(newToken.getAccountId());
+                Set<String> tokens = persistenceService.getAuthTokens(encryptedAccountId);
                 for (Iterator<String> it = tokens.iterator(); it.hasNext(); ) {
                     String storedToken = it.next();
                     AuthToken t = AuthTokenEncryptors.decrypt(storedToken);
