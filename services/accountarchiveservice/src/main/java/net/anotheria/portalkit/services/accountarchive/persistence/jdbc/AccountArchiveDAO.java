@@ -280,6 +280,10 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
             final String ids = StringUtils.concatenateTokens(query.getIds(), ',', '\'', '\'');
             sqlRawQuery.append(" AND id IN (").append(ids).append(")");
         }
+        if (!query.getDeletedNotes().isEmpty()) {
+            final String deletedNode = StringUtils.concatenateTokens(query.getIds(), ',', '\'', '\'');
+            sqlRawQuery.append(" AND deleted_note IN (").append(deletedNode).append(")");
+        }
         if (!StringUtils.isEmpty(query.getEmailMask()))
             sqlRawQuery.append(" AND email LIKE '").append(query.getEmailMask()).append("'");
         if (!StringUtils.isEmpty(query.getNameMask()))

@@ -69,6 +69,10 @@ public class ArchivedAccountQuery implements Serializable {
      * Tenants.
      */
     private final List<String> tenants = new ArrayList<>();
+    /**
+     * Deleted notes.
+     */
+    private final List<String> deletedNotes = new ArrayList<>();
 
     public Long getDeletedTill() {
         return deletedTill;
@@ -148,5 +152,9 @@ public class ArchivedAccountQuery implements Serializable {
 
     public List<String> getTenants() {
         return tenants;
+    }
+
+    public List<String> getDeletedNotes() {
+        return deletedNotes;
     }
 }
