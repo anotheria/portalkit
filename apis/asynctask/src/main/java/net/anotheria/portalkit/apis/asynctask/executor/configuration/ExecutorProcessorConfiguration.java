@@ -49,6 +49,14 @@ public class ExecutorProcessorConfiguration implements Serializable {
     public ExecutorProcessorConfiguration() {
     }
 
+    public static ExecutorProcessorConfiguration getDefaultConfiguration(String taskType) {
+        ExecutorProcessorConfiguration configuration = new ExecutorProcessorConfiguration();
+        configuration.setTaskType(taskType);
+        configuration.setExecutorProcessorType(ExecutorProcessorType.SINGLE);
+        configuration.setExecutorThreadsSleepTimeInSeconds(10);
+        return configuration;
+    }
+
     public String getTaskType() {
         return taskType;
     }

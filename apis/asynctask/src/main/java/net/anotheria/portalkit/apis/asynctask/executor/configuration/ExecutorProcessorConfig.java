@@ -68,7 +68,7 @@ public class ExecutorProcessorConfig implements Serializable {
     /**
      * Get configuration instance.
      *
-     * @return  {@link ExecutorProcessorConfig} configured instance
+     * @return {@link ExecutorProcessorConfig} configured instance
      */
     public static ExecutorProcessorConfig getInstance() {
         if (instance == null) {
@@ -94,11 +94,12 @@ public class ExecutorProcessorConfig implements Serializable {
     /**
      * Returns {@link ExecutorProcessorConfiguration} for specified {@link String} task type.
      *
-     * @param taskType  {@link String} task type for configuration
-     * @return          {@link ExecutorProcessorConfiguration} for this {@link String} task type
+     * @param taskType {@link String} task type for configuration
+     * @return {@link ExecutorProcessorConfiguration} for this {@link String} task type
      */
     public ExecutorProcessorConfiguration getExecutorProcessorConfiguration(String taskType) {
-        return configurationsMap.get(taskType);
+        ExecutorProcessorConfiguration configuration = configurationsMap.get(taskType);
+        return configuration == null ? ExecutorProcessorConfiguration.getDefaultConfiguration(taskType) : configuration;
     }
 
     public ExecutorProcessorConfiguration[] getExecutorProcessorConfigurations() {
