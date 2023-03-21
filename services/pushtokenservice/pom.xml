@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>services</groupId>
     <artifactId>services-pushtokenservice</artifactId>
     <name>services - push token service</name>
     <description>Services: PushToken Service. This service is used to store and manage data about push-notification

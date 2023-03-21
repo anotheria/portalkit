@@ -69,7 +69,6 @@
         <module>photoscammer</module>
         <module>sessionservice</module>
 		<module>pushtokenservice</module>
-		<module>pushtokenservice</module>
 	</modules>
 
 </project>
