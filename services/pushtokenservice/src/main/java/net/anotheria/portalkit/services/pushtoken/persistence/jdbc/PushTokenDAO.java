@@ -70,13 +70,24 @@ public class PushTokenDAO extends AbstractDAO implements DAO {
         }
     }
 
-    public void deleteToken(Connection connection, String token) throws DAOException, SQLException {
+    public String deleteToken(Connection connection, String token) throws DAOException, SQLException {
         PreparedStatement stat = null;
+        String accountId = null;
+        ResultSet result = null;
         try {
+            stat = connection.prepareStatement("SELECT accid FROM " + TABLE_NAME + " WHERE " + TOKEN_FIELD_NAME + " = ?;");
+            stat.setString(1, token);
+            result = stat.executeQuery();
+            if (result.next()) {
+                accountId = result.getString(ACCOUNTID_FIELD_NAME);
+            }
+
             stat = connection.prepareStatement("DELETE FROM " + TABLE_NAME + " WHERE " + TOKEN_FIELD_NAME + " = ?;");
             stat.setString(1, token);
             stat.executeUpdate();
+            return accountId;
         } finally {
+            JDBCUtil.close(result);
             JDBCUtil.close(stat);
         }
     }
