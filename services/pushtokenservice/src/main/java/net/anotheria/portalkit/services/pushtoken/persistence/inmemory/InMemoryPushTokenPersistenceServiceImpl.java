@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * In-memory implementation of PushTokenPersistenceService.
+ */
 public class InMemoryPushTokenPersistenceServiceImpl implements PushTokenPersistenceService {
 
     /**
