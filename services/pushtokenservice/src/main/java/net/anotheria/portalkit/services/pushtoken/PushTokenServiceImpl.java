@@ -95,4 +95,12 @@ public class PushTokenServiceImpl implements PushTokenService {
             throw new PushTokenServiceException("Cannot remove token", ex);
         }
     }
+
+    @Override
+    public void removeAllFromAccount(AccountId accountId) throws PushTokenServiceException {
+        List<String> tokens = getAllByAccountId(accountId);
+        for (String token : tokens) {
+            removeToken(token);
+        }
+    }
 }

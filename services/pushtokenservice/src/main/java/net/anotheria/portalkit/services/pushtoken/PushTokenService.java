@@ -42,4 +42,11 @@ public interface PushTokenService extends Service {
      */
     AccountId removeToken(String token) throws PushTokenServiceException;
 
+    /**
+     * Deletes all tokens that are belonged to provided account.
+     *
+     * @param accountId account whom tokens will be deleted
+     */
+    void removeAllFromAccount(AccountId accountId) throws PushTokenServiceException;
+
 }
