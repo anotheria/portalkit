@@ -4,4 +4,4 @@ CREATE TABLE push_token
     token VARCHAR      NOT NULL,
     PRIMARY KEY (accid, token)
 );
-CREATE INDEX accid_idx ON push_token (accid);
+CREATE INDEX push_token_accid_idx ON push_token (accid);
