@@ -99,7 +99,11 @@ public class ExecutorProcessorConfig implements Serializable {
      */
     public ExecutorProcessorConfiguration getExecutorProcessorConfiguration(String taskType) {
         ExecutorProcessorConfiguration configuration = configurationsMap.get(taskType);
-        return configuration == null ? ExecutorProcessorConfiguration.getDefaultConfiguration(taskType) : configuration;
+        if (configuration == null) {
+            configuration = ExecutorProcessorConfiguration.getDefaultConfiguration(taskType);
+            configurationsMap.put(taskType, configuration);
+        }
+        return configuration;
     }
 
     public ExecutorProcessorConfiguration[] getExecutorProcessorConfigurations() {
