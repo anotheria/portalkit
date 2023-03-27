@@ -4,14 +4,19 @@ import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceService;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@Monitor(subsystem = "pushtoken", category = "portalkit-service")
 public class PushTokenServiceImpl implements PushTokenService {
 
     /**
@@ -22,6 +27,7 @@ public class PushTokenServiceImpl implements PushTokenService {
     /**
      * Persistence service.
      */
+    @Autowired
     private PushTokenPersistenceService persistenceService;
 
     /**
@@ -34,11 +40,6 @@ public class PushTokenServiceImpl implements PushTokenService {
      */
     public PushTokenServiceImpl() {
         cache = Caches.createHardwiredCache("pushtokenservice-cache");
-        try {
-            persistenceService = MetaFactory.get(PushTokenPersistenceService.class);
-        } catch (MetaFactoryException e) {
-            throw new IllegalStateException("Can't start without persistence service ", e);
-        }
     }
 
     @Override
@@ -80,13 +81,7 @@ public class PushTokenServiceImpl implements PushTokenService {
     public AccountId removeToken(String token) throws PushTokenServiceException {
         try {
             AccountId tokenOwner = persistenceService.deleteToken(token);
-
-            // cache sync
-            List<String> cached = cache.get(tokenOwner);
-            if (cached != null) {
-                cached.remove(token);
-            }
-
+            cache.remove(tokenOwner); // cache sync
             return tokenOwner;
         } catch (PushTokenPersistenceServiceException ex) {
             log.error("Cannot remove token", ex);
@@ -96,9 +91,14 @@ public class PushTokenServiceImpl implements PushTokenService {
 
     @Override
     public void removeAllFromAccount(AccountId accountId) throws PushTokenServiceException {
-        List<String> tokens = getAllByAccountId(accountId);
-        for (String token : tokens) {
-            removeToken(token);
+        try {
+            persistenceService.deleteAllFromAccount(accountId);
+
+            // cache sync
+            cache.remove(accountId);
+        } catch (PushTokenPersistenceServiceException any) {
+            log.error("Cannot remove tokens from account", any);
+            throw new PushTokenServiceException("Cannot remove tokens from account", any);
         }
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * PushToken persistence service.
  */
-public interface PushTokenPersistenceService extends Service {
+public interface PushTokenPersistenceService {
 
     /**
      * Searches and returns for a list of tokens that are belonged to provided user
@@ -25,7 +25,7 @@ public interface PushTokenPersistenceService extends Service {
      * @param token     token to bind with account
      * @return saved token
      */
-    String  saveTokenForAccount(AccountId accountId, String token) throws PushTokenPersistenceServiceException;
+    String saveTokenForAccount(AccountId accountId, String token) throws PushTokenPersistenceServiceException;
 
     /**
      * Deletes a token. No user will have it. Deletes token completely from storage.
@@ -34,5 +34,12 @@ public interface PushTokenPersistenceService extends Service {
      * @return account who had this token before. Null if token wasn't in use.
      */
     AccountId deleteToken(String token) throws PushTokenPersistenceServiceException;
+
+    /**
+     * Deletes all tokens from account
+     *
+     * @param accountId account whom tokens will be removed
+     */
+    void deleteAllFromAccount(AccountId accountId) throws PushTokenPersistenceServiceException;
 
 }

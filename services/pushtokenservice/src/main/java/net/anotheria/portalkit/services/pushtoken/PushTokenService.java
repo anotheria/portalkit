@@ -13,8 +13,12 @@ import java.util.List;
  * One user (accountId) can have many push-notification tokens.
  * Every token is unique. So two users cannot have the same tokens.
  */
-@DistributeMe
-@FailBy(strategyClass = RetryCallOnce.class)
+@DistributeMe(
+        initcode = {
+                "net.anotheria.portalkit.services.pushtoken.PushTokenSpringConfigurator.configure();"
+        }
+)
+@FailBy(strategyClass=RetryCallOnce.class)
 public interface PushTokenService extends Service {
 
     /**
@@ -26,7 +30,8 @@ public interface PushTokenService extends Service {
     List<String> getAllByAccountId(AccountId accountId) throws PushTokenServiceException;
 
     /**
-     * Adds a provided token to the list of user's tokens
+     * Adds a provided token to the list of user's tokens.
+     * If token was used by any other account, token will be removed from that account.
      *
      * @param accountId account that will have a new or one more token
      * @param token     token to add
