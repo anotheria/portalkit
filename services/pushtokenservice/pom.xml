@@ -7,18 +7,13 @@
         <groupId>portalkit</groupId>
         <version>1.5.0-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>services-pushtokenservice</artifactId>
     <name>services - push token service</name>
     <description>Services: PushToken Service. This service is used to store and manage data about push-notification
         tokens.
     </description>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
 
     <dependencies>
         <dependency>

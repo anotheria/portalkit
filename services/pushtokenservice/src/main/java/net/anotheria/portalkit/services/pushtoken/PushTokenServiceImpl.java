@@ -61,14 +61,13 @@ public class PushTokenServiceImpl implements PushTokenService {
     @Override
     public String addTokenForAccount(AccountId accountId, String token) throws PushTokenServiceException {
         try {
-            removeToken(token); // returns an account who had this token before
+            removeToken(token);
             String savedToken = persistenceService.saveTokenForAccount(accountId, token);
 
             // cache sync
             List<String> cached = cache.get(accountId);
             if (cached != null) {
                 cached.add(token);
-                cache.put(accountId, cached);
             }
             return savedToken;
         } catch (PushTokenPersistenceServiceException ex) {
@@ -86,7 +85,6 @@ public class PushTokenServiceImpl implements PushTokenService {
             List<String> cached = cache.get(tokenOwner);
             if (cached != null) {
                 cached.remove(token);
-                cache.put(tokenOwner, cached);
             }
 
             return tokenOwner;
