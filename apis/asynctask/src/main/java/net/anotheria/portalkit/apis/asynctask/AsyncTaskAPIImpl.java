@@ -24,4 +24,9 @@ public class AsyncTaskAPIImpl extends AbstractAPIImpl implements AsyncTaskAPI {
     public List<AsyncTask> getTasks(String topicName) throws APIException {
         return messageBroker.getTasks(topicName);
     }
+
+    @Override
+    public void deInit() {
+        messageBroker.notifyShutdown();
+    }
 }

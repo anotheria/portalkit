@@ -145,4 +145,9 @@ public class GooglePubSubMessageBroker implements AsyncTaskMessageBroker {
         }
     }
 
+    @Override
+    public void notifyShutdown() {
+        publishers.notifyShutdown();
+        subscribers.notifyShutdown();
+    }
 }

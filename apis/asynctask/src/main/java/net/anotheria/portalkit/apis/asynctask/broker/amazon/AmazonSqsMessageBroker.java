@@ -109,6 +109,11 @@ public class AmazonSqsMessageBroker implements AsyncTaskMessageBroker {
         return result;
     }
 
+    @Override
+    public void notifyShutdown() {
+
+    }
+
     private AmazonSQS getClient(AmazonSqsConfig config) {
         if (config.isUseEnvironmentCredentials()) {
             return AmazonSQSClientBuilder.defaultClient();

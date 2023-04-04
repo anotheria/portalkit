@@ -124,6 +124,11 @@ public class KafkaMessageBroker implements AsyncTaskMessageBroker {
         return result;
     }
 
+    @Override
+    public void notifyShutdown() {
+
+    }
+
     private AsyncTask getTopicTask(String kafkaTopic) throws APIException {
         Consumer<String, String> consumer = consumers.get(kafkaTopic);
         synchronized (consumer) {

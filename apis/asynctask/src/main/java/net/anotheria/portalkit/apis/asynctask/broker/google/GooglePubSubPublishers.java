@@ -6,7 +6,9 @@ import net.anotheria.anoplass.api.APIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public final class GooglePubSubPublishers {
 
@@ -37,4 +39,14 @@ public final class GooglePubSubPublishers {
         return INSTANCE;
     }
 
+    public void notifyShutdown(){
+        for (Map.Entry<TopicName, Publisher> entry: publishers.entrySet()) {
+            try {
+                entry.getValue().shutdown();
+                entry.getValue().awaitTermination(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                log.error("Unable to correct shutdown publisher. " + e.getMessage());
+            }
+        }
+    }
 }

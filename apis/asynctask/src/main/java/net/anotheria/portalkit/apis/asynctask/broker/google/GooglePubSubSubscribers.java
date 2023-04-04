@@ -7,7 +7,9 @@ import net.anotheria.anoplass.api.APIException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public final class GooglePubSubSubscribers {
 
@@ -54,4 +56,15 @@ public final class GooglePubSubSubscribers {
         return INSTANCE;
     }
 
+
+    public void notifyShutdown() {
+        for (Map.Entry<String, SubscriberStub> entry: subscribers.entrySet()) {
+            try {
+                entry.getValue().shutdown();
+                entry.getValue().awaitTermination(10, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                log.error("Unable to correct shutdown subscriber. " + e.getMessage());
+            }
+        }
+    }
 }
