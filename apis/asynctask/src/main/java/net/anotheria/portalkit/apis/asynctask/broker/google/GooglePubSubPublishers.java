@@ -43,7 +43,9 @@ public final class GooglePubSubPublishers {
         for (Map.Entry<TopicName, Publisher> entry: publishers.entrySet()) {
             try {
                 entry.getValue().shutdown();
-                entry.getValue().awaitTermination(5, TimeUnit.SECONDS);
+                if (!entry.getValue().awaitTermination(10, TimeUnit.SECONDS)) {
+                    log.error("The publisher did not terminate");
+                }
             } catch (Exception e) {
                 log.error("Unable to correct shutdown publisher. " + e.getMessage());
             }
