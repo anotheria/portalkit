@@ -60,14 +60,7 @@ public final class GooglePubSubSubscribers {
     public void notifyShutdown() {
         for (Map.Entry<String, SubscriberStub> entry: subscribers.entrySet()) {
             try {
-                SubscriberStub subscriberStub = entry.getValue();
-                subscriberStub.shutdown();
-                if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
-                    subscriberStub.shutdownNow();
-                    if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
-                        log.error("The subscriber did not terminate");
-                    }
-                }
+                entry.getValue().close();
             } catch (Exception e) {
                 log.error("Unable to correct shutdown subscriber. " + e.getMessage());
             }
