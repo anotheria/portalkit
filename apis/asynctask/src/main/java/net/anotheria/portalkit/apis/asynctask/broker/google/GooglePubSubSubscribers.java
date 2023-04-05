@@ -62,9 +62,9 @@ public final class GooglePubSubSubscribers {
             try {
                 SubscriberStub subscriberStub = entry.getValue();
                 subscriberStub.shutdown();
-                if (!subscriberStub.awaitTermination(10, TimeUnit.SECONDS)) {
+                if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
                     subscriberStub.shutdownNow();
-                    if (!subscriberStub.awaitTermination(10, TimeUnit.SECONDS)) {
+                    if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
                         log.error("The subscriber did not terminate");
                     }
                 }
