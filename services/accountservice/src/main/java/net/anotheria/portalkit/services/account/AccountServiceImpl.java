@@ -11,6 +11,7 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,6 +66,16 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 	 * Cache for email 2 id mapping.
 	 */
 	private Cache<String, AccountId> email2idCache;
+
+	/**
+	 * Cache for name and brand 2 id mapping.
+	 */
+	private Cache<String, AccountId> nameAndBrand2idCache;
+
+	/**
+	 * Cache for email and brand 2 id mapping.
+	 */
+	private Cache<String, AccountId> emailAndBrand2idCache;
 
 	/**
 	 * Instance of null account that is used internally.
@@ -135,14 +146,23 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 			throw new AccountServiceException(e);
 		}
 
-		name2idCache.remove(oldAccount.getName());
-		email2idCache.remove(oldAccount.getEmail());
+		if (config.isBrandEnabled()) {
+			nameAndBrand2idCache.remove(getBrandKey(oldAccount.getName(), oldAccount.getBrand()));
+			emailAndBrand2idCache.remove(getBrandKey(oldAccount.getEmail(), oldAccount.getBrand()));
+		} else {
+			name2idCache.remove(oldAccount.getName());
+			email2idCache.remove(oldAccount.getEmail());
+		}
 	}
 
 	private void saveAccount(Account toSave) throws AccountServiceException {
 		if (toSave.getId() == null)
 			throw new IllegalArgumentException("Not account id set, impossible to save " + toSave);
 		Account oldAccount = getAccountInternally(toSave.getId());
+
+		if (config.isBrandEnabled() && StringUtils.isEmpty(toSave.getBrand()))
+			toSave.setBrand(config.getDefaultBrand());
+
 		try {
 			persistenceService.saveAccount(toSave);
 		} catch (AccountPersistenceServiceException e) {
@@ -155,12 +175,22 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 			cache.put(toSave.getId(), fromPersistence.clone());
 			if (oldAccount != NULL_ACCOUNT) {
 				if (!oldAccount.getEmail().equals(fromPersistence.getEmail())) {
-					email2idCache.remove(oldAccount.getEmail());
-					email2idCache.put(fromPersistence.getEmail(), fromPersistence.getId());
+					if (config.isBrandEnabled()) {
+						emailAndBrand2idCache.remove(getBrandKey(oldAccount.getEmail(), oldAccount.getBrand()));
+						emailAndBrand2idCache.put(getBrandKey(fromPersistence.getEmail(), fromPersistence.getBrand()), fromPersistence.getId());
+					} else {
+						email2idCache.remove(oldAccount.getEmail());
+						email2idCache.put(fromPersistence.getEmail(), fromPersistence.getId());
+					}
 				}
 				if (!oldAccount.getName().equals(fromPersistence.getName())) {
-					name2idCache.remove(oldAccount.getName());
-					name2idCache.put(fromPersistence.getName(), fromPersistence.getId());
+					if (config.isBrandEnabled()) {
+						nameAndBrand2idCache.remove(getBrandKey(oldAccount.getName(), oldAccount.getBrand()));
+						nameAndBrand2idCache.put(getBrandKey(fromPersistence.getName(), fromPersistence.getBrand()), fromPersistence.getId());
+					} else {
+						name2idCache.remove(oldAccount.getName());
+						name2idCache.put(fromPersistence.getName(), fromPersistence.getId());
+					}
 				}
 			}
 		} catch (AccountPersistenceServiceException e) {
@@ -184,20 +214,26 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 	@Override
 	public Account createAccount(Account toCreate) throws AccountServiceException {
 
-		if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName()) != null)
-			throw new AccountAlreadyExistsException("name", toCreate.getName());
-		if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail()) != null)
-			throw new AccountAlreadyExistsException("email", toCreate.getEmail());
-
-		@SuppressWarnings("deprecation")
-		Account newAccount = Account.newAccountFromPattern(toCreate);
-		saveAccount(newAccount);
-		if (config.isAuditEnabled()) {
-			createAuditForAccount(newAccount);
+		if (config.isBrandEnabled()) {
+			if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName(), toCreate.getBrand()) != null)
+				throw new AccountAlreadyExistsException("name", toCreate.getName(), toCreate.getBrand());
+			if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail(), toCreate.getBrand()) != null)
+				throw new AccountAlreadyExistsException("email", toCreate.getEmail(), toCreate.getBrand());
+		} else {
+			if (config.isExclusiveName() && getAccountIdByNameInternally(toCreate.getName()) != null)
+				throw new AccountAlreadyExistsException("name", toCreate.getName());
+			if (config.isExclusiveMail() && getAccountIdByEmailInternally(toCreate.getEmail()) != null)
+				throw new AccountAlreadyExistsException("email", toCreate.getEmail());
 		}
-		eventSupplier.accountCreated(newAccount);
-		nonExistingAccountCache.remove(newAccount.getId());
-		return getAccount(newAccount.getId());
+
+		toCreate.setId(AccountId.generateNew());
+		saveAccount(toCreate);
+		if (config.isAuditEnabled()) {
+			createAuditForAccount(toCreate);
+		}
+		eventSupplier.accountCreated(toCreate);
+		nonExistingAccountCache.remove(toCreate.getId());
+		return getAccount(toCreate.getId());
 	}
 
 	@Override
@@ -243,6 +279,63 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 			return fromPersistence;
 		} catch (AccountPersistenceServiceException e) {
 			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public AccountId getAccountIdByName(String accountName, String brand) throws AccountServiceException {
+		AccountId id = getAccountIdByNameInternally(accountName, brand);
+		if (id == null)
+			throw new AccountNotFoundException(accountName, brand);
+		return id;
+	}
+
+	private AccountId getAccountIdByNameInternally(String accountName, String brand) throws AccountServiceException {
+		AccountId fromCache = nameAndBrand2idCache.get(getBrandKey(accountName, brand));
+		if (fromCache != null)
+			return fromCache;
+
+		try {
+			AccountId fromPersistence = persistenceService.getIdByName(accountName, brand);
+			if (fromPersistence != null)
+				nameAndBrand2idCache.put(getBrandKey(accountName, brand), fromPersistence);
+
+			return fromPersistence;
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public AccountId getAccountIdByEmail(String accountEmail, String brand) throws AccountServiceException {
+		AccountId id = getAccountIdByEmailInternally(accountEmail, brand);
+		if (id == null)
+			throw new AccountNotFoundException(accountEmail, brand);
+		return id;
+	}
+
+	private AccountId getAccountIdByEmailInternally(String accountEmail, String brand) throws AccountServiceException{
+		AccountId fromCache = emailAndBrand2idCache.get(getBrandKey(accountEmail, brand));
+		if (fromCache != null)
+			return fromCache;
+
+		try {
+			AccountId fromPersistence = persistenceService.getIdByEmail(accountEmail, brand);
+			if (fromPersistence != null)
+				emailAndBrand2idCache.put(getBrandKey(accountEmail, brand), fromPersistence);
+
+			return fromPersistence;
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds(String brand) throws AccountAdminServiceException {
+		try {
+			return persistenceService.getAllAccountIds(brand);
+		} catch (AccountPersistenceServiceException e) {
+			throw new AccountAdminServiceException(e);
 		}
 	}
 
@@ -333,8 +426,14 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 
 		cache = Caches.createConfigurableHardwiredCache("pk-cache-account-service");
 		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("pk-cache-null-account-service");
-		name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
-		email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
+
+		if (config.isBrandEnabled()) {
+			nameAndBrand2idCache = Caches.createConfigurableHardwiredCache("accountservice-namebrand2id");
+			emailAndBrand2idCache = Caches.createConfigurableHardwiredCache("accountservice-emailbrand2id");
+		} else {
+			name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
+			email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
+		}
 
 		try {
 			persistenceService = MetaFactory.get(AccountPersistenceService.class);
@@ -351,4 +450,7 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 		init();
 	}
 
+	private String getBrandKey(String value, String brand) {
+		return value + "_" + brand;
+	}
 }

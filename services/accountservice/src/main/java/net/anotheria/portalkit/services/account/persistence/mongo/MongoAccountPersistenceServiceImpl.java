@@ -43,6 +43,7 @@ public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServ
 				accountEntity.setStatus(account.getStatus());
 				accountEntity.setTenant(account.getTenant());
 				accountEntity.setType(account.getType());
+				accountEntity.setBrand(account.getBrand());
 				accountEntity.setDaoCreated(System.currentTimeMillis());
 				accountEntity.setDaoUpdated(System.currentTimeMillis());
 
@@ -99,6 +100,19 @@ public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServ
 	}
 
 	@Override
+	public AccountId getIdByName(String name, String brand) throws AccountPersistenceServiceException {
+		try {
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByName(connect(), name, brand, AccountEntity.class);
+			if (accountEntity == null) return null;
+
+			return new AccountId(accountEntity.getAccid());
+		} catch (MongoDaoException e) {
+			log.error("Can't find accountId by name " + name + " and brand " + brand, e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
 		try {
 			Datastore datastore = connect();
@@ -108,6 +122,19 @@ public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServ
 			return new AccountId(accountEntity.getAccid());
 		} catch (MongoDaoException e) {
 			log.error("Can't find accountId by email " + email, e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public AccountId getIdByEmail(String email, String brand) throws AccountPersistenceServiceException {
+		try {
+			AccountEntity accountEntity = (AccountEntity) accountDao.getAccountByEmail(connect(), email, brand, AccountEntity.class);
+			if (accountEntity == null) return null;
+
+			return new AccountId(accountEntity.getAccid());
+		} catch (MongoDaoException e) {
+			log.error("Can't find accountId by email " + email + " and brand " + brand, e);
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		}
 	}
@@ -128,6 +155,21 @@ public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServ
 			return resultSet;
 		} catch (MongoDaoException e) {
 			log.error("Error while getting tokens for accountId", e);
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds(String brand) throws AccountPersistenceServiceException {
+		try {
+			List<? extends BaseEntity> allAccounts = accountDao.getAllAccounts(connect(), AccountEntity.class);
+			Set<AccountId> set = new HashSet<>();
+			for (BaseEntity baseEntity: allAccounts)
+				set.add(new AccountId(((AccountEntity)baseEntity).getAccid()));
+
+			return set;
+		} catch (MongoDaoException e) {
+			log.error("Error while getting accountIds for brand " + brand, e);
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		}
 	}

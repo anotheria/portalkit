@@ -53,10 +53,30 @@ public class InMemoryAccountPersistenceServiceImpl implements AccountPersistence
 	}
 
 	@Override
+	public AccountId getIdByName(String name, String brand) throws AccountPersistenceServiceException {
+		for (Account acc : storage.values()) {
+			System.out.println("checking " + name + " and " + brand + " in " + acc);
+			if (acc.getName().equals(name) && acc.getBrand().equals(brand))
+				return acc.getId().clone();
+		}
+		return null;
+	}
+
+	@Override
 	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
 		for (Account acc : storage.values()) {
 			System.out.println("checking " + email + " in " + acc);
 			if (acc.getEmail().equals(email))
+				return acc.getId().clone();
+		}
+		return null;
+	}
+
+	@Override
+	public AccountId getIdByEmail(String email, String brand) throws AccountPersistenceServiceException {
+		for (Account acc: storage.values()) {
+			System.out.println("checking " + email + " and " + brand + " in " + acc);
+			if (acc.getEmail().equals(email) && acc.getBrand().equals(brand))
 				return acc.getId().clone();
 		}
 		return null;
@@ -70,7 +90,17 @@ public class InMemoryAccountPersistenceServiceImpl implements AccountPersistence
 
 		return result;
 	}
-	
+
+	@Override
+	public Collection<AccountId> getAllAccountIds(String brand) throws AccountPersistenceServiceException {
+		List<AccountId> result = new ArrayList<>();
+		for (Account account: storage.values()) {
+			if (account.getBrand().equals(brand))
+				result.add(account.getId().clone());
+		}
+		return result;
+	}
+
 	@Override
 	public List<AccountId> getAccountsByType(int accountTypeId) throws AccountPersistenceServiceException {
 		List<AccountId> result = new ArrayList<AccountId>();

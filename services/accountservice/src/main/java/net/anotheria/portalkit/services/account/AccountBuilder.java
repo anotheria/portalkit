@@ -47,6 +47,10 @@ public final class AccountBuilder {
      * Random UID.
      */
     private int randomUID;
+    /**
+     * Brand name.
+     */
+    private String brand;
 
 
     public AccountBuilder id(AccountId accountId) {
@@ -90,6 +94,11 @@ public final class AccountBuilder {
         return this;
     }
 
+    public AccountBuilder brand(String aBrand) {
+        brand = aBrand;
+        return this;
+    }
+
     public Account build() {
 
         Account acc = new Account(id);
@@ -101,6 +110,7 @@ public final class AccountBuilder {
         acc.setStatus(status);
         acc.setTenant(tenant);
         acc.setRandomUID(randomUID);
+        acc.setBrand(brand);
 
         return acc;
     }

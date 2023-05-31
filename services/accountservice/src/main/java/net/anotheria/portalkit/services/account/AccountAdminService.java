@@ -25,6 +25,15 @@ public interface AccountAdminService extends Service {
 	Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException;
 
 	/**
+	 * Returns collection of registered accounts in the system according to brand.
+	 *
+	 * @param brand brand
+	 * @return collection of {@link AccountId}
+	 * @throws AccountAdminServiceException if any errors occurs
+	 */
+	Collection<AccountId> getAllAccountIds(String brand) throws AccountAdminServiceException;
+
+	/**
 	 * Get accounts identifiers by account type.
 	 * 
 	 * @param accountType
