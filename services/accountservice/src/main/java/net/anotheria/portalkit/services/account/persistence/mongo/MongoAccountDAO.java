@@ -21,12 +21,17 @@ public interface MongoAccountDAO<T> {
 
     T getEntityByAccountId(Datastore datastore, String accountId, Class<? extends T> tClass) throws MongoDaoException;
 
-
     T getAccountByName(Datastore datastore, String name, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+
+    T getAccountByName(Datastore datastore, String name, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
     T getAccountByEmail(Datastore datastore, String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
+    T getAccountByEmail(Datastore datastore, String email, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+
     List<? extends T> getAllAccounts(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
+
+    List<? extends T> getAllAccounts(Datastore datastore, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 
     List<? extends T> getAccountsByType(Datastore datastore, int id, Class<? extends BaseEntity> entityClass) throws MongoDaoException;
 

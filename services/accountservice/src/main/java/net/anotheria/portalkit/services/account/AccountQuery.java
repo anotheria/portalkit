@@ -60,6 +60,10 @@ public final class AccountQuery implements Serializable {
 	 * {@link List} of {@link String} tenants.
 	 */
 	private final List<String> tenants;
+	/**
+	 * User brand.
+	 */
+	private final String brand;
 
 	private AccountQuery(Builder builder) {
 		this.ids = builder.getIds();
@@ -73,6 +77,7 @@ public final class AccountQuery implements Serializable {
 		this.registeredFrom = builder.getRegisteredFrom();
 		this.registeredTill = builder.getRegisteredTill();
 		this.tenants = builder.getTenants();
+		this.brand = builder.getBrand();
 	}
 
 	public List<AccountId> getIds() {
@@ -119,6 +124,10 @@ public final class AccountQuery implements Serializable {
 		return tenants;
 	}
 
+	public String getBrand() {
+		return brand;
+	}
+
 	@Override
 	public String toString() {
 		return "AccountQuery{" +
@@ -133,6 +142,7 @@ public final class AccountQuery implements Serializable {
 				", registeredFrom=" + registeredFrom +
 				", registeredTill=" + registeredTill +
 				", tenants=" + tenants +
+				", brand='" + brand + '\'' +
 				'}';
 	}
 
@@ -151,6 +161,7 @@ public final class AccountQuery implements Serializable {
 		private Long registeredFrom;
 		private Long registeredTill;
 		private List<String> tenants = new ArrayList<>();
+		private String brand;
 
 		/**
 		 * Default constructor of builder.
@@ -226,6 +237,11 @@ public final class AccountQuery implements Serializable {
 			return this;
 		}
 
+		public Builder setBrand(String brand) {
+			this.brand = brand;
+			return this;
+		}
+
 		List<AccountId> getIds() {
 			return ids;
 		}
@@ -268,6 +284,10 @@ public final class AccountQuery implements Serializable {
 
 		List<String> getTenants() {
 			return tenants;
+		}
+
+		public String getBrand() {
+			return brand;
 		}
 	}
 }

@@ -100,6 +100,19 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 	}
 
 	@Override
+	public AccountId getIdByName(String name, String brand) throws AccountPersistenceServiceException {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			return dao.getIdByNameAndBrand(connection, name, brand);
+		} catch (SQLException | DAOException e) {
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(connection);
+		}
+	}
+
+	@Override
 	public AccountId getIdByEmail(String email) throws AccountPersistenceServiceException {
 		Connection con = null;
 		try {
@@ -115,6 +128,19 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 	}
 
 	@Override
+	public AccountId getIdByEmail(String email, String brand) throws AccountPersistenceServiceException {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			return dao.getIdByEmailAndBrand(connection, email, brand);
+		} catch (SQLException | DAOException e) {
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(connection);
+		}
+	}
+
+	@Override
 	public Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException {
 		Connection con = null;
 		try {
@@ -126,6 +152,19 @@ public class JDBCAccountPersistenceServiceImpl extends BasePersistenceServiceJDB
 			throw new AccountPersistenceServiceException(e.getMessage(), e);
 		} finally {
 			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public Collection<AccountId> getAllAccountIds(String brand) throws AccountPersistenceServiceException {
+		Connection connection = null;
+		try {
+			connection = getConnection();
+			return dao.getAccountIds(connection, brand);
+		} catch (SQLException | DAOException e) {
+			throw new AccountPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(connection);
 		}
 	}
 

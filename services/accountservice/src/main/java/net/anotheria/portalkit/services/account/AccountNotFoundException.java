@@ -16,4 +16,8 @@ public class AccountNotFoundException extends AccountServiceException{
 	public AccountNotFoundException(String accountName) {
 		super("Account with name "+accountName+" not found");
 	}
+
+	public AccountNotFoundException(String accountName, String brand) {
+		super("Account with name " + accountName + " and brand " + brand + " not found");
+	}
 }
