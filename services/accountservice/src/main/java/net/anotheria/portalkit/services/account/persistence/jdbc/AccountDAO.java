@@ -319,7 +319,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	}
 
 	public List<Account> getAccountsByQuery(final Connection con, final AccountQuery query) throws SQLException {
-		final String sqlSelectPart = "SELECT id, name, email, type, status, regts, tenant, randomUID FROM " + TABLE_NAME;
+		final String sqlSelectPart = "SELECT id, name, email, type, status, regts, tenant, randomUID, brand FROM " + TABLE_NAME;
 		final String sqlWherePart = " WHERE 1=1";
 		final String sqlOrderPart = " ORDER BY regts DESC";
 		// general selection part
