@@ -73,6 +73,10 @@ public class ArchivedAccountQuery implements Serializable {
      * Deleted notes.
      */
     private final List<String> deletedNotes = new ArrayList<>();
+    /**
+     * User brand.
+     */
+    private String brand;
 
     public Long getDeletedTill() {
         return deletedTill;
@@ -156,5 +160,13 @@ public class ArchivedAccountQuery implements Serializable {
 
     public List<String> getDeletedNotes() {
         return deletedNotes;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

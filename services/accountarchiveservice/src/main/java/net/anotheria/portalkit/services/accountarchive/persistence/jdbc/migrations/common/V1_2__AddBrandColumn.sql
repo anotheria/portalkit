@@ -1,0 +1,1 @@
+ALTER TABLE account_archive add column brand VARCHAR(32) ;

@@ -36,7 +36,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         PreparedStatement stat = null;
         ResultSet result = null;
         try {
-            stat = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME + " WHERE id = ?;");
+            stat = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note, brand from " + TABLE_NAME + " WHERE id = ?;");
             stat.setString(1, id.getInternalId());
             result = stat.executeQuery();
             if (!result.next()) {
@@ -60,6 +60,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         acc.setTenant(result.getString("tenant"));
         acc.setDeletionTimestamp(result.getLong("deleted_at"));
         acc.setDeletionNote(result.getString("deleted_note"));
+        acc.setBrand(result.getString("brand"));
         return acc;
     }
 
@@ -78,7 +79,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
                 }
             });
             String[] identities = transform.toArray(new String[transform.size()]);
-            StringBuilder sb = new StringBuilder("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME + " WHERE id IN (");
+            StringBuilder sb = new StringBuilder("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note, brand from " + TABLE_NAME + " WHERE id IN (");
             int listSize = identities.length;
             for(int i = 0; i < listSize; i++){
                 sb.append("'").append(identities[i]).append("'");
@@ -103,7 +104,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         ResultSet resultSet = null;
         List<ArchivedAccount> result = new ArrayList<ArchivedAccount>();
         try{
-            query = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note from " + TABLE_NAME);
+            query = connection.prepareStatement("SELECT id, name, email, type, regts, status, tenant, deleted_at, deleted_note, brand from " + TABLE_NAME);
             resultSet = query.executeQuery();
             while (resultSet.next()){
                 result.add(mapArchivedAccount(new AccountId(resultSet.getString("id")), resultSet));
@@ -124,7 +125,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         } catch (DAOException ignored) {
         }
 
-        String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ",deleted_at,deleted_note) " + "VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ",deleted_at,deleted_note,brand) " + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement query = connection.prepareStatement(insert);
         query.setString(1, account.getId().getInternalId());
         query.setString(2, account.getName());
@@ -137,12 +138,13 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         query.setLong(9, 0);
         query.setLong(10, account.getDeletionTimestamp());
         query.setString(11, account.getDeletionNote());
+        query.setString(12, account.getBrand());
         return query.executeUpdate() == 1;
     }
 
     protected boolean updateAccount(Connection connection, ArchivedAccount account) throws SQLException, DAOException {
         String update = "UPDATE " + TABLE_NAME + " set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, deleted_at = ?, deleted_note = ?, "
-                + ATT_DAO_UPDATED + " = ? WHERE id = ?";
+                + ATT_DAO_UPDATED + " = ?, brand = ? WHERE id = ?";
         PreparedStatement query = connection.prepareStatement(update);
         query.setString(1, account.getName());
         query.setString(2, account.getEmail());
@@ -153,7 +155,8 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
         query.setLong(7, account.getDeletionTimestamp());
         query.setString(8, account.getDeletionNote());
         query.setLong(9, System.currentTimeMillis());
-        query.setString(10, account.getId().getInternalId());
+        query.setString(10, account.getBrand());
+        query.setString(11, account.getId().getInternalId());
         int updated = query.executeUpdate();
         if (updated > 1) {
             throw new DAOException("There is more than 1 records update by Query: " + query);
@@ -265,7 +268,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
     }
 
     public List<ArchivedAccount> getAccountsByQuery(Connection connection, ArchivedAccountQuery query) throws SQLException {
-        final String sqlSelectPart = "SELECT id, name, email, type, status, regts, deleted_at, deleted_note, tenant FROM " + TABLE_NAME;
+        final String sqlSelectPart = "SELECT id, name, email, type, status, regts, deleted_at, deleted_note, tenant, brand FROM " + TABLE_NAME;
         final String sqlWherePart = " WHERE 1=1";
         final String sqlOrderPart = " ORDER BY regts DESC";
         // general selection part
@@ -311,6 +314,11 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
             String tenantsStr = StringUtils.concatenateTokens(query.getTenants(), ',', '\'', '\'');
             sqlRawQuery.append("AND tenant in (").append(tenantsStr).append(")");
         }
+
+        if (!StringUtils.isEmpty(query.getBrand())) {
+            sqlRawQuery.append("AND brand = '").append(query.getBrand()).append("'");
+        }
+
         // ordering part
         sqlRawQuery.append(sqlOrderPart);
 
@@ -334,6 +342,7 @@ public class AccountArchiveDAO extends AbstractDAO implements DAO {
                 account.setDeletionTimestamp(rs.getLong("deleted_at"));
                 account.setDeletionNote(rs.getString("deleted_note"));
                 account.setTenant(rs.getString("tenant"));
+                account.setBrand(rs.getString("brand"));
                 rawResult.add(account);
             }
         } finally {

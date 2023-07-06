@@ -41,9 +41,7 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
         try {
             con = getConnection();
             return command.execute(con);
-        } catch (SQLException e) {
-            throw new ArchivedAccountPersistenceServiceException(e.getMessage(), e);
-        } catch (DAOException e) {
+        } catch (DAOException | SQLException e) {
             throw new ArchivedAccountPersistenceServiceException(e.getMessage(), e);
         } finally {
             JDBCUtil.close(con);
@@ -52,63 +50,37 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
 
     @Override
     public ArchivedAccount getAccount(final AccountId id) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<ArchivedAccount>() {
-            @Override
-            public ArchivedAccount execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAccount(connection, id);
-            }
-        });
+        return callDao(connection -> dao.getAccount(connection, id));
     }
 
     @Override
     public List<ArchivedAccount> getAccounts(final List<AccountId> identities) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<List<ArchivedAccount>>() {
-            @Override
-            public List<ArchivedAccount> execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAccounts(connection, identities);
-            }
-        });
+        return callDao(connection -> dao.getAccounts(connection, identities));
     }
 
     @Override
     public List<ArchivedAccount> getAllAccounts() throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<List<ArchivedAccount>>() {
-            @Override
-            public List<ArchivedAccount> execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAllAccounts(connection);
-            }
-        });
+        return callDao(dao::getAllAccounts);
     }
 
     @Override
     public void saveAccount(final ArchivedAccount account) throws ArchivedAccountPersistenceServiceException {
-        callDao(new SQLConnectionAware<Void>() {
-            @Override
-            public Void execute(Connection connection) throws SQLException, DAOException {
-                dao.saveAccount(connection, account); return null;
-            }
+        callDao((SQLConnectionAware<Void>) connection -> {
+            dao.saveAccount(connection, account); return null;
         });
     }
 
     @Override
     public void deleteAccount(final AccountId id) throws ArchivedAccountPersistenceServiceException {
-        callDao(new SQLConnectionAware<Void>() {
-            @Override
-            public Void execute(Connection connection) throws SQLException, DAOException {
-                dao.deleteAccount(connection, id);
-                return null;
-            }
+        callDao((SQLConnectionAware<Void>) connection -> {
+            dao.deleteAccount(connection, id);
+            return null;
         });
     }
 
     @Override
     public AccountId getIdByName(final String name) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<AccountId>() {
-            @Override
-            public AccountId execute(Connection connection) throws SQLException, DAOException {
-                return dao.getIdByName(connection, name);
-            }
-        });
+        return callDao(connection -> dao.getIdByName(connection, name));
     }
 
     @Override
@@ -123,41 +95,21 @@ public class JdbcAccountArchivePersistenceServiceImpl extends BasePersistenceSer
 
     @Override
     public AccountId getIdByEmail(final String email) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<AccountId>() {
-            @Override
-            public AccountId execute(Connection connection) throws SQLException, DAOException {
-                return dao.getIdByEmail(connection, email);
-            }
-        });
+        return callDao(connection -> dao.getIdByEmail(connection, email));
     }
 
     @Override
     public Collection<AccountId> getAllAccountIds() throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<Collection<AccountId>>() {
-            @Override
-            public Collection<AccountId> execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAccountIds(connection);
-            }
-        });
+        return callDao(dao::getAccountIds);
     }
 
     @Override
     public List<AccountId> getAccountsByType(final int type) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<List<AccountId>>() {
-            @Override
-            public List<AccountId> execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAccountIdsByType(connection, type);
-            }
-        });
+        return callDao(connection -> dao.getAccountIdsByType(connection, type));
     }
 
     @Override
     public List<ArchivedAccount> getAccountsByQuery(final ArchivedAccountQuery query) throws ArchivedAccountPersistenceServiceException {
-        return callDao(new SQLConnectionAware<List<ArchivedAccount>>() {
-            @Override
-            public List<ArchivedAccount> execute(Connection connection) throws SQLException, DAOException {
-                return dao.getAccountsByQuery(connection, query);
-            }
-        });
+        return callDao(connection -> dao.getAccountsByQuery(connection, query));
     }
 }
