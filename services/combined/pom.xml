@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>portalkit</groupId>
+		<groupId>net.anotheria.portalkit</groupId>
 		<artifactId>services</artifactId>
 		<version>1.2.0-SNAPSHOT</version>
 	</parent>
@@ -14,42 +14,42 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-accountservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-accountsettingsservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-foreignidservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-accountlistservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-accountarchiveservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-recordservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-onlineservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
+			<groupId>net.anotheria.portalkit</groupId>
 			<artifactId>services-authenticationservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>

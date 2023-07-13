@@ -6,7 +6,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>portalkit</groupId>
+	<groupId>net.anotheria.portalkit</groupId>
 	<artifactId>portalkit</artifactId>
 	<version>1.6.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -455,50 +455,6 @@
 		<connection>scm:git:git@github.com:anotheria/portalkit.git</connection>
 		<developerConnection>scm:git:git@github.com:anotheria/portalkit.git</developerConnection>
 	</scm>
-
-	<distributionManagement>
-		<!-- use the following if you're not using a snapshot version. -->
-		<repository>
-			<id>portalkit-release</id>
-			<name>Portalkit Release Repository</name>
-			<url> https://repository.anotheria.net/content/repositories/portalkit-releases/</url>
-		</repository>
-		<!-- use the following if you ARE using a snapshot version. -->
-		<snapshotRepository>
-			<id>portalkit-snapshot</id>
-			<name>Portalkit Snapshot Repository</name>
-			<url>https://repository.anotheria.net/content/repositories/portalkit-snapshots/</url>
-			<uniqueVersion>true</uniqueVersion>
-		</snapshotRepository>
-	</distributionManagement>
-	
-	<reporting>
-	        <plugins>           
-	            <plugin>
-	                <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-project-info-reports-plugin</artifactId>
-	                <version>2.9</version>
-	            </plugin>           
-	        </plugins>    
-	    </reporting>
-
-	<licenses>
-		<license>
-			<name>NOT OPENSOURCE</name>
-			<url />
-			<distribution />
-		</license>
-	</licenses>
-
-	<url>http://anotheria.net</url>
-	<issueManagement>
-		<system>JIRA</system>
-		<url>https://jira.anotheria.net/</url>
-	</issueManagement>
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://jenkins.anotheria.net</url>
-	</ciManagement>
 
 	<inceptionYear>2012</inceptionYear>
 	<developers>
