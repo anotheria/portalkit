@@ -23,7 +23,7 @@ public class AccountResource {
     private AdminAPI adminAPI;
 
     public AccountResource() {
-        this.adminAPI = new AdminAPIImpl();
+        this.adminAPI = AdminAPIFactory.getInstance();
     }
 
     @GET

@@ -9,6 +9,11 @@ import net.anotheria.portalkit.adminapi.resources.account.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
 import net.anotheria.portalkit.services.account.AccountService;
+import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
+import net.anotheria.portalkit.services.accountsettings.Dataspace;
+import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
+import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
+import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +28,7 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     private AccountService accountService;
     private AccountAdminService accountAdminService;
     private AuthenticationService authenticationService;
+    private AccountSettingsService accountSettingsService;
 
     @Override
     public void init() throws APIInitException {
@@ -32,6 +38,7 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             this.accountService = MetaFactory.get(AccountService.class);
             this.accountAdminService = MetaFactory.get(AccountAdminService.class);
             this.authenticationService = MetaFactory.get(AuthenticationService.class);
+            this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
         } catch (MetaFactoryException ex) {
             log.error("Cannot initialize AccountResource", ex);
             throw new RuntimeException(ex.getMessage(), ex);
@@ -163,5 +170,77 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             log.error("Cannot update account password", any);
             throw new APIException(any.getMessage(), any);
         }
+    }
+
+    @Override
+    public String getSignAsToken(AccountId accountId) throws APIException {
+        String result = null;
+        try {
+            // TDB
+        } catch (Exception any) {
+            log.error("Cannot get sign as token", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Dataspace> getAllDataspaces(AccountId accountId) {
+        List<Dataspace> result = null;
+        try {
+            result = new LinkedList<>(accountSettingsService.getAllDataspaces(accountId));
+        } catch (Exception any) {
+            log.error("Cannot get user's dataspaces", any);
+        }
+        return result;
+    }
+
+    @Override
+    public Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException {
+        Dataspace result = null;
+        try {
+            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+                if (dataspace.getKey().getDataspaceId() == dataspaceId) {
+                    result = dataspace;
+                    break;
+                }
+            }
+
+            if (result == null) {
+                throw new APIException("Cannot find dataspace by id: " + dataspaceId);
+            }
+
+            Attribute attributeToAdd = Attribute.createAttribute(type, attributeName, attributeValue);
+            result.addAttribute(attributeName, attributeToAdd);
+            accountSettingsService.saveDataspace(result);
+        } catch (Exception any) {
+            log.error("Cannot add dataspace attribute", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException {
+        Dataspace result = null;
+        try {
+            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+                if (dataspace.getKey().getDataspaceId() == dataspaceId) {
+                    result = dataspace;
+                    break;
+                }
+            }
+
+            if (result == null) {
+                throw new APIException("Cannot find dataspace by id: " + dataspaceId);
+            }
+
+            result.removeAttribute(attributeName);
+            accountSettingsService.saveDataspace(result);
+        } catch (Exception any) {
+            log.error("Cannot remove dataspace attribute", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
     }
 }

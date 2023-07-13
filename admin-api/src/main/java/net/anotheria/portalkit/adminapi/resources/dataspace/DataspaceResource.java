@@ -1,18 +1,19 @@
 package net.anotheria.portalkit.adminapi.resources.dataspace;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.adminapi.api.AdminAPI;
+import net.anotheria.portalkit.adminapi.api.AdminAPIFactory;
+import net.anotheria.portalkit.adminapi.resources.ReplyObject;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
+import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.LinkedList;
 import java.util.List;
 
 @Path("admin-api/dataspace")
@@ -23,13 +24,10 @@ public class DataspaceResource {
     private static final Logger log = LoggerFactory.getLogger(DataspaceResource.class);
 
     private AccountSettingsService accountSettingsService;
-    private Gson gson;
-    private GsonBuilder builder;
+    private AdminAPI adminAPI;
 
     public DataspaceResource() {
-        this.builder = new GsonBuilder();
-        this.builder.setPrettyPrinting();
-        this.gson = builder.create();
+        this.adminAPI = AdminAPIFactory.getInstance();
 
         try {
             this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
@@ -40,17 +38,40 @@ public class DataspaceResource {
     }
 
     @GET
-    @Path("{accountId}/{dataspace}")
-    public Response getUserDataspace(@PathParam("accountId") String accountId, @PathParam("dataspace") String dataspace) {
+    @Path("{accountId}")
+    public Response getUserDataspaces(@PathParam("accountId") String accountId) {
 
         List<Dataspace> result = null;
         try {
-            result = new LinkedList<>();
+            result = adminAPI.getAllDataspaces(new AccountId(accountId));
         } catch (Exception e) {
-            log.error("Unable to get user's dataspace", e);
-            return Response.status(500).build();
+            return Response.status(500).entity(ReplyObject.error(e)).build();
         }
 
-        return Response.status(201).entity(gson.toJson(result)).build();
+        return Response.status(201).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @POST
+    @Path("add-attribute")
+    public Response addDataspaceAttribute(AddDataspaceAttributeRequest request) {
+        Dataspace result = null;
+        try {
+            result = adminAPI.addDataspaceAttribute(new AccountId(request.getAccountId()), request.getDataspaceId(), request.getAttributeName(), request.getAttributeValue(), request.getType());
+        } catch (Exception ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @POST
+    @Path("remove-attribute")
+    public Response removeDataspaceAttribute(RemoveDataspaceAttributeRequest request) {
+        Dataspace result = null;
+        try {
+            result = adminAPI.removeDataspaceAttribute(new AccountId(request.getAccountId()), request.getDataspaceId(), request.getAttributeName());
+        } catch (Exception ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 }

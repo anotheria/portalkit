@@ -4,7 +4,11 @@ import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.adminapi.resources.account.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.accountsettings.Dataspace;
+import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.util.List;
 
 public interface AdminAPI extends API {
 
@@ -19,5 +23,13 @@ public interface AdminAPI extends API {
     Account removeAccountStatus(AccountId accountId, int status) throws APIException;
 
     void setNewAccountPassword(AccountId accountId, String newPassword) throws APIException;
+
+    String getSignAsToken(AccountId accountId) throws APIException;
+
+    List<Dataspace> getAllDataspaces(AccountId accountId);
+
+    Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException;
+
+    Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
 
 }
