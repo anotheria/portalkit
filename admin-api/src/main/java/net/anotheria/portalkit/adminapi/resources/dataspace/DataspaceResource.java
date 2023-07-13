@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.dataspace;
+package net.anotheria.portalkit.adminapi.resources.dataspace;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
