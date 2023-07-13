@@ -8,7 +8,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 
 public interface AdminAPI extends API {
 
-    PageResult<Account> getAccounts(int pageNumber, int itemsOnPage) throws APIException;
+    PageResult<Account> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException;
 
     Account getAccountById(AccountId accountId) throws APIException;
 

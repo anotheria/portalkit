@@ -1,15 +1,11 @@
 package net.anotheria.portalkit.adminapi.resources.account;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.*;
 import net.anotheria.portalkit.adminapi.resources.ErrorKey;
 import net.anotheria.portalkit.adminapi.resources.ReplyObject;
 import net.anotheria.portalkit.services.account.Account;
-import net.anotheria.portalkit.services.account.AccountService;
 import net.anotheria.portalkit.services.common.AccountId;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,24 +22,16 @@ public class AccountResource {
 
     private AdminAPI adminAPI;
 
-    private AccountService accountService;
-
     public AccountResource() {
         this.adminAPI = new AdminAPIImpl();
-
-        try {
-            this.accountService = MetaFactory.get(AccountService.class);
-        } catch (MetaFactoryException ex) {
-            log.error("Cannot initialize AccountResource", ex);
-            throw new RuntimeException(ex.getMessage(), ex);
-        }
     }
 
     @GET
-    public Response getAllAccounts() {
+    @Path("/{searchTerm}/{pageNumber}/{itemsOnPage}")
+    public Response getAllAccounts(@PathParam("searchTerm") String searchTerm, @PathParam("pageNumber") int pageNumber, @PathParam("itemsOnPage") int itemsOnPage) {
         PageResult<Account> result = null;
         try {
-            result = adminAPI.getAccounts(0, 10);
+            result = adminAPI.getAccounts(pageNumber, itemsOnPage, searchTerm);
         } catch (APIException any) {
             log.error("Cannot get all accounts", any);
             return Response.status(500).entity(ReplyObject.error(any)).build();

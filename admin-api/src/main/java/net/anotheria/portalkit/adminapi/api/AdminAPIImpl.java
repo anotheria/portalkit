@@ -5,8 +5,6 @@ import net.anotheria.anoplass.api.APIInitException;
 import net.anotheria.anoplass.api.AbstractAPIImpl;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.adminapi.resources.ErrorKey;
-import net.anotheria.portalkit.adminapi.resources.ReplyObject;
 import net.anotheria.portalkit.adminapi.resources.account.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
@@ -14,10 +12,10 @@ import net.anotheria.portalkit.services.account.AccountService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
 
@@ -38,11 +36,20 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public PageResult<Account> getAccounts(int pageNumber, int itemsOnPage) throws APIException {
+    public PageResult<Account> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException {
         PageResult<Account> result = new PageResult<>();
         try {
             List<AccountId> accountIds = new LinkedList<>(accountAdminService.getAllAccountIds());
             List<Account> accounts = accountService.getAccounts(accountIds);
+
+            if(!StringUtils.isEmpty(searchTerm)) {
+                accounts = accounts.stream()
+                        .filter(e ->
+                                e.getEmail().toLowerCase().contains(searchTerm.trim().toLowerCase()) ||
+                                        e.getName().toLowerCase().contains(searchTerm.trim().toLowerCase())
+                        )
+                        .collect(Collectors.toList());
+            }
 
             result.setTotalItems(accounts.size());
             result.setItemsOnPage(itemsOnPage);
