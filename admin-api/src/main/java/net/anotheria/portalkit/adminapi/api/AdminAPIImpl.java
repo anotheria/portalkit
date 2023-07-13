@@ -9,6 +9,7 @@ import net.anotheria.portalkit.adminapi.resources.account.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
 import net.anotheria.portalkit.services.account.AccountService;
+import net.anotheria.portalkit.services.authentication.AuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,6 +22,7 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
 
     private AccountService accountService;
     private AccountAdminService accountAdminService;
+    private AuthenticationService authenticationService;
 
     @Override
     public void init() throws APIInitException {
@@ -29,6 +31,7 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         try {
             this.accountService = MetaFactory.get(AccountService.class);
             this.accountAdminService = MetaFactory.get(AccountAdminService.class);
+            this.authenticationService = MetaFactory.get(AuthenticationService.class);
         } catch (MetaFactoryException ex) {
             log.error("Cannot initialize AccountResource", ex);
             throw new RuntimeException(ex.getMessage(), ex);
@@ -150,5 +153,15 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             throw new APIException(any.getMessage(), any);
         }
         return result;
+    }
+
+    @Override
+    public void setNewAccountPassword(AccountId accountId, String newPassword) throws APIException {
+        try {
+            authenticationService.setPassword(accountId, newPassword);
+        } catch (Exception any) {
+            log.error("Cannot update account password", any);
+            throw new APIException(any.getMessage(), any);
+        }
     }
 }

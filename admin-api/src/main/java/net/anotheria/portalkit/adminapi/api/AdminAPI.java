@@ -18,4 +18,6 @@ public interface AdminAPI extends API {
 
     Account removeAccountStatus(AccountId accountId, int status) throws APIException;
 
+    void setNewAccountPassword(AccountId accountId, String newPassword) throws APIException;
+
 }

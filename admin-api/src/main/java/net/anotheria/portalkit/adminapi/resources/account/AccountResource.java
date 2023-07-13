@@ -93,5 +93,15 @@ public class AccountResource {
         return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 
+    @POST
+    @Path("password")
+    public Response setNewPassword(AccountSetPasswordRequest request) {
+        try {
+            adminAPI.setNewAccountPassword(new AccountId(request.getAccountId()), request.getPassword());
+        } catch (Exception any) {
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).build();
+    }
 
 }

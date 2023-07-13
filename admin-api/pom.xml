@@ -41,6 +41,12 @@
 
         <dependency>
             <groupId>portalkit</groupId>
+            <artifactId>services-authenticationservice</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>portalkit</groupId>
             <artifactId>services-common</artifactId>
             <version>${project.version}</version>
         </dependency>
