@@ -2,7 +2,7 @@ package net.anotheria.portalkit.adminapi.api;
 
 import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.portalkit.adminapi.resources.account.AccountUpdateRequest;
+import net.anotheria.portalkit.adminapi.rest.account.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;

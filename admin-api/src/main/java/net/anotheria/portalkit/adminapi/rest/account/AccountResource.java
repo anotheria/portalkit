@@ -1,9 +1,9 @@
-package net.anotheria.portalkit.adminapi.resources.account;
+package net.anotheria.portalkit.adminapi.rest.account;
 
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.adminapi.api.*;
-import net.anotheria.portalkit.adminapi.resources.ErrorKey;
-import net.anotheria.portalkit.adminapi.resources.ReplyObject;
+import net.anotheria.portalkit.adminapi.rest.ErrorKey;
+import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.resources.account;
+package net.anotheria.portalkit.adminapi.rest.account;
 
 public class AccountUpdateRequest {
 

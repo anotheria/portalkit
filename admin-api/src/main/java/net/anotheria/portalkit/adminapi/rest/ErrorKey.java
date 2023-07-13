@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.resources;
+package net.anotheria.portalkit.adminapi.rest;
 
 public enum ErrorKey {
 
