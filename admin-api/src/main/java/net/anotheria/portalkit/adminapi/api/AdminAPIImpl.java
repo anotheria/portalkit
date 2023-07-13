@@ -42,7 +42,7 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             List<AccountId> accountIds = new LinkedList<>(accountAdminService.getAllAccountIds());
             List<Account> accounts = accountService.getAccounts(accountIds);
 
-            if(!StringUtils.isEmpty(searchTerm)) {
+            if (!StringUtils.isEmpty(searchTerm)) {
                 accounts = accounts.stream()
                         .filter(e ->
                                 e.getEmail().toLowerCase().contains(searchTerm.trim().toLowerCase()) ||
@@ -119,6 +119,34 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             accountService.updateAccount(result);
         } catch (Exception any) {
             log.error("Cannot update account", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public Account addAccountStatus(AccountId accountId, int status) throws APIException {
+        Account result = null;
+        try {
+            result = accountService.getAccount(accountId);
+            result.addStatus(status);
+            result = accountService.updateAccount(result);
+        } catch (Exception any) {
+            log.error("Cannot add status to account", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public Account removeAccountStatus(AccountId accountId, int status) throws APIException {
+        Account result = null;
+        try {
+            result = accountService.getAccount(accountId);
+            result.removeStatus(status);
+            result = accountService.updateAccount(result);
+        } catch (Exception any) {
+            log.error("Cannot add status to account", any);
             throw new APIException(any.getMessage(), any);
         }
         return result;

@@ -69,5 +69,29 @@ public class AccountResource {
         return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 
+    @POST
+    @Path("addStatus/{accountId}/{status}")
+    public Response addStatusToAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
+        Account result = null;
+        try {
+            result = adminAPI.addAccountStatus(new AccountId(accountId), status);
+        } catch (Exception any) {
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @POST
+    @Path("removeStatus/{accountId}/{status}")
+    public Response removeStatusFromAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
+        Account result = null;
+        try {
+            result = adminAPI.removeAccountStatus(new AccountId(accountId), status);
+        } catch (Exception any) {
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
 
 }

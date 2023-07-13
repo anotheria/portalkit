@@ -14,4 +14,8 @@ public interface AdminAPI extends API {
 
     Account updateAccount(AccountUpdateRequest updateRequest) throws APIException;
 
+    Account addAccountStatus(AccountId accountId, int status) throws APIException;
+
+    Account removeAccountStatus(AccountId accountId, int status) throws APIException;
+
 }
