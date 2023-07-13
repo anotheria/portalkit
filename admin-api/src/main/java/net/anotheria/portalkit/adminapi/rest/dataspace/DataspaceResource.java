@@ -5,6 +5,8 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.AdminAPI;
 import net.anotheria.portalkit.adminapi.api.AdminAPIFactory;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
+import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
+import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.common.AccountId;

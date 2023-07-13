@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.rest.account;
+package net.anotheria.portalkit.adminapi.rest.account.request;
 
 public class AccountSetPasswordRequest {
 

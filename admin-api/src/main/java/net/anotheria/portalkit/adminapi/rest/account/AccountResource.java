@@ -4,6 +4,8 @@ import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.adminapi.api.*;
 import net.anotheria.portalkit.adminapi.rest.ErrorKey;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountSetPasswordRequest;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;
