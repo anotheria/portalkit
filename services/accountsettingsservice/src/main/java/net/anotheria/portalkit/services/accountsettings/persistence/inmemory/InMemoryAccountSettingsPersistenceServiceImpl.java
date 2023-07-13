@@ -6,6 +6,7 @@ import net.anotheria.portalkit.services.accountsettings.persistence.AccountSetti
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,6 +28,11 @@ public class InMemoryAccountSettingsPersistenceServiceImpl implements AccountSet
 	@Override
 	public Dataspace loadDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
 		return storage.get(new AccountSettingsKey(owner, dataspaceId).toString());
+	}
+
+	@Override
+	public Collection<Dataspace> loadDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+		throw new IllegalStateException("Not implemented yet");
 	}
 
 	@Override

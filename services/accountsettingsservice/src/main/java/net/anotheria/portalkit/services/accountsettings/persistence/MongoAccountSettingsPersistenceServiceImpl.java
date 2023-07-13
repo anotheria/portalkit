@@ -8,11 +8,12 @@ import net.anotheria.portalkit.services.storage.query.CompositeQuery;
 import net.anotheria.portalkit.services.storage.query.EqualQuery;
 import net.anotheria.portalkit.services.storage.query.QueryBuilder;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Mongo implementation of Account settings persistence service.
- * 
+ *
  * @author dagafonov
  */
 public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServiceImpl<Dataspace> implements AccountSettingsPersistenceService {
@@ -21,7 +22,7 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 	 * Storage configuration name.
 	 */
 	private static final String MONGO_SERVICE_COLLECTION_CONFIG_NAME = "pk-storage-mongo-accountsettings";
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -50,6 +51,17 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 			save(dataspace);
 		} catch (StorageException ex) {
 			throw new AccountSettingsPersistenceServiceException("save(" + dataspace + ") failed", ex);
+		}
+	}
+
+	@Override
+	public Collection<Dataspace> loadDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+		QueryBuilder builder = QueryBuilder.create();
+		try {
+			builder.add(EqualQuery.create("key.accountId", owner.getInternalId()));
+			return find(builder.build());
+		} catch (StorageException ex) {
+			throw new AccountSettingsPersistenceServiceException("find(" + builder + ") failed", ex);
 		}
 	}
 
