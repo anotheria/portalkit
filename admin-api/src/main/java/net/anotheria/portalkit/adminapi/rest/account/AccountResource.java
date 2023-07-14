@@ -97,7 +97,7 @@ public class AccountResource {
     }
 
     @POST
-    @Path("addStatus/{accountId}/{status}")
+    @Path("add-status/{accountId}/{status}")
     public Response addStatusToAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
         Account result = null;
         try {
@@ -109,7 +109,7 @@ public class AccountResource {
     }
 
     @POST
-    @Path("removeStatus/{accountId}/{status}")
+    @Path("remove-status/{accountId}/{status}")
     public Response removeStatusFromAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
         Account result = null;
         try {
@@ -132,7 +132,7 @@ public class AccountResource {
     }
 
     @GET
-    @Path("signAs/{accountId}")
+    @Path("sign-as/{accountId}")
     public Response getSignAsToken(@PathParam("accountId") String accountId) {
         String result = null;
         try {
