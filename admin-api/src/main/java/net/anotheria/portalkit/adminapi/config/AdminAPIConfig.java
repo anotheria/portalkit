@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @ConfigureMe(name = "pk-admin-api-config")
 public class AdminAPIConfig {
@@ -94,6 +95,14 @@ public class AdminAPIConfig {
         @Configure
         private String name;
 
+        public AccountStatusConfig() {
+        }
+
+        public AccountStatusConfig(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
         public int getValue() {
             return value;
         }
@@ -108,6 +117,19 @@ public class AdminAPIConfig {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AccountStatusConfig that = (AccountStatusConfig) o;
+            return value == that.value;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
         }
 
         @Override
@@ -128,6 +150,14 @@ public class AdminAPIConfig {
         @Configure
         private String name;
 
+        public AccountTypeConfig() {
+        }
+
+        public AccountTypeConfig(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
         public int getValue() {
             return value;
         }
@@ -142,6 +172,19 @@ public class AdminAPIConfig {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AccountTypeConfig that = (AccountTypeConfig) o;
+            return value == that.value;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(value);
         }
 
         @Override

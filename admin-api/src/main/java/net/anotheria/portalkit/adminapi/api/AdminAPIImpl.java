@@ -29,14 +29,14 @@ public class AdminAPIImpl implements AdminAPI {
 
     private static final Logger log = LoggerFactory.getLogger(AdminAPIImpl.class);
 
-    private final AccountService accountService;
-    private final AccountAdminService accountAdminService;
-    private final AuthenticationService authenticationService;
-    private final AccountSettingsService accountSettingsService;
+    private AccountService accountService;
+    private AccountAdminService accountAdminService;
+    private AuthenticationService authenticationService;
+    private AccountSettingsService accountSettingsService;
 
-    private final AdminAPIConfig config;
+    private AdminAPIConfig config;
 
-    public AdminAPIImpl() {
+    protected AdminAPIImpl() {
         this.config = AdminAPIConfig.getInstance();
 
         try {
@@ -45,10 +45,9 @@ public class AdminAPIImpl implements AdminAPI {
             this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
         } catch (MetaFactoryException ex) {
             log.error("Cannot initialize AccountResource", ex);
-            throw new RuntimeException(ex.getMessage(), ex);
         }
 
-        AuthenticationService authenticationServiceTemp;
+        AuthenticationService authenticationServiceTemp = null;
         try {
             authenticationServiceTemp = MetaFactory.get(AuthenticationService.class);
         } catch (MetaFactoryException ex) {
@@ -56,7 +55,6 @@ public class AdminAPIImpl implements AdminAPI {
                 authenticationServiceTemp = MetaFactory.get(SecretKeyAuthenticationService.class);
             } catch (MetaFactoryException inner) {
                 log.error("Cannot initialize AuthenticationService", inner);
-                throw new RuntimeException(inner.getMessage(), inner);
             }
         }
 
@@ -110,7 +108,9 @@ public class AdminAPIImpl implements AdminAPI {
 
             if (pageNumber > maxPage) {
                 accounts = Collections.emptyList();
+                result.setTotalItems(0);
             } else if (accounts.size() >= itemsOnPage) {
+
                 //in-memory pagination
                 int fromIndex = pageNumber * itemsOnPage;
                 int toIndex = fromIndex + itemsOnPage;
