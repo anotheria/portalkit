@@ -17,15 +17,15 @@ public interface AdminAPI {
 
     List<AdminAPIConfig.AccountTypeConfig> getAccountTypes() throws APIException;
 
-    PageResult<Account> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException;
+    PageResult<AdminAccountAO> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException;
 
-    Account getAccountById(AccountId accountId) throws APIException;
+    AdminAccountAO getAccountById(AccountId accountId) throws APIException;
 
-    Account updateAccount(AccountUpdateRequest updateRequest) throws APIException;
+    AdminAccountAO updateAccount(AccountUpdateRequest updateRequest) throws APIException;
 
-    Account addAccountStatus(AccountId accountId, int status) throws APIException;
+    AdminAccountAO addAccountStatus(AccountId accountId, int status) throws APIException;
 
-    Account removeAccountStatus(AccountId accountId, int status) throws APIException;
+    AdminAccountAO removeAccountStatus(AccountId accountId, int status) throws APIException;
 
     void setNewAccountPassword(AccountId accountId, String newPassword) throws APIException;
 

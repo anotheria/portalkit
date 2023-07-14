@@ -56,7 +56,7 @@ public class AccountResource {
 
     @GET
     public Response getAllAccounts(@QueryParam("searchTerm") String searchTerm, @QueryParam("pageNumber") int pageNumber, @QueryParam("itemsOnPage") int itemsOnPage) {
-        PageResult<Account> result = null;
+        PageResult<AdminAccountAO> result = null;
         try {
             result = adminAPI.getAccounts(pageNumber, itemsOnPage, searchTerm);
         } catch (APIException any) {
@@ -69,7 +69,7 @@ public class AccountResource {
     @GET
     @Path("/{accountId}")
     public Response getAccountById(@PathParam("accountId") String accountId) {
-        Account result = null;
+        AdminAccountAO result = null;
         try {
             result = adminAPI.getAccountById(new AccountId(accountId));
         } catch (Exception any) {
@@ -81,7 +81,7 @@ public class AccountResource {
 
     @POST
     public Response updateAccount(AccountUpdateRequest request) {
-        Account result = null;
+        AdminAccountAO result = null;
 
         try {
             result = adminAPI.updateAccount(request);
@@ -99,7 +99,7 @@ public class AccountResource {
     @POST
     @Path("add-status/{accountId}/{status}")
     public Response addStatusToAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
-        Account result = null;
+        AdminAccountAO result = null;
         try {
             result = adminAPI.addAccountStatus(new AccountId(accountId), status);
         } catch (Exception any) {
@@ -111,7 +111,7 @@ public class AccountResource {
     @POST
     @Path("remove-status/{accountId}/{status}")
     public Response removeStatusFromAccount(@PathParam("accountId") String accountId, @PathParam("status") int status) {
-        Account result = null;
+        AdminAccountAO result = null;
         try {
             result = adminAPI.removeAccountStatus(new AccountId(accountId), status);
         } catch (Exception any) {

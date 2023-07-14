@@ -88,8 +88,8 @@ public class AdminAPIImpl implements AdminAPI {
     }
 
     @Override
-    public PageResult<Account> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException {
-        PageResult<Account> result = new PageResult<>();
+    public PageResult<AdminAccountAO> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException {
+        PageResult<AdminAccountAO> result = new PageResult<>();
         try {
             List<AccountId> accountIds = new LinkedList<>(accountAdminService.getAllAccountIds());
             List<Account> accounts = accountService.getAccounts(accountIds);
@@ -122,7 +122,7 @@ public class AdminAPIImpl implements AdminAPI {
                 accounts = new ArrayList<>(accounts.subList(fromIndex, toIndex));
             }
 
-            result.setContent(accounts);
+            result.setContent(accounts.stream().map(this::map).collect(Collectors.toList()));
         } catch (Exception any) {
             log.error("Cannot get accounts");
             throw new APIException(any.getMessage(), any);
@@ -131,7 +131,7 @@ public class AdminAPIImpl implements AdminAPI {
     }
 
     @Override
-    public Account getAccountById(AccountId accountId) throws APIException {
+    public AdminAccountAO getAccountById(AccountId accountId) throws APIException {
         Account result = null;
         try {
             result = accountService.getAccount(accountId);
@@ -139,11 +139,11 @@ public class AdminAPIImpl implements AdminAPI {
             log.error("Cannot get account by id", any);
             throw new APIException(any.getMessage(), any);
         }
-        return result;
+        return map(result);
     }
 
     @Override
-    public Account updateAccount(AccountUpdateRequest updateRequest) throws APIException {
+    public AdminAccountAO updateAccount(AccountUpdateRequest updateRequest) throws APIException {
         if (updateRequest.getId() == null) {
             throw new AccountIdEmptyAdminAPIException();
         }
@@ -175,11 +175,11 @@ public class AdminAPIImpl implements AdminAPI {
             log.error("Cannot update account", any);
             throw new APIException(any.getMessage(), any);
         }
-        return result;
+        return map(result);
     }
 
     @Override
-    public Account addAccountStatus(AccountId accountId, int status) throws APIException {
+    public AdminAccountAO addAccountStatus(AccountId accountId, int status) throws APIException {
         Account result = null;
         try {
             result = accountService.getAccount(accountId);
@@ -189,11 +189,11 @@ public class AdminAPIImpl implements AdminAPI {
             log.error("Cannot add status to account", any);
             throw new APIException(any.getMessage(), any);
         }
-        return result;
+        return map(result);
     }
 
     @Override
-    public Account removeAccountStatus(AccountId accountId, int status) throws APIException {
+    public AdminAccountAO removeAccountStatus(AccountId accountId, int status) throws APIException {
         Account result = null;
         try {
             result = accountService.getAccount(accountId);
@@ -203,7 +203,7 @@ public class AdminAPIImpl implements AdminAPI {
             log.error("Cannot add status to account", any);
             throw new APIException(any.getMessage(), any);
         }
-        return result;
+        return map(result);
     }
 
     @Override
@@ -305,6 +305,34 @@ public class AdminAPIImpl implements AdminAPI {
             log.error("Cannot remove dataspace attribute", any);
             throw new APIException(any.getMessage(), any);
         }
+        return result;
+    }
+
+    private AdminAccountAO map(Account toMap) {
+        AdminAccountAO result = new AdminAccountAO();
+        result.setAccountId(toMap.getId());
+        result.setEmail(toMap.getEmail());
+        result.setName(toMap.getName());
+        result.setTenant(toMap.getTenant());
+        result.setRandomUID(toMap.getRandomUID());
+        result.setRegistrationTimestamp(toMap.getRegistrationTimestamp());
+
+        String type = null;
+        for (AdminAPIConfig.AccountTypeConfig accountType : config.getTypes()) {
+            if (toMap.getType() == accountType.getValue()) {
+                type = accountType.getName();
+                break;
+            }
+        }
+        result.setType(type);
+
+        List<String> statuses = new LinkedList<>();
+        for (AdminAPIConfig.AccountStatusConfig status : config.getStatuses()) {
+            if (toMap.hasStatus(status.getValue())) {
+                statuses.add(status.getName());
+            }
+        }
+        result.setStatuses(statuses);
         return result;
     }
 }
