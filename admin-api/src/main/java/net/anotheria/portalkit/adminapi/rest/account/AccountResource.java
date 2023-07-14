@@ -128,7 +128,7 @@ public class AccountResource {
         } catch (Exception any) {
             return Response.status(500).entity(ReplyObject.error(any)).build();
         }
-        return Response.status(200).build();
+        return Response.status(200).entity(ReplyObject.success()).build();
     }
 
     @GET
