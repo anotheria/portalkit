@@ -14,6 +14,7 @@ import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
+import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
 import net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -218,8 +219,28 @@ public class AdminAPIImpl implements AdminAPI {
     @Override
     public String getSignAsToken(AccountId accountId) throws APIException {
         String result = null;
+        Integer tokenValue = null;
         try {
-            // TDB
+            for (AdminAPIConfig.AuthTokenConfig token : config.getTokens()) {
+                if (token.isSignAs()) {
+                    tokenValue = token.getValue();
+                    break;
+                }
+            }
+
+            if (tokenValue != null) {
+                AuthToken token = new AuthToken();
+                token.setAccountId(accountId);
+                token.setExclusiveInType(false);
+                token.setMultiUse(true);
+                token.setExpiryTimestamp(System.currentTimeMillis() + net.anotheria.util.TimeUnit.DAY.getMillis(1));
+                token.setType(tokenValue);
+
+                result = authenticationService.generateEncryptedToken(accountId, token).getEncryptedVersion();
+            } else {
+                log.error("Cannot find a signAs token");
+                throw new APIException("Cannot find signAs token");
+            }
         } catch (Exception any) {
             log.error("Cannot get sign as token", any);
             throw new APIException(any.getMessage(), any);

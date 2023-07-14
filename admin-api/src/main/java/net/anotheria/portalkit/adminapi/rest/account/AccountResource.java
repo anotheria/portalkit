@@ -131,4 +131,16 @@ public class AccountResource {
         return Response.status(200).build();
     }
 
+    @GET
+    @Path("signAs/{accountId}")
+    public Response getSignAsToken(@PathParam("accountId") String accountId) {
+        String result = null;
+        try {
+            result = adminAPI.getSignAsToken(new AccountId(accountId));
+        } catch (Exception any) {
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("token", result)).build();
+    }
+
 }
