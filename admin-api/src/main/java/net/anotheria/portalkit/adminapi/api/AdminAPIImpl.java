@@ -5,6 +5,7 @@ import net.anotheria.anoplass.api.APIInitException;
 import net.anotheria.anoplass.api.AbstractAPIImpl;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
@@ -18,6 +19,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,9 +31,13 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     private AuthenticationService authenticationService;
     private AccountSettingsService accountSettingsService;
 
+    private AdminAPIConfig config;
+
     @Override
     public void init() throws APIInitException {
         super.init();
+
+        this.config = AdminAPIConfig.getInstance();
 
         try {
             this.accountService = MetaFactory.get(AccountService.class);
@@ -42,6 +48,30 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             log.error("Cannot initialize AccountResource", ex);
             throw new RuntimeException(ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public List<AdminAPIConfig.AccountStatusConfig> getAccountStatuses() throws APIException {
+        List<AdminAPIConfig.AccountStatusConfig> result = null;
+        try {
+            result = new LinkedList<>(Arrays.asList(config.getStatuses()));
+        } catch (Exception any) {
+            log.error("Cannot get account statuses", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public List<AdminAPIConfig.AccountTypeConfig> getAccountTypes() throws APIException {
+        List<AdminAPIConfig.AccountTypeConfig> result = null;
+        try {
+            result = new LinkedList<>(Arrays.asList(config.getTypes()));
+        } catch (Exception any) {
+            log.error("Cannot get account types", any);
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
     }
 
     @Override

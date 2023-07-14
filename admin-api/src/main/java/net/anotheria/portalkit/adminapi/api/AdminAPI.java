@@ -2,6 +2,7 @@ package net.anotheria.portalkit.adminapi.api;
 
 import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
+import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
@@ -11,6 +12,10 @@ import net.anotheria.portalkit.services.common.AccountId;
 import java.util.List;
 
 public interface AdminAPI extends API {
+
+    List<AdminAPIConfig.AccountStatusConfig> getAccountStatuses() throws APIException;
+
+    List<AdminAPIConfig.AccountTypeConfig> getAccountTypes() throws APIException;
 
     PageResult<Account> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException;
 

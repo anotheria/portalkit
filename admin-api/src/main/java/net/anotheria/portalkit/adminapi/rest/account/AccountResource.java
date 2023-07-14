@@ -2,6 +2,7 @@ package net.anotheria.portalkit.adminapi.rest.account;
 
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.adminapi.api.*;
+import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.ErrorKey;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountSetPasswordRequest;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("admin-api/account")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -26,6 +28,30 @@ public class AccountResource {
 
     public AccountResource() {
         this.adminAPI = AdminAPIFactory.getInstance();
+    }
+
+    @GET
+    @Path("statuses")
+    public Response getAllAccountStatuses() {
+        List<AdminAPIConfig.AccountStatusConfig> result = null;
+        try {
+            result = adminAPI.getAccountStatuses();
+        } catch (APIException ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("success", result)).build();
+    }
+
+    @GET
+    @Path("types")
+    public Response getAllAccountTypes() {
+        List<AdminAPIConfig.AccountTypeConfig> result = null;
+        try {
+            result = adminAPI.getAccountTypes();
+        } catch (APIException ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("success", result)).build();
     }
 
     @GET
