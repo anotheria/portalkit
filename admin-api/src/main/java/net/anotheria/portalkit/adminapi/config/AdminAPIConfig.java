@@ -162,6 +162,12 @@ public class AdminAPIConfig {
         @Configure
         private String name;
 
+        /**
+         * Token is used for "signAs" feature
+         */
+        @Configure
+        private boolean signAs;
+
         public int getValue() {
             return value;
         }
@@ -178,11 +184,20 @@ public class AdminAPIConfig {
             this.name = name;
         }
 
+        public boolean isSignAs() {
+            return signAs;
+        }
+
+        public void setSignAs(boolean signAs) {
+            this.signAs = signAs;
+        }
+
         @Override
         public String toString() {
             return "AuthTokenConfig{" +
-                    "tokenValue=" + value +
-                    ", tokenName='" + name + '\'' +
+                    "value=" + value +
+                    ", name='" + name + '\'' +
+                    ", signAs=" + signAs +
                     '}';
         }
     }
