@@ -1,17 +1,12 @@
 package net.anotheria.portalkit.adminapi.rest.dataspace;
 
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.AdminAPI;
 import net.anotheria.portalkit.adminapi.api.AdminAPIFactory;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
-import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.common.AccountId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -23,20 +18,10 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class DataspaceResource {
 
-    private static final Logger log = LoggerFactory.getLogger(DataspaceResource.class);
-
-    private AccountSettingsService accountSettingsService;
-    private AdminAPI adminAPI;
+    private final AdminAPI adminAPI;
 
     public DataspaceResource() {
         this.adminAPI = AdminAPIFactory.getInstance();
-
-        try {
-            this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
-        } catch (MetaFactoryException ex) {
-            log.error("Cannot initialize DataspaceResource", ex);
-            throw new RuntimeException(ex.getMessage(), ex);
-        }
     }
 
     @GET
