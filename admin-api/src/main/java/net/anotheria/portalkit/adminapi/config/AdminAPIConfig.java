@@ -26,6 +26,14 @@ public class AdminAPIConfig {
     @SerializedName("@tokens")
     private AuthTokenConfig[] tokens;
 
+    public AdminAPIConfig() {
+        try {
+            ConfigurationManager.INSTANCE.configure(this);
+        } catch (final IllegalArgumentException e) {
+            log.warn("Configuration fail[" + e.getMessage() + "]. Relaying on defaults.");
+        }
+    }
+
     public AccountStatusConfig[] getStatuses() {
         return statuses;
     }
@@ -65,12 +73,6 @@ public class AdminAPIConfig {
 
         static {
             INSTANCE = new AdminAPIConfig();
-            try {
-                ConfigurationManager.INSTANCE.configure(INSTANCE);
-            } catch (Exception e) {
-                log.error("GooglePubSubConfig configuration load failed: {}", e.getMessage(), e);
-                throw e;
-            }
         }
     }
 

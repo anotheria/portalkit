@@ -15,39 +15,51 @@ import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
+import net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
+public class AdminAPIImpl implements AdminAPI {
 
-    private AccountService accountService;
-    private AccountAdminService accountAdminService;
-    private AuthenticationService authenticationService;
-    private AccountSettingsService accountSettingsService;
+    private static final Logger log = LoggerFactory.getLogger(AdminAPIImpl.class);
 
-    private AdminAPIConfig config;
+    private final AccountService accountService;
+    private final AccountAdminService accountAdminService;
+    private final AuthenticationService authenticationService;
+    private final AccountSettingsService accountSettingsService;
 
-    @Override
-    public void init() throws APIInitException {
-        super.init();
+    private final AdminAPIConfig config;
 
+    public AdminAPIImpl() {
         this.config = AdminAPIConfig.getInstance();
 
         try {
             this.accountService = MetaFactory.get(AccountService.class);
             this.accountAdminService = MetaFactory.get(AccountAdminService.class);
-            this.authenticationService = MetaFactory.get(AuthenticationService.class);
             this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
         } catch (MetaFactoryException ex) {
             log.error("Cannot initialize AccountResource", ex);
             throw new RuntimeException(ex.getMessage(), ex);
         }
+
+        AuthenticationService authenticationServiceTemp;
+        try {
+            authenticationServiceTemp = MetaFactory.get(AuthenticationService.class);
+        } catch (MetaFactoryException ex) {
+            try {
+                authenticationServiceTemp = MetaFactory.get(SecretKeyAuthenticationService.class);
+            } catch (MetaFactoryException inner) {
+                log.error("Cannot initialize AuthenticationService", inner);
+                throw new RuntimeException(inner.getMessage(), inner);
+            }
+        }
+
+        this.authenticationService = authenticationServiceTemp;
     }
 
     @Override
@@ -93,9 +105,11 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             result.setTotalItems(accounts.size());
             result.setItemsOnPage(itemsOnPage);
             result.setPageNumber(pageNumber);
+            int maxPage = accounts.size() / itemsOnPage;
 
-            if (accounts.size() >= itemsOnPage) {
-
+            if (pageNumber > maxPage) {
+                accounts = Collections.emptyList();
+            } else if (accounts.size() >= itemsOnPage) {
                 //in-memory pagination
                 int fromIndex = pageNumber * itemsOnPage;
                 int toIndex = fromIndex + itemsOnPage;

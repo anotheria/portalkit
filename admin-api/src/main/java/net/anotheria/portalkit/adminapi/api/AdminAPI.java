@@ -11,7 +11,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.List;
 
-public interface AdminAPI extends API {
+public interface AdminAPI {
 
     List<AdminAPIConfig.AccountStatusConfig> getAccountStatuses() throws APIException;
 

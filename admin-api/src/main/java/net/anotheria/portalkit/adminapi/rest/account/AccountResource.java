@@ -55,8 +55,7 @@ public class AccountResource {
     }
 
     @GET
-    @Path("/{searchTerm}/{pageNumber}/{itemsOnPage}")
-    public Response getAllAccounts(@PathParam("searchTerm") String searchTerm, @PathParam("pageNumber") int pageNumber, @PathParam("itemsOnPage") int itemsOnPage) {
+    public Response getAllAccounts(@QueryParam("searchTerm") String searchTerm, @QueryParam("pageNumber") int pageNumber, @QueryParam("itemsOnPage") int itemsOnPage) {
         PageResult<Account> result = null;
         try {
             result = adminAPI.getAccounts(pageNumber, itemsOnPage, searchTerm);
