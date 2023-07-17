@@ -5,6 +5,7 @@ import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.services.account.*;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
+import net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +42,7 @@ public class AdminAPIImplTest {
     private AdminAPI adminAPI;
 
     @InjectMocks
-    private AdminAPIImpl testAdminImpl = new AdminAPIImpl();
+    private AdminAPIImpl testAdminImpl = (AdminAPIImpl) AdminAPIFactory.getInstanceForUnitTests();
 
     @Test
     public void testGetAccountStatuses() throws APIException {

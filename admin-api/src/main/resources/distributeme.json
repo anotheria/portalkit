@@ -1,0 +1,5 @@
+{
+  "registryContainerHost": "127.0.0.1",
+  "registryContainerPort": 9229,
+  "interceptor.1": "org.distributeme.core.interceptor.moskito.MoskitoJourneyInterceptor"
+}

@@ -16,9 +16,12 @@ import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
+import net.anotheria.portalkit.services.authentication.AuthenticationServiceException;
 import net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
+import org.distributeme.core.exception.NoConnectionToServerException;
+import org.distributeme.core.exception.ServiceUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,33 +35,25 @@ public class AdminAPIImpl implements AdminAPI {
     private AccountService accountService;
     private AccountAdminService accountAdminService;
     private AuthenticationService authenticationService;
+    private SecretKeyAuthenticationService secretKeyAuthenticationService;
     private AccountSettingsService accountSettingsService;
 
     private AdminAPIConfig config;
 
-    protected AdminAPIImpl() {
-        this.config = AdminAPIConfig.getInstance();
+    protected AdminAPIImpl(boolean unitTest) {
+        if (!unitTest) {
+            this.config = AdminAPIConfig.getInstance();
 
-        try {
-            this.accountService = MetaFactory.get(AccountService.class);
-            this.accountAdminService = MetaFactory.get(AccountAdminService.class);
-            this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
-        } catch (MetaFactoryException ex) {
-            log.error("Cannot initialize AccountResource", ex);
-        }
-
-        AuthenticationService authenticationServiceTemp = null;
-        try {
-            authenticationServiceTemp = MetaFactory.get(AuthenticationService.class);
-        } catch (MetaFactoryException ex) {
             try {
-                authenticationServiceTemp = MetaFactory.get(SecretKeyAuthenticationService.class);
-            } catch (MetaFactoryException inner) {
-                log.error("Cannot initialize AuthenticationService", inner);
+                this.accountService = MetaFactory.get(AccountService.class);
+                this.accountAdminService = MetaFactory.get(AccountAdminService.class);
+                this.accountSettingsService = MetaFactory.get(AccountSettingsService.class);
+                this.authenticationService = MetaFactory.get(AuthenticationService.class);
+                this.secretKeyAuthenticationService = MetaFactory.get(SecretKeyAuthenticationService.class);
+            } catch (MetaFactoryException ex) {
+                log.error("Cannot initialize AccountResource", ex);
             }
         }
-
-        this.authenticationService = authenticationServiceTemp;
     }
 
     @Override
@@ -208,11 +203,22 @@ public class AdminAPIImpl implements AdminAPI {
 
     @Override
     public void setNewAccountPassword(AccountId accountId, String newPassword) throws APIException {
+        AuthenticationServiceException exceptionToReturn = null;
         try {
             authenticationService.setPassword(accountId, newPassword);
-        } catch (Exception any) {
-            log.error("Cannot update account password", any);
-            throw new APIException(any.getMessage(), any);
+        } catch (ServiceUnavailableException noConnection) {
+            try {
+                secretKeyAuthenticationService.setPassword(accountId, newPassword);
+            } catch (AuthenticationServiceException ex) {
+                exceptionToReturn = ex;
+            }
+        } catch (AuthenticationServiceException ex) {
+            exceptionToReturn = ex;
+        }
+
+        if (exceptionToReturn != null) {
+            log.error("Cannot update account password", exceptionToReturn);
+            throw new APIException(exceptionToReturn.getMessage(), exceptionToReturn);
         }
     }
 
