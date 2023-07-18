@@ -4,7 +4,7 @@ import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 
 public class AuthProviderFactory {
 
-    private static AdminAPIConfig CONFIG = AdminAPIConfig.getInstance();
+    private static final AdminAPIConfig CONFIG = AdminAPIConfig.getInstance();
 
     public static AuthProvider getAuthProvider() {
         switch (CONFIG.getAuthProvider()) {
