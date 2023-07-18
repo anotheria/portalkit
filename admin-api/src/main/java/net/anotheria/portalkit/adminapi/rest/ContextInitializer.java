@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.adminapi.rest;
 
+import net.anotheria.anoplass.api.APIFinder;
+import net.anotheria.portalkit.adminapi.api.shared.APITierConfigurator;
 import net.anotheria.portalkit.adminapi.biz.BusinessTierConfigurator;
 import net.anotheria.portalkit.adminapi.biz.util.StartDistributeMeEventing;
 import org.configureme.ConfigurationManager;
@@ -44,6 +46,10 @@ public class ContextInitializer implements ServletContextListener {
         configureBusinessTier();
         LOGGER.info("configureBusinessTier time: " + (Duration.between(Instant.now(), start)));
 
+        start = Instant.now();
+        configureAPITier();
+        LOGGER.info("configureAPITier time: " + (Duration.between(Instant.now(), start)));
+
         LOGGER.info("--- " + APPLICATION_NAME + " --- APPLICATION INITIALIZATION: FINISHED --- ");
         LOGGER.info("--- " + APPLICATION_NAME + " --- CURRENT CONFIGURATION ENVIRONMENT: " + ConfigurationManager.INSTANCE.getDefaultEnvironment().expandedStringForm() + " --- ");
     }
@@ -61,6 +67,13 @@ public class ContextInitializer implements ServletContextListener {
     private void configureBusinessTier() {
         // custom project services
         BusinessTierConfigurator.configure();
+    }
+
+    /**
+     * Configuring API Tier.
+     */
+    private void configureAPITier() {
+        APITierConfigurator.configure();
     }
 
 

@@ -1,11 +1,15 @@
 package net.anotheria.portalkit.adminapi.api;
 
 import net.anotheria.anoplass.api.APIException;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAPIFactory;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAPIImpl;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAccountAO;
+import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.services.account.*;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
-import net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationService;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +46,7 @@ public class AdminAPIImplTest {
     private AdminAPI adminAPI;
 
     @InjectMocks
-    private AdminAPIImpl testAdminImpl = (AdminAPIImpl) AdminAPIFactory.getInstanceForUnitTests();
+    private AdminAPIImpl testAdminImpl = (AdminAPIImpl) AdminAPIFactory.getForUnitTests();
 
     @Test
     public void testGetAccountStatuses() throws APIException {

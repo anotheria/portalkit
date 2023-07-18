@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.adminapi.config;
 
 import com.google.gson.annotations.SerializedName;
+import net.anotheria.portalkit.adminapi.api.auth.provider.AuthProviderType;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
@@ -26,6 +27,9 @@ public class AdminAPIConfig {
     @Configure
     @SerializedName("@tokens")
     private AuthTokenConfig[] tokens;
+
+    @Configure
+    private AuthProviderType authProviderType;
 
     public AdminAPIConfig() {
         try {
@@ -59,6 +63,14 @@ public class AdminAPIConfig {
         this.tokens = tokens;
     }
 
+    public AuthProviderType getAuthProvider() {
+        return authProviderType;
+    }
+
+    public void setAuthProvider(AuthProviderType authProviderType) {
+        this.authProviderType = authProviderType;
+    }
+
     public static AdminAPIConfig getInstance() {
         return AdminAPIConfig.HolderClass.INSTANCE;
     }
@@ -83,6 +95,7 @@ public class AdminAPIConfig {
                 "statuses=" + Arrays.toString(statuses) +
                 ", types=" + Arrays.toString(types) +
                 ", tokens=" + Arrays.toString(tokens) +
+                ", authProvider=" + authProviderType +
                 '}';
     }
 

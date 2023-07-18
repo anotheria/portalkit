@@ -1,17 +1,17 @@
-package net.anotheria.portalkit.adminapi.api;
+package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
+import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
-import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.List;
 
-public interface AdminAPI {
+public interface AdminAPI extends API {
 
     List<AdminAPIConfig.AccountStatusConfig> getAccountStatuses() throws APIException;
 

@@ -1,13 +1,15 @@
 package net.anotheria.portalkit.adminapi.rest.account;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.portalkit.adminapi.api.*;
+import net.anotheria.anoplass.api.APIFactory;
+import net.anotheria.anoplass.api.APIFinder;
+import net.anotheria.portalkit.adminapi.api.admin.*;
+import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.ErrorKey;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountSetPasswordRequest;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
-import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,7 @@ public class AccountResource {
     private AdminAPI adminAPI;
 
     public AccountResource() {
-        this.adminAPI = AdminAPIFactory.getInstance();
+        this.adminAPI = APIFinder.findAPI(AdminAPI.class);
     }
 
     @GET

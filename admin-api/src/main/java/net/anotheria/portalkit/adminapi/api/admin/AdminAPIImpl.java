@@ -1,10 +1,10 @@
-package net.anotheria.portalkit.adminapi.api;
+package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.anoplass.api.APIInitException;
 import net.anotheria.anoplass.api.AbstractAPIImpl;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AdminAPIImpl implements AdminAPI {
+public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
 
     private static final Logger log = LoggerFactory.getLogger(AdminAPIImpl.class);
 

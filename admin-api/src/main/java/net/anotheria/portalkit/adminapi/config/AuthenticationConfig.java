@@ -1,0 +1,70 @@
+package net.anotheria.portalkit.adminapi.config;
+
+import org.configureme.ConfigurationManager;
+import org.configureme.annotations.Configure;
+import org.configureme.annotations.ConfigureMe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@ConfigureMe(name = "pk-admin-api-authentication-config")
+public class AuthenticationConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationConfig.class);
+
+    @Configure
+    private String login;
+
+    @Configure
+    private String password;
+
+    public AuthenticationConfig() {
+        try {
+            ConfigurationManager.INSTANCE.configure(this);
+        } catch (final IllegalArgumentException e) {
+            log.error("Configuration fail[" + e.getMessage() + "]. Check for pk-admin-api-authentication-config.json.");
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Holder class idiom.
+     */
+    private static class HolderClass {
+        /**
+         * Singleton instance.
+         */
+        private static final AuthenticationConfig INSTANCE;
+
+        static {
+            INSTANCE = new AuthenticationConfig();
+        }
+    }
+
+    public static AuthenticationConfig getInstance() {
+        return AuthenticationConfig.HolderClass.INSTANCE;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "AuthenticationConfig{" +
+                "login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+}

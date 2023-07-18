@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.api;
+package net.anotheria.portalkit.adminapi.api.shared;
 
 import java.util.LinkedList;
 import java.util.List;

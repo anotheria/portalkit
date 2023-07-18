@@ -1,7 +1,8 @@
 package net.anotheria.portalkit.adminapi.rest.dataspace;
 
-import net.anotheria.portalkit.adminapi.api.AdminAPI;
-import net.anotheria.portalkit.adminapi.api.AdminAPIFactory;
+import net.anotheria.anoplass.api.APIFinder;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
+import net.anotheria.portalkit.adminapi.api.admin.AdminAPIFactory;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
@@ -21,7 +22,7 @@ public class DataspaceResource {
     private final AdminAPI adminAPI;
 
     public DataspaceResource() {
-        this.adminAPI = AdminAPIFactory.getInstance();
+        this.adminAPI = APIFinder.findAPI(AdminAPI.class);
     }
 
     @GET
