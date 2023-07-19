@@ -1,8 +1,13 @@
 package net.anotheria.portalkit.adminapi.rest;
 
+import net.anotheria.anoplass.api.APICallContext;
+import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.portalkit.adminapi.api.auth.AdminAPIAuthenticationException;
+import net.anotheria.portalkit.adminapi.api.auth.AdminAuthAPI;
 import net.anotheria.portalkit.adminapi.api.auth.provider.AuthProvider;
 import net.anotheria.portalkit.adminapi.api.auth.provider.AuthProviderFactory;
+import net.anotheria.portalkit.adminapi.rest.filter.auth.AuthError;
 import net.anotheria.portalkit.adminapi.rest.filter.auth.AuthResult;
 import net.anotheria.portalkit.adminapi.rest.filter.path.AuthPaths;
 import org.slf4j.Logger;
@@ -17,14 +22,14 @@ import java.io.IOException;
 public class SecurityFilter implements Filter {
 
     private AuthPaths authPaths;
-    private AuthProvider authorization;
+    private AdminAuthAPI authAPI;
 
     private static final Logger log = LoggerFactory.getLogger(SecurityFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         this.authPaths = AuthPaths.getDefaults();
-        this.authorization = AuthProviderFactory.getAuthProvider();
+        this.authAPI = APIFinder.findAPI(AdminAuthAPI.class);
     }
 
     @Override
@@ -44,10 +49,13 @@ public class SecurityFilter implements Filter {
         boolean optionalAuth = requiredAuth == AuthPaths.Result.AUTH_OPTIONAL;
         String httpAuthString = req.getHeader("authToken");
 
-        AuthResult authResult = null;
+        AuthResult authResult = authorize(httpAuthString);
         if (!authResult.isAuthorized() && !optionalAuth) {
             response.sendError(authResult.getAuthError().getStatusCode(), authResult.getAuthError().getMsg());
             return;
+        } else {
+            APICallContext.getCallContext().setCurrentUserId(authResult.getLogin());
+            APICallContext.getCallContext().setAttribute("AUTH_TOKEN", httpAuthString);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
@@ -56,6 +64,16 @@ public class SecurityFilter implements Filter {
     @Override
     public void destroy() {
 
+    }
+
+    private AuthResult authorize(String authToken) {
+        try {
+            String login = authAPI.authenticateByToken(authToken);
+            return new AuthResult(login);
+        } catch (AdminAPIAuthenticationException e) {
+            log.warn("Can't authenticate with token: <{}>", authToken, e);
+            return new AuthResult(new AuthError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage()));
+        }
     }
 
 }

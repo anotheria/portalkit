@@ -1,6 +1,6 @@
 package net.anotheria.portalkit.adminapi.api.auth.provider;
 
-import net.anotheria.portalkit.adminapi.api.auth.AdminAPIAuthenticationException;
+import net.anotheria.portalkit.adminapi.api.auth.AdminAuthenticationProviderException;
 import net.anotheria.portalkit.adminapi.config.AuthenticationConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +16,14 @@ public class ConfigAuthProvider implements AuthProvider {
     }
 
     @Override
-    public void authenticate(String login, String password) throws AdminAPIAuthenticationException {
+    public void authenticate(String login, String password) throws AdminAuthenticationProviderException {
         try {
-            if (!login.equals(config.getLogin()) || !password.equals(config.getPassword())) {
-                throw new AdminAPIAuthenticationException("Authentication failed. Bad credentials");
+            AuthenticationConfig.AccountConfig account = config.getAccountByLogin(login);
+            if (account == null || (!login.equals(account.getLogin()) || !password.equals(account.getPassword())))  {
+                throw new AdminAuthenticationProviderException("Authentication failed. Bad credentials");
             }
-        } catch (AdminAPIAuthenticationException ex) {
-            throw new AdminAPIAuthenticationException(ex.getMessage(), ex);
-        } catch (Exception any) {
-            log.error("Cannot authenticate. Error is occurred", any);
+        } catch (AdminAuthenticationProviderException ex) {
+            throw new AdminAuthenticationProviderException(ex.getMessage(), ex);
         }
     }
 

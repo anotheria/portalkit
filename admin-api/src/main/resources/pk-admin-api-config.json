@@ -1,4 +1,5 @@
 {
+  "authProvider": "CONFIG",
   "@statuses": [
     {
       "value": 1,

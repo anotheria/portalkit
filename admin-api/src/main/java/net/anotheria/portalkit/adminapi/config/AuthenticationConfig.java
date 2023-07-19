@@ -1,10 +1,13 @@
 package net.anotheria.portalkit.adminapi.config;
 
+import com.google.gson.annotations.SerializedName;
 import org.configureme.ConfigurationManager;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
 
 @ConfigureMe(name = "pk-admin-api-authentication-config")
 public class AuthenticationConfig {
@@ -12,10 +15,8 @@ public class AuthenticationConfig {
     private static final Logger log = LoggerFactory.getLogger(AuthenticationConfig.class);
 
     @Configure
-    private String login;
-
-    @Configure
-    private String password;
+    @SerializedName("@accounts")
+    private AccountConfig[] accounts;
 
     public AuthenticationConfig() {
         try {
@@ -44,27 +45,61 @@ public class AuthenticationConfig {
         return AuthenticationConfig.HolderClass.INSTANCE;
     }
 
-    public String getLogin() {
-        return login;
+    public AccountConfig getAccountByLogin(String login) {
+        for (AccountConfig account : accounts) {
+            if (account.getLogin().equals(login)) {
+                return account;
+            }
+        }
+        return null;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public AccountConfig[] getAccounts() {
+        return accounts;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAccounts(AccountConfig[] accounts) {
+        this.accounts = accounts;
     }
 
     @Override
     public String toString() {
         return "AuthenticationConfig{" +
-                "login='" + login + '\'' +
-                ", password='" + password + '\'' +
+                "accounts=" + Arrays.toString(accounts) +
                 '}';
+    }
+
+    @ConfigureMe
+    public static class AccountConfig {
+
+        @Configure
+        private String login;
+
+        @Configure
+        private String password;
+
+        public String getLogin() {
+            return login;
+        }
+
+        public void setLogin(String login) {
+            this.login = login;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        @Override
+        public String toString() {
+            return "AccountConfig{" +
+                    "login='" + login + '\'' +
+                    ", password='" + password + '\'' +
+                    '}';
+        }
     }
 }

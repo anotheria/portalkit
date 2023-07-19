@@ -35,6 +35,10 @@
         <filter-name>CORSFilter</filter-name>
         <filter-class>net.anotheria.portalkit.adminapi.rest.CorsFilter</filter-class>
     </filter>
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>net.anotheria.portalkit.adminapi.rest.SecurityFilter</filter-class>
+    </filter>
 
     <!-- First filter must always be the first one in the mapping. -->
     <filter-mapping>
@@ -44,6 +48,11 @@
 
     <filter-mapping>
         <filter-name>CORSFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
         <url-pattern>/api/*</url-pattern>
     </filter-mapping>
 

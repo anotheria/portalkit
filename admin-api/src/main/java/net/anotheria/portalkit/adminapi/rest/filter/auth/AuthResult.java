@@ -1,14 +1,12 @@
 package net.anotheria.portalkit.adminapi.rest.filter.auth;
 
-import net.anotheria.portalkit.services.common.AccountId;
-
 public class AuthResult {
 
-    private AccountId accountId;
+    private String login;
     private AuthError authError;
 
-    public AuthResult(AccountId accountId) {
-        this.accountId = accountId;
+    public AuthResult(String login) {
+        this.login = login;
     }
 
     public AuthResult(AuthError authError) {
@@ -19,8 +17,8 @@ public class AuthResult {
         return authError == null;
     }
 
-    public AccountId getAccountId() {
-        return accountId;
+    public String getLogin() {
+        return login;
     }
 
     public AuthError getAuthError() {

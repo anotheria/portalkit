@@ -29,7 +29,7 @@ public class AdminAPIConfig {
     private AuthTokenConfig[] tokens;
 
     @Configure
-    private AuthProviderType authProviderType;
+    private AuthProviderType authProvider;
 
     public AdminAPIConfig() {
         try {
@@ -64,11 +64,11 @@ public class AdminAPIConfig {
     }
 
     public AuthProviderType getAuthProvider() {
-        return authProviderType;
+        return authProvider;
     }
 
     public void setAuthProvider(AuthProviderType authProviderType) {
-        this.authProviderType = authProviderType;
+        this.authProvider = authProviderType;
     }
 
     public static AdminAPIConfig getInstance() {
@@ -95,7 +95,7 @@ public class AdminAPIConfig {
                 "statuses=" + Arrays.toString(statuses) +
                 ", types=" + Arrays.toString(types) +
                 ", tokens=" + Arrays.toString(tokens) +
-                ", authProvider=" + authProviderType +
+                ", authProvider=" + authProvider +
                 '}';
     }
 
