@@ -10,6 +10,9 @@ public class ASGAuthProvider implements AuthProvider {
 
     private CMSUserManager userManager;
 
+    protected ASGAuthProvider(boolean unitTests) {
+    }
+
     public ASGAuthProvider() {
         this.userManager = CMSUserManager.getInstance();
     }
