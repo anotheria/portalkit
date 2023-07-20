@@ -11,7 +11,7 @@ public enum AuthProviderType {
     ASG,
 
     /**
-     * Provider that uses credentials from JSON config
+     * Provider that uses credentials from JSON config (pk-admin-api-authentication-config.json)
      */
     CONFIG
 

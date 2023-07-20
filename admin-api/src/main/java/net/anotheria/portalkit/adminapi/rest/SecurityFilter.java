@@ -5,8 +5,6 @@ import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAPIAuthenticationException;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAuthAPI;
-import net.anotheria.portalkit.adminapi.api.auth.provider.AuthProvider;
-import net.anotheria.portalkit.adminapi.api.auth.provider.AuthProviderFactory;
 import net.anotheria.portalkit.adminapi.rest.filter.auth.AuthError;
 import net.anotheria.portalkit.adminapi.rest.filter.auth.AuthResult;
 import net.anotheria.portalkit.adminapi.rest.filter.path.AuthPaths;

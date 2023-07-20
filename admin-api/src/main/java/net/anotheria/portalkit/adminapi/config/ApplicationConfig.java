@@ -11,20 +11,11 @@ import org.slf4j.LoggerFactory;
  */
 @ConfigureMe(name = "application", allfields = true)
 public class ApplicationConfig {
+
     /**
      * {@link Logger} instance.
      */
     private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
-
-    /**
-     * Async executor thread sleep time (seconds).
-     */
-    private long executorThreadsSleepTime = 10;
-
-    /**
-     * Async executor thread count.
-     */
-    private int executorThreadsCount = 10;
 
     /**
      * Adds to rest header Access-Control-Allow-Origin, with this value.
@@ -38,22 +29,6 @@ public class ApplicationConfig {
 
     public static ApplicationConfig get() {
         return ApplicationConfigHolder.instance;
-    }
-
-    public int getExecutorThreadsCount() {
-        return executorThreadsCount;
-    }
-
-    public void setExecutorThreadsCount(int executorThreadsCount) {
-        this.executorThreadsCount = executorThreadsCount;
-    }
-
-    public long getExecutorThreadsSleepTime() {
-        return executorThreadsSleepTime;
-    }
-
-    public void setExecutorThreadsSleepTime(long executorThreadsSleepTime) {
-        this.executorThreadsSleepTime = executorThreadsSleepTime;
     }
 
     public String[] getRestAccessControlAllowOrigin() {
@@ -89,8 +64,6 @@ public class ApplicationConfig {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("ApplicationConfig{");
-        sb.append("executorThreadsSleepTime=").append(executorThreadsSleepTime);
-        sb.append(", executorThreadsCount=").append(executorThreadsCount);
         sb.append('}');
         return sb.toString();
     }

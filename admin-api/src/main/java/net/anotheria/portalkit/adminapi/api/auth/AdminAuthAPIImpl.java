@@ -12,9 +12,19 @@ import java.util.Vector;
 
 public class AdminAuthAPIImpl extends AbstractAPIImpl implements AdminAuthAPI {
 
+    /**
+     * Time of token expiration.
+     */
     private static final int TOKEN_EXPIRATION_TIME = (int) java.util.concurrent.TimeUnit.HOURS.toMillis(1);
 
+    /**
+     * List to store all authTokens in memory.
+     */
     private List<AuthTokenAO> tokens = new Vector<>();
+
+    /**
+     * Auth provider to check credentials.
+     */
     private AuthProvider authProvider;
 
     @Override

@@ -2,6 +2,9 @@ package net.anotheria.portalkit.adminapi.api.auth.provider;
 
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 
+/**
+ * Factory for auth providers
+ */
 public class AuthProviderFactory {
 
     private static final AdminAPIConfig CONFIG = AdminAPIConfig.getInstance();

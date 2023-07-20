@@ -3,12 +3,31 @@ package net.anotheria.portalkit.adminapi.api.shared;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Used for paginated lists
+ *
+ * @param <T>
+ */
 public class PageResult<T> {
 
+    /**
+     * Page number, index
+     */
     private int pageNumber;
+
+    /**
+     * Amount of items on page
+     */
     private int itemsOnPage;
+
+    /**
+     * Total items
+     */
     private int totalItems;
 
+    /**
+     * Result content
+     */
     private List<T> content = new LinkedList<>();
 
     public int getPageNumber() {

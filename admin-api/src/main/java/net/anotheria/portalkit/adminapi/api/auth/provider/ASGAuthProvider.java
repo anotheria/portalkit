@@ -3,6 +3,9 @@ package net.anotheria.portalkit.adminapi.api.auth.provider;
 import net.anotheria.anosite.cms.user.CMSUserManager;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAuthenticationProviderException;
 
+/**
+ * Auth provider that uses ASG users to perform authentication.
+ */
 public class ASGAuthProvider implements AuthProvider {
 
     private CMSUserManager userManager;

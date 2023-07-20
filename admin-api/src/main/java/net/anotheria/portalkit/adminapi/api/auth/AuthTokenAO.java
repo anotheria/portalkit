@@ -1,10 +1,28 @@
 package net.anotheria.portalkit.adminapi.api.auth;
 
+/**
+ * Represents admin-API authToken.
+ */
 public class AuthTokenAO {
 
+    /**
+     * Token itself
+     */
     private String token;
+
+    /**
+     * Admin-User login
+     */
     private String login;
+
+    /**
+     * Token expiration time
+     */
     private long expirationTime;
+
+    /**
+     * Token creation timestamp
+     */
     private long timestamp;
 
     public AuthTokenAO() {
