@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 @ConfigureMe(name = "pk-admin-api-authentication-config")
 public class AuthenticationConfig {
@@ -92,6 +93,19 @@ public class AuthenticationConfig {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AccountConfig that = (AccountConfig) o;
+            return Objects.equals(login, that.login) && Objects.equals(password, that.password);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(login, password);
         }
 
         @Override
