@@ -5,16 +5,49 @@ import net.anotheria.portalkit.services.common.AccountId;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Admin-API representation of {@link net.anotheria.portalkit.services.account.Account} object
+ */
 public class AdminAccountAO {
 
+    /**
+     * Account Id
+     */
     private AccountId accountId;
+
+    /**
+     * Account email
+     */
     private String email;
+
+    /**
+     * Account name
+     */
     private String name;
+
+    /**
+     * Account tenant
+     */
     private String tenant;
+
+    /**
+     * Registration timestamp
+     */
     private long registrationTimestamp;
+
+    /**
+     * Random UID
+     */
     private long randomUID;
 
+    /**
+     * Human-friendly account type in string.=
+     */
     private String type;
+
+    /**
+     * Human-friendly account statuses in string
+     */
     private List<String> statuses = new LinkedList<>();
 
     public AccountId getAccountId() {
