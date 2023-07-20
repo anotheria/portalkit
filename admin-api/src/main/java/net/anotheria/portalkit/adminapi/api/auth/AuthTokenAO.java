@@ -3,16 +3,16 @@ package net.anotheria.portalkit.adminapi.api.auth;
 public class AuthTokenAO {
 
     private String token;
-    private AdminAccountAO account;
+    private String login;
     private long expirationTime;
     private long timestamp;
 
     public AuthTokenAO() {
     }
 
-    public AuthTokenAO(String token, AdminAccountAO account, long expirationTime, long timestamp) {
+    public AuthTokenAO(String token, String login, long expirationTime, long timestamp) {
         this.token = token;
-        this.account = account;
+        this.login = login;
         this.expirationTime = expirationTime;
         this.timestamp = timestamp;
     }
@@ -25,12 +25,12 @@ public class AuthTokenAO {
         this.token = token;
     }
 
-    public AdminAccountAO getAccount() {
-        return account;
+    public String getLogin() {
+        return login;
     }
 
-    public void setAccount(AdminAccountAO account) {
-        this.account = account;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public long getExpirationTime() {

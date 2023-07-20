@@ -224,6 +224,15 @@ public class AdminAPIConfig {
         @Configure
         private boolean signAs;
 
+        public AuthTokenConfig() {
+        }
+
+        public AuthTokenConfig(int value, String name, boolean signAs) {
+            this.value = value;
+            this.name = name;
+            this.signAs = signAs;
+        }
+
         public int getValue() {
             return value;
         }

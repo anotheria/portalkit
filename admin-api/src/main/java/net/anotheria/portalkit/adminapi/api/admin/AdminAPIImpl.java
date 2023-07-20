@@ -9,6 +9,7 @@ import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
+import net.anotheria.portalkit.services.account.AccountNotFoundException;
 import net.anotheria.portalkit.services.account.AccountService;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
@@ -155,11 +156,20 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         try {
             result = accountService.getAccount(new AccountId(updateRequest.getId()));
             if (!StringUtils.isEmpty(updateRequest.getEmail())) {
-                if (!accountService.getAccountIdByEmail(updateRequest.getEmail()).equals(result.getId())) {
-                    throw new EmailExistsAdminAPIException();
+                boolean accountWithEmailExists = false;
+                try {
+                    AccountId accountId = accountService.getAccountIdByEmail(updateRequest.getEmail());
+                    accountWithEmailExists = !accountId.equals(result.getId());
+                } catch (AccountNotFoundException ignored) {
                 }
+
+                if (accountWithEmailExists) {
+                    throw new EmailExistsAdminAPIException("Cannot update email. Another account with this email already exists");
+                }
+
                 result.setEmail(updateRequest.getEmail());
             }
+
             if (!StringUtils.isEmpty(updateRequest.getBrand())) {
                 result.setBrand(updateRequest.getBrand());
             }
@@ -321,21 +331,25 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         result.setRegistrationTimestamp(toMap.getRegistrationTimestamp());
 
         String type = null;
-        for (AdminAPIConfig.AccountTypeConfig accountType : config.getTypes()) {
-            if (toMap.getType() == accountType.getValue()) {
-                type = accountType.getName();
-                break;
-            }
-        }
-        result.setType(type);
-
         List<String> statuses = new LinkedList<>();
-        for (AdminAPIConfig.AccountStatusConfig status : config.getStatuses()) {
-            if (toMap.hasStatus(status.getValue())) {
-                statuses.add(status.getName());
+        if (config != null) {
+            for (AdminAPIConfig.AccountTypeConfig accountType : config.getTypes()) {
+                if (toMap.getType() == accountType.getValue()) {
+                    type = accountType.getName();
+                    break;
+                }
+            }
+
+            for (AdminAPIConfig.AccountStatusConfig status : config.getStatuses()) {
+                if (toMap.hasStatus(status.getValue())) {
+                    statuses.add(status.getName());
+                }
             }
         }
+
+        result.setType(type);
         result.setStatuses(statuses);
+
         return result;
     }
 }

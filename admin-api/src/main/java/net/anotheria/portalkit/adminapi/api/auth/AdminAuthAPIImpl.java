@@ -28,10 +28,10 @@ public class AdminAuthAPIImpl extends AbstractAPIImpl implements AdminAuthAPI {
     public String authenticateByToken(String authToken) throws AdminAPIAuthenticationException {
 
         // check if there is an account bound with a provided token
-        AdminAccountAO account = null;
+        String account = null;
         for (AuthTokenAO token : tokens) {
             if (token.getToken().equals(authToken) && (System.currentTimeMillis() - token.getTimestamp() < token.getExpirationTime())) {
-                account = token.getAccount();
+                account = token.getLogin();
             }
         }
 
@@ -39,7 +39,7 @@ public class AdminAuthAPIImpl extends AbstractAPIImpl implements AdminAuthAPI {
             throw new AdminAPIAuthenticationException("Authentication failed. Invalid or expired token");
         }
 
-        return account.getLogin();
+        return account;
     }
 
     @Override
@@ -48,11 +48,8 @@ public class AdminAuthAPIImpl extends AbstractAPIImpl implements AdminAuthAPI {
         try {
             authProvider.authenticate(login, password);
 
-            AdminAccountAO adminAccountAO = new AdminAccountAO();
-            adminAccountAO.setLogin(login);
-
             result = generateAuthToken();
-            tokens.add(new AuthTokenAO(result, adminAccountAO, TOKEN_EXPIRATION_TIME, System.currentTimeMillis()));
+            tokens.add(new AuthTokenAO(result, login, TOKEN_EXPIRATION_TIME, System.currentTimeMillis()));
         } catch (AdminAuthenticationProviderException ex) {
             throw new AdminAPIAuthenticationException(AdminAPIAuthenticationException.FailCause.PASSWORD_DOESNT_MATCH);
         }

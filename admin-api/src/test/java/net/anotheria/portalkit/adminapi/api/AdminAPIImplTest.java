@@ -1,15 +1,20 @@
 package net.anotheria.portalkit.adminapi.api;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
-import net.anotheria.portalkit.adminapi.api.admin.AdminAPIFactory;
-import net.anotheria.portalkit.adminapi.api.admin.AdminAPIImpl;
-import net.anotheria.portalkit.adminapi.api.admin.AdminAccountAO;
+import net.anotheria.portalkit.adminapi.api.admin.*;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.services.account.*;
+import net.anotheria.portalkit.services.accountsettings.AccountSettingsKey;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
+import net.anotheria.portalkit.services.accountsettings.AccountSettingsServiceException;
+import net.anotheria.portalkit.services.accountsettings.Dataspace;
+import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
+import net.anotheria.portalkit.services.accountsettings.attribute.StringAttribute;
 import net.anotheria.portalkit.services.authentication.AuthenticationService;
+import net.anotheria.portalkit.services.authentication.AuthenticationServiceException;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +23,15 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Matchers.argThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminAPIImplTest {
@@ -248,4 +257,315 @@ public class AdminAPIImplTest {
         assertEquals(accountId, result.getAccountId());
     }
 
+    @Test
+    public void testUpdateAccountEmailOnly() throws APIException, AccountServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        AccountUpdateRequest updateRequest = new AccountUpdateRequest();
+        updateRequest.setId(accountId.getInternalId());
+        updateRequest.setEmail("email-to-update");
+
+        Account existingAccount = new Account();
+        existingAccount.setId(accountId);
+        existingAccount.setName("name");
+        existingAccount.setEmail("old-email");
+
+        given(accountService.getAccount(accountId)).willReturn(existingAccount);
+        given(accountService.getAccountIdByEmail(updateRequest.getEmail())).willThrow(new AccountNotFoundException("Not found"));
+        given(config.getStatuses()).willReturn(new AdminAPIConfig.AccountStatusConfig[]{});
+        given(config.getTypes()).willReturn(new AdminAPIConfig.AccountTypeConfig[]{});
+
+        // when
+        testAdminImpl.updateAccount(updateRequest);
+
+        // then
+        then(accountService).should().updateAccount(argThat(e -> e.getEmail().equals(updateRequest.getEmail()) && e.getId().equals(accountId) && e.getName().equals(existingAccount.getName())));
+    }
+
+    @Test
+    public void testUpdateAccountEmailExists() throws APIException, AccountServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        AccountUpdateRequest updateRequest = new AccountUpdateRequest();
+        updateRequest.setId(accountId.getInternalId());
+        updateRequest.setEmail("email-to-update");
+
+        Account existingAccount = new Account();
+        existingAccount.setId(accountId);
+        existingAccount.setName("name");
+        existingAccount.setEmail("old-email");
+
+        given(accountService.getAccount(accountId)).willReturn(existingAccount);
+        given(accountService.getAccountIdByEmail(updateRequest.getEmail())).willReturn(AccountId.generateNew());
+
+        try {
+
+            // when
+            testAdminImpl.updateAccount(updateRequest);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+        }
+    }
+
+    @Test
+    public void testUpdateAccountAll() throws APIException, AccountServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        AccountUpdateRequest updateRequest = new AccountUpdateRequest();
+        updateRequest.setId(accountId.getInternalId());
+        updateRequest.setEmail("email-to-update");
+        updateRequest.setName("name-to-update");
+        updateRequest.setTenant("tenant-to-update");
+        updateRequest.setType(10);
+        updateRequest.setBrand("brand-to-update");
+
+        Account existingAccount = new Account();
+        existingAccount.setId(accountId);
+        existingAccount.setName("name");
+        existingAccount.setEmail("old-email");
+        existingAccount.setType(1);
+        existingAccount.setTenant("old-tenant");
+        existingAccount.setBrand("old-brand");
+
+        given(accountService.getAccount(accountId)).willReturn(existingAccount);
+        given(accountService.getAccountIdByEmail(updateRequest.getEmail())).willThrow(new AccountNotFoundException(""));
+
+        given(config.getStatuses()).willReturn(new AdminAPIConfig.AccountStatusConfig[]{});
+        given(config.getTypes()).willReturn(new AdminAPIConfig.AccountTypeConfig[]{});
+
+        // when
+        testAdminImpl.updateAccount(updateRequest);
+
+        // then
+        then(accountService).should().updateAccount(argThat(
+                e -> e.getId().equals(accountId) && e.getName().equals(updateRequest.getName())
+                        && e.getEmail().equals(updateRequest.getEmail()) && e.getType() == updateRequest.getType()
+                        && e.getBrand().equals(updateRequest.getBrand()) && e.getTenant().equals(updateRequest.getTenant())
+        ));
+    }
+
+    @Test
+    public void testUpdateAccountAccountIdEmpty() {
+
+        // given
+        AccountUpdateRequest updateRequest = new AccountUpdateRequest();
+
+        try {
+
+            // when
+            testAdminImpl.updateAccount(updateRequest);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+        }
+    }
+
+    @Test
+    public void testAddAccountStatus() throws APIException, AccountServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int status = 8;
+
+        Account account = new Account();
+        account.setId(accountId);
+
+        given(accountService.getAccount(accountId)).willReturn(account);
+        given(accountService.updateAccount(argThat(e -> e.getId().equals(accountId)))).willReturn(account);
+
+        given(config.getStatuses()).willReturn(new AdminAPIConfig.AccountStatusConfig[]{});
+        given(config.getTypes()).willReturn(new AdminAPIConfig.AccountTypeConfig[]{});
+
+        // when
+        testAdminImpl.addAccountStatus(accountId, status);
+
+        // then
+        then(accountService).should().updateAccount(argThat(e -> e.getId().equals(accountId) && e.getStatus() == status));
+    }
+
+    @Test
+    public void testRemoveAccountStatus() throws AccountServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int status = 4;
+
+        Account account = new Account();
+        account.setId(accountId);
+        account.setStatus(4);
+
+        given(accountService.getAccount(accountId)).willReturn(account);
+        given(accountService.updateAccount(argThat(e -> e.getId().equals(accountId)))).willReturn(account);
+
+        given(config.getStatuses()).willReturn(new AdminAPIConfig.AccountStatusConfig[]{});
+        given(config.getTypes()).willReturn(new AdminAPIConfig.AccountTypeConfig[]{});
+
+        // when
+        testAdminImpl.removeAccountStatus(accountId, status);
+
+        // then
+        then(accountService).should().updateAccount(argThat(e -> e.getId().equals(accountId) && e.getStatus() == 0));
+    }
+
+    @Test
+    public void testSetNewAccountPassword() throws APIException, AuthenticationServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        String newPassword = "new-password";
+
+        // when
+        testAdminImpl.setNewAccountPassword(accountId, newPassword);
+
+        // then
+        then(authenticationService).should().setPassword(accountId, newPassword);
+    }
+
+    @Test
+    public void testGetSignAsToken() throws AuthenticationServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+
+        AdminAPIConfig.AuthTokenConfig[] tokens = new AdminAPIConfig.AuthTokenConfig[]{new AdminAPIConfig.AuthTokenConfig(0, "AUTH_TOKEN", false), new AdminAPIConfig.AuthTokenConfig(1, "DIRECT_LOGIN", true)};
+        given(config.getTokens()).willReturn(tokens);
+
+        String token = "token";
+        EncryptedAuthToken encryptedAuthToken = new EncryptedAuthToken();
+        encryptedAuthToken.setEncryptedVersion(token);
+        given(authenticationService.generateEncryptedToken(eq(accountId), argThat(e -> e.getAccountId().equals(accountId) && e.getType() == 1 && e.isMultiUse()))).willReturn(encryptedAuthToken);
+
+        // when
+        String result = testAdminImpl.getSignAsToken(accountId);
+
+        // then
+        assertEquals(token, result);
+    }
+
+    @Test
+    public void testGetAllDataspaces() throws AccountSettingsServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+
+        List<Dataspace> dataspaces = new LinkedList<>();
+
+        Dataspace dataspace = new Dataspace();
+        dataspace.setKey(new AccountSettingsKey(accountId, 1));
+        dataspaces.add(dataspace);
+
+        Dataspace dataspace1 = new Dataspace();
+        dataspace1.setKey(new AccountSettingsKey(accountId, 2));
+        dataspaces.add(dataspace1);
+
+        given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
+
+        // when
+        List<Dataspace> result = testAdminImpl.getAllDataspaces(accountId);
+
+        // then
+        assertArrayEquals(dataspaces.toArray(), result.toArray());
+    }
+
+    @Test
+    public void testAddDataspaceAttribute() throws AccountSettingsServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int dataspaceId = 1;
+        String attributeName = "attrName";
+        String attributeValue = "attrValue";
+        AttributeType type = AttributeType.STRING;
+
+        List<Dataspace> dataspaces = new LinkedList<>();
+        Dataspace dataspace = new Dataspace();
+        dataspace.setKey(new AccountSettingsKey(accountId, dataspaceId));
+        dataspaces.add(dataspace);
+
+        given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
+
+        // when
+        Dataspace result = testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+
+        // then
+        then(accountSettingsService).should().saveDataspace(result);
+        assertEquals(attributeName, result.getAttribute(attributeName).getName());
+        assertEquals(attributeValue, result.getAttribute(attributeName).getValueAsString());
+        assertEquals(type, result.getAttribute(attributeName).getType());
+    }
+
+    @Test
+    public void testAddDataspaceAttributeNoDataspace() throws AccountSettingsServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int dataspaceId = 1;
+        String attributeName = "attrName";
+        String attributeValue = "attrValue";
+        AttributeType type = AttributeType.STRING;
+
+        given(accountSettingsService.getAllDataspaces(accountId)).willReturn(Collections.emptyList());
+
+        try {
+
+            // when
+            testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+
+        }
+    }
+
+    @Test
+    public void testRemoveDataspaceAttribute() throws AccountSettingsServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int dataspaceId = 1;
+        String attributeName = "attrName";
+
+        List<Dataspace> dataspaces = new LinkedList<>();
+        Dataspace dataspace = new Dataspace();
+        dataspace.setKey(new AccountSettingsKey(accountId, dataspaceId));
+        dataspace.addAttribute(attributeName, new StringAttribute(attributeName, "someAttr"));
+        dataspaces.add(dataspace);
+
+        given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
+
+        // when
+        Dataspace result = testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+
+        // then
+        then(accountSettingsService).should().saveDataspace(result);
+        assertNull(result.getAttribute(attributeName));
+    }
+
+    @Test
+    public void testRemoveDataspaceAttributeNoDataspace() throws AccountSettingsServiceException, APIException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int dataspaceId = 1;
+        String attributeName = "attrName";
+
+        given(accountSettingsService.getAllDataspaces(accountId)).willReturn(Collections.emptyList());
+
+        try {
+
+            // when
+            testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+        }
+    }
 }
