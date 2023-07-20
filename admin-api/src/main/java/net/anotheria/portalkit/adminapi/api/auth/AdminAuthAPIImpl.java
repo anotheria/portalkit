@@ -75,4 +75,8 @@ public class AdminAuthAPIImpl extends AbstractAPIImpl implements AdminAuthAPI {
     private String generateAuthToken() {
         return "B:".concat(RandomStringUtils.randomAlphanumeric(200));
     }
+
+    protected void setTokens(List<AuthTokenAO> tokens) {
+        this.tokens = tokens;
+    }
 }
