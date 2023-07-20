@@ -1,5 +1,12 @@
 package net.anotheria.portalkit.adminapi.rest.account;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.servers.Server;
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.APIFactory;
 import net.anotheria.anoplass.api.APIFinder;
@@ -23,6 +30,7 @@ import java.util.List;
 @Path("admin-api/account")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Server(url = "/api/v1/")
 public class AccountResource {
 
     private static final Logger log = LoggerFactory.getLogger(AccountResource.class);
@@ -35,6 +43,11 @@ public class AccountResource {
 
     @GET
     @Path("statuses")
+    @Operation(description = "Returns all account statuses")
+    @ApiResponse(
+            description = "List with account statuses.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AdminAPIConfig.AccountStatusConfig.class)))
     public Response getAllAccountStatuses() {
         List<AdminAPIConfig.AccountStatusConfig> result = null;
         try {
@@ -49,6 +62,11 @@ public class AccountResource {
 
     @GET
     @Path("types")
+    @Operation(description = "Returns all account types")
+    @ApiResponse(
+            description = "List with account types.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AdminAPIConfig.AccountTypeConfig.class)))
     public Response getAllAccountTypes() {
         List<AdminAPIConfig.AccountTypeConfig> result = null;
         try {
@@ -60,7 +78,12 @@ public class AccountResource {
     }
 
     @GET
-    public Response getAllAccounts(@QueryParam("searchTerm") String searchTerm, @QueryParam("pageNumber") int pageNumber, @QueryParam("itemsOnPage") int itemsOnPage) {
+    @Operation(description = "Returns paginated list of accounts")
+    @ApiResponse(
+            description = "List with accounts.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AdminAccountAO.class)))
+    public Response getAllAccounts(@QueryParam("searchTerm") @Parameter(name = "searchTerm", description = "Term to filter accounts by email/name", required = true, schema = @Schema(implementation = String.class)) String searchTerm, @QueryParam("pageNumber") @Parameter(name = "pageNumber", description = "Number/index of page", required = true, schema = @Schema(implementation = Integer.class)) int pageNumber, @QueryParam("itemsOnPage") @Parameter(name = "itemsOnPage", description = "Amount on items on page", required = true, schema = @Schema(implementation = Integer.class)) int itemsOnPage) {
         PageResult<AdminAccountAO> result = null;
         try {
             result = adminAPI.getAccounts(pageNumber, itemsOnPage, searchTerm);
