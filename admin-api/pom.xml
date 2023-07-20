@@ -15,13 +15,24 @@
     <description>Admin API via REST</description>
 
     <properties>
-        <moskito-version>3.2.2</moskito-version>
+
         <jersey-version>2.34</jersey-version>
         <swagger-version>2.2.8</swagger-version>
-        <moskito-control-version>3.0.0</moskito-control-version>
-        <ano-plass-access-aop-version>2.2.0-SNAPSHOT</ano-plass-access-aop-version>
         <swagger-ui.version>3.17.0</swagger-ui.version>
+
+        <moskito-version>3.2.2</moskito-version>
+        <moskito-control-version>3.0.0</moskito-control-version>
+
         <distributeme-version>2.3.10</distributeme-version>
+
+        <ano-site-version>3.2.2-SNAPSHOT</ano-site-version>
+        <ano-doc-version>3.2.2-SNAPSHOT</ano-doc-version>
+        <ano-doc-plugin-version>2.6.11</ano-doc-plugin-version>
+        <build-helper-version>1.5</build-helper-version>
+        <ano-maf-version>3.0.0</ano-maf-version>
+        <ano-plass-access-aop-version>2.2.0-SNAPSHOT</ano-plass-access-aop-version>
+        <ano-plass-version>2.1.5</ano-plass-version>
+        <ano-prise-version>2.2.0</ano-prise-version>
     </properties>
 
     <dependencies>
@@ -215,6 +226,50 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>ano-site</artifactId>
+            <version>${ano-site-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.anotheria</groupId>
+                    <artifactId>moskito-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>net.anotheria</groupId>
+                    <artifactId>moskito-webui</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>ano-maf</artifactId>
+            <version>${ano-maf-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>ano-plass</artifactId>
+            <version>${ano-plass-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.anotheria</groupId>
+            <artifactId>ano-prise</artifactId>
+            <version>${ano-prise-version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>javassist</artifactId>
+                    <groupId>javassist</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -258,6 +313,22 @@
                                     <outputDirectory>${project.build.directory}/tmp/media</outputDirectory>
                                     <includes>moskito/**,**/*.jsp</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>net.anotheria</groupId>
+                                    <artifactId>ano-site</artifactId>
+                                    <version>${ano-site-version}</version>
+                                    <type>jar</type>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                    <includes>etc/def/as/as-*.xml</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>net.anotheria</groupId>
+                                    <artifactId>ano-site</artifactId>
+                                    <version>${ano-site-version}</version>
+                                    <type>jar</type>
+                                    <outputDirectory>${project.build.directory}/tmp/media</outputDirectory>
+                                    <includes>cms_static/**,html/**,img/**,js/**/*.js,**/*.jsp,css/**/*.css</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -286,6 +357,18 @@
                             <value>/openapi</value>
                         </replacement>
                     </replacements>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${basedir}/generated</directory>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
                 </configuration>
             </plugin>
             <plugin>
@@ -379,6 +462,12 @@
                             <directory>${project.build.directory}/tmp/media</directory>
                         </resource>
                         <resource>
+                            <directory>${project.build.directory}/tmp/gen</directory>
+                            <includes>
+                                <include>**/*.jsp</include>
+                            </includes>
+                        </resource>
+                        <resource>
                             <directory>${basedir}/src/main/java</directory>
                             <includes>
                                 <include>**/*.jsp</include>
@@ -386,6 +475,92 @@
                         </resource>
                     </webResources>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.anotheria</groupId>
+                <artifactId>maven-ano-doc-plugin</artifactId>
+                <version>${ano-doc-plugin-version}</version>
+                <configuration>
+                    <baseDir>${basedir}</baseDir>
+                    <outputDir>${basedir}/generated</outputDir>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.anotheria</groupId>
+                        <artifactId>ano-doc</artifactId>
+                        <version>${ano-doc-version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-version}</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java/</source>
+                                <source>generated/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-resource</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/generated/java</directory>
+                                    <excludes>
+                                        <exclude>*.java</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <!-- here the phase you need -->
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/tmp/gen</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/generated/java</directory>
+                                    <includes>
+                                        <include>**/*.jsp</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

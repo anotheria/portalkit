@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<context>
+	<package>net.anotheria.anosite.gen</package>
+	<owner>portalkit</owner>
+	<applicationName>adminapi</applicationName>
+	<applicationURLPath></applicationURLPath>
+	<servletMapping>cms</servletMapping>
+	<encoding>UTF-8</encoding>
+	<languages>
+		<supported>
+			<language>EN</language>
+		</supported>
+		<default>
+			<language>EN</language>
+		</default>
+	</languages>
+</context>

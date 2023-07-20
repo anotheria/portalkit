@@ -4,6 +4,7 @@ import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.shared.APITierConfigurator;
 import net.anotheria.portalkit.adminapi.biz.BusinessTierConfigurator;
 import net.anotheria.portalkit.adminapi.biz.util.StartDistributeMeEventing;
+import net.anotheria.portalkit.adminapi.shared.ASGTierConfigurator;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +68,7 @@ public class ContextInitializer implements ServletContextListener {
     private void configureBusinessTier() {
         // custom project services
         BusinessTierConfigurator.configure();
+        ASGTierConfigurator.configure();
     }
 
     /**

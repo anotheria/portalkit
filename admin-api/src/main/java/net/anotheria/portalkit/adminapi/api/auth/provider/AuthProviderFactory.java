@@ -9,7 +9,7 @@ public class AuthProviderFactory {
     public static AuthProvider getAuthProvider() {
         switch (CONFIG.getAuthProvider()) {
             case ASG:
-                return null;
+                return new ASGAuthProvider();
             case CONFIG:
                 return new ConfigAuthProvider();
             default:

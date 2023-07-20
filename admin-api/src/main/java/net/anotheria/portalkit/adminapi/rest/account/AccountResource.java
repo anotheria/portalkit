@@ -3,6 +3,7 @@ package net.anotheria.portalkit.adminapi.rest.account;
 import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.APIFactory;
 import net.anotheria.anoplass.api.APIFinder;
+import net.anotheria.anosite.cms.user.CMSUserManager;
 import net.anotheria.portalkit.adminapi.api.admin.*;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
@@ -41,6 +42,8 @@ public class AccountResource {
         } catch (APIException ex) {
             return Response.status(500).entity(ReplyObject.error(ex)).build();
         }
+        boolean isKnown = CMSUserManager.getInstance().isKnownUser("admin");
+        System.out.println(isKnown);
         return Response.status(200).entity(ReplyObject.success("success", result)).build();
     }
 
