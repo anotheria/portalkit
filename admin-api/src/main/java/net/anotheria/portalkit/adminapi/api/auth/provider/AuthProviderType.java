@@ -6,7 +6,7 @@ package net.anotheria.portalkit.adminapi.api.auth.provider;
 public enum AuthProviderType {
 
     /**
-     * Provider that uses credentials from ASG - Ano-Access Configuration
+     * Provider that uses credentials from ASG - UserManagement section
      */
     ASG,
 
