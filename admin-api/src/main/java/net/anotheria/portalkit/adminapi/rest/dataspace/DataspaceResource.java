@@ -1,9 +1,17 @@
 package net.anotheria.portalkit.adminapi.rest.dataspace;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.servers.Server;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPIFactory;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
+import net.anotheria.portalkit.adminapi.rest.auth.request.LoginRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
@@ -17,6 +25,7 @@ import java.util.List;
 @Path("admin-api/dataspace")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@Server(url = "/api/v1/")
 public class DataspaceResource {
 
     private final AdminAPI adminAPI;
@@ -26,8 +35,13 @@ public class DataspaceResource {
     }
 
     @GET
+    @Operation(description = "Get account's all dataspaces.")
     @Path("{accountId}")
-    public Response getUserDataspaces(@PathParam("accountId") String accountId) {
+    @ApiResponse(
+            description = "List with dataspaces.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Dataspace.class)))
+    public Response getUserDataspaces(@PathParam("accountId") @Parameter(description = "Dataspaces account-owner") String accountId) {
 
         List<Dataspace> result = null;
         try {
@@ -40,7 +54,13 @@ public class DataspaceResource {
     }
 
     @POST
+    @Operation(description = "Add attribute to provided dataspace.", requestBody = @RequestBody(description = "Payload to add new dataspace attribute",
+            content = @Content(schema = @Schema(implementation = AddDataspaceAttributeRequest.class))))
     @Path("add-attribute")
+    @ApiResponse(
+            description = "Updated dataspace object.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Dataspace.class)))
     public Response addDataspaceAttribute(AddDataspaceAttributeRequest request) {
         Dataspace result = null;
         try {
@@ -52,7 +72,13 @@ public class DataspaceResource {
     }
 
     @POST
+    @Operation(description = "Remove attribute from provided dataspace.", requestBody = @RequestBody(description = "Payload to remove dataspace attribute",
+            content = @Content(schema = @Schema(implementation = RemoveDataspaceAttributeRequest.class))))
     @Path("remove-attribute")
+    @ApiResponse(
+            description = "Updated dataspace object.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = Dataspace.class)))
     public Response removeDataspaceAttribute(RemoveDataspaceAttributeRequest request) {
         Dataspace result = null;
         try {
