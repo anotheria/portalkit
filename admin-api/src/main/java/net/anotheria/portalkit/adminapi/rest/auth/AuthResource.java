@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
+import net.anotheria.anoplass.api.APICallContext;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAccountAO;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAPIAuthenticationException;
@@ -15,10 +16,7 @@ import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.adminapi.rest.auth.request.LoginRequest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -32,6 +30,26 @@ public class AuthResource {
 
     public AuthResource() {
         this.authAPI = APIFinder.findAPI(AdminAuthAPI.class);
+    }
+
+    @GET
+    @Operation(description = "Internal Admin-API endpoint to get current logged in admin-user.")
+    @Path("me")
+    @ApiResponse(
+            description = "Admin-user login.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = String.class)))
+    public Response getCurrentUser() {
+        String login = null;
+        try {
+            String currentToken = (String) APICallContext.getCallContext().getAttribute("AUTH_TOKEN");
+            login = authAPI.authenticateByToken(currentToken);
+        } catch (AdminAPIAuthenticationException ex) {
+            return Response.status(401).entity(ReplyObject.error(ErrorKey.INVALID_TOKEN)).build();
+        } catch (Exception any) {
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("login", login)).build();
     }
 
     @POST

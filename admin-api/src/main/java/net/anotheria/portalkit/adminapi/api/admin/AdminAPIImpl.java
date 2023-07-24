@@ -329,6 +329,8 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         result.setTenant(toMap.getTenant());
         result.setRandomUID(toMap.getRandomUID());
         result.setRegistrationTimestamp(toMap.getRegistrationTimestamp());
+        result.setNumericType(toMap.getType());
+        result.setStatus(toMap.getStatus());
 
         String type = null;
         List<String> statuses = new LinkedList<>();

@@ -41,7 +41,12 @@ public class AdminAccountAO {
     private long randomUID;
 
     /**
-     * Human-friendly account type in string.=
+     * Account type as number.
+     */
+    private Integer numericType;
+
+    /**
+     * Human-friendly account type in string.
      */
     private String type;
 
@@ -49,6 +54,11 @@ public class AdminAccountAO {
      * Human-friendly account statuses in string
      */
     private List<String> statuses = new LinkedList<>();
+
+    /**
+     * Account status as number
+     */
+    private Long status;
 
     public AccountId getAccountId() {
         return accountId;
@@ -98,6 +108,14 @@ public class AdminAccountAO {
         this.randomUID = randomUID;
     }
 
+    public int getNumericType() {
+        return numericType;
+    }
+
+    public void setNumericType(Integer numericType) {
+        this.numericType = numericType;
+    }
+
     public String getType() {
         return type;
     }
@@ -114,6 +132,14 @@ public class AdminAccountAO {
         this.statuses = statuses;
     }
 
+    public Long getStatus() {
+        return status;
+    }
+
+    public void setStatus(Long status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "AdminAccountAO{" +
@@ -123,8 +149,10 @@ public class AdminAccountAO {
                 ", tenant='" + tenant + '\'' +
                 ", registrationTimestamp=" + registrationTimestamp +
                 ", randomUID=" + randomUID +
+                ", numericType=" + numericType +
                 ", type='" + type + '\'' +
                 ", statuses=" + statuses +
+                ", status=" + status +
                 '}';
     }
 }

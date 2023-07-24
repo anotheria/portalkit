@@ -1,8 +1,8 @@
 {
   "@accounts": [
     {
-      "login": "akulyk",
-      "password": "qweqweqwe"
+      "login": "admin",
+      "password": "admin"
     }
   ]
 }
