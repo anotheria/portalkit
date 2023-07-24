@@ -19,7 +19,7 @@ public class ConfigAuthProviderTest {
     private AuthenticationConfig config;
 
     @InjectMocks
-    private ConfigAuthProvider testAuthProvider = new ConfigAuthProvider();
+    private ConfigAuthProvider testAuthProvider = new ConfigAuthProvider(true);
 
     @Test
     public void testAuthenticate() throws AdminAuthenticationProviderException {

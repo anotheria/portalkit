@@ -14,6 +14,9 @@ public class ConfigAuthProvider implements AuthProvider {
 
     private AuthenticationConfig config;
 
+    protected ConfigAuthProvider(boolean unitTests) {
+    }
+
     public ConfigAuthProvider() {
         this.config = AuthenticationConfig.getInstance();
     }
