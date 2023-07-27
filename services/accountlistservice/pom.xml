@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>net.anotheria.portalkit</groupId>
-		<artifactId>services</artifactId>
-		<version>1.6.3-SNAPSHOT</version>
+		<artifactId>pk-services</artifactId>
+		<version>3.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>services-accountlistservice</artifactId>
+	<artifactId>pk-services-accountlistservice</artifactId>
 	<name>services - account list service</name>
 	<description>Services: Account List Service</description>
 
@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.anotheria.portalkit</groupId>
-			<artifactId>services-common</artifactId>
+			<artifactId>pk-services-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
