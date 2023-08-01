@@ -71,6 +71,15 @@ public class AdminAPIConfig {
         this.authProvider = authProviderType;
     }
 
+    public AccountStatusConfig getStatus(String statusName) {
+        for (AccountStatusConfig status : getStatuses()) {
+            if (status.getName().equals(statusName)) {
+                return status;
+            }
+        }
+        return null;
+    }
+
     public static AdminAPIConfig getInstance() {
         return AdminAPIConfig.HolderClass.INSTANCE;
     }

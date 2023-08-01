@@ -5,6 +5,7 @@ import net.anotheria.anoplass.api.APIException;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountsGetRequest;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -42,6 +43,15 @@ public interface AdminAPI extends API {
      * @throws APIException in case of error
      */
     PageResult<AdminAccountAO> getAccounts(int pageNumber, int itemsOnPage, String searchTerm) throws APIException;
+
+    /**
+     * Returns paginated list of created in system accounts.
+     *
+     * @param request criteria request
+     * @return list of paginated {@link AdminAccountAO}
+     * @throws APIException in case of error
+     */
+    PageResult<AdminAccountAO> getAccounts(AccountsGetRequest request) throws APIException;
 
     /**
      * Returns account by accountId

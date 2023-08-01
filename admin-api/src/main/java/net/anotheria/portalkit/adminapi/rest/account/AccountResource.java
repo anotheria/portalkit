@@ -17,6 +17,7 @@ import net.anotheria.portalkit.adminapi.rest.ErrorKey;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountSetPasswordRequest;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountsGetRequest;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,25 @@ public class AccountResource {
         PageResult<AdminAccountAO> result = null;
         try {
             result = adminAPI.getAccounts(pageNumber, itemsOnPage, searchTerm);
+        } catch (APIException any) {
+            log.error("Cannot get all accounts", any);
+            return Response.status(500).entity(ReplyObject.error(any)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @POST
+    @Path("list")
+    @Operation(description = "Returns paginated list of accounts", requestBody = @RequestBody(description = "Payload to filter accounts.",
+            content = @Content(schema = @Schema(implementation = AccountsGetRequest.class))))
+    @ApiResponse(
+            description = "List with accounts.",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = AdminAccountAO.class)))
+    public Response getAllAccountsNew(AccountsGetRequest request) {
+        PageResult<AdminAccountAO> result = null;
+        try {
+            result = adminAPI.getAccounts(request);
         } catch (APIException any) {
             log.error("Cannot get all accounts", any);
             return Response.status(500).entity(ReplyObject.error(any)).build();

@@ -7,6 +7,7 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
+import net.anotheria.portalkit.adminapi.rest.account.request.AccountsGetRequest;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
 import net.anotheria.portalkit.services.account.AccountNotFoundException;
@@ -52,13 +53,17 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 this.authenticationService = MetaFactory.get(AuthenticationService.class);
 
                 String services = RegistryUtil.getXMLServiceList();
-                if (services.contains(AuthenticationService.class.getName().replace(".", "_"))) {
-                    tmpAuthenticationService = MetaFactory.get(AuthenticationService.class);
-                } else {
-                    tmpAuthenticationService = MetaFactory.get(SecretKeyAuthenticationService.class);
-                }
+                if (services != null) {
+                    if (services.contains(AuthenticationService.class.getName().replace(".", "_"))) {
+                        tmpAuthenticationService = MetaFactory.get(AuthenticationService.class);
+                    } else {
+                        tmpAuthenticationService = MetaFactory.get(SecretKeyAuthenticationService.class);
+                    }
 
-                this.authenticationService = tmpAuthenticationService;
+                    this.authenticationService = tmpAuthenticationService;
+                } else {
+                    throw new RuntimeException("Cannot get DiMe Registry");
+                }
             } catch (MetaFactoryException ex) {
                 log.error("Cannot initialize AccountResource", ex);
             }
@@ -118,6 +123,124 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 //in-memory pagination
                 int fromIndex = pageNumber * itemsOnPage;
                 int toIndex = fromIndex + itemsOnPage;
+
+                if (toIndex > accounts.size()) {
+                    toIndex = accounts.size();
+                }
+
+                accounts = new ArrayList<>(accounts.subList(fromIndex, toIndex));
+            }
+
+            result.setContent(accounts.stream().map(this::map).collect(Collectors.toList()));
+        } catch (Exception any) {
+            log.error("Cannot get accounts");
+            throw new APIException(any.getMessage(), any);
+        }
+        return result;
+    }
+
+    @Override
+    public PageResult<AdminAccountAO> getAccounts(AccountsGetRequest request) throws APIException {
+        PageResult<AdminAccountAO> result = new PageResult<>();
+        try {
+            List<AccountId> accountIds = new LinkedList<>(accountAdminService.getAllAccountIds());
+            List<Account> accounts = accountService.getAccounts(accountIds);
+
+            if (!StringUtils.isEmpty(request.getSearchTerm())) {
+                accounts = accounts.stream()
+                        .filter(e ->
+                                e.getEmail().toLowerCase().contains(request.getSearchTerm().trim().toLowerCase()) ||
+                                        e.getName().toLowerCase().contains(request.getSearchTerm().trim().toLowerCase())
+                        )
+                        .collect(Collectors.toList());
+            }
+
+            // filtering by registration date range, included and excluded statuses
+            accounts = accounts.stream().filter(e -> {
+                for (String includedStatus : request.getIncludedStatuses()) {
+                    AdminAPIConfig.AccountStatusConfig status = config.getStatus(includedStatus);
+                    if (status != null) {
+                        if (!e.hasStatus(status.getValue())) {
+                            return false;
+                        }
+                    }
+                }
+
+                for (String excludedStatus : request.getExcludedStatuses()) {
+                    AdminAPIConfig.AccountStatusConfig status = config.getStatus(excludedStatus);
+                    if (status != null) {
+                        if (e.hasStatus(status.getValue())) {
+                            return false;
+                        }
+                    }
+                }
+
+                if (request.getRegistrationRange() != null) {
+                    AccountsGetRequest.AccountRegistrationDateRange range = request.getRegistrationRange();
+                    return e.getRegistrationTimestamp() >= range.getFrom() && e.getRegistrationTimestamp() <= range.getTo();
+                }
+
+                return true;
+            }).collect(Collectors.toList());
+
+            result.setTotalItems(accounts.size());
+            result.setItemsOnPage(request.getItemsOnPage());
+            result.setPageNumber(request.getPageIndex());
+
+            // sorting by field
+            switch (request.getSort().getField()) {
+                case NAME:
+                    switch (request.getSort().getDirection()) {
+                        case ASC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getName)).collect(Collectors.toList());
+                            break;
+                        case DESC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getName).reversed()).collect(Collectors.toList());
+                            break;
+                    }
+                    break;
+                case EMAIL:
+                    switch (request.getSort().getDirection()) {
+                        case ASC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getEmail)).collect(Collectors.toList());
+                            break;
+                        case DESC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getEmail).reversed()).collect(Collectors.toList());
+                            break;
+                    }
+                    break;
+                case STATUS:
+                    switch (request.getSort().getDirection()) {
+                        case ASC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getStatus)).collect(Collectors.toList());
+                            break;
+                        case DESC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getStatus).reversed()).collect(Collectors.toList());
+                            break;
+                    }
+                    break;
+                case REGISTRATION_DATE:
+                    switch (request.getSort().getDirection()) {
+                        case ASC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getRegistrationTimestamp)).collect(Collectors.toList());
+                            break;
+                        case DESC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getRegistrationTimestamp).reversed()).collect(Collectors.toList());
+                            break;
+                    }
+                    break;
+            }
+
+            int maxPage = accounts.size() / request.getItemsOnPage();
+
+            if (request.getPageIndex() > maxPage) {
+                accounts = Collections.emptyList();
+                result.setTotalItems(0);
+            } else if (accounts.size() >= request.getPageIndex()) {
+
+                //in-memory pagination
+                int fromIndex = request.getPageIndex() * request.getItemsOnPage();
+                int toIndex = fromIndex + request.getItemsOnPage();
 
                 if (toIndex > accounts.size()) {
                     toIndex = accounts.size();
