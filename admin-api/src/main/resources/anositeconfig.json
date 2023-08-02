@@ -1,0 +1,12 @@
+{
+  "enforceHttp": false,
+  "enforceHttps": false,
+  "httpsOnly": false,
+  "verbose": true,
+  "systemsList": [
+    "CMS"
+  ],
+  "prod": {
+    "verbose": false
+  }
+}

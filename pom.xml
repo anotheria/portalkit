@@ -38,6 +38,7 @@
 		<module>services</module>
 		<module>apis</module>
 		<module>engines</module>
+		<module>admin-api</module>
 	</modules>
 
 	<dependencyManagement>
