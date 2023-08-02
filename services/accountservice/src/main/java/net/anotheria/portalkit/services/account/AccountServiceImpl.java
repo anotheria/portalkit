@@ -428,11 +428,11 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 		nonExistingAccountCache = Caches.createConfigurableHardwiredCache("pk-cache-null-account-service");
 
 		if (config.isBrandEnabled()) {
-			nameAndBrand2idCache = Caches.createConfigurableHardwiredCache("accountservice-namebrand2id");
-			emailAndBrand2idCache = Caches.createConfigurableHardwiredCache("accountservice-emailbrand2id");
+			nameAndBrand2idCache = Caches.createConfigurableHardwiredCache("pk-cache-accountservice-namebrand2id");
+			emailAndBrand2idCache = Caches.createConfigurableHardwiredCache("pk-cache-accountservice-emailbrand2id");
 		} else {
-			name2idCache = Caches.createConfigurableHardwiredCache("accountservice-name2id");
-			email2idCache = Caches.createConfigurableHardwiredCache("accountservice-email2id");
+			name2idCache = Caches.createConfigurableHardwiredCache("pk-cache-accountservice-name2id");
+			email2idCache = Caches.createConfigurableHardwiredCache("pk-cache-accountservice-email2id");
 		}
 
 		try {

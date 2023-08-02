@@ -1,0 +1,8 @@
+{
+  "storageDir": "/app/cms-content/content",
+  "dev": {
+    "akulyk": {
+      "storageDir": "/Users/akulyk/dev/admin-api/cms-content/content"
+    }
+  }
+}

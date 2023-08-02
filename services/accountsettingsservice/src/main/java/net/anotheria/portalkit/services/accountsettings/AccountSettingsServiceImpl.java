@@ -13,6 +13,10 @@ import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Account settings service implementation.
  *
@@ -79,6 +83,31 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
             return ds;
         } catch (AccountSettingsPersistenceServiceException e) {
             throw new AccountSettingsServiceException("persistence.loadDataspace failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public Collection<Dataspace> getAllDataspaces(AccountId accountId) throws AccountSettingsServiceException {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
+        try {
+
+            //first check cache
+            DataspaceCacheHolder holder = cache.get(accountId);
+            if (holder != null) {
+                return new LinkedList<>(holder.getAll());
+            }
+
+            Collection<Dataspace> dataspaces = persistence.loadDataspaces(accountId);
+            for (Dataspace dataspace : dataspaces) {
+                putInCache(accountId, dataspace.getKey().getDataspaceId(), dataspace);
+            }
+
+            return dataspaces;
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence.loadDataspaces failed", e);
         } finally {
             lock.unlock();
         }

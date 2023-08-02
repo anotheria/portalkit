@@ -1,0 +1,5 @@
+{
+  "net.anotheria.portalkit.services.account.persistence.AccountPersistenceService": "net.anotheria.portalkit.services.account.persistence.jdbc.JDBCAccountPersistenceServiceFactory",
+  "net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService": "net.anotheria.portalkit.services.authentication.persistence.jdbc.JDBCAuthenticationPersistenceServiceFactory",
+  "net.anotheria.portalkit.services.authentication.AuthenticationService": "net.anotheria.portalkit.services.authentication.SecretKeyAuthenticationServiceFactory"
+}

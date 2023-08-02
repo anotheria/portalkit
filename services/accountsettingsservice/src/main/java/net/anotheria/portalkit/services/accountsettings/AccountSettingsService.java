@@ -8,6 +8,9 @@ import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * 
  * 
@@ -26,6 +29,13 @@ public interface AccountSettingsService extends Service, DeletionService {
 	 * @throws AccountSettingsServiceException
 	 */
 	Dataspace getDataspace(AccountId accountId, DataspaceType domain) throws AccountSettingsServiceException;
+
+	/**
+	 * Loads all dataspaces from persistence by given userId
+	 * @param accountId account id
+	 * @return {@link Dataspace}
+	 */
+	Collection<Dataspace> getAllDataspaces(AccountId accountId) throws AccountSettingsServiceException;
 
 	/**
 	 * Saves given dataspace in persistence.
