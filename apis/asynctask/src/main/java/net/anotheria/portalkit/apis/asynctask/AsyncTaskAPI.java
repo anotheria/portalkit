@@ -21,8 +21,9 @@ public interface AsyncTaskAPI extends API {
     /**
      * Returns tasks to process.
      *
+     * @param topicName - name of topic
      * @return list of {@link AsyncTask}
-     * @throws APIException
+     * @throws APIException if error occurs
      */
-    List<AsyncTask> getTasks() throws APIException;
+    List<AsyncTask> getTasks(String topicName) throws APIException;
 }

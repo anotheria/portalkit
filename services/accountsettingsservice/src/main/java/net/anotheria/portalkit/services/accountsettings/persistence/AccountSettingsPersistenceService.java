@@ -4,6 +4,8 @@ import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.common.AccountId;
 
+import java.util.Collection;
+
 /**
  * AccountSettingsPersistenceService.
  * 
@@ -32,13 +34,13 @@ public interface AccountSettingsPersistenceService extends Service {
 
 	boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
 
-//	/**
-//	 * 
-//	 * @param owner
-//	 * @return {@code Collection<Dataspace>}
-//	 * @throws AccountSettingsPersistenceServiceException
-//	 */
-//	Collection<Dataspace> loadDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
+	/**
+	 *
+	 * @param owner
+	 * @return {@code Collection<Dataspace>}
+	 * @throws AccountSettingsPersistenceServiceException
+	 */
+	Collection<Dataspace> loadDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
 //
 //	/**
 //	 * 

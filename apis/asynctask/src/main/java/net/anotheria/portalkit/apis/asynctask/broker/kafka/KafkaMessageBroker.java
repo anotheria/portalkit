@@ -58,11 +58,11 @@ public class KafkaMessageBroker implements AsyncTaskMessageBroker {
         Properties producerProps = new Properties();
         Properties consumerProps = new Properties();
 
-        producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getProducerHost() + ":" + kafkaConfig.getProducerPort());
+        producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getBootstrapServers());
         producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getProducerHost() + ":" + kafkaConfig.getProducerPort());
+        consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConfig.getBootstrapServers());
         consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConfig.getGroupId());
         consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -115,25 +115,18 @@ public class KafkaMessageBroker implements AsyncTaskMessageBroker {
     }
 
     @Override
-    public List<AsyncTask> getTasks() throws APIException {
+    public List<AsyncTask> getTasks(String topicName) throws APIException {
         List<AsyncTask> result = new LinkedList<>();
-        List<Future<AsyncTask>> topicTaskExecutors = new LinkedList<>();
-        for (String taskType : taskConfigByType.keySet()) {
-            Future<AsyncTask> topicTaskExecutor = executorService.submit(() -> getTopicTask(taskType));
-            topicTaskExecutors.add(topicTaskExecutor);
-        }
+        AsyncTask task = getTopicTask(topicName);
+        if (task != null)
+            result.add(task);
 
-        for (Future<AsyncTask> topicTaskExecutor : topicTaskExecutors) {
-            try {
-                AsyncTask task = topicTaskExecutor.get();
-                if (task != null) {
-                    result.add(task);
-                }
-            } catch (ExecutionException | InterruptedException e) {
-                log.error("getTopicTask execution failed: {}", e.getMessage(), e);
-            }
-        }
         return result;
+    }
+
+    @Override
+    public void notifyShutdown() {
+
     }
 
     private AsyncTask getTopicTask(String kafkaTopic) throws APIException {

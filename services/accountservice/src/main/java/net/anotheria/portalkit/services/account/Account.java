@@ -58,6 +58,10 @@ public class Account implements Serializable, Cloneable {
 	private int randomUID;
 
 	/**
+	 * Brand name.
+	 */
+	private String brand;
+	/**
 	 * Default constructor.
 	 */
 	public Account(){
@@ -130,17 +134,12 @@ public class Account implements Serializable, Cloneable {
 		this.randomUID = randomUID;
 	}
 
-	/**
-	 * Creates a new account from account pattern. Copies all fields (except id) from the pattern account.
-	 * Use to properly create new account objects with preset attributes.
-	 * @param pattern	account pattern.
-	 * @return {@link Account}
-	 */
-	@Deprecated
-	public static final Account newAccountFromPattern(Account pattern){
-		Account ret = new Account(AccountId.generateNew());
-		ret.copyFrom(pattern);
-		return ret;
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 
 	protected void copyFrom(Account anotherAccount){
@@ -151,10 +150,11 @@ public class Account implements Serializable, Cloneable {
         tenant = anotherAccount.tenant;
         registrationTimestamp = anotherAccount.registrationTimestamp;
 		randomUID = anotherAccount.randomUID;
+		brand = anotherAccount.brand;
 	}
 
 	@Override public String toString(){
-		return "id: "+getId()+", name: "+getName()+", type: "+getType()+", status: "+getStatus()+", tenant: "+getTenant();
+		return "id: "+getId()+", name: "+getName()+", type: "+getType()+", status: "+getStatus()+", tenant: "+getTenant() + ", randomUID: " + getRandomUID() + ", brand: " + getBrand();
 	}
 
 	@Override public boolean equals(Object o){

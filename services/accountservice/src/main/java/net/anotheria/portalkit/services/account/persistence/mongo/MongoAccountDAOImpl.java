@@ -5,6 +5,7 @@ import com.mongodb.MongoException;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.persistence.mongo.entities.AccountEntity;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
+import net.anotheria.util.StringUtils;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.UpdateOperations;
 import org.slf4j.Logger;
@@ -50,6 +51,7 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
                     .set("tenant", newAccountData.getTenant())
                     .set("regts", newAccountData.getRegistrationTimestamp())
                     .set("status", newAccountData.getStatus())
+                    .set("brand", newAccountData.getBrand())
                     .set("daoUpdated", System.currentTimeMillis());
             datastore.update((AccountEntity) entity, ops);
         } catch (MongoException e) {
@@ -148,6 +150,26 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
+    public BaseEntity getAccountByName(Datastore datastore, String name, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+        if (StringUtils.isEmpty(name))
+            throw new IllegalArgumentException("Account name is empty");
+
+        if (StringUtils.isEmpty(brand))
+            throw new IllegalArgumentException("Account brand is empty");
+
+        try {
+            List<? extends BaseEntity> result =datastore.createQuery(entityClass).field("name").equal(name).field("brand").equal(brand).asList();
+            if (result.isEmpty())
+                return null;
+
+            return result.get(0);
+        } catch (MongoException e) {
+            log.error(e.getMessage());
+            throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + " with name: " + name + " and brand: " + brand);
+        }
+    }
+
+    @Override
     public BaseEntity getAccountByEmail(Datastore datastore, String email, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         if (email == null) {
             throw new IllegalArgumentException("AccountId is null.");
@@ -165,8 +187,41 @@ public class MongoAccountDAOImpl implements MongoAccountDAO<BaseEntity> {
     }
 
     @Override
+    public BaseEntity getAccountByEmail(Datastore datastore, String email, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+        if (StringUtils.isEmpty(email))
+            throw new IllegalArgumentException("Email is empty");
+
+        if (StringUtils.isEmpty(brand))
+            throw new IllegalArgumentException("Brand is empty");
+
+        try {
+            List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("email").equal(email).field("brand").equal(brand).asList();
+            if (result.isEmpty())
+                return null;
+
+            return result.get(0);
+        } catch (MongoException e) {
+            log.error(e.getMessage());
+            throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + " with email: " + email + " and brand: " + brand);
+        }
+    }
+
+    @Override
     public List<? extends BaseEntity> getAllAccounts(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         return null;
+    }
+
+    @Override
+    public List<? extends BaseEntity> getAllAccounts(Datastore datastore, String brand, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
+        if (StringUtils.isEmpty(brand))
+            throw new IllegalArgumentException("Brand is empty");
+
+        try {
+            return datastore.createQuery(entityClass).field("brand").equal(brand).asList();
+        } catch (MongoException e) {
+            log.error(e.getMessage());
+            throw new MongoDaoException("Can't find accounts with brand: " + brand + ". " + e.getMessage());
+        }
     }
 
     @Override

@@ -1,0 +1,106 @@
+{
+  "authProvider": "CONFIG",
+  "@statuses": [
+    {
+      "value": 1,
+      "name": "REGISTERED"
+    },
+    {
+      "value": 2,
+      "name": "CONFIRMED"
+    },
+    {
+      "value": 4,
+      "name": "ONCE_CONFIRMED"
+    },
+    {
+      "value": 8,
+      "name": "PREMIUM"
+    },
+    {
+      "value": 16,
+      "name": "MARKED_FOR_DELETION"
+    },
+    {
+      "value": 32,
+      "name": "CORPORATE_ACCOUNT"
+    },
+    {
+      "value": 64,
+      "name": "SUB_ACCOUNT"
+    },
+    {
+      "value": 128,
+      "name": "BETA"
+    },
+    {
+      "value": 256,
+      "name": "PHONE_NUMBER_CONFIRMED"
+    }
+  ],
+  "@types": [
+    {
+      "value": 0,
+      "name": "USER"
+    },
+    {
+      "value": 1,
+      "name": "DEFAULT_USER"
+    }
+  ],
+  "@tokens": [
+    {
+      "value": 1,
+      "name": "AUTOMATED_LOGIN_BY_COOKIE"
+    },
+    {
+      "value": 2,
+      "name": "PASSWORD_LOST_TOKEN"
+    },
+    {
+      "value": 3,
+      "name": "EMAIL_CONFIRMATION"
+    },
+    {
+      "value": 4,
+      "name": "EMAIL_DIRECT_LOGIN"
+    },
+    {
+      "value": 5,
+      "name": "ONE_TIME_LOGIN"
+    },
+    {
+      "value": 6,
+      "name": "EMAIL_CRM_MAIL_LOGIN"
+    },
+    {
+      "value": 8,
+      "name": "EMAIL_ONE_TIME_LOGIN"
+    },
+    {
+      "value": 9,
+      "name": "AUTH_TOKEN"
+    },
+    {
+      "value": 10,
+      "name": "ADMIN_DIRECT_LOGIN",
+      "signAs": true
+    },
+    {
+      "value": 11,
+      "name": "WEBSOCKET_REST_TOKEN"
+    },
+    {
+      "value": 12,
+      "name": "P_API_TOKEN"
+    },
+    {
+      "value": 13,
+      "name": "ADMIN_TOKEN"
+    },
+    {
+      "value": 14,
+      "name": "PERSISTENCE_TOKEN"
+    }
+  ]
+}

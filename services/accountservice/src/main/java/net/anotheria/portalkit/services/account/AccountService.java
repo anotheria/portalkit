@@ -34,8 +34,6 @@ public interface AccountService extends Service {
 	 */
 	List<Account> getAccounts(List<AccountId> ids) throws AccountServiceException;
 
-
-
 	/**
 	 * Deletes an account.
 	 * @param id account id.
@@ -78,4 +76,26 @@ public interface AccountService extends Service {
 	 */
 	AccountId getAccountIdByEmail(String accountEmail) throws AccountServiceException;
 
+	/**
+	 * Returns {@link AccountId} for given (login) name and brand. Account name can also be the email address of the user, or whatever you want
+	 * to use for login purposes.
+	 * This method returns {@link AccountId} instead of account object for better scaleability (mod distribution).
+	 *
+	 * @param accountName a value of the name field
+	 * @param brand		  a value of the brand field
+	 * @return			  {@link AccountId}
+	 * @throws AccountServiceException if any error occurs
+	 */
+	AccountId getAccountIdByName(String accountName, String brand) throws AccountServiceException;
+
+	/**
+	 * Returns {@link AccountId} by email and brand.
+	 * This method returns {@link AccountId} instead of account object for better scaleability (mod distribution).
+	 *
+	 * @param accountEmail	exact email address
+	 * @param brand 		a value of the brand field
+	 * @return				{@link	AccountId}
+	 * @throws AccountServiceException if any errors occurs
+	 */
+	AccountId getAccountIdByEmail(String accountEmail, String brand) throws AccountServiceException;
 }

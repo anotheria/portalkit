@@ -23,8 +23,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -63,6 +65,8 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 	 */
 	private ArrayList<DAO> daos = new ArrayList<DAO>();
 
+    private static Map<String, BasicDataSource> dataSourceMap = new HashMap<>();
+
 	/**
 	 * Default constructor.
 	 */
@@ -86,25 +90,22 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 	 */
 	@Override
 	public void init() {
-		BasicDataSource newDataSource = new BasicDataSource();
-		if (configName == null)
-			throw new IllegalStateException("Config not set");
-		JDBCConfig config = new JDBCConfig();
-		ConfigurationManager.INSTANCE.configureAs(config, configName);
-		log.info("Using config: " + config);
 
-		//System.out.println("Using config: "+config);
-		newDataSource.setDriverClassName(config.getDriver());
-		newDataSource.setUrl(config.getUrl());
-		newDataSource.setUsername(config.getUsername());
-		newDataSource.setPassword(config.getPassword());
+        if (configName == null)
+            throw new IllegalStateException("Config not set");
+        JDBCConfig config = new JDBCConfig();
+        ConfigurationManager.INSTANCE.configureAs(config, configName);
+        log.info("Using config: " + config);
+        if (!StringUtils.isEmpty(config.getDatasourceName())) {
+            if (!dataSourceMap.containsKey(config.getDatasourceName())) {
+                dataSourceMap.put(config.getDatasourceName(), createDataSource(config));
+            }
+            this.dataSource = dataSourceMap.get(config.getDatasourceName());
+        } else {
+            this.dataSource = createDataSource(config);
+        }
 
-		if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections() > 0)
-			newDataSource.setMaxActive(config.getMaxConnections());
-
-		this.dataSource = newDataSource;
-		
-		String dbtype = "psql";
+        String dbtype = "psql";
 		if (config.getDriver() != null) {
 			if (config.getDriver().contains("mysql")) {
 				dbtype = "mysql";
@@ -131,6 +132,17 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
 			log.info("Flyway current version:" + flywayInfo.current().getVersion());
 		}
 	}
+
+    private BasicDataSource createDataSource(JDBCConfig config) {
+        BasicDataSource newDataSource = new BasicDataSource();
+        newDataSource.setDriverClassName(config.getDriver());
+        newDataSource.setUrl(config.getUrl());
+        newDataSource.setUsername(config.getUsername());
+        newDataSource.setPassword(config.getPassword());
+        if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections() > 0)
+            newDataSource.setMaxActive(config.getMaxConnections());
+        return newDataSource;
+    }
 
 	private String getTableNameForMigration() {
 		String[] commonPackage = StringUtils.tokenize(BasePersistenceServiceJDBCImpl.class.getPackage().getName(), '.');

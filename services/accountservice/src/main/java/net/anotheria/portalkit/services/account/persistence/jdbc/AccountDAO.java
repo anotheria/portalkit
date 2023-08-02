@@ -10,6 +10,7 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.DAO;
 import net.anotheria.portalkit.services.common.persistence.jdbc.DAOException;
 import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 import net.anotheria.util.StringUtils;
+import net.anotheria.util.log.LogMessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +70,20 @@ public class AccountDAO extends AbstractDAO implements DAO {
 
 	public static final int POS_RANDOM_UID = 8;
 	/**
+	 * Position of the brand field in insert/update statements.
+	 */
+	public static final int POS_BRAND = 9;
+	/**
 	 * Max value of the position field.
 	 */
-	public static final int MAX_POS = POS_RANDOM_UID;
+	public static final int MAX_POS = POS_BRAND;
 
 	/**
 	 * Internal create account operation.
 	 */
 	private boolean createAccount(Connection connection, Account toSave) throws SQLException {
-		String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, randomUID, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
-				+ "VALUES ( ?,?,?,?,?,?,?,?,?,? )";
+		String insert = "INSERT INTO " + TABLE_NAME + "(id, name, email, type, regts, status, tenant, randomUID, brand, " + ATT_DAO_CREATED + "," + ATT_DAO_UPDATED + ") "
+				+ "VALUES ( ?,?,?,?,?,?,?,?,?,?,? )";
 
 		try {
 			Account acc = getAccount(connection, toSave.getId());
@@ -101,6 +106,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			insertStatement.setLong(POS_STATUS, toSave.getStatus());
 			insertStatement.setString(POS_TENANT, toSave.getTenant());
 			insertStatement.setInt(POS_RANDOM_UID, toSave.getRandomUID());
+			insertStatement.setString(POS_BRAND, toSave.getBrand());
 			insertStatement.setLong(MAX_POS + 1, System.currentTimeMillis());
 			insertStatement.setLong(MAX_POS + 2, 0);
 			// insertStatement.setString(MAX_POS + 3, toSave.getId().getInternalId());
@@ -116,7 +122,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	 * Internal update operation.
 	 */
 	private boolean updateAccount(Connection connection, Account toSave) throws SQLException, DAOException {
-		String update = "UPDATE " + TABLE_NAME + " set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, randomUID = ?," + ATT_DAO_UPDATED + " = ? WHERE id = ?";
+		String update = "UPDATE " + TABLE_NAME + " set name = ?, email = ?, type = ?, regts = ?, status = ?, tenant = ?, randomUID = ?, brand = ?, " + ATT_DAO_UPDATED + " = ? WHERE id = ?";
 		PreparedStatement updateStatement = null;
 		try {
 			updateStatement = connection.prepareStatement(update);
@@ -131,8 +137,9 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			updateStatement.setLong(i++, toSave.getStatus());
 			updateStatement.setString(i++, toSave.getTenant());
 			updateStatement.setInt(i++ , toSave.getRandomUID());
+			updateStatement.setString(i++, toSave.getBrand());
 			updateStatement.setLong(i++, System.currentTimeMillis());
-			updateStatement.setString(i++, toSave.getId().getInternalId());
+			updateStatement.setString(i, toSave.getId().getInternalId());
 			// */
 
 			int updateResult = updateStatement.executeUpdate();
@@ -155,25 +162,23 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		PreparedStatement stat = null;
 		ResultSet result = null;
 		try {
-			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status, tenant, randomUID from " + TABLE_NAME + " WHERE id = ?;");
+			stat = connection.prepareStatement("SELECT id,name, email, type, regts, status, tenant, randomUID, brand from " + TABLE_NAME + " WHERE id = ?;");
 			stat.setString(1, id.getInternalId());
 			result = stat.executeQuery();
 			if (!result.next()) {
 				return null;
 			}
 
-			AccountBuilder builder = new AccountBuilder();
-
-			builder.id(id);
-			builder.name(result.getString(POS_NAME));
-			builder.email(result.getString(POS_EMAIL));
-			builder.registrationTimestamp(result.getLong(POS_REG));
-			builder.type(result.getInt(POS_TYPE));
-			builder.status(result.getLong(POS_STATUS));
-			builder.tenant(result.getString(POS_TENANT));
-			builder.randomUID(result.getInt(POS_RANDOM_UID));
-
-			return builder.build();
+			return new AccountBuilder().id(id)
+					.name(result.getString(POS_NAME))
+					.email(result.getString(POS_EMAIL))
+					.registrationTimestamp(result.getLong(POS_REG))
+					.type(result.getInt(POS_TYPE))
+					.status(result.getLong(POS_STATUS))
+					.tenant(result.getString(POS_TENANT))
+					.randomUID(result.getInt(POS_RANDOM_UID))
+					.brand(result.getString(POS_BRAND))
+					.build();
 		} finally {
 			JDBCUtil.close(result);
 			JDBCUtil.close(stat);
@@ -240,6 +245,60 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		}
 	}
 
+	public AccountId getIdByNameAndBrand(Connection connection, String name, String brand) throws DAOException {
+		return getIdByFieldAndBrand(connection, "name", name, brand);
+	}
+
+	public AccountId getIdByEmailAndBrand(Connection connection, String email, String brand) throws DAOException {
+		return getIdByFieldAndBrand(connection, "email", email, brand);
+	}
+
+	private AccountId getIdByFieldAndBrand(Connection connection, String fieldName, String fieldValue, String brandValue) throws DAOException {
+		String sql = "SELECT id FROM " + TABLE_NAME + " WHERE " + fieldName + " = ? AND brand = ?";
+		PreparedStatement select = null;
+		ResultSet result = null;
+		try {
+			select = connection.prepareStatement(sql);
+			select.setString(1, fieldValue);
+			select.setString(2, brandValue);
+			result = select.executeQuery();
+			if (!result.next())
+				return null;
+			return new AccountId(result.getString(1));
+		} catch (SQLException e) {
+			String failMsg = LogMessageUtil.failMsg(e, connection, fieldName, fieldValue, brandValue);
+			LOGGER.error("Account-DAO :" + failMsg);
+			throw new DAOException(failMsg, e);
+		} finally {
+			JDBCUtil.close(result);
+			JDBCUtil.close(select);
+		}
+	}
+
+	public List<AccountId> getAccountIds(Connection connection, String brandValue) throws DAOException {
+		List<AccountId> result = new ArrayList<AccountId>();
+
+		String sql = "SELECT id FROM " + TABLE_NAME + " WHERE brand = ?";
+		PreparedStatement select = null;
+		ResultSet resultSet = null;
+		try {
+			select = connection.prepareStatement(sql);
+			select.setString(1, brandValue);
+			resultSet = select.executeQuery();
+			while (resultSet.next())
+				result.add(new AccountId(resultSet.getString(POS_ID)));
+
+			return result;
+		} catch (SQLException e) {
+			String failMsg = LogMessageUtil.failMsg(e, connection, brandValue);
+			LOGGER.error("Account-DAO :" + failMsg);
+			throw new DAOException(failMsg, e);
+		} finally {
+			JDBCUtil.close(select);
+			JDBCUtil.close(resultSet);
+		}
+	}
+
 	public List<AccountId> getAccountIdsByType(Connection con, int typeId) throws SQLException, DAOException {
 		List<AccountId> result = new ArrayList<AccountId>();
 		String sql = "SELECT id FROM " + TABLE_NAME + " WHERE type = ?";
@@ -260,7 +319,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 	}
 
 	public List<Account> getAccountsByQuery(final Connection con, final AccountQuery query) throws SQLException {
-		final String sqlSelectPart = "SELECT id, name, email, type, status, regts, tenant, randomUID FROM " + TABLE_NAME;
+		final String sqlSelectPart = "SELECT id, name, email, type, status, regts, tenant, randomUID, brand FROM " + TABLE_NAME;
 		final String sqlWherePart = " WHERE 1=1";
 		final String sqlOrderPart = " ORDER BY regts DESC";
 		// general selection part
@@ -295,6 +354,10 @@ public class AccountDAO extends AbstractDAO implements DAO {
 			sqlRawQuery.append(" AND tenant IN (").append(tenantsStr).append(")");
 		}
 
+		if (!StringUtils.isEmpty(query.getBrand())) {
+			sqlRawQuery.append("AND brand = '").append(query.getBrand()).append("'");
+		}
+
 		// ordering part
 		sqlRawQuery.append(sqlOrderPart);
 
@@ -318,6 +381,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 				account.setRegistrationTimestamp(rs.getLong("regts"));
 				account.setTenant(rs.getString("tenant"));
 				account.setRandomUID(rs.getInt("randomUID"));
+				account.setBrand(rs.getString("brand"));
 				rawResult.add(account);
 			}
 		} finally {

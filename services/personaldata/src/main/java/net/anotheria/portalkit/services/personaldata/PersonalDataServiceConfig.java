@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.personaldata;
 
 import net.anotheria.util.crypt.CryptTool;
 import org.configureme.ConfigurationManager;
+import org.configureme.annotations.AfterReConfiguration;
 import org.configureme.annotations.Configure;
 import org.configureme.annotations.ConfigureMe;
 import org.configureme.annotations.DontConfigure;
@@ -69,6 +70,12 @@ public final class PersonalDataServiceConfig {
             LOGGER.warn("Configuration fail[" + e.getMessage() + "]. Relaying on defaults.");
         }
 
+        CryptTool cryptTool = new CryptTool(new String(configurationReadKey));
+        this.applicationSecret = cryptTool.decryptFromHexTrim(this.applicationSecret);
+    }
+
+    @AfterReConfiguration
+    public void reconfigure() {
         CryptTool cryptTool = new CryptTool(new String(configurationReadKey));
         this.applicationSecret = cryptTool.decryptFromHexTrim(this.applicationSecret);
     }
