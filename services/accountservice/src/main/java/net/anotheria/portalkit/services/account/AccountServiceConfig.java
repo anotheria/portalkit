@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @since 13.12.12 16:04
  */
 
-@ConfigureMe(name = "account-service-configuration")
+@ConfigureMe(name = "pk-account-service-configuration")
 public final class AccountServiceConfig {
 	/**
 	 * If true only one account with same email address is allowed. Default true.
