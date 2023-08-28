@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPIFactory;
+import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.auth.request.LoginRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
@@ -35,6 +36,21 @@ public class DataspaceResource {
     }
 
     @GET
+    @Operation(description = "Get all available dataspaces.")
+    @Path("config")
+    @ApiResponse(description = "Returns list of available configured dataspaces.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AdminAPIConfig.DataspaceConfig.class)))
+    public Response getDataspacesConfig() {
+        List<AdminAPIConfig.DataspaceConfig> result = null;
+        try {
+            result = adminAPI.getDataspaces();
+        } catch (Exception e) {
+            return Response.status(500).entity(ReplyObject.error(e)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+
+    @GET
     @Operation(description = "Get account's all dataspaces.")
     @Path("{accountId}")
     @ApiResponse(
@@ -50,7 +66,7 @@ public class DataspaceResource {
             return Response.status(500).entity(ReplyObject.error(e)).build();
         }
 
-        return Response.status(201).entity(ReplyObject.success("data", result)).build();
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 
     @POST

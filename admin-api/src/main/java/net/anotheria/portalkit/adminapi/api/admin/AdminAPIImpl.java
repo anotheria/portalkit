@@ -395,6 +395,17 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
+    public List<AdminAPIConfig.DataspaceConfig> getDataspaces() throws APIException {
+        List<AdminAPIConfig.DataspaceConfig> result = null;
+        try {
+            result = new LinkedList<>(Arrays.asList(config.getDataspaces()));
+        } catch (Exception any) {
+            throw new APIException("Cannot get dataspaces config", any);
+        }
+        return result;
+    }
+
+    @Override
     public List<Dataspace> getAllDataspaces(AccountId accountId) {
         List<Dataspace> result = null;
         try {

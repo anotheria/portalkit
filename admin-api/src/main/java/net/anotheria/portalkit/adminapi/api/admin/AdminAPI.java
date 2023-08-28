@@ -109,6 +109,8 @@ public interface AdminAPI extends API {
      */
     String getSignAsToken(AccountId accountId) throws APIException;
 
+    List<AdminAPIConfig.DataspaceConfig> getDataspaces() throws APIException;
+
     /**
      * Returns all account's dataspaces
      *

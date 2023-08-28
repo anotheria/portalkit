@@ -29,6 +29,10 @@ public class AdminAPIConfig {
     private AuthTokenConfig[] tokens;
 
     @Configure
+    @SerializedName("@dataspaces")
+    private DataspaceConfig[] dataspaces;
+
+    @Configure
     private AuthProviderType authProvider;
 
     public AdminAPIConfig() {
@@ -69,6 +73,14 @@ public class AdminAPIConfig {
 
     public void setAuthProvider(AuthProviderType authProviderType) {
         this.authProvider = authProviderType;
+    }
+
+    public DataspaceConfig[] getDataspaces() {
+        return dataspaces;
+    }
+
+    public void setDataspaces(DataspaceConfig[] dataspaces) {
+        this.dataspaces = dataspaces;
     }
 
     public AccountStatusConfig getStatus(String statusName) {
@@ -281,6 +293,48 @@ public class AdminAPIConfig {
                     "value=" + value +
                     ", name='" + name + '\'' +
                     ", signAs=" + signAs +
+                    '}';
+        }
+    }
+
+    @ConfigureMe
+    public static class DataspaceConfig {
+
+        @Configure
+        private int value;
+
+        @Configure
+        private String name;
+
+        public DataspaceConfig() {
+        }
+
+        public DataspaceConfig(int value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "DataspaceConfig{" +
+                    "type=" + value +
+                    ", name='" + name + '\'' +
                     '}';
         }
     }
