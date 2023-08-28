@@ -321,7 +321,7 @@ public class AdminAPIImplTest {
         updateRequest.setEmail("email-to-update");
         updateRequest.setName("name-to-update");
         updateRequest.setTenant("tenant-to-update");
-        updateRequest.setType(10);
+        updateRequest.setType("USER");
         updateRequest.setBrand("brand-to-update");
 
         Account existingAccount = new Account();
@@ -344,8 +344,8 @@ public class AdminAPIImplTest {
         // then
         then(accountService).should().updateAccount(argThat(
                 e -> e.getId().equals(accountId) && e.getName().equals(updateRequest.getName())
-                        && e.getEmail().equals(updateRequest.getEmail()) && e.getType() == updateRequest.getType()
-                        && e.getBrand().equals(updateRequest.getBrand()) && e.getTenant().equals(updateRequest.getTenant())
+                        && e.getEmail().equals(updateRequest.getEmail()) && e.getBrand().equals(updateRequest.getBrand())
+                        && e.getTenant().equals(updateRequest.getTenant())
         ));
     }
 

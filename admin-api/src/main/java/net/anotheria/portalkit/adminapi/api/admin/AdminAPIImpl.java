@@ -303,7 +303,17 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 result.setTenant(updateRequest.getTenant());
             }
             if (updateRequest.getType() != null) {
-                result.setType(updateRequest.getType());
+                AdminAPIConfig.AccountTypeConfig accountType = config.getType(updateRequest.getType());
+                if (accountType != null) {
+                    result.setType(accountType.getValue());
+                }
+            }
+
+            for (String status : updateRequest.getStatuses()) {
+                AdminAPIConfig.AccountStatusConfig accountStatus = config.getStatus(status);
+                if (accountStatus != null) {
+                    result.addStatus(accountStatus.getValue());
+                }
             }
 
             accountService.updateAccount(result);

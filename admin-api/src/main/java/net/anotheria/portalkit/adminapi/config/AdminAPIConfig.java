@@ -80,6 +80,15 @@ public class AdminAPIConfig {
         return null;
     }
 
+    public AccountTypeConfig getType(String typeName) {
+        for (AccountTypeConfig type : getTypes()) {
+            if (type.getName().equals(typeName)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
     public static AdminAPIConfig getInstance() {
         return AdminAPIConfig.HolderClass.INSTANCE;
     }
