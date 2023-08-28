@@ -1,4 +1,4 @@
-package net.anotheria.portalkit.adminapi.api.admin;
+package net.anotheria.portalkit.adminapi.api.admin.dataspace;
 
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
 import net.anotheria.portalkit.services.common.AccountId;

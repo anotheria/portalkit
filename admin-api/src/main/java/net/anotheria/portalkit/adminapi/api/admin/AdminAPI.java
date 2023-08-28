@@ -2,11 +2,12 @@ package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountsGetRequest;
-import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.common.AccountId;
 
@@ -118,6 +119,16 @@ public interface AdminAPI extends API {
      * @return {@link DataspaceAO}
      */
     List<DataspaceAO> getAllDataspaces(AccountId accountId);
+
+    /**
+     * Creates dataspace with for account with specific id and attributes.
+     *
+     * @param accountId   owner of dataspace
+     * @param dataspaceId id of dataspace
+     * @param attributes  list of attributes
+     * @return {@link DataspaceAO}
+     */
+    DataspaceAO createDataspace(AccountId accountId, int dataspaceId, List<DataspaceAttributeAO> attributes) throws APIException;
 
     /**
      * Saves an attribute to existing dataspace.

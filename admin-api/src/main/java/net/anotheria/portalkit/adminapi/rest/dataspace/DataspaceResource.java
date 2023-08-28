@@ -9,12 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
-import net.anotheria.portalkit.adminapi.api.admin.DataspaceAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
+import net.anotheria.portalkit.adminapi.rest.dataspace.request.CreateDataspaceRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
-import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import javax.ws.rs.*;
@@ -48,7 +48,6 @@ public class DataspaceResource {
         return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 
-
     @GET
     @Operation(description = "Get account's all dataspaces.")
     @Path("{accountId}")
@@ -65,6 +64,20 @@ public class DataspaceResource {
             return Response.status(500).entity(ReplyObject.error(e)).build();
         }
 
+        return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @POST
+    @Operation(description = "Create dataspace", requestBody = @RequestBody(description = "Payload to create dataspace",
+            content = @Content(schema = @Schema(implementation = CreateDataspaceRequest.class))))
+    @ApiResponse(description = "Created dataspace", content = @Content(mediaType = "application/json", schema = @Schema(implementation = DataspaceAO.class)))
+    public Response createDataspace(CreateDataspaceRequest request) {
+        DataspaceAO result = null;
+        try {
+            result = adminAPI.createDataspace(request.getAccountId(), request.getType(), request.getAttributes());
+        } catch (Exception ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
         return Response.status(200).entity(ReplyObject.success("data", result)).build();
     }
 

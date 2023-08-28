@@ -4,6 +4,9 @@ import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.AbstractAPIImpl;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceExistsAPIException;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
@@ -12,6 +15,7 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
 import net.anotheria.portalkit.services.account.AccountNotFoundException;
 import net.anotheria.portalkit.services.account.AccountService;
+import net.anotheria.portalkit.services.accountsettings.AccountSettingsKey;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
@@ -414,6 +418,32 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             log.error("Cannot get user's dataspaces", any);
         }
         return result;
+    }
+
+    @Override
+    public DataspaceAO createDataspace(AccountId accountId, int dataspaceId, List<DataspaceAttributeAO> attributes) throws APIException {
+        try {
+            DataspaceAO result = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
+                if (dataspace.getKey().getDataspaceId() == dataspaceId) {
+                    throw new DataspaceExistsAPIException("Dataspace already exists");
+                }
+            }
+            Dataspace toSave = new Dataspace();
+            toSave.setKey(new AccountSettingsKey(accountId, dataspaceId));
+            for (DataspaceAttributeAO attributeToMap : attributes) {
+                Attribute attribute = Attribute.createAttribute(attributeToMap.getType(), attributeToMap.getAttributeName(), attributeToMap.getAttributeValue());
+                toSave.addAttribute(attributeToMap.getAttributeName(), attribute);
+            }
+            accountSettingsService.saveDataspace(toSave);
+            result = map(toSave);
+            return result;
+        } catch (DataspaceExistsAPIException ex) {
+            throw new DataspaceExistsAPIException(ex.getMessage(), ex);
+        } catch (Exception any) {
+            log.error("Cannot create dataspace", any);
+            throw new APIException("Cannot create dataspace", any);
+        }
     }
 
     @Override
