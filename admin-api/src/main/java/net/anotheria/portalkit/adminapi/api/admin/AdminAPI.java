@@ -115,12 +115,12 @@ public interface AdminAPI extends API {
      * Returns all account's dataspaces
      *
      * @param accountId dataspaces owner
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      */
-    List<Dataspace> getAllDataspaces(AccountId accountId);
+    List<DataspaceAO> getAllDataspaces(AccountId accountId);
 
     /**
-     * Adds an attribute to existing dataspace.
+     * Saves an attribute to existing dataspace.
      * If there is no dataspace with provided id, exception will be thrown.
      *
      * @param accountId      dataspace owner
@@ -128,10 +128,10 @@ public interface AdminAPI extends API {
      * @param attributeName  name of attribute
      * @param attributeValue value of attribute
      * @param type           type of attribute
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      * @throws APIException in case of error
      */
-    Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException;
+    DataspaceAO saveDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException;
 
     /**
      * Removes an attribute from existing dataspace.
@@ -140,9 +140,9 @@ public interface AdminAPI extends API {
      * @param accountId     dataspace owner
      * @param dataspaceId   id of dataspace
      * @param attributeName name of attribute
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      * @throws APIException in case of error
      */
-    Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
+    DataspaceAO removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
 
 }

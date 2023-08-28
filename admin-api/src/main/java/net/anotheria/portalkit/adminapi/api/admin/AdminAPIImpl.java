@@ -406,10 +406,10 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public List<Dataspace> getAllDataspaces(AccountId accountId) {
-        List<Dataspace> result = null;
+    public List<DataspaceAO> getAllDataspaces(AccountId accountId) {
+        List<DataspaceAO> result = null;
         try {
-            result = new LinkedList<>(accountSettingsService.getAllDataspaces(accountId));
+            result = map(accountSettingsService.getAllDataspaces(accountId));
         } catch (Exception any) {
             log.error("Cannot get user's dataspaces", any);
         }
@@ -417,23 +417,26 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException {
-        Dataspace result = null;
+    public DataspaceAO saveDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException {
+        DataspaceAO result = null;
         try {
-            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+            Dataspace toEdit = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
                 if (dataspace.getKey().getDataspaceId() == dataspaceId) {
-                    result = dataspace;
+                    toEdit = dataspace;
                     break;
                 }
             }
 
-            if (result == null) {
+            if (toEdit == null) {
                 throw new APIException("Cannot find dataspace by id: " + dataspaceId);
             }
 
             Attribute attributeToAdd = Attribute.createAttribute(type, attributeName, attributeValue);
-            result.addAttribute(attributeName, attributeToAdd);
-            accountSettingsService.saveDataspace(result);
+            toEdit.addAttribute(attributeName, attributeToAdd);
+            accountSettingsService.saveDataspace(toEdit);
+
+            result = map(toEdit);
         } catch (Exception any) {
             log.error("Cannot add dataspace attribute", any);
             throw new APIException(any.getMessage(), any);
@@ -442,22 +445,25 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException {
-        Dataspace result = null;
+    public DataspaceAO removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException {
+        DataspaceAO result = null;
         try {
-            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+            Dataspace toEdit = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
                 if (dataspace.getKey().getDataspaceId() == dataspaceId) {
-                    result = dataspace;
+                    toEdit = dataspace;
                     break;
                 }
             }
 
-            if (result == null) {
+            if (toEdit == null) {
                 throw new APIException("Cannot find dataspace by id: " + dataspaceId);
             }
 
-            result.removeAttribute(attributeName);
-            accountSettingsService.saveDataspace(result);
+            toEdit.removeAttribute(attributeName);
+            accountSettingsService.saveDataspace(toEdit);
+
+            result = map(toEdit);
         } catch (Exception any) {
             log.error("Cannot remove dataspace attribute", any);
             throw new APIException(any.getMessage(), any);
@@ -496,6 +502,32 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         result.setType(type);
         result.setStatuses(statuses);
 
+        return result;
+    }
+
+    private List<DataspaceAO> map(Collection<Dataspace> toMap) {
+        List<DataspaceAO> result = new LinkedList<>();
+        for (Dataspace dataspace : toMap) {
+            result.add(map(dataspace));
+        }
+        return result;
+    }
+
+    private DataspaceAO map(Dataspace toMap) {
+        DataspaceAO result = new DataspaceAO();
+        AdminAPIConfig.DataspaceConfig dataspaceConfig = config.getDataspace(toMap.getKey().getDataspaceId());
+
+        result.setAccountId(new AccountId(toMap.getKey().getAccountId()));
+        result.setType(toMap.getKey().getDataspaceId());
+        if (dataspaceConfig != null) {
+            result.setName(dataspaceConfig.getName());
+        }
+
+        List<Attribute> attributes = new LinkedList<>();
+        for (Map.Entry<String, Attribute> entry : toMap.getAttributes().entrySet()) {
+            attributes.add(entry.getValue());
+        }
+        result.setAttributes(attributes);
         return result;
     }
 }

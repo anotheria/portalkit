@@ -101,6 +101,15 @@ public class AdminAPIConfig {
         return null;
     }
 
+    public DataspaceConfig getDataspace(int value) {
+        for (DataspaceConfig dataspace : getDataspaces()) {
+            if (dataspace.getValue() == value) {
+                return dataspace;
+            }
+        }
+        return null;
+    }
+
     public static AdminAPIConfig getInstance() {
         return AdminAPIConfig.HolderClass.INSTANCE;
     }

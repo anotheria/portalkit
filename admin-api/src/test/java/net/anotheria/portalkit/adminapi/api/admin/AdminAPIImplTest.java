@@ -1,7 +1,6 @@
 package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.portalkit.adminapi.api.admin.*;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
@@ -467,10 +466,13 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        List<Dataspace> result = testAdminImpl.getAllDataspaces(accountId);
+        List<DataspaceAO> result = testAdminImpl.getAllDataspaces(accountId);
 
         // then
-        assertArrayEquals(dataspaces.toArray(), result.toArray());
+        assertEquals(dataspace.getKey().getDataspaceId(), result.get(0).getType());
+        assertEquals(new AccountId(dataspace.getKey().getAccountId()), result.get(0).getAccountId());
+        assertEquals(dataspace1.getKey().getDataspaceId(), result.get(1).getType());
+        assertEquals(new AccountId(dataspace1.getKey().getAccountId()), result.get(1).getAccountId());
     }
 
     @Test
@@ -491,13 +493,13 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        Dataspace result = testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+        DataspaceAO result = testAdminImpl.saveDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
 
         // then
-        then(accountSettingsService).should().saveDataspace(result);
-        assertEquals(attributeName, result.getAttribute(attributeName).getName());
-        assertEquals(attributeValue, result.getAttribute(attributeName).getValueAsString());
-        assertEquals(type, result.getAttribute(attributeName).getType());
+        then(accountSettingsService).should().saveDataspace(argThat(e -> e.getKey().getAccountId().equals(accountId.getInternalId()) && e.getKey().getDataspaceId() == dataspaceId));
+        assertEquals(attributeName, result.getAttributes().get(0).getName());
+        assertEquals(attributeValue, result.getAttributes().get(0).getValueAsString());
+        assertEquals(type, result.getAttributes().get(0).getType());
     }
 
     @Test
@@ -515,7 +517,7 @@ public class AdminAPIImplTest {
         try {
 
             // when
-            testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+            testAdminImpl.saveDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
 
             // then
             fail("exception expected");
@@ -541,11 +543,11 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        Dataspace result = testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+        DataspaceAO result = testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
 
         // then
-        then(accountSettingsService).should().saveDataspace(result);
-        assertNull(result.getAttribute(attributeName));
+        then(accountSettingsService).should().saveDataspace(argThat(e -> e.getKey().getDataspaceId() == dataspaceId && e.getKey().getAccountId().equals(accountId.getInternalId())));
+        assertTrue(result.getAttributes().isEmpty());
     }
 
     @Test
