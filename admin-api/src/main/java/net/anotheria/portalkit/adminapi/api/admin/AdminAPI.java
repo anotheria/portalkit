@@ -156,4 +156,11 @@ public interface AdminAPI extends API {
      */
     DataspaceAO removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
 
+    /**
+     * Removes dataspace completely by account and dataspace id.
+     * @param accountId dataspace owner
+     * @param dataspaceId dataspace type (id)
+     */
+    void deleteDataspace(AccountId accountId, int dataspaceId) throws APIException;
+
 }

@@ -32,6 +32,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminAPIImplTest {
@@ -565,6 +567,40 @@ public class AdminAPIImplTest {
 
             // when
             testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+        }
+    }
+
+    @Test
+    public void testDeleteDataspace() throws APIException, AccountSettingsServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int type = 1;
+
+        // when
+        testAdminImpl.deleteDataspace(accountId, type);
+
+        // then
+        then(accountSettingsService).should().deleteDataspace(accountId, type);
+    }
+
+    @Test
+    public void testDeleteDataspaceGenericException() throws APIException, AccountSettingsServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int type = 1;
+
+        when(accountSettingsService.deleteDataspace(accountId, type)).thenThrow(new AccountSettingsServiceException(""));
+
+        try {
+
+            // when
+            testAdminImpl.deleteDataspace(accountId, type);
 
             // then
             fail("exception expected");

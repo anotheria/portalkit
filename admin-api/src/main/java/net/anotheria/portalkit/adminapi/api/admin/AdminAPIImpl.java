@@ -7,6 +7,7 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceExistsAPIException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceTypeInternal;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
@@ -499,6 +500,16 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
             throw new APIException(any.getMessage(), any);
         }
         return result;
+    }
+
+    @Override
+    public void deleteDataspace(AccountId accountId, int dataspaceId) throws APIException {
+        try {
+            accountSettingsService.deleteDataspace(accountId, dataspaceId);
+        } catch (Exception any) {
+            log.error("Cannot delete dataspace", any);
+            throw new APIException(any.getMessage(), any);
+        }
     }
 
     private AdminAccountAO map(Account toMap) {

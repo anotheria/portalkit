@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
+import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.APIFinder;
 import net.anotheria.portalkit.adminapi.api.admin.AdminAPI;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
@@ -14,6 +15,7 @@ import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.AddDataspaceAttributeRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.CreateDataspaceRequest;
+import net.anotheria.portalkit.adminapi.rest.dataspace.request.DeleteDataspaceRequest;
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
 import net.anotheria.portalkit.services.common.AccountId;
 
@@ -115,5 +117,21 @@ public class DataspaceResource {
             return Response.status(500).entity(ReplyObject.error(ex)).build();
         }
         return Response.status(200).entity(ReplyObject.success("data", result)).build();
+    }
+
+    @DELETE
+    @Operation(description = "Deletes dataspace.", requestBody = @RequestBody(description = "Payload to delete dataspace",
+            content = @Content(schema = @Schema(implementation = DeleteDataspaceRequest.class))))
+    @ApiResponse(
+            description = "Success reply object",
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ReplyObject.class)))
+    public Response deleteDataspace(DeleteDataspaceRequest request) {
+        try {
+            adminAPI.deleteDataspace(request.getAccountId(), request.getType());
+        } catch (APIException ex) {
+            return Response.status(500).entity(ReplyObject.error(ex)).build();
+        }
+        return Response.status(200).entity(ReplyObject.success()).build();
     }
 }
