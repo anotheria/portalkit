@@ -1,5 +1,8 @@
 package net.anotheria.portalkit.adminapi.rest.account.request;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Request used to update account information.
  * ID must be always present. In case when id is null, method throws an exception.
@@ -14,8 +17,10 @@ public class AccountUpdateRequest {
     private String email;
     private String name;
     private String brand;
-    private Integer type;
+    private String type;
     private String tenant;
+
+    private List<String> statuses = new LinkedList<>();
 
     public String getId() {
         return id;
@@ -49,11 +54,11 @@ public class AccountUpdateRequest {
         this.brand = brand;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -63,6 +68,14 @@ public class AccountUpdateRequest {
 
     public void setTenant(String tenant) {
         this.tenant = tenant;
+    }
+
+    public List<String> getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(List<String> statuses) {
+        this.statuses = statuses;
     }
 
     @Override

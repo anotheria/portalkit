@@ -55,6 +55,15 @@ public interface AccountSettingsService extends Service, DeletionService {
 	boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException;
 
 	/**
+	 * Deletes a dataspace of user by dataspaceId.
+	 * @param accountId account id
+	 * @param dataspaceId dataspace id
+	 * @return boolean
+	 * @throws AccountSettingsServiceException
+	 */
+	boolean deleteDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException;
+
+	/**
 	 * Deletes all dataspaces of user. Returns amount of dataspaces deleted.
 	 * @param accountId account id.
 	 * @return	int

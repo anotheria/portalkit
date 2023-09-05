@@ -4,6 +4,10 @@ import net.anotheria.anoplass.api.APIException;
 import net.anotheria.anoplass.api.AbstractAPIImpl;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceExistsAPIException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceTypeInternal;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
@@ -12,6 +16,7 @@ import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountAdminService;
 import net.anotheria.portalkit.services.account.AccountNotFoundException;
 import net.anotheria.portalkit.services.account.AccountService;
+import net.anotheria.portalkit.services.accountsettings.AccountSettingsKey;
 import net.anotheria.portalkit.services.accountsettings.AccountSettingsService;
 import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
@@ -303,7 +308,17 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 result.setTenant(updateRequest.getTenant());
             }
             if (updateRequest.getType() != null) {
-                result.setType(updateRequest.getType());
+                AdminAPIConfig.AccountTypeConfig accountType = config.getType(updateRequest.getType());
+                if (accountType != null) {
+                    result.setType(accountType.getValue());
+                }
+            }
+
+            for (String status : updateRequest.getStatuses()) {
+                AdminAPIConfig.AccountStatusConfig accountStatus = config.getStatus(status);
+                if (accountStatus != null) {
+                    result.addStatus(accountStatus.getValue());
+                }
             }
 
             accountService.updateAccount(result);
@@ -385,10 +400,21 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public List<Dataspace> getAllDataspaces(AccountId accountId) {
-        List<Dataspace> result = null;
+    public List<AdminAPIConfig.DataspaceConfig> getDataspaces() throws APIException {
+        List<AdminAPIConfig.DataspaceConfig> result = null;
         try {
-            result = new LinkedList<>(accountSettingsService.getAllDataspaces(accountId));
+            result = new LinkedList<>(Arrays.asList(config.getDataspaces()));
+        } catch (Exception any) {
+            throw new APIException("Cannot get dataspaces config", any);
+        }
+        return result;
+    }
+
+    @Override
+    public List<DataspaceAO> getAllDataspaces(AccountId accountId) {
+        List<DataspaceAO> result = null;
+        try {
+            result = map(accountSettingsService.getAllDataspaces(accountId));
         } catch (Exception any) {
             log.error("Cannot get user's dataspaces", any);
         }
@@ -396,23 +422,52 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException {
-        Dataspace result = null;
+    public DataspaceAO createDataspace(AccountId accountId, int dataspaceId, List<DataspaceAttributeAO> attributes) throws APIException {
         try {
-            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+            DataspaceAO result = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
                 if (dataspace.getKey().getDataspaceId() == dataspaceId) {
-                    result = dataspace;
+                    throw new DataspaceExistsAPIException("Dataspace already exists");
+                }
+            }
+            Dataspace toSave = new Dataspace();
+            toSave.setKey(new AccountSettingsKey(accountId, dataspaceId));
+            for (DataspaceAttributeAO attributeToMap : attributes) {
+                Attribute attribute = Attribute.createAttribute(attributeToMap.getType(), attributeToMap.getAttributeName(), attributeToMap.getAttributeValue());
+                toSave.addAttribute(attributeToMap.getAttributeName(), attribute);
+            }
+            accountSettingsService.saveDataspace(toSave);
+            result = map(toSave);
+            return result;
+        } catch (DataspaceExistsAPIException ex) {
+            throw new DataspaceExistsAPIException(ex.getMessage(), ex);
+        } catch (Exception any) {
+            log.error("Cannot create dataspace", any);
+            throw new APIException("Cannot create dataspace", any);
+        }
+    }
+
+    @Override
+    public DataspaceAO saveDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException {
+        DataspaceAO result = null;
+        try {
+            Dataspace toEdit = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
+                if (dataspace.getKey().getDataspaceId() == dataspaceId) {
+                    toEdit = dataspace;
                     break;
                 }
             }
 
-            if (result == null) {
+            if (toEdit == null) {
                 throw new APIException("Cannot find dataspace by id: " + dataspaceId);
             }
 
             Attribute attributeToAdd = Attribute.createAttribute(type, attributeName, attributeValue);
-            result.addAttribute(attributeName, attributeToAdd);
-            accountSettingsService.saveDataspace(result);
+            toEdit.addAttribute(attributeName, attributeToAdd);
+            accountSettingsService.saveDataspace(toEdit);
+
+            result = map(toEdit);
         } catch (Exception any) {
             log.error("Cannot add dataspace attribute", any);
             throw new APIException(any.getMessage(), any);
@@ -421,27 +476,40 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
     }
 
     @Override
-    public Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException {
-        Dataspace result = null;
+    public DataspaceAO removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException {
+        DataspaceAO result = null;
         try {
-            for (Dataspace dataspace : getAllDataspaces(accountId)) {
+            Dataspace toEdit = null;
+            for (Dataspace dataspace : accountSettingsService.getAllDataspaces(accountId)) {
                 if (dataspace.getKey().getDataspaceId() == dataspaceId) {
-                    result = dataspace;
+                    toEdit = dataspace;
                     break;
                 }
             }
 
-            if (result == null) {
+            if (toEdit == null) {
                 throw new APIException("Cannot find dataspace by id: " + dataspaceId);
             }
 
-            result.removeAttribute(attributeName);
-            accountSettingsService.saveDataspace(result);
+            toEdit.removeAttribute(attributeName);
+            accountSettingsService.saveDataspace(toEdit);
+
+            result = map(toEdit);
         } catch (Exception any) {
             log.error("Cannot remove dataspace attribute", any);
             throw new APIException(any.getMessage(), any);
         }
         return result;
+    }
+
+    @Override
+    public void deleteDataspace(AccountId accountId, int dataspaceId) throws APIException {
+        try {
+            accountSettingsService.deleteDataspace(accountId, dataspaceId);
+        } catch (Exception any) {
+            log.error("Cannot delete dataspace", any);
+            throw new APIException(any.getMessage(), any);
+        }
     }
 
     private AdminAccountAO map(Account toMap) {
@@ -475,6 +543,32 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
         result.setType(type);
         result.setStatuses(statuses);
 
+        return result;
+    }
+
+    private List<DataspaceAO> map(Collection<Dataspace> toMap) {
+        List<DataspaceAO> result = new LinkedList<>();
+        for (Dataspace dataspace : toMap) {
+            result.add(map(dataspace));
+        }
+        return result;
+    }
+
+    private DataspaceAO map(Dataspace toMap) {
+        DataspaceAO result = new DataspaceAO();
+        AdminAPIConfig.DataspaceConfig dataspaceConfig = config.getDataspace(toMap.getKey().getDataspaceId());
+
+        result.setAccountId(new AccountId(toMap.getKey().getAccountId()));
+        result.setType(toMap.getKey().getDataspaceId());
+        if (dataspaceConfig != null) {
+            result.setName(dataspaceConfig.getName());
+        }
+
+        List<Attribute> attributes = new LinkedList<>();
+        for (Map.Entry<String, Attribute> entry : toMap.getAttributes().entrySet()) {
+            attributes.add(entry.getValue());
+        }
+        result.setAttributes(attributes);
         return result;
     }
 }

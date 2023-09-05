@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.APIException;
-import net.anotheria.portalkit.adminapi.api.admin.*;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
@@ -32,6 +32,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AdminAPIImplTest {
@@ -321,7 +323,7 @@ public class AdminAPIImplTest {
         updateRequest.setEmail("email-to-update");
         updateRequest.setName("name-to-update");
         updateRequest.setTenant("tenant-to-update");
-        updateRequest.setType(10);
+        updateRequest.setType("USER");
         updateRequest.setBrand("brand-to-update");
 
         Account existingAccount = new Account();
@@ -344,8 +346,8 @@ public class AdminAPIImplTest {
         // then
         then(accountService).should().updateAccount(argThat(
                 e -> e.getId().equals(accountId) && e.getName().equals(updateRequest.getName())
-                        && e.getEmail().equals(updateRequest.getEmail()) && e.getType() == updateRequest.getType()
-                        && e.getBrand().equals(updateRequest.getBrand()) && e.getTenant().equals(updateRequest.getTenant())
+                        && e.getEmail().equals(updateRequest.getEmail()) && e.getBrand().equals(updateRequest.getBrand())
+                        && e.getTenant().equals(updateRequest.getTenant())
         ));
     }
 
@@ -467,10 +469,13 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        List<Dataspace> result = testAdminImpl.getAllDataspaces(accountId);
+        List<DataspaceAO> result = testAdminImpl.getAllDataspaces(accountId);
 
         // then
-        assertArrayEquals(dataspaces.toArray(), result.toArray());
+        assertEquals(dataspace.getKey().getDataspaceId(), result.get(0).getType());
+        assertEquals(new AccountId(dataspace.getKey().getAccountId()), result.get(0).getAccountId());
+        assertEquals(dataspace1.getKey().getDataspaceId(), result.get(1).getType());
+        assertEquals(new AccountId(dataspace1.getKey().getAccountId()), result.get(1).getAccountId());
     }
 
     @Test
@@ -491,13 +496,13 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        Dataspace result = testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+        DataspaceAO result = testAdminImpl.saveDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
 
         // then
-        then(accountSettingsService).should().saveDataspace(result);
-        assertEquals(attributeName, result.getAttribute(attributeName).getName());
-        assertEquals(attributeValue, result.getAttribute(attributeName).getValueAsString());
-        assertEquals(type, result.getAttribute(attributeName).getType());
+        then(accountSettingsService).should().saveDataspace(argThat(e -> e.getKey().getAccountId().equals(accountId.getInternalId()) && e.getKey().getDataspaceId() == dataspaceId));
+        assertEquals(attributeName, result.getAttributes().get(0).getName());
+        assertEquals(attributeValue, result.getAttributes().get(0).getValueAsString());
+        assertEquals(type, result.getAttributes().get(0).getType());
     }
 
     @Test
@@ -515,7 +520,7 @@ public class AdminAPIImplTest {
         try {
 
             // when
-            testAdminImpl.addDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
+            testAdminImpl.saveDataspaceAttribute(accountId, dataspaceId, attributeName, attributeValue, type);
 
             // then
             fail("exception expected");
@@ -541,11 +546,11 @@ public class AdminAPIImplTest {
         given(accountSettingsService.getAllDataspaces(accountId)).willReturn(dataspaces);
 
         // when
-        Dataspace result = testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+        DataspaceAO result = testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
 
         // then
-        then(accountSettingsService).should().saveDataspace(result);
-        assertNull(result.getAttribute(attributeName));
+        then(accountSettingsService).should().saveDataspace(argThat(e -> e.getKey().getDataspaceId() == dataspaceId && e.getKey().getAccountId().equals(accountId.getInternalId())));
+        assertTrue(result.getAttributes().isEmpty());
     }
 
     @Test
@@ -562,6 +567,40 @@ public class AdminAPIImplTest {
 
             // when
             testAdminImpl.removeDataspaceAttribute(accountId, dataspaceId, attributeName);
+
+            // then
+            fail("exception expected");
+        } catch (APIException ignored) {
+        }
+    }
+
+    @Test
+    public void testDeleteDataspace() throws APIException, AccountSettingsServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int type = 1;
+
+        // when
+        testAdminImpl.deleteDataspace(accountId, type);
+
+        // then
+        then(accountSettingsService).should().deleteDataspace(accountId, type);
+    }
+
+    @Test
+    public void testDeleteDataspaceGenericException() throws APIException, AccountSettingsServiceException {
+
+        // given
+        AccountId accountId = AccountId.generateNew();
+        int type = 1;
+
+        when(accountSettingsService.deleteDataspace(accountId, type)).thenThrow(new AccountSettingsServiceException(""));
+
+        try {
+
+            // when
+            testAdminImpl.deleteDataspace(accountId, type);
 
             // then
             fail("exception expected");

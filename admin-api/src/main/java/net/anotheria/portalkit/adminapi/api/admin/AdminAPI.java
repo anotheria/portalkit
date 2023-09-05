@@ -2,11 +2,12 @@ package net.anotheria.portalkit.adminapi.api.admin;
 
 import net.anotheria.anoplass.api.API;
 import net.anotheria.anoplass.api.APIException;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
+import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountsGetRequest;
-import net.anotheria.portalkit.services.accountsettings.Dataspace;
 import net.anotheria.portalkit.services.accountsettings.attribute.AttributeType;
 import net.anotheria.portalkit.services.common.AccountId;
 
@@ -109,16 +110,28 @@ public interface AdminAPI extends API {
      */
     String getSignAsToken(AccountId accountId) throws APIException;
 
+    List<AdminAPIConfig.DataspaceConfig> getDataspaces() throws APIException;
+
     /**
      * Returns all account's dataspaces
      *
      * @param accountId dataspaces owner
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      */
-    List<Dataspace> getAllDataspaces(AccountId accountId);
+    List<DataspaceAO> getAllDataspaces(AccountId accountId);
 
     /**
-     * Adds an attribute to existing dataspace.
+     * Creates dataspace with for account with specific id and attributes.
+     *
+     * @param accountId   owner of dataspace
+     * @param dataspaceId id of dataspace
+     * @param attributes  list of attributes
+     * @return {@link DataspaceAO}
+     */
+    DataspaceAO createDataspace(AccountId accountId, int dataspaceId, List<DataspaceAttributeAO> attributes) throws APIException;
+
+    /**
+     * Saves an attribute to existing dataspace.
      * If there is no dataspace with provided id, exception will be thrown.
      *
      * @param accountId      dataspace owner
@@ -126,10 +139,10 @@ public interface AdminAPI extends API {
      * @param attributeName  name of attribute
      * @param attributeValue value of attribute
      * @param type           type of attribute
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      * @throws APIException in case of error
      */
-    Dataspace addDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException;
+    DataspaceAO saveDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName, String attributeValue, AttributeType type) throws APIException;
 
     /**
      * Removes an attribute from existing dataspace.
@@ -138,9 +151,16 @@ public interface AdminAPI extends API {
      * @param accountId     dataspace owner
      * @param dataspaceId   id of dataspace
      * @param attributeName name of attribute
-     * @return {@link Dataspace}
+     * @return {@link DataspaceAO}
      * @throws APIException in case of error
      */
-    Dataspace removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
+    DataspaceAO removeDataspaceAttribute(AccountId accountId, int dataspaceId, String attributeName) throws APIException;
+
+    /**
+     * Removes dataspace completely by account and dataspace id.
+     * @param accountId dataspace owner
+     * @param dataspaceId dataspace type (id)
+     */
+    void deleteDataspace(AccountId accountId, int dataspaceId) throws APIException;
 
 }
