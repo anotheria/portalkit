@@ -66,25 +66,25 @@
 
         <dependency>
             <groupId>net.anotheria.portalkit</groupId>
-            <artifactId>services-accountsettingsservice</artifactId>
+            <artifactId>pk-services-accountsettingsservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.anotheria.portalkit</groupId>
-            <artifactId>services-accountservice</artifactId>
+            <artifactId>pk-services-accountservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.anotheria.portalkit</groupId>
-            <artifactId>services-authenticationservice</artifactId>
+            <artifactId>pk-services-authenticationservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.anotheria.portalkit</groupId>
-            <artifactId>services-common</artifactId>
+            <artifactId>pk-services-common</artifactId>
             <version>${project.version}</version>
         </dependency>
 
