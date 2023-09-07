@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
+        <groupId>net.anotheria.portalkit</groupId>
         <artifactId>portalkit</artifactId>
-        <groupId>portalkit</groupId>
-        <version>1.6.3-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +23,7 @@
         <moskito-version>3.2.2</moskito-version>
         <moskito-control-version>3.0.0</moskito-control-version>
 
-        <distributeme-version>2.3.10</distributeme-version>
+        <distributeme-version>2.5.1</distributeme-version>
 
         <ano-site-version>3.2.2-SNAPSHOT</ano-site-version>
         <ano-doc-version>3.2.2-SNAPSHOT</ano-doc-version>
@@ -31,7 +31,7 @@
         <build-helper-version>1.5</build-helper-version>
         <ano-maf-version>3.0.0</ano-maf-version>
         <ano-plass-access-aop-version>2.2.0-SNAPSHOT</ano-plass-access-aop-version>
-        <ano-plass-version>2.1.5</ano-plass-version>
+        <ano-plass-version>2.1.6</ano-plass-version>
         <ano-prise-version>2.2.0</ano-prise-version>
     </properties>
 
@@ -65,25 +65,25 @@
         </dependency>
 
         <dependency>
-            <groupId>portalkit</groupId>
+            <groupId>net.anotheria.portalkit</groupId>
             <artifactId>services-accountsettingsservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>portalkit</groupId>
+            <groupId>net.anotheria.portalkit</groupId>
             <artifactId>services-accountservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>portalkit</groupId>
+            <groupId>net.anotheria.portalkit</groupId>
             <artifactId>services-authenticationservice</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>portalkit</groupId>
+            <groupId>net.anotheria.portalkit</groupId>
             <artifactId>services-common</artifactId>
             <version>${project.version}</version>
         </dependency>
