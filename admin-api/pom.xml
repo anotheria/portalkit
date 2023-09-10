@@ -25,12 +25,12 @@
 
         <distributeme-version>2.5.1</distributeme-version>
 
-        <ano-site-version>3.2.2-SNAPSHOT</ano-site-version>
-        <ano-doc-version>3.2.2-SNAPSHOT</ano-doc-version>
+        <ano-site-version>3.2.2</ano-site-version>
+        <ano-doc-version>3.2.2</ano-doc-version>
         <ano-doc-plugin-version>2.6.11</ano-doc-plugin-version>
         <build-helper-version>1.5</build-helper-version>
         <ano-maf-version>3.0.0</ano-maf-version>
-        <ano-plass-access-aop-version>2.2.0-SNAPSHOT</ano-plass-access-aop-version>
+        <ano-plass-access-aop-version>2.2.0</ano-plass-access-aop-version>
         <ano-plass-version>2.1.6</ano-plass-version>
         <ano-prise-version>2.2.0</ano-prise-version>
     </properties>
