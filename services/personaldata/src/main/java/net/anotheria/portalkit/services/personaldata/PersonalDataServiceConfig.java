@@ -59,6 +59,12 @@ public final class PersonalDataServiceConfig {
     @Configure
     private String database = "baldur_m2m";
 
+    /**
+     * Connection string.
+     */
+    @Configure
+    private String connectionString;
+
 
     /**
      * Default constructor.
@@ -134,6 +140,13 @@ public final class PersonalDataServiceConfig {
         this.database = database;
     }
 
+    public String getConnectionString() {
+        return connectionString;
+    }
+
+    public void setConnectionString(String connectionString) {
+        this.connectionString = connectionString;
+    }
 
     @Override
     public String toString() {
