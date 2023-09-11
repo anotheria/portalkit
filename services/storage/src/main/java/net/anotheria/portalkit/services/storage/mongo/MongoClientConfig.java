@@ -67,6 +67,12 @@ public final class MongoClientConfig implements Serializable {
 	private DB[] databases;
 
 	/**
+	 * Connection string.
+	 */
+	@Configure
+	private String connectionString;
+
+	/**
 	 * Maximum connections amount per host.
 	 */
 	@Configure
@@ -328,6 +334,14 @@ public final class MongoClientConfig implements Serializable {
 
 	public void setDatabases(final DB[] aDatabases) {
 		this.databases = aDatabases != null ? aDatabases.clone() : null;
+	}
+
+	public String getConnectionString() {
+		return connectionString;
+	}
+
+	public void setConnectionString(String connectionString) {
+		this.connectionString = connectionString;
 	}
 
 	public int getConnectionsPerHost() {

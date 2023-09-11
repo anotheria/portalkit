@@ -1,7 +1,10 @@
 package net.anotheria.portalkit.services.personaldata.storage;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
 import net.anotheria.portalkit.services.personaldata.PersonalDataServiceConfig;
+import net.anotheria.util.StringUtils;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
@@ -42,8 +45,12 @@ public class MongoConnector {
     private MongoConnector() {
 
         PersonalDataServiceConfig config = PersonalDataServiceConfig.getInstance();
-
-        mongo = new MongoClient(config.getHost(), config.getPort());
+        if (StringUtils.isEmpty(config.getConnectionString())) {
+            mongo = new MongoClient(config.getHost(), config.getPort());
+        } else {
+            MongoClientURI uri = new MongoClientURI(config.getConnectionString(), new MongoClientOptions.Builder().sslEnabled(true));
+            mongo = new MongoClient(uri);
+        }
         morphia = new Morphia();
         morphia.mapPackage("net.anotheria.portalkit.services.personaldata");
         databaseName = config.getDatabase();
