@@ -1,5 +1,6 @@
 # Maven build directory
 target/
+admin-api/generated
 
 # SVN related dir's/files
 .svn/
