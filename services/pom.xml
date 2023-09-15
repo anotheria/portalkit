@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>net.anotheria.portalkit</groupId>
 		<artifactId>portalkit</artifactId>
-		<version>3.0.2-SNAPSHOT</version>
+		<version>3.0.3-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -69,6 +69,7 @@
         <module>photoscammer</module>
         <module>sessionservice</module>
 		<module>pushtokenservice</module>
+		<module>phoneverificationservice</module>
 	</modules>
 
 </project>
