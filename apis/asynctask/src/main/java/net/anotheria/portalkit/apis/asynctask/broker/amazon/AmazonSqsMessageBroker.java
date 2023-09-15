@@ -65,7 +65,7 @@ public class AmazonSqsMessageBroker implements AsyncTaskMessageBroker {
     }
 
     @Override
-    public List<AsyncTask> getTasks() throws APIException {
+    public List<AsyncTask> getTasks(String topicName) throws APIException {
         AmazonSqsConfig config = AmazonSqsConfig.getInstance();
 
         AmazonSQS client = getClient(config);
@@ -81,11 +81,14 @@ public class AmazonSqsMessageBroker implements AsyncTaskMessageBroker {
         for (Message message : messages) {
             Map<String, MessageAttributeValue> messageAttributes = message.getMessageAttributes();
             MessageAttributeValue taskTypeAttr = messageAttributes.get("taskType");
-            if (taskTypeAttr == null) {
+            if (taskTypeAttr == null)
                 continue;
-            }
 
             String taskType = taskTypeAttr.getStringValue();
+
+            if (!taskType.equals(topicName))
+                continue;
+
             AsyncTaskConfig asyncTaskConfig = taskConfigByType.get(taskType);
             if (asyncTaskConfig == null) {
                 log.error("no asyncTaskConfig for task: " + taskType);
@@ -104,6 +107,11 @@ public class AmazonSqsMessageBroker implements AsyncTaskMessageBroker {
         }
 
         return result;
+    }
+
+    @Override
+    public void notifyShutdown() {
+
     }
 
     private AmazonSQS getClient(AmazonSqsConfig config) {

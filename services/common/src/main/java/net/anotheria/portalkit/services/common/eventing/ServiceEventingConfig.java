@@ -43,8 +43,8 @@ public final class ServiceEventingConfig {
 		try {
 			ConfigurationManager.INSTANCE.configure(this);
 		} catch (Exception e) {
-			String failMsg = "ServiceOperationEventingConfig configuration failed. Default values will be used";
-			LoggerFactory.getLogger(ServiceEventingConfig.class).error(failMsg, e);
+			String failMsg = "ServiceEventingConfig configuration 'pk-service-eventing.json' not found. Default values will be used";
+			LoggerFactory.getLogger(ServiceEventingConfig.class).warn(failMsg);
 		}
 	}
 

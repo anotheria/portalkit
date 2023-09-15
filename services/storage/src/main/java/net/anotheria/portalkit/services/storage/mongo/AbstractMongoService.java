@@ -2,9 +2,10 @@ package net.anotheria.portalkit.services.storage.mongo;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
 import com.mongodb.ServerAddress;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
-import net.anotheria.portalkit.services.storage.mongo.MongoClientConfig.DB;
+import net.anotheria.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,13 +70,16 @@ public abstract class AbstractMongoService {
 	protected synchronized void initialize() {
 		if (serviceInitialized.get())
 			return;
-
-		List<ServerAddress> addresses = MongoClientUtil.getAddresses(mongoClientConfiguration);
 		MongoClientOptions options = MongoClientUtil.getOptions(mongoClientConfiguration);
-
-		// configuring updater interval waiting sleep time to 100 milliseconds
-		System.setProperty("com.mongodb.updaterIntervalNoMasterMS", String.valueOf(configuration.getInitWaitInterval()));
-		mongoClient = new MongoClient(addresses, options);
+		if (StringUtils.isEmpty(mongoClientConfiguration.getConnectionString())) {
+			List<ServerAddress> addresses = MongoClientUtil.getAddresses(mongoClientConfiguration);
+			// configuring updater interval waiting sleep time to 100 milliseconds
+			System.setProperty("com.mongodb.updaterIntervalNoMasterMS", String.valueOf(configuration.getInitWaitInterval()));
+			mongoClient = new MongoClient(addresses, options);
+		} else {
+			MongoClientURI uri = new MongoClientURI(mongoClientConfiguration.getConnectionString(), new MongoClientOptions.Builder(options).sslEnabled(true));
+			mongoClient = new MongoClient(uri);
+		}
 
 		Thread initializationVerifier = new Thread(new Runnable() {
 			@Override

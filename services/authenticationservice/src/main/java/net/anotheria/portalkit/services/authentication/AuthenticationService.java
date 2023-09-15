@@ -15,13 +15,13 @@ import org.distributeme.core.failing.RetryCallOnce;
  * @since 11.12.12 15:56
  */
 @DistributeMe
-@FailBy(strategyClass=RetryCallOnce.class)
+@FailBy(strategyClass = RetryCallOnce.class)
 public interface AuthenticationService extends Service, DeletionService {
 
     /**
      * Sets new password for the user.
      *
-     * @param id user id.
+     * @param id       user id.
      * @param password user password.
      * @throws AuthenticationServiceException if error
      */
@@ -30,7 +30,7 @@ public interface AuthenticationService extends Service, DeletionService {
     /**
      * Returns true if the user can authenticate with the given password.
      *
-     * @param id user id.
+     * @param id       user id.
      * @param password user password.
      * @return boolean
      * @throws AuthenticationServiceException if error
@@ -61,8 +61,8 @@ public interface AuthenticationService extends Service, DeletionService {
      * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
      * all consequences) and can be issued to the user by calling getEncodedAuthString.
      *
-     * @param accountId account id.
-     * @param prefilledToken    {@link AuthToken}
+     * @param accountId      account id.
+     * @param prefilledToken {@link AuthToken}
      * @return {@link EncryptedAuthToken}
      * @throws AuthenticationServiceException if error
      */
@@ -72,8 +72,8 @@ public interface AuthenticationService extends Service, DeletionService {
      * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
      * all consequences and parameters) and can be issued to the user by calling getEncodedAuthString.
      *
-     * @param accountId account id.
-     * @param prefilledToken    {@link AuthToken}
+     * @param accountId      account id.
+     * @param prefilledToken {@link AuthToken}
      * @return {@link EncryptedAuthToken}
      * @throws AuthenticationServiceException if error
      */
@@ -87,22 +87,31 @@ public interface AuthenticationService extends Service, DeletionService {
      */
     void deleteTokens(AccountId accountId) throws AuthenticationServiceException;
 
-	/**
-	 * Removes all user tokens of given type from database.
-	 *
-	 * @param accountId account id.
-	 * @param type token type.
-	 * @throws AuthenticationServiceException if error
-	 */
-	void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException;
+    /**
+     * Removes all user tokens of given type from database.
+     *
+     * @param accountId account id.
+     * @param type      token type.
+     * @throws AuthenticationServiceException if error
+     */
+    void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException;
+
+    /**
+     * Removes one user token from database.
+     *
+     * @param accountId account id.
+     * @param token     token.
+     * @throws AuthenticationServiceException if error
+     */
+    void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException;
 
     /**
      * Returns token for given user and type.
      *
      * @param accountId account id
-     * @param type  token type
-     * @return  token
+     * @param type      token type
+     * @return token
      * @throws AuthenticationServiceException if error
      */
-	String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException;
+    String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException;
 }

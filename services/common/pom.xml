@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>portalkit</groupId>
-		<artifactId>services</artifactId>
-		<version>1.4.0-SNAPSHOT</version>
+		<groupId>net.anotheria.portalkit</groupId>
+		<artifactId>pk-services</artifactId>
+		<version>3.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>services-common</artifactId>
+	<artifactId>pk-services-common</artifactId>
 	<name>services - common</name>
-	<description>Services: Common</description>
+	<description>PortalKIT Services: Common</description>
 
 	<dependencies>
 		<!--Mongo-->
@@ -79,7 +79,7 @@
 			<artifactId>flyway-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>postgresql</groupId>
+			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		<dependency>

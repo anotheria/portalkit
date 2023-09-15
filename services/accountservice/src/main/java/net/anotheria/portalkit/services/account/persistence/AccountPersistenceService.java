@@ -51,6 +51,16 @@ public interface AccountPersistenceService extends Service {
 	AccountId getIdByName(String name) throws AccountPersistenceServiceException;
 
 	/**
+	 * Returns the id of the account with the given name and brand.
+	 *
+	 * @param name	user name
+	 * @param brand user brand
+	 * @return {@link AccountId}.
+	 * @throws AccountPersistenceServiceException if error.
+	 */
+	AccountId getIdByName(String name, String brand) throws AccountPersistenceServiceException;
+
+	/**
 	 * Returns the id of the account with the given email.
 	 * 
 	 * @param email
@@ -60,6 +70,16 @@ public interface AccountPersistenceService extends Service {
 	AccountId getIdByEmail(String email) throws AccountPersistenceServiceException;
 
 	/**
+	 * Returns the id of the account with the given email and brand.
+	 *
+	 * @param email		user email
+	 * @param brand     brand
+	 * @return {@link AccountId}
+	 * @throws AccountPersistenceServiceException if error.
+	 */
+	AccountId getIdByEmail(String email, String brand) throws AccountPersistenceServiceException;
+
+	/**
 	 * Get all account id's.
 	 * 
 	 * @return {@link Collection} of {@link AccountId}
@@ -67,6 +87,14 @@ public interface AccountPersistenceService extends Service {
 	 */
 	Collection<AccountId> getAllAccountIds() throws AccountPersistenceServiceException;
 
+	/**
+	 *  Get all account id's for given brand.
+	 *
+	 * @param brand brand name
+	 * @return	{@link Collection} of {@link AccountId}
+	 * @throws AccountPersistenceServiceException if any errors occurs
+	 */
+	Collection<AccountId> getAllAccountIds(String brand) throws AccountPersistenceServiceException;
 	/**
 	 * 
 	 * @param id account id

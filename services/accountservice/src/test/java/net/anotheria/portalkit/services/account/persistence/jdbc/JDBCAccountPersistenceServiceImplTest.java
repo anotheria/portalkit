@@ -48,6 +48,7 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 
 	public Account createAccountTemplate() {
 		Account account = new Account();
+		account.setId(AccountId.generateNew());
 		account.setName("test");
 		account.setEmail("test@example.com");
 		account.setType(1);
@@ -55,7 +56,7 @@ abstract class JDBCAccountPersistenceServiceImplTest {
 		account.addStatus(1);
 		account.addStatus(16);
 		account.addStatus(32);
-		return Account.newAccountFromPattern(account);
+		return account;
 	}
 
 	public void testGetAccount(JDBCAccountPersistenceServiceImpl service) throws AccountPersistenceServiceException {

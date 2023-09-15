@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @since 13.12.12 16:04
  */
 
-@ConfigureMe(name = "account-service-configuration")
+@ConfigureMe(name = "pk-account-service-configuration")
 public final class AccountServiceConfig {
 	/**
 	 * If true only one account with same email address is allowed. Default true.
@@ -29,6 +29,17 @@ public final class AccountServiceConfig {
      */
     @Configure
     private boolean auditEnabled = false;
+    /**
+     * If true we can use same email and account name for different brands.
+     */
+    @Configure
+    private boolean brandEnabled = false;
+    /**
+     * Default brand name.
+     */
+    @Configure
+    private String defaultBrand = null;
+
     /**
      * Config instance.
      */
@@ -88,12 +99,34 @@ public final class AccountServiceConfig {
         this.auditEnabled = auditEnabled;
     }
 
+    public boolean isBrandEnabled() {
+        return brandEnabled;
+    }
+
+    public void setBrandEnabled(boolean brandEnabled) {
+        this.brandEnabled = brandEnabled;
+    }
+
+    public String getDefaultBrand() {
+        return defaultBrand;
+    }
+
+    public void setDefaultBrand(String defaultBrand) {
+        this.defaultBrand = defaultBrand;
+    }
+
+    public static void setInstance(AccountServiceConfig instance) {
+        AccountServiceConfig.instance = instance;
+    }
+
     @Override
     public String toString() {
         return "AccountServiceConfig{" +
                 "exclusiveMail=" + exclusiveMail +
                 ", exclusiveName=" + exclusiveName +
                 ", auditEnabled=" + auditEnabled +
+                ", brandEnabled=" + brandEnabled +
+                ", defaultBrand='" + defaultBrand + '\'' +
                 '}';
     }
 }

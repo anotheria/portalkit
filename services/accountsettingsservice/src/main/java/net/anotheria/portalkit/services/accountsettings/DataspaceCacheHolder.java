@@ -1,5 +1,8 @@
 package net.anotheria.portalkit.services.accountsettings;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -22,5 +25,9 @@ public class DataspaceCacheHolder {
 
 	void remove(int type) {
 		dataspaces.remove(type);
+	}
+
+	Collection<Dataspace> getAll() {
+		return dataspaces.values();
 	}
 }

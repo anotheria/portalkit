@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<filters>
+	<filter name="AZ" class="net.anotheria.asg.util.filter.AZDocumentFilter"/>
+	<filter name="MissingTranslation" class="net.anotheria.asg.util.filter.MissingAnyTranslationFilter"/>
+	<filter name="LandingTypeFilter" class="net.anotheria.baldur.asg.landingpage.LandingTypeFilter"/>
+</filters>

@@ -1,0 +1,6 @@
+{
+    "appName": "Portalkit ADMIN-API",
+    "restAccessControlAllowOrigin": [
+        "*"
+    ]
+}

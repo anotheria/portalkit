@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>portalkit</groupId>
-		<artifactId>services</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
+		<groupId>net.anotheria.portalkit</groupId>
+		<artifactId>pk-services</artifactId>
+		<version>3.0.1-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>services-combined</artifactId>
+	<artifactId>pk-services-combined</artifactId>
 	<name>services - combined started</name>
 	<description>Services: StarterForAllServices</description>
 
@@ -14,43 +14,43 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-accountservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-accountservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-accountsettingsservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-accountsettingsservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-foreignidservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-foreignidservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-accountlistservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-accountlistservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-accountarchiveservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-accountarchiveservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-recordservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-recordservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-onlineservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-onlineservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>portalkit</groupId>
-			<artifactId>services-authenticationservice</artifactId>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-authenticationservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

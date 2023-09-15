@@ -13,6 +13,10 @@ import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Account settings service implementation.
  *
@@ -84,6 +88,31 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
         }
     }
 
+    @Override
+    public Collection<Dataspace> getAllDataspaces(AccountId accountId) throws AccountSettingsServiceException {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
+        try {
+
+            //first check cache
+            DataspaceCacheHolder holder = cache.get(accountId);
+            if (holder != null) {
+                return new LinkedList<>(holder.getAll());
+            }
+
+            Collection<Dataspace> dataspaces = persistence.loadDataspaces(accountId);
+            for (Dataspace dataspace : dataspaces) {
+                putInCache(accountId, dataspace.getKey().getDataspaceId(), dataspace);
+            }
+
+            return dataspaces;
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence.loadDataspaces failed", e);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     //this method is unsafe, it should be called from locked areas only.
     private void putInCache(AccountId accountId, int dataspaceType, Dataspace dataspace) {
         DataspaceCacheHolder holder = cache.get(accountId);
@@ -120,6 +149,24 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 
             if (holder.get(type) != null && success == true) {
                 holder.remove(type);
+            }
+
+            return success;
+        } catch (AccountSettingsPersistenceServiceException e) {
+            throw new AccountSettingsServiceException("persistence failed ", e);
+        }
+    }
+
+    @Override
+    public boolean deleteDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException {
+        try {
+            boolean success = persistence.deleteDataspace(accountId, dataspaceId);
+
+            // remove dataspace from cache
+            DataspaceCacheHolder holder = cache.get(accountId);
+
+            if (holder.get(dataspaceId) != null && success) {
+                holder.remove(dataspaceId);
             }
 
             return success;

@@ -21,16 +21,7 @@ public final class KafkaConfig implements Serializable {
     private static KafkaConfig INSTANCE;
 
     @Configure
-    private String producerHost;
-
-    @Configure
-    private int producerPort;
-
-    @Configure
-    private String consumerHost;
-
-    @Configure
-    private int consumerPort;
+    private String bootstrapServers;
 
     @Configure
     private String groupId;
@@ -65,36 +56,12 @@ public final class KafkaConfig implements Serializable {
         return INSTANCE;
     }
 
-    public String getProducerHost() {
-        return producerHost;
+    public String getBootstrapServers() {
+        return bootstrapServers;
     }
 
-    public void setProducerHost(String producerHost) {
-        this.producerHost = producerHost;
-    }
-
-    public int getProducerPort() {
-        return producerPort;
-    }
-
-    public void setProducerPort(int producerPort) {
-        this.producerPort = producerPort;
-    }
-
-    public String getConsumerHost() {
-        return consumerHost;
-    }
-
-    public void setConsumerHost(String consumerHost) {
-        this.consumerHost = consumerHost;
-    }
-
-    public int getConsumerPort() {
-        return consumerPort;
-    }
-
-    public void setConsumerPort(int consumerPort) {
-        this.consumerPort = consumerPort;
+    public void setBootstrapServers(String bootstrapServers) {
+        this.bootstrapServers = bootstrapServers;
     }
 
     public String getGroupId() {
@@ -107,7 +74,9 @@ public final class KafkaConfig implements Serializable {
 
     @Override
     public String toString() {
-        return "KafkaConfig{" + "producerHost='" + producerHost + '\'' + ", producerPort=" + producerPort + ", consumerHost='" + consumerHost + '\'' + ", consumerPort=" + consumerPort +
-                ", groupId='" + groupId + '\'' + '}';
+        return "KafkaConfig{" +
+                "bootstrapServers='" + bootstrapServers + '\'' +
+                ", groupId='" + groupId + '\'' +
+                '}';
     }
 }

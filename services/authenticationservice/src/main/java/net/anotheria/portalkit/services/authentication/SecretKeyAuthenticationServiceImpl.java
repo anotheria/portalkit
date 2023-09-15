@@ -51,10 +51,10 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
 
         AuthenticationServiceConfig config = new AuthenticationServiceConfig();
         try {
-			ConfigurationManager.INSTANCE.configure(config);
-		}catch(IllegalArgumentException e){
-        	log.warn("Couldn't find configuration file for auth config (pk-auth) will work with default values");
-		}
+            ConfigurationManager.INSTANCE.configure(config);
+        } catch (IllegalArgumentException e) {
+            log.warn("Couldn't find configuration file for auth config (pk-auth) will work with default values");
+        }
         //initialize with configureme.
         try {
             passwordAlgorithm = PasswordEncryptionAlgorithm.class.cast(Class.forName(config.getPasswordAlgorithm()).newInstance());
@@ -165,7 +165,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
 
             if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
                 //this is maybe suboptimal, but no other chance to fix it otherways for now
-                Set<String> tokens = persistenceService.getAuthTokens(newToken.getAccountId());
+                Set<String> tokens = persistenceService.getAuthTokens(encryptedAccountId);
                 for (Iterator<String> it = tokens.iterator(); it.hasNext(); ) {
                     String storedToken = it.next();
                     AuthToken t = AuthTokenEncryptors.decrypt(storedToken);
@@ -213,27 +213,48 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         }
     }
 
-	@Override
-	public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {
-		Set<String> tokens = null;
-		AccountId encrypted = getEncrypted(accountId);
-		try {
-			tokens = persistenceService.getAuthTokens(encrypted);
-		}catch(AuthenticationPersistenceServiceException e){
-    		throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
-		}
+    @Override
+    public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {
+        Set<String> tokens = null;
+        AccountId encrypted = getEncrypted(accountId);
+        try {
+            tokens = persistenceService.getAuthTokens(encrypted);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException("Can't retrieve tokens for user " + accountId, e);
+        }
 
-		for (String token : tokens){
-			AuthToken authToken = decrypt(token);
-			if (authToken.getType() == type){
-				try{
-					persistenceService.deleteAuthToken(encrypted, token);
-				}catch(AuthenticationPersistenceServiceException e){
-					log.error("Can't delete token for user "+accountId+", type "+type+", token: "+token, e);
-				}
-			}
-		}
-	}
+        for (String token : tokens) {
+            AuthToken authToken = decrypt(token);
+            if (authToken.getType() == type) {
+                try {
+                    persistenceService.deleteAuthToken(encrypted, token);
+                } catch (AuthenticationPersistenceServiceException e) {
+                    log.error("Can't delete token for user " + accountId + ", type " + type + ", token: " + token, e);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException {
+        Set<String> tokens = null;
+        AccountId encrypted = getEncrypted(accountId);
+        try {
+            tokens = persistenceService.getAuthTokens(encrypted);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException("Can't retrieve tokens for user " + accountId, e);
+        }
+
+        for (String tokenFromDB : tokens) {
+            if (tokenFromDB.equals(token)) {
+                try {
+                    persistenceService.deleteAuthToken(encrypted, token);
+                } catch (AuthenticationPersistenceServiceException e) {
+                    log.error("Can't delete token for user " + accountId + ", token: " + token, e);
+                }
+            }
+        }
+    }
 
     /*
     @Override
@@ -257,6 +278,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         }
     }
 */
+
     /**
      * Returns new instance of encrypted version of AccountId.
      *
@@ -282,7 +304,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
                 persistenceService.deleteAuthTokens(accountId);
 
             if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
-                for (String token: persistenceService.getAuthTokens(newToken.getAccountId())) {
+                for (String token : persistenceService.getAuthTokens(newToken.getAccountId())) {
                     AuthToken t = AuthTokenEncryptors.decrypt(token);
                     if (t.getType() == newToken.getType())
                         persistenceService.deleteAuthToken(newToken.getAccountId(), token);
@@ -301,11 +323,11 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         Set<String> tokens = null;
         try {
             tokens = persistenceService.getAuthTokens(accountId);
-        }catch(AuthenticationPersistenceServiceException e){
-            throw new AuthenticationServiceException("Can't retrieve tokens for user "+accountId, e);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException("Can't retrieve tokens for user " + accountId, e);
         }
 
-        for (String token : tokens){
+        for (String token : tokens) {
             AuthToken authToken = decrypt(token);
             if (authToken.getType() == type) {
                 return token;

@@ -1,0 +1,95 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <display-name>Portalkit ADMIN-API</display-name>
+
+    <context-param>
+        <param-name>distributeMePort</param-name>
+        <param-value>9299</param-value>
+    </context-param>
+
+    <servlet>
+        <servlet-name>OpenApi</servlet-name>
+        <servlet-class>io.swagger.v3.jaxrs2.integration.OpenApiServlet</servlet-class>
+        <init-param>
+            <param-name>openApi.configuration.resourcePackages</param-name>
+            <param-value>
+                net.anotheria.portalkit.adminapi.rest
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OpenApi</servlet-name>
+        <url-pattern>/openapi/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- PhotoServer Stuff - Servlet-MAPPING: End -->
+
+    <filter>
+        <filter-name>APIFilter</filter-name>
+        <filter-class>net.anotheria.anoplass.api.filter.APIFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>net.anotheria.portalkit.adminapi.rest.CorsFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>SecurityFilter</filter-name>
+        <filter-class>net.anotheria.portalkit.adminapi.rest.SecurityFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CMSFilter</filter-name>
+        <filter-class>net.anotheria.anosite.gen.shared.filter.CMSFilter</filter-class>
+        <init-param>
+            <param-name>path</param-name>
+            <param-value>/cms/</param-value>
+        </init-param>
+    </filter>
+
+    <!-- First filter must always be the first one in the mapping. -->
+    <filter-mapping>
+        <filter-name>APIFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>SecurityFilter</filter-name>
+        <url-pattern>/api/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CMSFilter</filter-name>
+        <url-pattern>/cms/*</url-pattern>
+    </filter-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>net.anotheria.portalkit.adminapi.rest.ContextInitializer</listener-class>
+    </listener>
+    <listener>
+        <listener-class>
+            net.anotheria.anoplass.api.listener.APISessionListener
+        </listener-class>
+    </listener>
+    <listener>
+        <listener-class>
+            net.anotheria.anosite.shared.presentation.listener.ContextInitializer
+        </listener-class>
+    </listener>
+    <listener>
+        <listener-class>net.anotheria.moskito.webui.embedded.StartMoSKitoInspectBackendForRemoteListener
+        </listener-class>
+    </listener>
+
+
+</web-app>

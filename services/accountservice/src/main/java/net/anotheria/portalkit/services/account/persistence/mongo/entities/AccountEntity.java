@@ -33,6 +33,8 @@ public class AccountEntity extends BaseEntity {
 
     private long status;
 
+    private String brand;
+
     private long daoCreated;
 
     private long daoUpdated;
@@ -53,6 +55,7 @@ public class AccountEntity extends BaseEntity {
         account.setStatus(this.status);
         account.setTenant(this.tenant);
         account.setType(this.type);
+        account.setBrand(this.brand);
         return account;
     }
 
@@ -122,6 +125,14 @@ public class AccountEntity extends BaseEntity {
         this.status = status;
     }
 
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
     public long getDaoCreated() {
         return daoCreated;
     }
@@ -149,6 +160,7 @@ public class AccountEntity extends BaseEntity {
                 "\"tenant\":" + (tenant == null ? "null" : "\"" + tenant + "\"") + ", " +
                 "\"regts\":\"" + regts + "\"" + ", " +
                 "\"status\":\"" + status + "\"" + ", " +
+                "\"brand\":" + (brand == null ? "null" : "\"" + brand + "\"") + ", " +
                 "\"daoCreated\":\"" + daoCreated + "\"" + ", " +
                 "\"daoUpdated\":\"" + daoUpdated + "\"" +
                 "}";
