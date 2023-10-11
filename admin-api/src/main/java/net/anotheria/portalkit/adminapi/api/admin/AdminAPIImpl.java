@@ -314,12 +314,16 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 }
             }
 
-            for (String status : updateRequest.getStatuses()) {
-                AdminAPIConfig.AccountStatusConfig accountStatus = config.getStatus(status);
-                if (accountStatus != null) {
-                    result.addStatus(accountStatus.getValue());
+            if (!updateRequest.getStatuses().isEmpty()) {
+                result.setStatus(0);
+                for (String status : updateRequest.getStatuses()) {
+                    AdminAPIConfig.AccountStatusConfig accountStatus = config.getStatus(status);
+                    if (accountStatus != null) {
+                        result.addStatus(accountStatus.getValue());
+                    }
                 }
             }
+
 
             accountService.updateAccount(result);
         } catch (Exception any) {
