@@ -72,7 +72,7 @@ public class PushTokenPersistenceServiceImpl implements PushTokenPersistenceServ
         lock.lock();
         try {
             List<PushTokenEntity> toDelete = repository.findAllById_AccountId(accountId.getInternalId());
-            repository.delete(toDelete);
+            repository.deleteAll(toDelete);
         } catch (Exception any) {
             throw new PushTokenPersistenceServiceException(any.getMessage(), any);
         } finally {

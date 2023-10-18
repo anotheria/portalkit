@@ -2,17 +2,18 @@ package net.anotheria.portalkit.services.authentication.persistence.mongo;
 
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
+import dev.morphia.Datastore;
+import dev.morphia.query.filters.Filters;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthPasswordEntity;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthTokenEntity;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.query.UpdateOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
     private final Logger log = LoggerFactory.getLogger(MongoTokenDAOImpl.class);
@@ -43,11 +44,10 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity is null.");
         }
         try {
-            // change the name of the hotel
-            UpdateOperations<AuthPasswordEntity> ops = datastore.createUpdateOperations(AuthPasswordEntity.class)
-                    .set("password", newPassword)
-                    .set("daoUpdated", System.currentTimeMillis());
-            datastore.update((AuthPasswordEntity) entity, ops);
+            AuthPasswordEntity authPasswordEntity = (AuthPasswordEntity)entity;
+            authPasswordEntity.setPassword(newPassword);
+            authPasswordEntity.setDaoUpdated(System.currentTimeMillis());
+            datastore.save(authPasswordEntity);
         } catch (MongoException e) {
             log.error("Can't update " + entity.toString());
             throw new MongoDaoException("Can't update " + entity.toString());
@@ -60,7 +60,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("accid").equal(id).asList();
+            List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("accid", id)).stream().collect(Collectors.toList());
             if (result.isEmpty()) {
                 throw new MongoDaoException(entityClass.getSimpleName() + "with acid= " + id + " not found");
             }
@@ -74,7 +74,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
     @Override
     public List<? extends BaseEntity> getAll(Datastore datastore, Class<? extends BaseEntity> entityClass) throws MongoDaoException {
         try {
-            return datastore.createQuery(entityClass).asList();
+            return datastore.find(entityClass).stream().collect(Collectors.toList());
         } catch (MongoException e) {
             log.error("Can't find " + entityClass.getSimpleName() + "list");
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "list");
@@ -88,7 +88,11 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            datastore.delete(datastore.createQuery(entityClass).field("accid").equal(id));
+            List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("accid", id)).stream().collect(Collectors.toList());
+            if (result.isEmpty()) {
+                return;
+            }
+            datastore.delete(result.get(0));
         } catch (MongoException e) {
             log.error("Can't delete " + entityClass.getSimpleName() + "with accid " + id);
             throw new MongoDaoException("Can't delete " + entityClass.getSimpleName() + "with accid " + id);
@@ -101,7 +105,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity id is null.");
         }
         try {
-            return datastore.createQuery(entityClass).field("externalId").equal(id).asList();
+            return datastore.find(entityClass).filter(Filters.eq("externalId",id)).stream().collect(Collectors.toList());
 
         } catch (MongoException e) {
             log.error("Can't find " + entityClass.getSimpleName() + "list by id");
@@ -115,7 +119,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("AccountId is null.");
         }
         try {
-            List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("accid").equal(accountId).asList();
+            List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("accid", accountId)).stream().collect(Collectors.toList());
             if (result.isEmpty()) {
                 return null;
             }
@@ -131,7 +135,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
         if (token == null) {
             throw new IllegalArgumentException("Token is null.");
         }
-        List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("token").equal(token).asList();
+        List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("token",token)).stream().collect(Collectors.toList());
         if (result.isEmpty()) {
             return false;
         }
@@ -145,7 +149,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
         }
         try {
             Set<String> resultSet = new HashSet<>();
-            List<? extends BaseEntity> result = datastore.createQuery(entityClass).field("accid").equal(id).asList();
+            List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("accid", id)).stream().collect(Collectors.toList());
             if (result.isEmpty()) {
                 return resultSet;
 //                throw new MongoDaoException(entityClass.getSimpleName() + "with acid= " + id + " not found");
@@ -167,7 +171,11 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
             throw new IllegalArgumentException("Entity id/token is null.");
         }
         try {
-            datastore.delete(datastore.createQuery(entityClass).field("accid").equal(id).field("token").equal(token));
+            List<? extends BaseEntity> result = datastore.find(entityClass).filter(Filters.eq("accid", id), Filters.eq("token", token)).stream().collect(Collectors.toList());
+            if (result.isEmpty()) {
+                return;
+            }
+            datastore.delete(result.get(0));
         } catch (MongoException e) {
             log.error("Can't delete " + entityClass.getSimpleName() + "with accid " + id + " and token " + token);
             throw new MongoDaoException("Can't delete " + entityClass.getSimpleName() + "with accid " + id + " and token " + token);

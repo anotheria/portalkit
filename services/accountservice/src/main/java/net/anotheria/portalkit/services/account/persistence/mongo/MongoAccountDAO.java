@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.account.persistence.mongo;
 
+import dev.morphia.Datastore;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
-import org.mongodb.morphia.Datastore;
 
 import java.util.List;
 

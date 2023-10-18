@@ -1,9 +1,10 @@
 package net.anotheria.portalkit.services.personaldata;
 
+import dev.morphia.Datastore;
+import dev.morphia.query.filters.Filters;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
-import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +22,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PersonalDataServiceImpl.class);
 
     /**
-     * {@link Datastore} instance.
+     * {@link dev.morphia.Datastore} instance.
      * */
     private Datastore datastore;
 
@@ -43,7 +44,9 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Override
     public PersonalData get(AccountId accountId) throws PersonalDataServiceException {
 
-        PersonalData personalData = datastore.createQuery(PersonalData.class).field("_id").equal(accountId.getInternalId()).get();
+        PersonalData personalData = datastore.find(PersonalData.class)
+                .filter(Filters.eq("_id", accountId.getInternalId()))
+                .first();
 
         if (personalData == null) {
             return null;
@@ -66,7 +69,9 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Override
     public void delete(AccountId accountId) throws PersonalDataServiceException {
 
-        PersonalData personalData = datastore.createQuery(PersonalData.class).field("_id").equal(accountId.getInternalId()).get();
+        PersonalData personalData = datastore.find(PersonalData.class)
+                .filter(Filters.eq("_id", accountId.getInternalId()))
+                .first();
 
         if (personalData == null) {
             return;

@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 
+import dev.morphia.Datastore;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.foreignid.persistence.mongo.entity.ForeignIdEntity;
-import org.mongodb.morphia.Datastore;
 
 import java.util.List;
 

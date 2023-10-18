@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
 
@@ -59,7 +59,6 @@ public class PortalKitAuthenticationAPIImplManualLoginTest {
     public void testManualLoginExistingUserWrongPassword() throws Exception{
 
         when(accountService.getAccountIdByEmail("user")).thenReturn(ACCOUNT_ID);
-        when(authenticationService.canAuthenticate(ACCOUNT_ID, "password")).thenReturn(true);
 
         try {
             portalKitAuthenticationAPI.manualLogin("user", "xxxxxx");

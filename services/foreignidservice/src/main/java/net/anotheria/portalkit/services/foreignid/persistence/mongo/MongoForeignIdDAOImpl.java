@@ -2,14 +2,16 @@ package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
+import dev.morphia.Datastore;
+import dev.morphia.query.filters.Filters;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.foreignid.ForeignId;
+import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import net.anotheria.portalkit.services.foreignid.persistence.mongo.entity.ForeignIdEntity;
-import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Roman Stetsiuk on 7/25/16.
@@ -45,10 +47,10 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
         }
         try {
             List<ForeignIdEntity> result = datastore
-                    .createQuery(ForeignIdEntity.class)
-                    .field("sourceId").equal(sid)
-                    .field("foreignid").equal(fid)
-                    .asList();
+                    .find(ForeignIdEntity.class)
+                    .filter(Filters.eq("sourceId", sid), Filters.eq("foreignid", fid))
+                    .iterator()
+                    .toList();
 
             if (result.isEmpty()) {
                 return null;
@@ -66,16 +68,8 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
             throw new IllegalArgumentException("fid is null.");
         }
         try {
-            List<ForeignIdEntity> result = datastore
-                    .createQuery(ForeignIdEntity.class)
-                    .field("sourceId").equal(sid)
-                    .field("foreignid").equal(fid)
-                    .asList();
-
-            if (result.isEmpty()) {
-                return null;
-            }
-            return result.get(0).getAccountId();
+            ForeignIdEntity result = getForeignIdBySidAndFid(datastore, sid, fid);
+            return result == null ? null : result.getAccountId();
         } catch (MongoException e) {
             throw new MongoDaoException("Can't find foreignId with sid: " + sid + " fid:" + fid);
         }
@@ -88,9 +82,9 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
         }
         try {
             List<ForeignIdEntity> result = datastore
-                    .createQuery(ForeignIdEntity.class)
-                    .field("accountId").equal(accId)
-                    .asList();
+                    .find(ForeignIdEntity.class)
+                    .filter(Filters.eq("accountId", accId))
+                    .stream().collect(Collectors.toList());
 
             if (result.isEmpty()) {
                 throw new MongoDaoException("Can't find foreignIds with accid: " + accId);
@@ -107,11 +101,13 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
             throw new IllegalArgumentException("Entity accid is null.");
         }
         try {
-            datastore.delete(datastore.createQuery(ForeignIdEntity.class)
-                    .field("accountId").equal(accountId)
-                    .field("sourceId").equal(sid)
-                    .field("foreignid").equal(fid)
-            );
+            List<? extends BaseEntity> result = datastore.find(ForeignIdEntity.class)
+                    .filter(Filters.eq("accountId", accountId),Filters.eq("sourceId", sid),Filters.eq("foreignid", fid))
+                    .stream().collect(Collectors.toList());
+            if (result.isEmpty()) {
+                return;
+            }
+            datastore.delete(result.get(0));
         } catch (MongoException e) {
             log.error("Can't delete foreignId with accid={}, fid={}, sid={}", accountId, fid, sid );
             throw new MongoDaoException("Can't delete foreignId");

@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.account.persistence.mongo;
 
+import dev.morphia.Datastore;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.Account;
 import net.anotheria.portalkit.services.account.AccountQuery;
@@ -10,7 +11,6 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseMongoPersistenceServiceImpl;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

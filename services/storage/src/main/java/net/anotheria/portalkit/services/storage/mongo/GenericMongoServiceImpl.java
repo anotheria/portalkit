@@ -1,12 +1,11 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.util.JSON;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.storage.exception.EntityAlreadyExistStorageException;
@@ -16,7 +15,6 @@ import net.anotheria.portalkit.services.storage.exception.StorageRuntimeExceptio
 import net.anotheria.portalkit.services.storage.mongo.index.Index;
 import net.anotheria.portalkit.services.storage.mongo.index.IndexField;
 import net.anotheria.portalkit.services.storage.mongo.util.MongoConstants;
-import net.anotheria.portalkit.services.storage.mongo.util.MongoUtil;
 import net.anotheria.portalkit.services.storage.query.LimitQuery;
 import net.anotheria.portalkit.services.storage.query.OffsetQuery;
 import net.anotheria.portalkit.services.storage.query.Query;
@@ -24,6 +22,7 @@ import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -39,9 +38,9 @@ import java.util.List;
 
 /**
  * {@link GenericMongoService} implementation.
- * 
+ *
  * @author Alexandr Bolbat
- * 
+ *
  * @param <T>
  */
 @Monitor (subsystem = "portalkit")
@@ -64,7 +63,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aEntityClass
 	 *            entity class
 	 */
@@ -74,7 +73,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	/**
 	 * Public constructor.
-	 * 
+	 *
 	 * @param aEntityClass
 	 *            entity class
 	 * @param conf
@@ -136,7 +135,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				continue;
 			}
 
-			final BasicDBObject fields = new BasicDBObject();
+			Document keys = new Document();
 			for (final IndexField field : index.getFields()) {
 				if (field == null) {
 					LOGGER.warn("Index[" + index + "] field[" + null + "] configuration is wrong. Skipping.");
@@ -150,18 +149,16 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				final String name = field.getName();
 				final int order = field.getOrder();
 				final boolean hashed = field.isHashed();
-				fields.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
+				keys.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
 			}
-			final BasicDBObject options = new BasicDBObject();
-			if (!StringUtils.isEmpty(index.getName())) // index name
-				options.put(Index.MONGO_INDEX_PROPERTY_NAME, index.getName());
 
-			options.put(Index.MONGO_INDEX_PROPERTY_UNIQUE, index.isUnique()); // unique constraint
-			options.put(Index.MONGO_INDEX_PROPERTY_DROPDUPS, index.isDropDups()); // drop duplicates on creation, should be used very carefully
-			options.put(Index.MONGO_INDEX_PROPERTY_SPARSE, index.isSparse());
-			options.put(Index.MONGO_INDEX_PROPERTY_BACKGROUND, index.isBackground());
+			IndexOptions options = new IndexOptions()
+					.name(index.getName())
+					.unique(index.isUnique())
+					.sparse(index.isSparse())
+					.background(index.isBackground());
 
-			getCollection().createIndex(fields, options);
+			getCollection().createIndex(keys, options);
 		}
 	}
 
@@ -172,18 +169,18 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	}
 
 	@DontMonitor
-	private DBCollection getCollection() {
-		return getMongoClient().getDB(getDBName()).getCollection(configuration.getCollectionName());
+	private MongoCollection<Document> getCollection() {
+		return getMongoClient().getDatabase(getDBName()).getCollection(configuration.getCollectionName());
 	}
 
 	@Override
 	public T read(final String uid) throws StorageException {
 		if (uid == null || uid.trim().isEmpty())
 			throw new IllegalArgumentException("uid argument is empty.");
+		Document obj;
 
-		DBObject obj;
 		try {
-			obj = getCollection().findOne(MongoUtil.queryGetEntity(uid));
+			obj = getCollection().find(Filters.eq(MongoConstants.FIELD_ID_NAME, uid)).first();
 		} catch (final MongoException e) {
 			throw new StorageException("Can't read entity[" + uid + "].", e);
 		}
@@ -212,10 +209,10 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 		final String uid = EntityUtils.getFieldValue(toSave, configuration.getEntityKeyFieldName());
 		try {
-			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toSave)));
+			Document entity = Document.parse(new ObjectMapper().writeValueAsString(toSave));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
-			getCollection().save(entity);
+			getCollection().insertOne(entity);
 		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toSave + "].", e);
 		} catch (final JsonMappingException e) {
@@ -245,10 +242,10 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 		}
 
 		try {
-			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toCreate)));
+			Document entity = Document.parse(new ObjectMapper().writeValueAsString(toCreate));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
-			getCollection().insert(entity);
+			getCollection().insertOne(entity);
 		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toCreate + "].", e);
 		} catch (final JsonMappingException e) {
@@ -273,10 +270,12 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 		// performing entity update
 		try {
-			final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toUpdate)));
+			Document entity = Document.parse(new ObjectMapper().writeValueAsString(toUpdate));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
-			getCollection().update(MongoUtil.queryGetEntity(uid), entity);
+
+			Bson filter = Filters.eq(MongoConstants.FIELD_ID_NAME, uid);
+			getCollection().updateOne(filter, new Document("$set", entity));
 		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toUpdate + "].", e);
 		} catch (final JsonMappingException e) {
@@ -295,7 +294,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	public T delete(final String uid) throws StorageException {
 		final T result = read(uid);
 		try {
-			getCollection().remove(MongoUtil.queryGetEntity(uid));
+			getCollection().deleteOne(Filters.eq(MongoConstants.FIELD_ID_NAME, uid));
 		} catch (final MongoException e) {
 			throw new StorageException("Can't delete entity[" + uid + "].", e);
 		}
@@ -398,22 +397,23 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	public List<T> findAll() throws StorageException {
 		final List<T> result = new ArrayList<T>();
 
-		DBCursor rawResult = null;
+		MongoCursor<Document> cursor = null;
 		try {
-			rawResult = getCollection().find();
+			FindIterable<Document> rawResult = getCollection().find();
+			cursor = rawResult.iterator();
 
 			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
-			while (rawResult.hasNext()) {
-				final DBObject obj = rawResult.next();
+			while (cursor.hasNext()) {
+				final Document doc = cursor.next();
 				try {
-					result.add(objectMapper.readValue(obj.toString(), entityClass));
+					result.add(objectMapper.readValue(doc.toJson(), entityClass));
 				} catch (final JsonParseException e) {
-					throw new StorageException("Can't parse entity[" + obj + "].", e);
+					throw new StorageException("Can't parse entity[" + doc + "].", e);
 				} catch (final JsonMappingException e) {
-					throw new StorageException("Can't map entity[" + obj + "].", e);
+					throw new StorageException("Can't map entity[" + doc + "].", e);
 				} catch (final IOException e) {
 					throw new StorageException(e);
 				}
@@ -421,32 +421,33 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 			return result;
 		} catch (final MongoException e) {
-			throw new StorageException("Can't exequte query: find all entities.", e);
+			throw new StorageException("Can't execute query: find all entities.", e);
 		} finally {
-			if (rawResult != null)
-				rawResult.close();
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
 	}
 
 	@Override
 	public List<T> find(final Query query) throws StorageException {
 		if (query == null)
-			throw new IllegalArgumentException("query argument in null.");
+			throw new IllegalArgumentException("query argument is null.");
 
 		final List<T> result = new ArrayList<T>();
 
-		final BasicDBObject mongoQuery = MongoQueryMapper.map(query);
+		final Bson mongoQuery = MongoQueryMapper.map(query);
 		if (mongoQuery == null)
 			return result;
 
-		DBCursor rawResult = null;
+		MongoCursor<Document> cursor = null;
 		try {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("find(" + query + ") executing with mongo query[" + mongoQuery + "].");
 
-			rawResult = getCollection().find(mongoQuery);
+			FindIterable<Document> rawResult = getCollection().find(mongoQuery);
 
-			final BasicDBObject sorting = MongoQueryMapper.getSorting(query);
+			final Bson sorting = MongoQueryMapper.getSorting(query);
 			if (sorting != null)
 				rawResult.sort(sorting);
 
@@ -463,14 +464,15 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
-			while (rawResult.hasNext()) {
-				final DBObject obj = rawResult.next();
+			cursor = rawResult.iterator();
+			while (cursor.hasNext()) {
+				final Document doc = cursor.next();
 				try {
-					result.add(objectMapper.readValue(obj.toString(), entityClass));
+					result.add(objectMapper.readValue(doc.toJson(), entityClass));
 				} catch (final JsonParseException e) {
-					throw new StorageException("Can't parse entity[" + obj + "].", e);
+					throw new StorageException("Can't parse entity[" + doc + "].", e);
 				} catch (final JsonMappingException e) {
-					throw new StorageException("Can't map entity[" + obj + "].", e);
+					throw new StorageException("Can't map entity[" + doc + "].", e);
 				} catch (final IOException e) {
 					throw new StorageException(e);
 				}
@@ -478,42 +480,42 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 			return result;
 		} catch (final MongoException e) {
-			throw new StorageException("Can't exequte query[" + query + "].", e);
+			throw new StorageException("Can't execute query[" + query + "].", e);
 		} finally {
-			if (rawResult != null)
-				rawResult.close();
+			if (cursor != null)
+				cursor.close();
 		}
 	}
 
 	@Override
 	public void delete(Query query) throws StorageException {
-
 		if (query == null)
-			throw new IllegalArgumentException("query argument in null.");
+			throw new IllegalArgumentException("query argument is null.");
 
-		final BasicDBObject mongoQuery = MongoQueryMapper.map(query);
+		final Bson mongoQuery = MongoQueryMapper.map(query);
 
 		if (mongoQuery == null)
 			return;
 
-		DBCursor rawResult = null;
+		MongoCursor<Document> cursor = null;
 
 		try {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("find(" + query + ") executing with mongo query[" + mongoQuery + "].");
 
-			rawResult = getCollection().find(mongoQuery);
+			cursor = getCollection().find(mongoQuery).iterator();
 
-			while (rawResult.hasNext()) {
-				final DBObject obj = rawResult.next();
+			while (cursor.hasNext()) {
+				final Document doc = cursor.next();
+				final String uid = doc.getString(MongoConstants.FIELD_ID_NAME);
 
-				delete((String) obj.get(MongoConstants.FIELD_ID_NAME));
+				delete(uid);
 			}
 		} catch (final MongoException e) {
-			throw new StorageException("Can't exequte query[" + query + "].", e);
+			throw new StorageException("Can't execute query[" + query + "].", e);
 		} finally {
-			if (rawResult != null)
-				rawResult.close();
+			if (cursor != null)
+				cursor.close();
 		}
 	}
 }

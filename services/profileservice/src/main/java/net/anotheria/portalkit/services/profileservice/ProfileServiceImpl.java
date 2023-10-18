@@ -1,10 +1,17 @@
 package net.anotheria.portalkit.services.profileservice;
 
-import com.mongodb.*;
-import com.mongodb.util.JSON;
+import com.mongodb.BasicDBObject;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoException;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.*;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.IndexOptions;
 import net.anotheria.portalkit.services.profileservice.index.Index;
 import net.anotheria.portalkit.services.profileservice.index.IndexField;
 import net.anotheria.util.StringUtils;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -27,10 +34,10 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
      */
     protected static final Logger LOGGER = LoggerFactory.getLogger(ProfileServiceImpl.class);
 
-    private static final String MONGO_ID = "_id";
+    private static final String FIELD_ID_NAME = "_id";
 
     private final ProfileServiceConfig config;
-    private MongoClient mongoClient;
+    private final MongoClient mongoClient;
 
     /**
      * Entity class.
@@ -52,7 +59,10 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         this.entity = entity;
         this.config = ProfileServiceConfig.getInstance(conf, env);
         List<ServerAddress> addresses = ProfileServiceUtil.getAddresses(config);
-        mongoClient = new MongoClient(addresses);
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyToClusterSettings(builder -> builder.hosts(addresses))
+                .build();
+        mongoClient = MongoClients.create(settings);
         initializeIndexes();
     }
 
@@ -64,7 +74,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
             return;
 
         final List<Index> indexes = config.getIndexes();
-        if (indexes == null || indexes.isEmpty()) {
+        if (indexes.isEmpty()) {
             LOGGER.warn("Indexes configuration is empty. Skipping.");
             return;
         }
@@ -79,7 +89,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
                 continue;
             }
 
-            final BasicDBObject fields = new BasicDBObject();
+            Document keys = new Document();
             for (final IndexField field : index.getFields()) {
                 if (field == null) {
                     LOGGER.warn("Index[" + index + "] field[" + null + "] configuration is wrong. Skipping.");
@@ -93,18 +103,16 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
                 final String name = field.getName();
                 final int order = field.getOrder();
                 final boolean hashed = field.isHashed();
-                fields.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
+                keys.put(name, hashed ? IndexField.MONGO_INDEX_FIELD_PROPERTY_HASHED : order);
             }
-            final BasicDBObject options = new BasicDBObject();
-            if (!StringUtils.isEmpty(index.getName())) // index name
-                options.put(Index.MONGO_INDEX_PROPERTY_NAME, index.getName());
 
-            options.put(Index.MONGO_INDEX_PROPERTY_UNIQUE, index.isUnique()); // unique constraint
-            options.put(Index.MONGO_INDEX_PROPERTY_DROPDUPS, index.isDropDups()); // drop duplicates on creation, should be used very carefully
-            options.put(Index.MONGO_INDEX_PROPERTY_SPARSE, index.isSparse());
-            options.put(Index.MONGO_INDEX_PROPERTY_BACKGROUND, index.isBackground());
+            IndexOptions options = new IndexOptions()
+                    .name(index.getName())
+                    .unique(index.isUnique())
+                    .sparse(index.isSparse())
+                    .background(index.isBackground());
 
-            getCollection().createIndex(fields, options);
+            getCollection().createIndex(keys, options);
         }
     }
 
@@ -114,9 +122,10 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         if (uid == null || uid.trim().isEmpty())
             throw new IllegalArgumentException("uid argument is empty.");
 
-        DBObject obj;
+        Document obj;
+
         try {
-            obj = getCollection().findOne(queryGetEntity(uid));
+            obj = getCollection().find(Filters.eq(FIELD_ID_NAME, uid)).first();
         } catch (final MongoException e) {
             throw new ProfileServiceException("Can't read profile[" + uid + "].", e);
         }
@@ -143,8 +152,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         if (toSave == null)
             throw new IllegalArgumentException("toSave argument is null.");
         try {
-            final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toSave)));
-            getCollection().save(entity);
+            getCollection().insertOne(Document.parse(new ObjectMapper().writeValueAsString(toSave)));
         } catch (final JsonGenerationException e) {
             throw new ProfileServiceException("Can't generate profile[" + toSave + "].", e);
         } catch (final JsonMappingException e) {
@@ -173,8 +181,8 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         }
 
         try {
-            final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toCreate)));
-            getCollection().insert(entity);
+            Document entity = Document.parse(new ObjectMapper().writeValueAsString(toCreate));
+            getCollection().insertOne(entity);
         } catch (final JsonGenerationException e) {
             throw new ProfileServiceException("Can't generate profile[" + toCreate + "].", e);
         } catch (final JsonMappingException e) {
@@ -199,8 +207,9 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
 
         // performing entity update
         try {
-            final DBObject entity = DBObject.class.cast(JSON.parse(new ObjectMapper().writeValueAsString(toUpdate)));
-            getCollection().update(queryGetEntity(uid), entity);
+            Document entity = Document.parse(new ObjectMapper().writeValueAsString(toUpdate));
+            Bson filter = Filters.eq(FIELD_ID_NAME, uid);
+            getCollection().updateOne(filter, new Document("$set", entity));
         } catch (final JsonGenerationException e) {
             throw new ProfileServiceException("Can't generate profile[" + toUpdate + "].", e);
         } catch (final JsonMappingException e) {
@@ -219,7 +228,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
     public T delete(String uid) throws ProfileServiceException {
         final T result = read(uid);
         try {
-            getCollection().remove(queryGetEntity(uid));
+            getCollection().deleteOne(Filters.eq(FIELD_ID_NAME, uid));
         } catch (final MongoException e) {
             throw new ProfileServiceException("Can't delete profile[" + uid + "].", e);
         }
@@ -231,22 +240,23 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
     public List<T> findAll() throws ProfileServiceException {
         final List<T> result = new ArrayList<T>();
 
-        DBCursor rawResult = null;
+        MongoCursor<Document> cursor = null;
         try {
-            rawResult = getCollection().find();
+            FindIterable<Document> rawResult = getCollection().find();
+            cursor = rawResult.iterator();
 
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
-            while (rawResult.hasNext()) {
-                final DBObject obj = rawResult.next();
+            while (cursor.hasNext()) {
+                final Document doc = cursor.next();
                 try {
-                    result.add(objectMapper.readValue(obj.toString(), entity));
+                    result.add(objectMapper.readValue(doc.toJson(), entity));
                 } catch (final JsonParseException e) {
-                    throw new ProfileServiceException("Can't parse profile[" + obj + "].", e);
+                    throw new ProfileServiceException("Can't parse profile[" + doc + "].", e);
                 } catch (final JsonMappingException e) {
-                    throw new ProfileServiceException("Can't map profile[" + obj + "].", e);
+                    throw new ProfileServiceException("Can't map profile[" + doc + "].", e);
                 } catch (final IOException e) {
                     throw new ProfileServiceException(e);
                 }
@@ -256,8 +266,9 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         } catch (final MongoException e) {
             throw new ProfileServiceException("Can't execute query: find all entities.", e);
         } finally {
-            if (rawResult != null)
-                rawResult.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -267,26 +278,27 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
             throw new IllegalArgumentException("query argument in null.");
 
         final List<T> result = new ArrayList<T>();
-        DBCursor rawResult = null;
+        MongoCursor<Document> cursor = null;
         try {
             if (LOGGER.isDebugEnabled())
                 LOGGER.debug("find(" + mongoQuery + ") executing with mongo query[" + mongoQuery + "].");
 
-            rawResult = getCollection().find(mongoQuery);
+            FindIterable<Document> rawResult = getCollection().find(mongoQuery);
 
             // processing results
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
 
-            while (rawResult.hasNext()) {
-                final DBObject obj = rawResult.next();
+            cursor = rawResult.iterator();
+            while (cursor.hasNext()) {
+                final Document doc = cursor.next();
                 try {
-                    result.add(objectMapper.readValue(obj.toString(), entity));
+                    result.add(objectMapper.readValue(doc.toJson(), entity));
                 } catch (final JsonParseException e) {
-                    throw new ProfileServiceException("Can't parse profile[" + obj + "].", e);
+                    throw new ProfileServiceException("Can't parse profile[" + doc + "].", e);
                 } catch (final JsonMappingException e) {
-                    throw new ProfileServiceException("Can't map profile[" + obj + "].", e);
+                    throw new ProfileServiceException("Can't map profile[" + doc + "].", e);
                 } catch (final IOException e) {
                     throw new ProfileServiceException(e);
                 }
@@ -296,8 +308,8 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         } catch (final MongoException e) {
             throw new ProfileServiceException("Can't execute profile[" + mongoQuery + "].", e);
         } finally {
-            if (rawResult != null)
-                rawResult.close();
+            if (cursor != null)
+                cursor.close();
         }
     }
 
@@ -305,12 +317,9 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         return config.getDatabaseName();
     }
 
-    private DBCollection getCollection() {
-        return mongoClient.getDB(getDBName()).getCollection(config.getCollectionName());
+    private MongoCollection<Document> getCollection() {
+        return mongoClient.getDatabase(getDBName()).getCollection(config.getCollectionName());
     }
 
-    private static DBObject queryGetEntity(final String uid) {
-        return new BasicDBObject(MONGO_ID, uid);
-    }
 }
 

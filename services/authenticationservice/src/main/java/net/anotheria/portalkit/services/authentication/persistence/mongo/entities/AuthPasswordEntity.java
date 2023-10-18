@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.authentication.persistence.mongo.entities;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
 
 /**
  * Created by Roman Stetsiuk

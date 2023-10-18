@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
 
@@ -62,7 +62,7 @@ public class RelationServiceCacheTest {
         verify(isRelatedCacheMock).get(CACHE_KEY);
         verifyNoMoreInteractions(isRelatedCacheMock);
 
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class RelationServiceCacheTest {
         verify(isRelatedCacheMock).get(CACHE_KEY);
         verifyNoMoreInteractions(isRelatedCacheMock);
 
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 
     @Test
@@ -122,6 +122,6 @@ public class RelationServiceCacheTest {
         verify(isRelatedCacheMock).get(CACHE_KEY);
         verifyNoMoreInteractions(isRelatedCacheMock);
 
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 }

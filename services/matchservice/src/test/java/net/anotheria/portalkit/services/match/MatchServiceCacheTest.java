@@ -3,23 +3,19 @@ package net.anotheria.portalkit.services.match;
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * @author bvanchuhov
@@ -74,7 +70,7 @@ public class MatchServiceCacheTest {
         verify(isMatchedCacheMock).get(cacheKey);
         verifyNoMoreInteractions(isMatchedCacheMock);
 
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 
     @Test
@@ -116,7 +112,7 @@ public class MatchServiceCacheTest {
         assertArrayEquals(new Object[]{MATCH_A_B_0, MATCH_A_C_0, MATCH_A_C_1}, actual.toArray());
 
         verify(ownersCacheMock, times(1)).get(ACCOUNT_A);
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 
     @Test
@@ -156,6 +152,6 @@ public class MatchServiceCacheTest {
         assertArrayEquals(new Object[]{MATCH_A_C_0, MATCH_A_C_1}, actual.toArray());
 
         verify(targetsCacheMock, times(1)).get(ACCOUNT_C);
-        verifyZeroInteractions(entityManagerMock);
+        verifyNoInteractions(entityManagerMock);
     }
 }
