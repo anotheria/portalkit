@@ -97,7 +97,8 @@ public class JpaSpringConfiguration {
         HibernateConfig dbConfig = getDbConfig();
         Properties props = new Properties();
         props.put("hibernate.show_sql", dbConfig.isShowSql());
-//        props.put("hibernate.hbm2ddl.auto", "validate");
+        if (dbConfig.isValidate())
+            props.put("hibernate.hbm2ddl.auto", "validate");
         entityManagerFactoryBean.setJpaProperties(props);
 
         entityManagerFactoryBean.afterPropertiesSet();
