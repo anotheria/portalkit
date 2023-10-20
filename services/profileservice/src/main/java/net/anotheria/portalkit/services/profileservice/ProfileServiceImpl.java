@@ -137,7 +137,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
             final ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-            return objectMapper.readValue(obj.toString(), entity);
+            return objectMapper.readValue(obj.toJson(), entity);
         } catch (final JsonParseException e) {
             throw new ProfileServiceException("Can't parse profile[" + obj + "].", e);
         } catch (final JsonMappingException e) {
@@ -152,7 +152,14 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         if (toSave == null)
             throw new IllegalArgumentException("toSave argument is null.");
         try {
-            getCollection().insertOne(Document.parse(new ObjectMapper().writeValueAsString(toSave)));
+            Document entity = Document.parse(new ObjectMapper().writeValueAsString(toSave));
+            try {
+                String uid = toSave.get_id();
+                read(uid);
+                getCollection().replaceOne(Filters.eq(FIELD_ID_NAME, uid), entity);
+            } catch (ProfileServiceException e) {
+                getCollection().insertOne(entity);
+            }
         } catch (final JsonGenerationException e) {
             throw new ProfileServiceException("Can't generate profile[" + toSave + "].", e);
         } catch (final JsonMappingException e) {
@@ -209,7 +216,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
         try {
             Document entity = Document.parse(new ObjectMapper().writeValueAsString(toUpdate));
             Bson filter = Filters.eq(FIELD_ID_NAME, uid);
-            getCollection().updateOne(filter, new Document("$set", entity));
+            getCollection().replaceOne(filter, entity);
         } catch (final JsonGenerationException e) {
             throw new ProfileServiceException("Can't generate profile[" + toUpdate + "].", e);
         } catch (final JsonMappingException e) {

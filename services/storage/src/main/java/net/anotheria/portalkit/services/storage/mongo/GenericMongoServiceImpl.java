@@ -192,7 +192,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			final ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
-			return objectMapper.readValue(obj.toString(), entityClass);
+			return objectMapper.readValue(obj.toJson(), entityClass);
 		} catch (final JsonParseException e) {
 			throw new StorageException("Can't parse entity[" + obj + "].", e);
 		} catch (final JsonMappingException e) {
@@ -212,7 +212,12 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			Document entity = Document.parse(new ObjectMapper().writeValueAsString(toSave));
 			if (!MongoConstants.FIELD_ID_NAME.equals(configuration.getEntityKeyFieldName()))
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
-			getCollection().insertOne(entity);
+			try {
+				read(uid);
+				getCollection().replaceOne(Filters.eq(MongoConstants.FIELD_ID_NAME, uid), entity);
+			} catch (StorageException e) {
+				getCollection().insertOne(entity);
+			}
 		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toSave + "].", e);
 		} catch (final JsonMappingException e) {
@@ -275,7 +280,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 				entity.put(MongoConstants.FIELD_ID_NAME, uid);
 
 			Bson filter = Filters.eq(MongoConstants.FIELD_ID_NAME, uid);
-			getCollection().updateOne(filter, new Document("$set", entity));
+			getCollection().replaceOne(filter, entity);
 		} catch (final JsonGenerationException e) {
 			throw new StorageException("Can't generate entity[" + toUpdate + "].", e);
 		} catch (final JsonMappingException e) {
