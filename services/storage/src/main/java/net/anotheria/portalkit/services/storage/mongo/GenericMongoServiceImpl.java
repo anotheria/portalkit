@@ -215,7 +215,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			try {
 				read(uid);
 				getCollection().replaceOne(Filters.eq(MongoConstants.FIELD_ID_NAME, uid), entity);
-			} catch (StorageException e) {
+			} catch (EntityNotFoundStorageException e) {
 				getCollection().insertOne(entity);
 			}
 		} catch (final JsonGenerationException e) {

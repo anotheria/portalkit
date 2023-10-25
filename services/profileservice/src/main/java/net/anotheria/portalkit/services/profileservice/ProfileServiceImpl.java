@@ -157,7 +157,7 @@ public class ProfileServiceImpl<T extends Profile> implements ProfileService<T> 
                 String uid = toSave.get_id();
                 read(uid);
                 getCollection().replaceOne(Filters.eq(FIELD_ID_NAME, uid), entity);
-            } catch (ProfileServiceException e) {
+            } catch (ProfileNotFoundException e) {
                 getCollection().insertOne(entity);
             }
         } catch (final JsonGenerationException e) {

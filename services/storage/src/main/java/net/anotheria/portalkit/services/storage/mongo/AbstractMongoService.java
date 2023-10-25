@@ -3,7 +3,6 @@ package net.anotheria.portalkit.services.storage.mongo;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import net.anotheria.portalkit.services.storage.exception.StorageRuntimeException;
@@ -73,27 +72,33 @@ public abstract class AbstractMongoService {
 		if (serviceInitialized.get())
 			return;
 		MongoClientOptions options = MongoClientUtil.getOptions(mongoClientConfiguration);
-
-		MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder()
-				.applyToSocketSettings(builder -> {
-					builder.connectTimeout(options.getConnectTimeout(), TimeUnit.MILLISECONDS);
-					builder.readTimeout(options.getSocketTimeout(), TimeUnit.MILLISECONDS);
-				})
-				.applyToConnectionPoolSettings(builder -> builder.maxSize(options.getConnectionsPerHost()))
-				.readPreference(options.getReadPreference())
-				.writeConcern(options.getWriteConcern());
+		MongoClientSettings settings;
 
 		if (StringUtils.isEmpty(mongoClientConfiguration.getConnectionString())) {
-			settingsBuilder.applyToClusterSettings(builder -> builder.hosts(MongoClientUtil.getAddresses(mongoClientConfiguration)));
+			settings = MongoClientSettings.builder()
+					.applyToClusterSettings(builder -> builder.hosts(MongoClientUtil.getAddresses(mongoClientConfiguration)))
+					.applyToSocketSettings(builder -> {
+						builder.connectTimeout(options.getConnectTimeout(), TimeUnit.MILLISECONDS);
+						builder.readTimeout(options.getSocketTimeout(), TimeUnit.MILLISECONDS);
+					})
+					.applyToConnectionPoolSettings(builder -> builder.maxSize(options.getConnectionsPerHost()))
+					.readPreference(options.getReadPreference())
+					.writeConcern(options.getWriteConcern())
+					.build();
 		} else {
-			settingsBuilder.applyToClusterSettings(builder -> builder.applyConnectionString(new ConnectionString(mongoClientConfiguration.getConnectionString())))
-					.applyToSslSettings(builder -> builder.enabled(true));
-			if (!mongoClientConfiguration.getDatabases().isEmpty()) {
-				MongoClientConfig.DB db = mongoClientConfiguration.getDatabases().get(0);
-				settingsBuilder.credential(MongoCredential.createCredential(db.getUsername(), db.getName(), db.getPassword().toCharArray()));
-			}
+			settings = MongoClientSettings.builder()
+					.applyConnectionString(new ConnectionString(mongoClientConfiguration.getConnectionString()))
+					.applyToSslSettings(builder -> builder.enabled(true))
+					.applyToSocketSettings(builder -> {
+						builder.connectTimeout(options.getConnectTimeout(), TimeUnit.MILLISECONDS);
+						builder.readTimeout(options.getSocketTimeout(), TimeUnit.MILLISECONDS);
+					})
+					.applyToConnectionPoolSettings(builder -> builder.maxSize(options.getConnectionsPerHost()))
+					.readPreference(options.getReadPreference())
+					.writeConcern(options.getWriteConcern())
+					.build();
 		}
-		mongoClient = MongoClients.create(settingsBuilder.build());
+		mongoClient = MongoClients.create(settings);
 
 		Thread initializationVerifier = new Thread(() -> {
 			mongoClient.listDatabaseNames(); // now this thread will wait mongo client if it initialization still in progress

@@ -1,13 +1,19 @@
 package net.anotheria.portalkit.services.personaldata;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
-import dev.morphia.query.filters.Filters;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,19 +28,19 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(PersonalDataServiceImpl.class);
 
     /**
-     * {@link dev.morphia.Datastore} instance.
-     * */
+     * {@link Datastore} instance.
+     */
     private Datastore datastore;
 
     /**
      * {@link PersonalDataServiceConfig} instance.
-     * */
+     */
     private PersonalDataServiceConfig config;
 
 
     /**
      * Default constructor.
-     * */
+     */
     public PersonalDataServiceImpl() {
         datastore = MongoConnector.getDatabase();
         config = PersonalDataServiceConfig.getInstance();
@@ -43,16 +49,18 @@ public class PersonalDataServiceImpl implements PersonalDataService {
 
     @Override
     public PersonalData get(AccountId accountId) throws PersonalDataServiceException {
-
-        PersonalData personalData = datastore.find(PersonalData.class)
-                .filter(Filters.eq("_id", accountId.getInternalId()))
-                .first();
-
+        Document personalData = getCollection().find(Filters.eq("_id", accountId.getInternalId())).first();
         if (personalData == null) {
             return null;
         }
-
-        return decryptPersonalData(personalData);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        try {
+            return decryptPersonalData(objectMapper.readValue(personalData.toJson(), PersonalData.class));
+        } catch (IOException e) {
+            throw new PersonalDataServiceException(e.getMessage());
+        }
     }
 
     @Override
@@ -61,23 +69,27 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         if (personalData == null) {
             return;
         }
-
         personalData.set_id(personalData.getAccountId().getInternalId());
-        datastore.save(encryptPersonalData(personalData));
+        PersonalData encryptData = encryptPersonalData(personalData);
+
+        try {
+            Document entity = Document.parse(new ObjectMapper().writeValueAsString(encryptData));
+            PersonalData oldData = get(personalData.getAccountId());
+            if (oldData == null) {
+                getCollection().insertOne(entity);
+            }
+            getCollection().replaceOne(Filters.eq("_id", personalData.getAccountId().getInternalId()), entity);
+        } catch (Exception e) {
+            throw new PersonalDataServiceException(e.getMessage());
+        }
     }
 
     @Override
     public void delete(AccountId accountId) throws PersonalDataServiceException {
-
-        PersonalData personalData = datastore.find(PersonalData.class)
-                .filter(Filters.eq("_id", accountId.getInternalId()))
-                .first();
-
+        PersonalData personalData = get(accountId);
         if (personalData == null) {
-            return;
+            getCollection().deleteOne(Filters.eq("id", new ObjectId(accountId.getInternalId())));
         }
-
-        datastore.delete(personalData);
     }
 
 
@@ -107,5 +119,9 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         toEncrypt.setPersonalData(encrypted);
 
         return toEncrypt;
+    }
+
+    private MongoCollection<Document> getCollection() {
+        return datastore.getDatabase().getCollection(PersonalDataServiceConfig.getInstance().getCollectionName());
     }
 }

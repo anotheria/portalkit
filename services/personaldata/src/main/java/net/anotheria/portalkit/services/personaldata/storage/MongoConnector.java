@@ -44,17 +44,19 @@ public class MongoConnector {
     private MongoConnector() {
         PersonalDataServiceConfig config = PersonalDataServiceConfig.getInstance();
 
-        MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
+        MongoClientSettings settings;
 
         if (StringUtils.isEmpty(config.getConnectionString())) {
-            settingsBuilder.applyToClusterSettings(builder -> {
-                builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.getPort())));
-            });
+            settings = MongoClientSettings.builder()
+                    .applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.getPort()))))
+                    .build();
         } else {
-            settingsBuilder.applyToClusterSettings(builder -> builder.applyConnectionString(new ConnectionString(config.getConnectionString())))
-                    .applyToSslSettings(builder -> builder.enabled(true));
+            settings = MongoClientSettings.builder()
+                    .applyConnectionString(new ConnectionString(config.getConnectionString()))
+                    .applyToSslSettings(builder -> builder.enabled(true))
+                    .build();
         }
-        mongo = MongoClients.create(settingsBuilder.build());
+        mongo = MongoClients.create(settings);
         databaseName = config.getDatabase();
         datastore = Morphia.createDatastore(mongo, databaseName);
     }
