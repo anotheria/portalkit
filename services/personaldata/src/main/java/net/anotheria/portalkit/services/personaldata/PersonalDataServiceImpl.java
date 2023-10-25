@@ -87,7 +87,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Override
     public void delete(AccountId accountId) throws PersonalDataServiceException {
         PersonalData personalData = get(accountId);
-        if (personalData == null) {
+        if (personalData != null) {
             getCollection().deleteOne(Filters.eq("id", new ObjectId(accountId.getInternalId())));
         }
     }
