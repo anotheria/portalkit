@@ -6,19 +6,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.servers.Server;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import net.anotheria.anoplass.api.APICallContext;
 import net.anotheria.anoplass.api.APIFinder;
-import net.anotheria.portalkit.adminapi.api.admin.AdminAccountAO;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAPIAuthenticationException;
 import net.anotheria.portalkit.adminapi.api.auth.AdminAuthAPI;
 import net.anotheria.portalkit.adminapi.rest.ErrorKey;
 import net.anotheria.portalkit.adminapi.rest.ReplyObject;
-import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;
 import net.anotheria.portalkit.adminapi.rest.auth.request.LoginRequest;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 @Path("admin-api/auth")
 @Consumes(MediaType.APPLICATION_JSON)

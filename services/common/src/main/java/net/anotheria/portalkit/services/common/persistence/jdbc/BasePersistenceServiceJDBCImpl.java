@@ -3,7 +3,7 @@ package net.anotheria.portalkit.services.common.persistence.jdbc;
 import com.googlecode.flyway.core.Flyway;
 import com.googlecode.flyway.core.api.MigrationInfoService;
 import net.anotheria.util.StringUtils;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,7 +140,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
         newDataSource.setUsername(config.getUsername());
         newDataSource.setPassword(config.getPassword());
         if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections() > 0)
-            newDataSource.setMaxActive(config.getMaxConnections());
+            newDataSource.setMaxTotal(config.getMaxConnections());
         return newDataSource;
     }
 

@@ -1,13 +1,13 @@
 package net.anotheria.portalkit.adminapi.rest;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import javax.ws.rs.ApplicationPath;
+import jakarta.ws.rs.ApplicationPath;
 
 @ApplicationPath("/api/v1/*")
 @OpenAPIDefinition(info = @Info(title = "Portalkit Admin API", description = "API to perform admin actions", version = "v1"))

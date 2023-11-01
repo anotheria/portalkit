@@ -6,15 +6,15 @@
 	"test": {
 
 		"h2": {
-			"driver": "org.h2.jdbcx.JdbcDataSource",
+			"driver": "org.h2.Driver",
 			"url": "jdbc:h2:mem:pk_records;IGNORECASE=TRUE",
-			"username": "another",
+			"username": "another"
 		},
 		
 		"psql": {
 			"driver": "org.postgresql.Driver",
 			"url": "jdbc:postgresql://localhost/pk_test",
-			"username": "another",
+			"username": "another"
 		},
 
 		"hsqldb": {
@@ -25,8 +25,8 @@
 			"remote" : {
 				"driver": "org.hsqldb.jdbc.JDBCDriver",
 				"url": "jdbc:hsqldb:hsql://localhost:9001/testdb",
-				"username": "sa",
-			},
+				"username": "sa"
+			}
 		}
 	}
 }

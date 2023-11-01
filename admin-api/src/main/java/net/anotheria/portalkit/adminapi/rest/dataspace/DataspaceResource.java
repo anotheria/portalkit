@@ -19,9 +19,9 @@ import net.anotheria.portalkit.adminapi.rest.dataspace.request.DeleteDataspaceRe
 import net.anotheria.portalkit.adminapi.rest.dataspace.request.RemoveDataspaceAttributeRequest;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("admin-api/dataspace")
