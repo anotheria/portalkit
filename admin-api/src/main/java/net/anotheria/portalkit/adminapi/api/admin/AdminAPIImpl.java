@@ -155,7 +155,8 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                 accounts = accounts.stream()
                         .filter(e ->
                                 e.getEmail().toLowerCase().contains(request.getSearchTerm().trim().toLowerCase()) ||
-                                        e.getName().toLowerCase().contains(request.getSearchTerm().trim().toLowerCase())
+                                        e.getName().toLowerCase().contains(request.getSearchTerm().trim().toLowerCase()) ||
+                                        e.getId().getInternalId().toLowerCase().contains(request.getSearchTerm().toLowerCase())
                         )
                         .collect(Collectors.toList());
             }
