@@ -12,7 +12,7 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang3.SerializationUtils;
 
 /**
  * InMemoryAccountPersistenceServiceImpl.

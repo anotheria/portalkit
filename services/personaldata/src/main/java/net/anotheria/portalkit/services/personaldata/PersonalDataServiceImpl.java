@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.personaldata;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
@@ -8,8 +10,6 @@ import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +54,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
             return null;
         }
         final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
         try {
             return decryptPersonalData(objectMapper.readValue(personalData.toJson(), PersonalData.class));
         } catch (IOException e) {

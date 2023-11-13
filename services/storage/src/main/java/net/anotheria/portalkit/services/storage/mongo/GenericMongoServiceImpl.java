@@ -1,5 +1,10 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -23,11 +28,6 @@ import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,8 +190,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 		try {
 			final ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
 			return objectMapper.readValue(obj.toJson(), entityClass);
 		} catch (final JsonParseException e) {
 			throw new StorageException("Can't parse entity[" + obj + "].", e);
@@ -408,8 +407,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			cursor = rawResult.iterator();
 
 			final ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
 
 			while (cursor.hasNext()) {
 				final Document doc = cursor.next();
@@ -466,8 +464,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 			// processing results
 			final ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-			objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+			objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
 
 			cursor = rawResult.iterator();
 			while (cursor.hasNext()) {

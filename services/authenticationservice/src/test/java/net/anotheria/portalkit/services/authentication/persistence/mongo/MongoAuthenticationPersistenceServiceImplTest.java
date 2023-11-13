@@ -1,29 +1,15 @@
 package net.anotheria.portalkit.services.authentication.persistence.mongo;
 
-import com.mongodb.*;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodProcess;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthTokenEncryptors;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
-import net.anotheria.portalkit.services.authentication.persistence.jdbc.JDBCAuthenticationPersistenceServiceImpl;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.IdCodeGenerator;
-import org.configureme.ConfigurationManager;
-import org.configureme.environments.DynamicEnvironment;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static org.junit.Assert.*;
 

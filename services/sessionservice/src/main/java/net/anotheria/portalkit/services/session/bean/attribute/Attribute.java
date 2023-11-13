@@ -1,9 +1,8 @@
 package net.anotheria.portalkit.services.session.bean.attribute;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import net.anotheria.util.BasicComparable;
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 import java.io.Serializable;
 
@@ -14,12 +13,12 @@ import java.io.Serializable;
  * @author abolbat
  * @author dagafonov
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
-	@Type(value = StringAttribute.class, name = "STRING"), 
-	@Type(value = IntAttribute.class, name = "INT"),
-	@Type(value = LongAttribute.class, name = "LONG"), 
-	@Type(value = BooleanAttribute.class, name = "BOOLEAN") 
+	@JsonSubTypes.Type(value = StringAttribute.class, name = "STRING"),
+	@JsonSubTypes.Type(value = IntAttribute.class, name = "INT"),
+	@JsonSubTypes.Type(value = LongAttribute.class, name = "LONG"),
+	@JsonSubTypes.Type(value = BooleanAttribute.class, name = "BOOLEAN")
 })
 public abstract class Attribute implements Serializable {
 

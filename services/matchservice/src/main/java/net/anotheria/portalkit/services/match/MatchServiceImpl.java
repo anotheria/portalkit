@@ -10,7 +10,7 @@ import net.anotheria.portalkit.services.match.exception.MatchServiceException;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
-import org.apache.http.util.Args;
+import org.apache.hc.core5.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

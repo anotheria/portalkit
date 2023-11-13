@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.portalkit.services.common.AccountId;
-import org.apache.http.util.Args;
+import org.apache.hc.core5.util.Args;
 
 import javax.persistence.*;
 import java.util.Objects;
