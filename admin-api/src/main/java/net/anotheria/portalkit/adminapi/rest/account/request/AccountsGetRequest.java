@@ -123,7 +123,8 @@ public class AccountsGetRequest {
         NAME,
         EMAIL,
         REGISTRATION_DATE,
-        STATUS
+        STATUS,
+        TYPE
 
     }
 

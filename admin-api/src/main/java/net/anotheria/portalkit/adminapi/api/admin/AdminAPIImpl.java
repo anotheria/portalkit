@@ -235,6 +235,15 @@ public class AdminAPIImpl extends AbstractAPIImpl implements AdminAPI {
                             break;
                     }
                     break;
+                case TYPE:
+                    switch (request.getSort().getDirection()) {
+                        case ASC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getType)).collect(Collectors.toList());
+                            break;
+                        case DESC:
+                            accounts = accounts.stream().sorted(Comparator.comparing(Account::getType).reversed()).collect(Collectors.toList());
+                            break;
+                    }
             }
 
             int maxPage = accounts.size() / request.getItemsOnPage();
