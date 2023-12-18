@@ -3,7 +3,6 @@ package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.foreignid.ForeignId;
 import net.anotheria.portalkit.services.foreignid.persistence.mongo.entity.ForeignIdEntity;
 import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
@@ -98,6 +97,15 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
             return result;
         } catch (MongoException e) {
             throw new MongoDaoException("Can't find foreignId with accid: " + accId);
+        }
+    }
+
+    @Override
+    public long getForeignIdsCount(Datastore datastore) throws MongoDaoException {
+        try {
+            return datastore.createQuery(ForeignIdEntity.class).countAll();
+        } catch (MongoException e) {
+            throw new MongoDaoException("Can't get foreignIds count");
         }
     }
 

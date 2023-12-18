@@ -165,4 +165,15 @@ public class MongoAuthenticationPersistenceServiceImpl extends BaseMongoPersiste
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}
 	}
+
+	@Override
+	public long authTokensCount() throws AuthenticationPersistenceServiceException {
+		try {
+			Datastore datastore = connect();
+			return tokenDao.getAuthTokensCount(datastore, AuthTokenEntity.class);
+		} catch (MongoDaoException e) {
+			log.error("Can't get tokens count");
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}
+	}
 }

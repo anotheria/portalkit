@@ -170,5 +170,16 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		AccountId accid = getAccountIdByForeignId(connection, sid, fid);
 		unlink(connection, accid, sid, fid);
 	}
-
+	public long getForeignIdsCount(Connection connection) throws DAOException, SQLException {
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			stat = connection.prepareStatement("SELECT count(id) from " + TABLE_NAME);
+			result = stat.executeQuery();
+			return result.next() ? result.getLong(1) : 0;
+		} finally {
+			JDBCUtil.close(result);
+			JDBCUtil.close(stat);
+		}
+	}
 }

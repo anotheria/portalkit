@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.pushtoken.persistence;
 
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
@@ -29,6 +30,11 @@ public class PushTokenPersistenceServiceImpl implements PushTokenPersistenceServ
         } catch (Exception any) {
             throw new PushTokenPersistenceServiceException(any.getMessage(), any);
         }
+    }
+
+    @Override
+    public long getAllTokensCount() throws PushTokenPersistenceServiceException {
+        return repository.count();
     }
 
     @Override

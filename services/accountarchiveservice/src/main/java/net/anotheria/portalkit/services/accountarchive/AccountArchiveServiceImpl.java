@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.accountarchive;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.accountarchive.event.AccountArchiveServiceEventSupplier;
 import net.anotheria.portalkit.services.accountarchive.persistence.AccountArchivePersistenceService;
 import net.anotheria.portalkit.services.accountarchive.persistence.ArchivedAccountPersistenceServiceException;
@@ -17,7 +19,7 @@ import java.util.regex.Pattern;
  * @since 21.04.14 19:03
  */
 @Monitor(subsystem = "portalkit")
-public class AccountArchiveServiceImpl implements AccountArchiveService {
+public class AccountArchiveServiceImpl implements AccountArchiveService, EntityManagingService {
 
     private AccountArchivePersistenceService persistenceService;
     private AccountArchiveServiceEventSupplier eventSupplier = new AccountArchiveServiceEventSupplier();
@@ -27,6 +29,16 @@ public class AccountArchiveServiceImpl implements AccountArchiveService {
             persistenceService = MetaFactory.get(AccountArchivePersistenceService.class);
         } catch (MetaFactoryException e) {
             throw new IllegalStateException("Can't start without persistence service ", e);
+        }
+        EntityManagingServices.createEntityCounter(this, "AccountArchive");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return persistenceService.getAllAccountIds().size();
+        } catch (ArchivedAccountPersistenceServiceException e) {
+            return 0;
         }
     }
 

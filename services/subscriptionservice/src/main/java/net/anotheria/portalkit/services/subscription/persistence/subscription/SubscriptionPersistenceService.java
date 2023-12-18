@@ -36,8 +36,11 @@ public interface SubscriptionPersistenceService {
     List<TransactionDO> getTransactionForAccount(String accountId) throws SubscriptionPersistenceException;
 
     List<TransactionDO> getTransactions() throws SubscriptionPersistenceException;
+    long getTransactionsCount() throws SubscriptionPersistenceException;
 
     List<SubscriptionDO> getSubscriptions() throws SubscriptionPersistenceException;
+    long getSubscriptionsCount() throws SubscriptionPersistenceException;
 
     List<Cancellation> getCancellations() throws SubscriptionPersistenceException;
+    long getCancellationsCount() throws SubscriptionPersistenceException;
 }

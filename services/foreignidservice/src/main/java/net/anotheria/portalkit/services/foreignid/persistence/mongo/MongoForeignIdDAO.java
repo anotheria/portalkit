@@ -14,6 +14,8 @@ public interface MongoForeignIdDAO {
 
     List<ForeignIdEntity> getForeignIdsByAccountId(Datastore datastore, AccountId accId) throws MongoDaoException;
 
+    long getForeignIdsCount(Datastore datastore) throws MongoDaoException;
+
     void deleteEntity(Datastore datastore, AccountId accountId, int sid, String fid) throws MongoDaoException;
 
     ForeignIdEntity getForeignIdBySidAndFid(Datastore datastore, int sid, String fid) throws MongoDaoException;

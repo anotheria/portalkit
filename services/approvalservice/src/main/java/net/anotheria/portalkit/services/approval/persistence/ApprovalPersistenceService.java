@@ -111,6 +111,8 @@ public interface ApprovalPersistenceService {
 	 */
 	List<TicketDO> getTickets(String locale) throws ApprovalPersistenceServiceException;
 
+	long getTicketsCount() throws ApprovalPersistenceServiceException;
+
 	/**
 	 * Retrieve list of all tickets for given {@link AccountId}.
 	 *

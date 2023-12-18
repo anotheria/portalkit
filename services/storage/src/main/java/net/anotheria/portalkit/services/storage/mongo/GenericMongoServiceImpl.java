@@ -1,11 +1,6 @@
 package net.anotheria.portalkit.services.storage.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-import com.mongodb.client.MongoCollection;
+import com.mongodb.*;
 import com.mongodb.util.JSON;
 import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
@@ -23,7 +18,6 @@ import net.anotheria.portalkit.services.storage.query.Query;
 import net.anotheria.portalkit.services.storage.query.common.QueryUtils;
 import net.anotheria.portalkit.services.storage.util.EntityUtils;
 import net.anotheria.util.StringUtils;
-import org.bson.Document;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.DeserializationConfig;
@@ -39,9 +33,9 @@ import java.util.List;
 
 /**
  * {@link GenericMongoService} implementation.
- * 
+ *
  * @author Alexandr Bolbat
- * 
+ *
  * @param <T>
  */
 @Monitor (subsystem = "portalkit")
@@ -64,7 +58,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param aEntityClass
 	 *            entity class
 	 */
@@ -74,7 +68,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 
 	/**
 	 * Public constructor.
-	 * 
+	 *
 	 * @param aEntityClass
 	 *            entity class
 	 * @param conf
@@ -426,6 +420,15 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 			if (rawResult != null)
 				rawResult.close();
 		}
+	}
+
+	@Override
+	public long countAll() throws StorageException {
+		try {
+			return getCollection().count();
+		} catch (final MongoException e) {
+			throw new StorageException("Can't execute query: count all entities.", e);
+			}
 	}
 
 	@Override

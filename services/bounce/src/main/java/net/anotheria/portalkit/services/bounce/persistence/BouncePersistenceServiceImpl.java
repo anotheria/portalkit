@@ -4,10 +4,7 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,5 +63,15 @@ public class BouncePersistenceServiceImpl implements BouncePersistenceService {
         }
 
         return bounces;
+    }
+
+    @Override
+    public long getBouncesCount() throws BouncePersistenceServiceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(b.email) from BounceDO b", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
     }
 }

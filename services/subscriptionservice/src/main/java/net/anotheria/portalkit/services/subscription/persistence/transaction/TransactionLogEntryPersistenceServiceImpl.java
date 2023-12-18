@@ -5,10 +5,7 @@ import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -52,5 +49,15 @@ public class TransactionLogEntryPersistenceServiceImpl implements TransactionLog
 	public List<TransactionLogEntryEntity> getTransactionLogEntries() throws TransactionPersistenceException {
 		TypedQuery<TransactionLogEntryEntity> q = entityManager.createNamedQuery(TransactionLogEntryEntity.JPQL_GET_ALL, TransactionLogEntryEntity.class);
 		return q.getResultList();
+	}
+
+	@Override
+	public long getTransactionLogEntriesCount() throws TransactionPersistenceException {
+		TypedQuery<Long> query = entityManager.createQuery("select count(*) from TransactionLogEntryEntity a", Long.class);
+		try {
+			return query.getSingleResult();
+		} catch (NoResultException e) {
+			return 0;
+		}
 	}
 }

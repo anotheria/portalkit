@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.subscription;
 
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.SubscriptionDO;
 import net.anotheria.portalkit.services.subscription.persistence.subscription.SubscriptionPersistenceException;
@@ -24,7 +26,7 @@ import java.util.List;
  * @since 13.03.16 16:16
  */
 @Service
-public class SubscriptionServiceImpl implements SubscriptionService {
+public class SubscriptionServiceImpl implements SubscriptionService, EntityManagingService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
 
@@ -33,6 +35,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 	@Autowired
 	private SubscriptionPersistenceService subscriptionPersistenceService;
+
+	public SubscriptionServiceImpl() {
+		EntityManagingServices.createEntityCounter(this, "Transactions", "Subscriptions", "Cancellations");
+	}
+
+	@Override
+	public int getEntityCount(String s) {
+		try {
+			switch (s) {
+				case "Transactions":
+					return Long.valueOf(subscriptionPersistenceService.getTransactionsCount()).intValue();
+				case "Subscriptions":
+					return Long.valueOf(subscriptionPersistenceService.getSubscriptionsCount()).intValue();
+				case "Cancellations":
+					return Long.valueOf(subscriptionPersistenceService.getCancellationsCount()).intValue();
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return 0;
+	}
 
 	@Override
 	public Subscription getActiveSubscriptionForAccount(AccountId accountId) throws SubscriptionServiceException {

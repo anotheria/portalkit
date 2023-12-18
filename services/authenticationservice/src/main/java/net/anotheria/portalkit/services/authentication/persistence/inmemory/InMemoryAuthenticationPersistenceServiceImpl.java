@@ -93,4 +93,9 @@ public class InMemoryAuthenticationPersistenceServiceImpl implements Authenticat
 		accountsTokens.remove(encryptedToken);
 		authTokensSet.remove(encryptedToken);
 	}
+
+	@Override
+	public long authTokensCount() throws AuthenticationPersistenceServiceException {
+		return authTokensByAccount.size();
+	}
 }

@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.authentication;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -20,7 +22,7 @@ import java.util.Set;
  * @since 13.12.12 09:30
  */
 @Monitor(subsystem = "authentication", category = "portalkit-service")
-public class AuthenticationServiceImpl implements AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService, EntityManagingService {
 
     /**
      * The currently used password enhashing algorithm.
@@ -61,7 +63,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (MetaFactoryException e) {
             throw new IllegalStateException("Can't work without a persistence service", e);
         }
+        EntityManagingServices.createEntityCounter(this, "AuthTokens");
+    }
 
+    @Override
+    public int getEntityCount(String s) {
+        switch (s) {
+            case "AuthTokens":
+                try {
+                    return Long.valueOf(persistenceService.authTokensCount()).intValue();
+                } catch (AuthenticationPersistenceServiceException e) {
+                    log.error(e.getMessage());
+                    return 0;
+                }
+        }
+        return 0;
     }
 
     @Override

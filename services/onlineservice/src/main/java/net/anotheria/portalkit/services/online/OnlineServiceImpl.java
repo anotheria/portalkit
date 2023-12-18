@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.online;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.moskito.core.stats.TimeUnit;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPersistenceServiceException;
@@ -29,7 +31,7 @@ import java.util.TimerTask;
  * @author h3llka
  */
 @Monitor(subsystem = "online", category = "portalkit-service")
-public class OnlineServiceImpl implements OnlineService {
+public class OnlineServiceImpl implements OnlineService, EntityManagingService {
 	/**
 	 * Logging util instance.
 	 */
@@ -66,7 +68,7 @@ public class OnlineServiceImpl implements OnlineService {
 		lockManager = new SafeIdBasedLockManager<AccountId>();
 		config = OnlineServiceConfiguration.getInstance();
 		initCleanUpTimer();
-
+		EntityManagingServices.createEntityCounter(this, "OnlineUsers");
 	}
 
 	/**
@@ -86,6 +88,11 @@ public class OnlineServiceImpl implements OnlineService {
 			}
 
 		}, 0L, config.getInactiveAccountsCleanUpInterval());
+	}
+
+	@Override
+	public int getEntityCount(String s) {
+		return onlineUserStorage.getOnlineUsersAmount();
 	}
 
 	@Override

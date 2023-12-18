@@ -123,4 +123,14 @@ public class MongoForeignIdPersistenceServiceImpl  extends BaseMongoPersistenceS
             throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public long getForeignIdsCount() throws ForeignIdPersistenceServiceException {
+        try {
+            return foreignIdDAO.getForeignIdsCount(connect());
+        } catch (MongoDaoException e) {
+            log.error("Can't get foreign Ids count");
+            throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+        }
+    }
 }

@@ -36,5 +36,6 @@ public interface TransactionLogEntryPersistenceService {
 	 * @return
 	 */
 	List<TransactionLogEntryEntity> getTransactionLogEntries() throws TransactionPersistenceException;
+	long getTransactionLogEntriesCount() throws TransactionPersistenceException;
 
 }

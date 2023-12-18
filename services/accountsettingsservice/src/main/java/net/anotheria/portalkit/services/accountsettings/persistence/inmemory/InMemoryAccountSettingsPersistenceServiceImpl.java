@@ -36,6 +36,11 @@ public class InMemoryAccountSettingsPersistenceServiceImpl implements AccountSet
 	}
 
 	@Override
+	public long dataspacesCount() throws AccountSettingsPersistenceServiceException {
+		return storage.size();
+	}
+
+	@Override
 	public boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException {
 		return storage.remove(new AccountSettingsKey(owner, dataspaceId).toString()) != null;
 
