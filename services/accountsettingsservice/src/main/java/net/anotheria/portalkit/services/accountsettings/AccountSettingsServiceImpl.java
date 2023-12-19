@@ -58,7 +58,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
 
         cache = Caches.createConfigurableHardwiredCache("pk-cache-account-settings-service");
         Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
-        EntityManagingServices.createEntityCounter(this, "");
+        EntityManagingServices.createEntityCounter(this, "Dataspaces");
     }
 
     @Override
