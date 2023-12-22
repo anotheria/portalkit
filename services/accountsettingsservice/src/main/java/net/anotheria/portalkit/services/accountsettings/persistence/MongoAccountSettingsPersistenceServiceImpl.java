@@ -66,6 +66,15 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 	}
 
 	@Override
+	public long dataspacesCount() throws AccountSettingsPersistenceServiceException {
+		try {
+			return countAll();
+		} catch (StorageException e) {
+			throw new AccountSettingsPersistenceServiceException("dataspacesCount() failed", e);
+		}
+	}
+
+	@Override
 	public boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
 		try {
 			return delete(owner.getInternalId()) != null;

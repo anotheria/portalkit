@@ -5,6 +5,8 @@ import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplier;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
@@ -24,7 +26,7 @@ import java.util.List;
  * @since 12.12.12 11:28
  */
 @Monitor (subsystem = "account", category = "portalkit-service")
-public enum AccountServiceImpl implements AccountService, AccountAdminService {
+public enum AccountServiceImpl implements AccountService, AccountAdminService, EntityManagingService {
 	INSTANCE;
 
 	/**
@@ -443,7 +445,7 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
-
+		EntityManagingServices.createEntityCounter(this, "Accounts");
 	}
 
 	void unitTestReset(){
@@ -452,5 +454,14 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService {
 
 	private String getBrandKey(String value, String brand) {
 		return value + "_" + brand;
+	}
+
+	@Override
+	public int getEntityCount(String s) {
+		try {
+			return persistenceService.getAllAccountIds().size();
+		} catch (AccountPersistenceServiceException e) {
+			return 0;
+		}
 	}
 }

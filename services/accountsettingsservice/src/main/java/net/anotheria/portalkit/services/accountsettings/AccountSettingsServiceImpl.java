@@ -4,6 +4,8 @@ import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceService;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -15,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Account settings service implementation.
@@ -24,7 +25,7 @@ import java.util.List;
  * @author dagafonov
  * @since 12.12.12 10:14
  */
-public class AccountSettingsServiceImpl implements AccountSettingsService {
+public class AccountSettingsServiceImpl implements AccountSettingsService, EntityManagingService {
     /**
      * Logger.
      */
@@ -57,7 +58,17 @@ public class AccountSettingsServiceImpl implements AccountSettingsService {
 
         cache = Caches.createConfigurableHardwiredCache("pk-cache-account-settings-service");
         Caches.attachCacheToMoskitoLoggers(cache, "account-settings-cache", "cache", "portal-kit");
+        EntityManagingServices.createEntityCounter(this, "Dataspaces");
+    }
 
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(persistence.dataspacesCount()).intValue();
+        } catch (AccountSettingsPersistenceServiceException e) {
+            log.error(e.getMessage());
+            return 0;
+        }
     }
 
     @Override

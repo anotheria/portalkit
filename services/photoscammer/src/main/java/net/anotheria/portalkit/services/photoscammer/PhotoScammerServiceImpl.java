@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.photoscammer;
 
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.photoscammer.persistence.PhotoScammerPersistenceService;
 import net.anotheria.portalkit.services.photoscammer.persistence.PhotoScammerPersistenceServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +13,33 @@ import java.util.List;
  * @author Vlad Lukjanenko
  */
 @Service
-public class PhotoScammerServiceImpl implements PhotoScammerService {
+public class PhotoScammerServiceImpl implements PhotoScammerService, EntityManagingService {
 
     @Autowired
     private PhotoScammerPersistenceService photoScammerPersistenceService;
 
+    public PhotoScammerServiceImpl() {
+        EntityManagingServices.createEntityCounter(this, "PhotoScammers", "PhotoDatas");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        switch (s){
+            case"PhotoScammers":
+                try {
+                    return Long.valueOf(photoScammerPersistenceService.getAllPhotoScammerDataCount()).intValue();
+                } catch (PhotoScammerPersistenceServiceException e) {
+                    return 0;
+                }
+            case "PhotoDatas":
+                try {
+                    return Long.valueOf(photoScammerPersistenceService.getAllPhotoDataCount()).intValue();
+                } catch (PhotoScammerPersistenceServiceException e) {
+                    return 0;
+                }
+        }
+        return 0;
+    }
 
     @Override
     public PhotoDataBO getPhotoData(long photoId) throws PhotoScammerServiceException {

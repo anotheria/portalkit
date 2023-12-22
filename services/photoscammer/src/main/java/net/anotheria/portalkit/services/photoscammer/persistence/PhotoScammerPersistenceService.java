@@ -37,6 +37,8 @@ public interface PhotoScammerPersistenceService {
      * */
     List<PhotoDataBO> getAllPhotoData() throws PhotoScammerPersistenceServiceException;
 
+    long getAllPhotoDataCount() throws PhotoScammerPersistenceServiceException;
+
     /**
      * Gets all {@link PhotoDataBO} by user.
      *
@@ -67,6 +69,8 @@ public interface PhotoScammerPersistenceService {
      * @throws PhotoScammerPersistenceServiceException if error.
      * */
     List<PhotoScammerBO> getAllPhotoScammerData() throws PhotoScammerPersistenceServiceException;
+
+    long getAllPhotoScammerDataCount() throws PhotoScammerPersistenceServiceException;
 
     /**
      * Get {@link PhotoScammerBO} by perseptiveHash.

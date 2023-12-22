@@ -20,6 +20,8 @@ public interface BasicQueryStorageService<T extends Serializable> {
 	 */
 	List<T> findAll() throws StorageException;
 
+	long countAll() throws StorageException;
+
 	/**
 	 * Find entities by given query.
 	 * 

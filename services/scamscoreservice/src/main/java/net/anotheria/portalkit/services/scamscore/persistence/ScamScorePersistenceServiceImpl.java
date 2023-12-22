@@ -4,10 +4,7 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -74,6 +71,16 @@ public class ScamScorePersistenceServiceImpl implements ScamScorePersistenceServ
         }
 
         return records;
+    }
+
+    @Override
+    public long getScamRecordsCount() throws ScamScorePersistenceServiceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.id) from UserScamRecordDO a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
     }
 
     @Override

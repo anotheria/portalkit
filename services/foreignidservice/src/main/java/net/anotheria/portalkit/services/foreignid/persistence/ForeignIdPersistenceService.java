@@ -64,4 +64,6 @@ public interface ForeignIdPersistenceService extends Service {
 	 */
 	void unlink(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException;
 
+	long getForeignIdsCount() throws ForeignIdPersistenceServiceException;
+
 }

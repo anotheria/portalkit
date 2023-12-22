@@ -1,6 +1,8 @@
 package net.anotheria.portalkit.services.bounce;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.bounce.persistence.BounceDO;
 import net.anotheria.portalkit.services.bounce.persistence.BouncePersistenceService;
 import net.anotheria.portalkit.services.bounce.persistence.BouncePersistenceServiceException;
@@ -17,12 +19,24 @@ import java.util.Map;
  */
 @Service
 @Monitor(subsystem = "mail", category = "portalkit-service")
-public class BounceServiceImpl implements BounceService {
+public class BounceServiceImpl implements BounceService, EntityManagingService {
 
     @Autowired
     private BouncePersistenceService bouncePersistenceService;
 
-    
+    public BounceServiceImpl() {
+        EntityManagingServices.createEntityCounter(this, "Bounces");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(bouncePersistenceService.getBouncesCount()).intValue();
+        } catch (BouncePersistenceServiceException e) {
+            return 0;
+        }
+    }
+
     @Override
     public void saveBounce(BounceBO bounce) throws BounceServiceException {
         try {

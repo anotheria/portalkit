@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.pushtoken;
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceService;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceServiceException;
@@ -15,7 +17,7 @@ import java.util.List;
 
 @Service
 @Monitor(subsystem = "pushtoken", category = "portalkit-service")
-public class PushTokenServiceImpl implements PushTokenService {
+public class PushTokenServiceImpl implements PushTokenService, EntityManagingService {
 
     /**
      * Logger.
@@ -38,6 +40,17 @@ public class PushTokenServiceImpl implements PushTokenService {
      */
     public PushTokenServiceImpl() {
         cache = Caches.createHardwiredCache("pushtokenservice-cache");
+        EntityManagingServices.createEntityCounter(this, "PushTokens");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(persistenceService.getAllTokensCount()).intValue();
+        } catch (PushTokenPersistenceServiceException e) {
+            log.error(e.getMessage());
+            return 0;
+        }
     }
 
     @Override

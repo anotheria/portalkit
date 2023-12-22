@@ -146,6 +146,18 @@ public class ApprovalPersistenceServiceImpl implements ApprovalPersistenceServic
 	}
 
 	@Override
+	public long getTicketsCount() throws ApprovalPersistenceServiceException {
+		String queryStr = "select count(t.ticketId) from TicketDO t ";
+		TypedQuery<Long> q = entityManager.createQuery(queryStr, Long.class);
+
+		Long ret = q.getSingleResult();
+		if (ret == null)
+			throw new ApprovalPersistenceServiceException("Count is null");
+
+		return ret;
+	}
+
+	@Override
 	public List<TicketDO> getTicketsByAccountId(AccountId accountId) throws ApprovalPersistenceServiceException {
 		TypedQuery<TicketDO> q = entityManager.createNamedQuery(TicketDO.GET_TICKETS_BY_ACCOUNT_ID, TicketDO.class);
 		q.setParameter("accountId", accountId.getInternalId());

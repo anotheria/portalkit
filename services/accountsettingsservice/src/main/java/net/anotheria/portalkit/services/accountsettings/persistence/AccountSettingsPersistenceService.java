@@ -41,6 +41,8 @@ public interface AccountSettingsPersistenceService extends Service {
 	 * @throws AccountSettingsPersistenceServiceException
 	 */
 	Collection<Dataspace> loadDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
+
+	long dataspacesCount() throws AccountSettingsPersistenceServiceException;
 //
 //	/**
 //	 * 

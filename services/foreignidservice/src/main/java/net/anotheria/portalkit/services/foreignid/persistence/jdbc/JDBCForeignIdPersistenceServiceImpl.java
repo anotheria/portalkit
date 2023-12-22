@@ -92,6 +92,21 @@ public class JDBCForeignIdPersistenceServiceImpl extends BasePersistenceServiceJ
 	}
 
 	@Override
+	public long getForeignIdsCount() throws ForeignIdPersistenceServiceException {
+		Connection conn = null;
+		try {
+			conn = getConnection();
+			return dao.getForeignIdsCount(conn);
+		} catch (DAOException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		} catch (SQLException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(conn);
+		}
+	}
+
+	@Override
 	public void unlink(int sid, String fid) throws ForeignIdPersistenceServiceException {
 		Connection conn = null;
 		try {

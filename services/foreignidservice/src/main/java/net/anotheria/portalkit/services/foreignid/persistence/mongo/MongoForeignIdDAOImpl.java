@@ -96,6 +96,15 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
     }
 
     @Override
+    public long getForeignIdsCount(Datastore datastore) throws MongoDaoException {
+        try {
+            return datastore.createQuery(ForeignIdEntity.class).countAll();
+        } catch (MongoException e) {
+            throw new MongoDaoException("Can't get foreignIds count");
+        }
+    }
+
+    @Override
     public void deleteEntity(Datastore datastore, AccountId accountId, int sid, String fid) throws MongoDaoException {
         if (accountId == null) {
             throw new IllegalArgumentException("Entity accid is null.");

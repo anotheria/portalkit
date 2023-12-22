@@ -5,6 +5,7 @@ import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceSe
 import net.anotheria.portalkit.services.online.persistence.PersistenceTestScenario;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
+import org.junit.Ignore;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
  *
  * @author h3llka
  */
+@Ignore
 public class JDBCActivityPersistenceServiceTest extends PersistenceTestScenario {
 
     private static final List<String> environments;

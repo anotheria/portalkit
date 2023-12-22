@@ -433,6 +433,15 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	}
 
 	@Override
+	public long countAll() throws StorageException {
+		try {
+			return getCollection().count();
+		} catch (final MongoException e) {
+			throw new StorageException("Can't execute query: count all entities.", e);
+			}
+	}
+
+	@Override
 	public List<T> find(final Query query) throws StorageException {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");

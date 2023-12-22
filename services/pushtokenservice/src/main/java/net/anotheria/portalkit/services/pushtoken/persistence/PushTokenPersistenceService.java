@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.pushtoken.persistence;
 
-import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.List;
@@ -17,6 +16,8 @@ public interface PushTokenPersistenceService {
      * @return list of tokens. Empty if user has no token at all.
      */
     List<String> getAllTokensByAccountId(AccountId accountId) throws PushTokenPersistenceServiceException;
+
+    long getAllTokensCount() throws PushTokenPersistenceServiceException;
 
     /**
      * Saves token for a provided account.

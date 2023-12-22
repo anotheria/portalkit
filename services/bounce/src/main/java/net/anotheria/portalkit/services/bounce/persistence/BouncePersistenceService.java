@@ -43,4 +43,6 @@ public interface BouncePersistenceService {
      * @return list of {@link BounceDO}.
      * */
     List<BounceDO> getBounces() throws BouncePersistenceServiceException;
+
+    long getBouncesCount() throws BouncePersistenceServiceException;
 }

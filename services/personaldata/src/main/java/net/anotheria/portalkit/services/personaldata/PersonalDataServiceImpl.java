@@ -44,8 +44,18 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     public PersonalDataServiceImpl() {
         datastore = MongoConnector.getDatabase();
         config = PersonalDataServiceConfig.getInstance();
+        EntityManagingServices.createEntityCounter(this, "PersonalDatas");
     }
 
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(datastore.getCount(PersonalData.class)).intValue();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage());
+            return 0;
+        }
+    }
 
     @Override
     public PersonalData get(AccountId accountId) throws PersonalDataServiceException {

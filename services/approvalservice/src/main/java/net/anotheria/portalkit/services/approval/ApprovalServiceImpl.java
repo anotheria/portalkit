@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.approval;
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceService;
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Monitor(subsystem = "approval", category = "portalkit-service")
-public class ApprovalServiceImpl implements ApprovalService {
+public class ApprovalServiceImpl implements ApprovalService, EntityManagingService {
 
 	/**
 	 * Persistence service.
@@ -56,6 +57,15 @@ public class ApprovalServiceImpl implements ApprovalService {
 		Thread ticketUnlocker = new Thread(new TicketUnlocker());
 		ticketUnlocker.setDaemon(true);
 		ticketUnlocker.start();
+	}
+
+	@Override
+	public int getEntityCount(String s) {
+		try {
+			return Long.valueOf(approvalPersistenceService.getTicketsCount()).intValue();
+		} catch (ApprovalPersistenceServiceException e) {
+			return 0;
+		}
 	}
 
 	@Override

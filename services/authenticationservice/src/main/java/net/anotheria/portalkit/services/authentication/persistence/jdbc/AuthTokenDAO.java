@@ -141,6 +141,18 @@ public class AuthTokenDAO extends AbstractDAO implements DAO {
 			JDBCUtil.close(delete);
 		}
 	}
+	public long getAuthTokensCount(Connection connection) throws SQLException, DAOException{
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			stat = connection.prepareStatement("SELECT count(id) from " + TABLE_NAME);
+			result = stat.executeQuery();
+			return result.next() ? result.getLong(1) : 0;
+		} finally {
+			JDBCUtil.close(result);
+			JDBCUtil.close(stat);
+		}
+	}
 
 	public void deleteAuthTokens(Connection con, AccountId owner) throws SQLException, DAOException{
 		String deleteSQL = "DELETE FROM "+TABLE_NAME+" where accid=?";

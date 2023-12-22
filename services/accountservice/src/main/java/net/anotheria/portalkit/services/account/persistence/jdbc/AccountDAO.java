@@ -355,7 +355,7 @@ public class AccountDAO extends AbstractDAO implements DAO {
 		}
 
 		if (!StringUtils.isEmpty(query.getBrand())) {
-			sqlRawQuery.append("AND brand = '").append(query.getBrand()).append("'");
+			sqlRawQuery.append(" AND brand = '").append(query.getBrand()).append("'");
 		}
 
 		// ordering part

@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.scamscore;
 
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.scamscore.persistence.ScamScorePersistenceService;
 import net.anotheria.portalkit.services.scamscore.persistence.ScamScorePersistenceServiceException;
 import net.anotheria.portalkit.services.scamscore.persistence.ScoreDO;
@@ -16,10 +18,23 @@ import java.util.List;
  * @author Vlad Lukjanenko
  */
 @Service
-public class ScamScoreServiceImpl implements ScamScoreService {
+public class ScamScoreServiceImpl implements ScamScoreService, EntityManagingService {
 
     @Autowired
     private ScamScorePersistenceService scamScorePersistenceService;
+
+    public ScamScoreServiceImpl() {
+        EntityManagingServices.createEntityCounter(this, "ScamScores");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(scamScorePersistenceService.getScamRecordsCount()).intValue();
+        } catch (ScamScorePersistenceServiceException e) {
+            return 0;
+        }
+    }
 
     @Override
     public void createUserScamRecord(UserScamRecordBO scamRecord) throws ScamScoreServiceException {

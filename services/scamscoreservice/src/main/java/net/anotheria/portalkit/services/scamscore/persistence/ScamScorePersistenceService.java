@@ -63,6 +63,8 @@ public interface ScamScorePersistenceService {
      * */
     List<UserScamRecordDO> getScamRecords(boolean notCheckedOnly) throws ScamScorePersistenceServiceException;
 
+    long getScamRecordsCount() throws ScamScorePersistenceServiceException;
+
     /**
      * Returns scam record by id.
      *

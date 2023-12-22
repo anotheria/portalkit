@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -68,6 +69,16 @@ public class PhotoScammerPersistenceServiceImpl implements PhotoScammerPersisten
     }
 
     @Override
+    public long getAllPhotoDataCount() throws PhotoScammerPersistenceServiceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.id) from PhotoData a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    @Override
     public List<PhotoDataBO> getAllPhotoDataByUser(String userId) throws PhotoScammerPersistenceServiceException {
 
         TypedQuery<PhotoData> query = entityManager.createNamedQuery(PhotoData.JPQL_GET_ALL_PHOTO_DATA_BY_USER, PhotoData.class)
@@ -110,6 +121,16 @@ public class PhotoScammerPersistenceServiceImpl implements PhotoScammerPersisten
         }
 
         return result;
+    }
+
+    @Override
+    public long getAllPhotoScammerDataCount() throws PhotoScammerPersistenceServiceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.id) from PhotoScammer a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
     }
 
     @Override

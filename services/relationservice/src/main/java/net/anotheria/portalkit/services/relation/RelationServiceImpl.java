@@ -4,6 +4,8 @@ import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.DontMonitor;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
@@ -16,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.*;
 
 import static net.anotheria.portalkit.services.relation.RelationEntity.*;
@@ -27,7 +31,7 @@ import static net.anotheria.portalkit.services.relation.RelationEntity.*;
 @Service
 @Transactional
 @Monitor(subsystem = "relation", category = "portalkit-service")
-public class RelationServiceImpl implements RelationService {
+public class RelationServiceImpl implements RelationService, EntityManagingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RelationServiceImpl.class);
 
@@ -47,8 +51,22 @@ public class RelationServiceImpl implements RelationService {
 
     public RelationServiceImpl() {
         relationCache = Caches.createConfigurableHardwiredCache("pk-cache-relation-service");
+        EntityManagingServices.createEntityCounter(this, "Relations");
     }
 
+    @Override
+    public int getEntityCount(String s) {
+        return Long.valueOf(getRelationsCount()).intValue();
+    }
+
+    private long getRelationsCount() {
+        TypedQuery<Long> query = entityManager.createQuery("select count(*) from RelationEntity a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
     @Override
     public void addRelation(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
         long currentTime = System.currentTimeMillis();

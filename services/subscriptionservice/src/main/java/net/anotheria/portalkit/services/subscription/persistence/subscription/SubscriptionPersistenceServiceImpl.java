@@ -129,9 +129,29 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
     }
 
     @Override
+    public long getTransactionsCount() throws SubscriptionPersistenceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.id) from TransactionDO a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
+
+    @Override
     public List<SubscriptionDO> getSubscriptions() throws SubscriptionPersistenceException {
         TypedQuery<SubscriptionDO> q = entityManager.createNamedQuery(SubscriptionDO.JPQL_GET_ALL, SubscriptionDO.class);
         return q.getResultList();
+    }
+
+    @Override
+    public long getSubscriptionsCount() throws SubscriptionPersistenceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.subscriptionId) from SubscriptionDO a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
     }
 
     @Override
@@ -145,6 +165,16 @@ public class SubscriptionPersistenceServiceImpl implements SubscriptionPersisten
         }
 
         return cancellations;
+    }
+
+    @Override
+    public long getCancellationsCount() throws SubscriptionPersistenceException {
+        TypedQuery<Long> query = entityManager.createQuery("select count(a.userId) from CancellationDO a", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
     }
 
     private boolean subscriptionExists(long subscriptionId) {

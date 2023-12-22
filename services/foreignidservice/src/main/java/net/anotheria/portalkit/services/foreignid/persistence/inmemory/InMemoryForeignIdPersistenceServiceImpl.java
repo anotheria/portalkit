@@ -119,4 +119,8 @@ public class InMemoryForeignIdPersistenceServiceImpl implements ForeignIdPersist
 		}
 	}
 
+	@Override
+	public long getForeignIdsCount() throws ForeignIdPersistenceServiceException {
+		return storage.size();
+	}
 }

@@ -214,6 +214,11 @@ public class GenericInMemoryServiceImpl<T extends Serializable> implements Gener
 	}
 
 	@Override
+	public long countAll() throws StorageException {
+		return storage.size();
+	}
+
+	@Override
 	public List<T> find(final Query query) throws StorageException {
 		if (query == null)
 			throw new IllegalArgumentException("query argument in null.");

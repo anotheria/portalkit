@@ -33,4 +33,6 @@ public interface AuthenticationPersistenceService extends Service {
 
 	void deleteAuthToken(AccountId owner, String encryptedToken)  throws AuthenticationPersistenceServiceException;
 
+	long authTokensCount() throws AuthenticationPersistenceServiceException;
+
 }

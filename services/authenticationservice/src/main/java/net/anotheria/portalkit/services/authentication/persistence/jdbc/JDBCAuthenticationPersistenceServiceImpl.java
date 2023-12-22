@@ -170,4 +170,17 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 			JDBCUtil.close(con);
 		}
 	}
+
+	@Override
+	public long authTokensCount() throws AuthenticationPersistenceServiceException {
+		Connection con = null;
+		try {
+			con = getConnection();
+			return authTokenDAO.getAuthTokensCount(con);
+		} catch (SQLException | DAOException e) {
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(con);
+		}
+	}
 }

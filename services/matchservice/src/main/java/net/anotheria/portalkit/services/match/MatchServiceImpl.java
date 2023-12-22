@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.match;
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
 import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import static net.anotheria.portalkit.services.match.MatchEntity.*;
 @Service
 @Transactional
 @Monitor(subsystem = "match", category = "portalkit-service")
-public class MatchServiceImpl implements MatchService {
+public class MatchServiceImpl implements MatchService, EntityManagingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MatchServiceImpl.class);
 
@@ -63,8 +66,22 @@ public class MatchServiceImpl implements MatchService {
         isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
         ownersCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
         targetsCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
+        EntityManagingServices.createEntityCounter(this, "Matches");
     }
 
+    @Override
+    public int getEntityCount(String s) {
+        return Long.valueOf(getMatchesCount()).intValue();
+    }
+
+    private long getMatchesCount() {
+        TypedQuery<Long> query = entityManager.createQuery("select count(*) from MatchEntity m", Long.class);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return 0;
+        }
+    }
     @Override
     public void addMatch(AccountId owner, AccountId target, int type) throws MatchAlreadyExistsException {
         Match match = new Match(owner, target, type);

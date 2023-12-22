@@ -1,5 +1,7 @@
 package net.anotheria.portalkit.services.session.persistence;
 
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.session.bean.Session;
 import net.anotheria.portalkit.services.session.bean.attribute.Attribute;
 import net.anotheria.portalkit.services.storage.exception.StorageException;
@@ -10,7 +12,7 @@ import net.anotheria.portalkit.services.storage.query.QueryBuilder;
 
 import java.util.List;
 
-public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Session> implements SessionPersistenceService {
+public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Session> implements SessionPersistenceService, EntityManagingService {
 
     /**
      * Storage configuration name.
@@ -22,6 +24,16 @@ public class SessionPersistenceServiceImpl extends GenericMongoServiceImpl<Sessi
      */
     public SessionPersistenceServiceImpl() {
         super(Session.class, MONGO_SERVICE_COLLECTION_CONFIG_NAME, null, null, null);
+        EntityManagingServices.createEntityCounter(this, "Sessions");
+    }
+
+    @Override
+    public int getEntityCount(String s) {
+        try {
+            return Long.valueOf(countAll()).intValue();
+        } catch (StorageException e) {
+            return 0;
+        }
     }
 
     @Override

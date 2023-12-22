@@ -5,6 +5,8 @@ import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceService;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceServiceException;
@@ -18,7 +20,7 @@ import java.util.List;
  * @author dagafonov
  */
 @Monitor(subsystem = "portalkit")
-public class ForeignIdServiceImpl implements ForeignIdService {
+public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingService {
 
 	/**
 	 * Persistence service.
@@ -47,6 +49,16 @@ public class ForeignIdServiceImpl implements ForeignIdService {
 			persistenceService = MetaFactory.get(ForeignIdPersistenceService.class);
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
+		}
+		EntityManagingServices.createEntityCounter(this, "ForeignIds");
+	}
+
+	@Override
+	public int getEntityCount(String s) {
+		try {
+			return Long.valueOf(persistenceService.getForeignIdsCount()).intValue();
+		} catch (ForeignIdPersistenceServiceException e) {
+			return 0;
 		}
 	}
 
