@@ -98,7 +98,7 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
     @Override
     public long getForeignIdsCount(Datastore datastore) throws MongoDaoException {
         try {
-            return datastore.createQuery(ForeignIdEntity.class).countAll();
+            return datastore.find(ForeignIdEntity.class).count();
         } catch (MongoException e) {
             throw new MongoDaoException("Can't get foreignIds count");
         }

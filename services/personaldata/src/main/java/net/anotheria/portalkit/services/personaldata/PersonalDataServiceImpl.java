@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
+import net.anotheria.moskito.core.entity.EntityManagingService;
+import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
@@ -20,7 +22,7 @@ import java.util.Map;
 /**
  * @author Vlad Lukjanenko
  */
-public class PersonalDataServiceImpl implements PersonalDataService {
+public class PersonalDataServiceImpl implements PersonalDataService, EntityManagingService {
 
     /**
      * {@link Logger} instance.
@@ -50,7 +52,7 @@ public class PersonalDataServiceImpl implements PersonalDataService {
     @Override
     public int getEntityCount(String s) {
         try {
-            return Long.valueOf(datastore.getCount(PersonalData.class)).intValue();
+            return Long.valueOf(datastore.find(PersonalData.class).count()).intValue();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return 0;

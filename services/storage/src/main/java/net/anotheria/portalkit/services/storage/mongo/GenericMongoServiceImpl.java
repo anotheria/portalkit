@@ -435,7 +435,7 @@ public class GenericMongoServiceImpl<T extends Serializable> extends AbstractMon
 	@Override
 	public long countAll() throws StorageException {
 		try {
-			return getCollection().count();
+			return getCollection().countDocuments();
 		} catch (final MongoException e) {
 			throw new StorageException("Can't execute query: count all entities.", e);
 			}

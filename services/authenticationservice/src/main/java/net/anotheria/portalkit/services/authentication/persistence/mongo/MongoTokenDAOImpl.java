@@ -183,7 +183,7 @@ public class MongoTokenDAOImpl implements MongoDAO<BaseEntity> {
     }
     public long getAuthTokensCount(Datastore datastore, Class<AuthTokenEntity> entityClass) throws MongoDaoException {
         try {
-            return datastore.createQuery(entityClass).countAll();
+            return datastore.find(entityClass).count();
         } catch (MongoException e) {
             log.error("Can't find " + entityClass.getSimpleName() + "list");
             throw new MongoDaoException("Can't find " + entityClass.getSimpleName() + "list");
