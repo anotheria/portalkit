@@ -18,19 +18,19 @@
         <swagger-version>2.2.18</swagger-version>
         <swagger-ui.version>5.9.0</swagger-ui.version>
 
-        <moskito-version>4.0.0-SNAPSHOT</moskito-version>
+        <moskito-version>4.0.0</moskito-version>
         <moskito-control-version>4.0.0-SNAPSHOT</moskito-control-version>
 
-        <distributeme-version>4.0.0-SNAPSHOT</distributeme-version>
+        <distributeme-version>4.0.0</distributeme-version>
 
-        <ano-site-version>4.0.0-SNAPSHOT</ano-site-version>
-        <ano-doc-version>4.0.0-SNAPSHOT</ano-doc-version>
-        <ano-doc-plugin-version>4.0.0-SNAPSHOT</ano-doc-plugin-version>
+        <ano-site-version>4.0.0</ano-site-version>
+        <ano-doc-version>4.0.0</ano-doc-version>
+        <ano-doc-plugin-version>4.0.0</ano-doc-plugin-version>
         <build-helper-version>3.4.0</build-helper-version>
-        <ano-maf-version>4.0.0-SNAPSHOT</ano-maf-version>
-        <ano-plass-access-aop-version>4.0.0-SNAPSHOT</ano-plass-access-aop-version>
-        <ano-plass-version>4.0.0-SNAPSHOT</ano-plass-version>
-        <ano-prise-version>4.0.0-SNAPSHOT</ano-prise-version>
+        <ano-maf-version>4.0.0</ano-maf-version>
+        <ano-plass-access-aop-version>4.0.0</ano-plass-access-aop-version>
+        <ano-plass-version>4.0.0</ano-plass-version>
+        <ano-prise-version>4.0.0</ano-prise-version>
     </properties>
 
     <dependencyManagement>
@@ -159,11 +159,12 @@
             <version>${moskito-version}</version>
         </dependency>
 
+		<!--
         <dependency>
             <groupId>org.moskito</groupId>
             <artifactId>moskito-control-agent-http-endpoint</artifactId>
             <version>${moskito-control-version}</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>jakarta.servlet</groupId>
@@ -232,11 +233,12 @@
             </exclusions>
         </dependency>
 
+		<!--
         <dependency>
             <groupId>org.moskito</groupId>
             <artifactId>moskito-control-agent-rmi-endpoint</artifactId>
             <version>${moskito-control-version}</version>
-        </dependency>
+        </dependency> -->
 
         <dependency>
             <groupId>net.anotheria</groupId>
