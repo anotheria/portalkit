@@ -19,7 +19,7 @@
         <swagger-ui.version>5.9.0</swagger-ui.version>
 
         <moskito-version>4.0.0</moskito-version>
-        <moskito-control-version>4.0.0-SNAPSHOT</moskito-control-version>
+        <moskito-control-version>3.1.1</moskito-control-version><!-- temporarly, move to 4.0.0 once available -->
 
         <distributeme-version>4.0.0</distributeme-version>
 
@@ -233,12 +233,11 @@
             </exclusions>
         </dependency>
 
-		<!--
         <dependency>
             <groupId>org.moskito</groupId>
             <artifactId>moskito-control-agent-rmi-endpoint</artifactId>
             <version>${moskito-control-version}</version>
-        </dependency> -->
+        </dependency>
 
         <dependency>
             <groupId>net.anotheria</groupId>
