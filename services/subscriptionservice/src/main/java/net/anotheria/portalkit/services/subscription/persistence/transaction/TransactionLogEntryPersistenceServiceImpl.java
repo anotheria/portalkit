@@ -52,6 +52,14 @@ public class TransactionLogEntryPersistenceServiceImpl implements TransactionLog
 	}
 
 	@Override
+	public List<TransactionLogEntryEntity> getTransactionLogEntriesByMessageMask(String messageMask) throws TransactionPersistenceException {
+		String queryStr = "select a from TransactionLogEntryEntity a where a.message like :messageMask";
+		TypedQuery<TransactionLogEntryEntity> query  = entityManager.createQuery(queryStr, TransactionLogEntryEntity.class)
+				.setParameter("messageMask", messageMask);
+		return query.getResultList();
+	}
+
+	@Override
 	public long getTransactionLogEntriesCount() throws TransactionPersistenceException {
 		TypedQuery<Long> query = entityManager.createQuery("select count(*) from TransactionLogEntryEntity a", Long.class);
 		try {
