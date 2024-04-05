@@ -17,6 +17,10 @@ public class NoOperationTask extends AsyncTask {
      * Creation timestamp.
      */
     private long timestamp;
+    /**
+     * No operation attribute.
+     */
+    private boolean noOperation =  true;
 
     /**
      * Based constructor.
@@ -43,6 +47,14 @@ public class NoOperationTask extends AsyncTask {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isNoOperation() {
+        return noOperation;
+    }
+
+    public void setNoOperation(boolean noOperation) {
+        this.noOperation = noOperation;
     }
 
     @Override
