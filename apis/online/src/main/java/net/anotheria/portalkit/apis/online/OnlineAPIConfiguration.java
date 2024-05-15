@@ -35,15 +35,6 @@ public final class OnlineAPIConfiguration {
 	private boolean performLoginNotificationOnActivityOfflineErrors;
 
 	/**
-	 * Allow to notify Activity via
-	 * {@link net.anotheria.portalkit.services.online.OnlineService#notifyUserActivity(net.anotheria.portalkit.services.common.AccountId)} - in case if
-	 * {@link net.anotheria.portalkit.services.online.OnlineService#notifyLoggedIn(net.anotheria.portalkit.services.common.AccountId)} fails with
-	 * {@link net.anotheria.portalkit.services.online.AccountIsOnlineException}.
-	 */
-	@Configure
-	private boolean performActivityUpdateOnLoginOnlineErrors;
-
-	/**
 	 * Allow to select sync/async communication with {@link net.anotheria.portalkit.services.online.OnlineService} notify - interface methods.
 	 */
 	@Configure
@@ -107,7 +98,6 @@ public final class OnlineAPIConfiguration {
 		this.performLoginNotificationAsync = false;
 		this.performLogoutNotificationAsync = false;
 		this.performActivityUpdateNotificationAsync = false;
-		this.performActivityUpdateOnLoginOnlineErrors = true;
 		this.activityEventProcessorSleepTime = 200L;
 		this.activityEventProcessorSize = 1000;
 		this.activityEventProcessorChannelsAmount = 10;
@@ -127,14 +117,6 @@ public final class OnlineAPIConfiguration {
 
 	public void setPerformLoginNotificationOnActivityOfflineErrors(boolean performLoginNotificationOnActivityOfflineErrors) {
 		this.performLoginNotificationOnActivityOfflineErrors = performLoginNotificationOnActivityOfflineErrors;
-	}
-
-	public boolean isPerformActivityUpdateOnLoginOnlineErrors() {
-		return performActivityUpdateOnLoginOnlineErrors;
-	}
-
-	public void setPerformActivityUpdateOnLoginOnlineErrors(boolean performActivityUpdateOnLoginOnlineErrors) {
-		this.performActivityUpdateOnLoginOnlineErrors = performActivityUpdateOnLoginOnlineErrors;
 	}
 
 	public long getActivityEventProcessorSleepTime() {
@@ -187,18 +169,15 @@ public final class OnlineAPIConfiguration {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder(this.getClass().getSimpleName());
-		builder.append(" [activityUpdateInterval=").append(activityUpdateInterval);
-		builder.append(", performLoginNotificationOnActivityOfflineErrors=").append(performLoginNotificationOnActivityOfflineErrors);
-		builder.append(", performActivityUpdateOnLoginOnlineErrors=").append(performActivityUpdateOnLoginOnlineErrors);
-		builder.append(", performLoginNotificationAsync=").append(performLoginNotificationAsync);
-		builder.append(", performLogoutNotificationAsync=").append(performLogoutNotificationAsync);
-		builder.append(", performActivityUpdateNotificationAsync=").append(performActivityUpdateNotificationAsync);
-		builder.append(", activityEventProcessorSleepTime=").append(activityEventProcessorSleepTime);
-		builder.append(", activityEventProcessorSize=").append(activityEventProcessorSize);
-		builder.append(", activityEventProcessorChannelsAmount=").append(activityEventProcessorChannelsAmount);
-		builder.append("]");
-		return builder.toString();
+        return this.getClass().getSimpleName() + " [activityUpdateInterval=" + activityUpdateInterval +
+                ", performLoginNotificationOnActivityOfflineErrors=" + performLoginNotificationOnActivityOfflineErrors +
+                ", performLoginNotificationAsync=" + performLoginNotificationAsync +
+                ", performLogoutNotificationAsync=" + performLogoutNotificationAsync +
+                ", performActivityUpdateNotificationAsync=" + performActivityUpdateNotificationAsync +
+                ", activityEventProcessorSleepTime=" + activityEventProcessorSleepTime +
+                ", activityEventProcessorSize=" + activityEventProcessorSize +
+                ", activityEventProcessorChannelsAmount=" + activityEventProcessorChannelsAmount +
+                "]";
 	}
 
 }
