@@ -104,8 +104,10 @@ public class OnlineServiceImpl implements OnlineService, EntityManagingService {
 		lock.lock();
 
 		try {
-			if (onlineUserStorage.isAccountOnline(account))
-				throw new AccountIsOnlineException(account);
+			if (onlineUserStorage.isAccountOnline(account)) {
+				notifyUserActivity(account);
+				return;
+			}
 
 			final long lastLoginNanoTime = getNanoTime();
 			persistence.saveLastLogin(account, toMillis(lastLoginNanoTime));
