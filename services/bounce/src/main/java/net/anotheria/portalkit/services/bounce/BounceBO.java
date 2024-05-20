@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.bounce;
 
 import net.anotheria.portalkit.services.bounce.persistence.BounceDO;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.io.Serializable;
 
 /**
