@@ -1,6 +1,17 @@
 package net.anotheria.portalkit.services.subscription.persistence.subscription;
 
-import javax.persistence.*;
+
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+
 import java.util.Objects;
 
 /**
@@ -42,7 +53,8 @@ public class SubscriptionDO {
     /**
      * Subscription id.
      */
-    @Column @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long subscriptionId;
     /**
      * Id of the purchase product.

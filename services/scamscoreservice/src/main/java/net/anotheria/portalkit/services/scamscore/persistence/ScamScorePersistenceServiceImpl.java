@@ -1,10 +1,15 @@
 package net.anotheria.portalkit.services.scamscore.persistence;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
+
 import java.util.List;
 
 /**

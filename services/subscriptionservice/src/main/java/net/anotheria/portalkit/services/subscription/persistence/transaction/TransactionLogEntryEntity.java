@@ -1,9 +1,18 @@
 package net.anotheria.portalkit.services.subscription.persistence.transaction;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.subscription.TransactionLogEntry;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
@@ -35,7 +44,9 @@ public class TransactionLogEntryEntity {
 	public static final String JPQL_GET_ALL = "TransactionLogEntryEntity.getAll";
 	public static final String JPQL_DELETE_TRANSACTION_LOG = "TransactionLogEntryEntity.deleteTransactionLogs";
 
-	@Column @Id  @GeneratedValue(strategy= GenerationType.IDENTITY)
+	@Id
+	@Column
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private long technicalId;
 
 	/**

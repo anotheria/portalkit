@@ -1,9 +1,15 @@
 package net.anotheria.portalkit.services.subscription.persistence.subscription;
 
-import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.subscription.Transaction;
-
-import javax.persistence.*;
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 
 /**
  * @author Vlad Lukjanenko
@@ -34,7 +40,9 @@ public class TransactionDO {
     /**
      * Id of transaction.
      * */
-    @Column @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Id
+    @Column
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long Id;
 
     /**
