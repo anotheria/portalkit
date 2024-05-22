@@ -1,12 +1,16 @@
 package net.anotheria.portalkit.services.personaldata.storage;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import net.anotheria.portalkit.services.personaldata.PersonalDataServiceConfig;
 import net.anotheria.util.StringUtils;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
+
+import java.util.Collections;
 
 /**
  * @author Vlad Lukjanenko
@@ -15,47 +19,46 @@ public class MongoConnector {
 
     /**
      * {@link MongoConnector} instance.
-     * */
+     */
     private static MongoConnector INSTANCE = null;
 
     /**
      * {@link MongoClient} instance.
-     * */
+     */
     private MongoClient mongo;
 
     /**
-     * {@link Morphia} instance.
-     * */
-    private Morphia morphia;
-
-    /**
      * Collection name.
-     * */
+     */
     private String databaseName;
 
     /**
      * {@link Datastore} instance.
-     * */
+     */
     private Datastore datastore;
 
 
     /**
      * Default constructor.
-     * */
+     */
     private MongoConnector() {
-
         PersonalDataServiceConfig config = PersonalDataServiceConfig.getInstance();
+
+        MongoClientSettings settings;
+
         if (StringUtils.isEmpty(config.getConnectionString())) {
-            mongo = new MongoClient(config.getHost(), config.getPort());
+            settings = MongoClientSettings.builder()
+                    .applyToClusterSettings(builder -> builder.hosts(Collections.singletonList(new ServerAddress(config.getHost(), config.getPort()))))
+                    .build();
         } else {
-            MongoClientURI uri = new MongoClientURI(config.getConnectionString(), new MongoClientOptions.Builder().sslEnabled(true));
-            mongo = new MongoClient(uri);
+            settings = MongoClientSettings.builder()
+                    .applyConnectionString(new ConnectionString(config.getConnectionString()))
+                    .applyToSslSettings(builder -> builder.enabled(true))
+                    .build();
         }
-        morphia = new Morphia();
-        morphia.mapPackage("net.anotheria.portalkit.services.personaldata");
+        mongo = MongoClients.create(settings);
         databaseName = config.getDatabase();
-        datastore = morphia.createDatastore(mongo, databaseName);
-        datastore.ensureIndexes();
+        datastore = Morphia.createDatastore(mongo, databaseName);
     }
 
 
@@ -69,7 +72,7 @@ public class MongoConnector {
 
     /**
      * Returns {@link MongoConnector} instance.
-     * */
+     */
     private static MongoConnector getInstance() {
 
         if (INSTANCE == null) {
@@ -87,7 +90,7 @@ public class MongoConnector {
 
     /**
      * Returns {@link Datastore} instance.
-     * */
+     */
     public static Datastore getDatabase() {
         return getInstance().datastore;
     }

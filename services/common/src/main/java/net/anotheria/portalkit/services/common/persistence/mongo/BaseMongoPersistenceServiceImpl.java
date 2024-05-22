@@ -1,21 +1,21 @@
 package net.anotheria.portalkit.services.common.persistence.mongo;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import org.configureme.ConfigurationManager;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Morphia;
 
 /**
  * Base mongo persistence service
- *
+ * <p>
  * Created by Roman Stetsiuk on 7/1/16.
  */
 public abstract class BaseMongoPersistenceServiceImpl implements BaseMongoPersistenceService {
     private MongoClient mongoClient;
     private MongoConnectorConfig config;
-    private Morphia morphia;
-
 
     /**
      * Name of the configuration.
@@ -37,13 +37,11 @@ public abstract class BaseMongoPersistenceServiceImpl implements BaseMongoPersis
     @Override
     public void init() {
         mongoClient = configure();
-        morphia = new Morphia();
-        morphia.mapPackage("net.anotheria.portalkit.services.common.persistence.mongo.entities");
-        connect().ensureIndexes();
+        connect();
     }
 
     protected Datastore connect() {
-        return morphia.createDatastore(mongoClient, config.getDbName());
+        return Morphia.createDatastore(mongoClient, config.getDbName());
     }
 
     private MongoClient configure() {
@@ -52,9 +50,12 @@ public abstract class BaseMongoPersistenceServiceImpl implements BaseMongoPersis
 
         config = new MongoConnectorConfig();
         ConfigurationManager.INSTANCE.configureAs(config, configName);
-        MongoClientURI uri = new MongoClientURI(config.getUri());
+        MongoClientSettings clientSettings = MongoClientSettings.builder()
+                .applyToClusterSettings(builder -> builder.applyConnectionString(new ConnectionString(config.getUri())))
+                .applyToSslSettings(builder -> builder.enabled(true))
+                .build();
 
-        return new MongoClient(uri);
+        return MongoClients.create(clientSettings);
     }
 
 }

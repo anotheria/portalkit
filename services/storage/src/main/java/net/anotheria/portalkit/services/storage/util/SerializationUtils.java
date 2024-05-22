@@ -39,7 +39,7 @@ public final class SerializationUtils {
 
 	/**
 	 * Clone {@link Serializable} T.<br>
-	 * {@link org.apache.commons.lang.SerializationUtils} used for cloning objects.
+	 * {@link org.apache.commons.lang3.SerializationUtils} used for cloning objects.
 	 * 
 	 * @param toClone
 	 *            {@link Serializable} T to clone, can't be <code>null</code>
@@ -50,7 +50,7 @@ public final class SerializationUtils {
 			throw new IllegalArgumentException("toClone argument is null.");
 
 		@SuppressWarnings("unchecked")
-		T clone = (T) org.apache.commons.lang.SerializationUtils.clone(toClone);
+		T clone = (T) org.apache.commons.lang3.SerializationUtils.clone(toClone);
 		return clone;
 	}
 

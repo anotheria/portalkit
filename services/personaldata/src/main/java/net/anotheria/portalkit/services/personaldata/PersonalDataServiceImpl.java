@@ -1,14 +1,21 @@
 package net.anotheria.portalkit.services.personaldata;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import dev.morphia.Datastore;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
-import org.mongodb.morphia.Datastore;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,18 +31,18 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
 
     /**
      * {@link Datastore} instance.
-     * */
+     */
     private Datastore datastore;
 
     /**
      * {@link PersonalDataServiceConfig} instance.
-     * */
+     */
     private PersonalDataServiceConfig config;
 
 
     /**
      * Default constructor.
-     * */
+     */
     public PersonalDataServiceImpl() {
         datastore = MongoConnector.getDatabase();
         config = PersonalDataServiceConfig.getInstance();
@@ -45,7 +52,7 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
     @Override
     public int getEntityCount(String s) {
         try {
-            return Long.valueOf(datastore.getCount(PersonalData.class)).intValue();
+            return Long.valueOf(datastore.find(PersonalData.class).count()).intValue();
         } catch (Exception e) {
             LOGGER.error(e.getMessage());
             return 0;
@@ -54,14 +61,17 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
 
     @Override
     public PersonalData get(AccountId accountId) throws PersonalDataServiceException {
-
-        PersonalData personalData = datastore.createQuery(PersonalData.class).field("_id").equal(accountId.getInternalId()).get();
-
+        Document personalData = getCollection().find(Filters.eq("_id", accountId.getInternalId())).first();
         if (personalData == null) {
             return null;
         }
-
-        return decryptPersonalData(personalData);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
+        try {
+            return decryptPersonalData(objectMapper.readValue(personalData.toJson(), PersonalData.class));
+        } catch (IOException e) {
+            throw new PersonalDataServiceException(e.getMessage());
+        }
     }
 
     @Override
@@ -70,21 +80,27 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
         if (personalData == null) {
             return;
         }
-
         personalData.set_id(personalData.getAccountId().getInternalId());
-        datastore.save(encryptPersonalData(personalData));
+        PersonalData encryptData = encryptPersonalData(personalData);
+
+        try {
+            Document entity = Document.parse(new ObjectMapper().writeValueAsString(encryptData));
+            PersonalData oldData = get(personalData.getAccountId());
+            if (oldData == null) {
+                getCollection().insertOne(entity);
+            }
+            getCollection().replaceOne(Filters.eq("_id", personalData.getAccountId().getInternalId()), entity);
+        } catch (Exception e) {
+            throw new PersonalDataServiceException(e.getMessage());
+        }
     }
 
     @Override
     public void delete(AccountId accountId) throws PersonalDataServiceException {
-
-        PersonalData personalData = datastore.createQuery(PersonalData.class).field("_id").equal(accountId.getInternalId()).get();
-
-        if (personalData == null) {
-            return;
+        PersonalData personalData = get(accountId);
+        if (personalData != null) {
+            getCollection().deleteOne(Filters.eq("id", new ObjectId(accountId.getInternalId())));
         }
-
-        datastore.delete(personalData);
     }
 
 
@@ -114,5 +130,9 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
         toEncrypt.setPersonalData(encrypted);
 
         return toEncrypt;
+    }
+
+    private MongoCollection<Document> getCollection() {
+        return datastore.getDatabase().getCollection(PersonalDataServiceConfig.getInstance().getCollectionName());
     }
 }

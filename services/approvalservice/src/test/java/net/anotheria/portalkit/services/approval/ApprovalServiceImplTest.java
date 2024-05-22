@@ -7,7 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,8 +69,6 @@ public class ApprovalServiceImplTest {
         ticket.setPresentation(System.currentTimeMillis());
         ticket.setAccountId(new AccountId("TEST"));
 
-        when(persistenceService.getTicketById(2)).thenReturn(ticket.toDO());
-
         approvalService.approveTicket(ticket);
 
         verify(persistenceService, atLeastOnce()).updateTicket(any(TicketDO.class));
@@ -91,8 +89,6 @@ public class ApprovalServiceImplTest {
         ticket.setFulfillment(System.currentTimeMillis());
         ticket.setPresentation(System.currentTimeMillis());
         ticket.setAccountId(new AccountId("TEST"));
-
-        when(persistenceService.getTicketById(3)).thenReturn(ticket.toDO());
 
         approvalService.disapproveTicket(ticket);
 

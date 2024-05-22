@@ -62,11 +62,15 @@ public final class GooglePubSubSubscribers {
             try {
                 SubscriberStub subscriberStub = entry.getValue();
                 subscriberStub.shutdown();
-                if (!subscriberStub.awaitTermination(5, TimeUnit.SECONDS)) {
+                if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
                     subscriberStub.shutdownNow();
-                    if (!subscriberStub.awaitTermination(5, TimeUnit.SECONDS)) {
-                        log.error("The subscriber did not terminate");
+                    if (!subscriberStub.awaitTermination(1, TimeUnit.MINUTES)) {
+                        log.error("The subscriber [{}] did not terminate",  entry.getKey());
+                    } else {
+                        log.info("The subscriber [{}] is turned off after shutdownNow.", entry.getKey());
                     }
+                } else {
+                    log.info("The subscriber [{}] is turned off after shutdown.", entry.getKey());
                 }
             } catch (Exception e) {
                 log.error("Unable to correct shutdown subscriber. " + e.getMessage());

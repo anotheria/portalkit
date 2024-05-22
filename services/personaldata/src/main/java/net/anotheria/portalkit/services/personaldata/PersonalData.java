@@ -1,9 +1,10 @@
 package net.anotheria.portalkit.services.personaldata;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexed;
 import net.anotheria.portalkit.services.common.AccountId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
-import org.mongodb.morphia.annotations.Indexed;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import java.util.Objects;
 /**
  * @author Vlad Lukjanenko
  */
-@Entity(value = "personal_data",noClassnameStored = true)
+@Entity(value = "personal_data")
 public class PersonalData implements Serializable {
 
     /**
@@ -27,7 +28,7 @@ public class PersonalData implements Serializable {
     @Id
     private String _id;
 
-    @Indexed(unique = true)
+    @Indexed(options = @IndexOptions(unique = true))
     private AccountId accountId;
 
     /**

@@ -53,7 +53,7 @@ public class AsyncTaskSingleExecutorProcessor extends AsyncTaskExecutorProcessor
                             executeTask(task);
                             producer.getDefaultStats().incProcessedTasks();
                         } catch (Exception any) {
-                            LOGGER.error("Unable to execute task. {}. ", any.getMessage());
+                            LOGGER.error("Unable to execute single task. {}. ", any.getMessage());
                             producer.getDefaultStats().incErrorTasks();
                         } finally {
                             taskIterator.remove();
@@ -62,7 +62,7 @@ public class AsyncTaskSingleExecutorProcessor extends AsyncTaskExecutorProcessor
                 }
             } catch (Throwable e) {
                 producer.getDefaultStats().incErrorTasks();
-                LOGGER.error("Unable to execute async tasks", e);
+                LOGGER.error("Unable to execute async tasks.", e);
                 sleepTime();
             }
         }

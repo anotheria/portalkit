@@ -1,9 +1,15 @@
 package net.anotheria.portalkit.services.relation;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import net.anotheria.portalkit.services.common.AccountId;
-import org.apache.http.util.Args;
+import org.apache.hc.core5.util.Args;
 
-import javax.persistence.*;
 import java.util.Objects;
 
 /**

@@ -10,17 +10,17 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
 import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
-import org.apache.http.util.Args;
+import org.apache.hc.core5.util.Args;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import java.util.*;
 
 import static net.anotheria.portalkit.services.relation.RelationEntity.*;

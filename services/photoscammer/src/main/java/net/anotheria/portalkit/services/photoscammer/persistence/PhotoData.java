@@ -1,8 +1,16 @@
 package net.anotheria.portalkit.services.photoscammer.persistence;
 
+import jakarta.persistence.Access;
+import jakarta.persistence.AccessType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
 import net.anotheria.portalkit.services.photoscammer.PhotoDataBO;
-
-import javax.persistence.*;
 
 /**
  * @author Vlad Lukjanenko

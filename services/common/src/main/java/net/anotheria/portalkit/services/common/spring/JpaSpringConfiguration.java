@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.common.spring;
 
 import com.googlecode.flyway.core.Flyway;
 import net.anotheria.portalkit.services.common.flyway.FlywayUtils;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.configureme.ConfigurationManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -97,7 +97,8 @@ public class JpaSpringConfiguration {
         HibernateConfig dbConfig = getDbConfig();
         Properties props = new Properties();
         props.put("hibernate.show_sql", dbConfig.isShowSql());
-        props.put("hibernate.hbm2ddl.auto", dbConfig.isValidate());
+        if (dbConfig.isValidate())
+            props.put("hibernate.hbm2ddl.auto", "validate");
         entityManagerFactoryBean.setJpaProperties(props);
 
         entityManagerFactoryBean.afterPropertiesSet();

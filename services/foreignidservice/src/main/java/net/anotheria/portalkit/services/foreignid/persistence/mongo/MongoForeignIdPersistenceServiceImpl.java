@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 
+import dev.morphia.Datastore;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseMongoPersistenceServiceImpl;
 import net.anotheria.portalkit.services.foreignid.ForeignId;
@@ -7,7 +8,6 @@ import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersisten
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceServiceException;
 import net.anotheria.portalkit.services.foreignid.persistence.mongo.entity.ForeignIdEntity;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -470,15 +470,17 @@ public class OnlineServiceTest {
                 try {
                     Assert.assertEquals(loginTime, persistence.readLastLogin(accountId));
                 } catch (ActivityPersistenceServiceException e) {
-                    Assert.fail("TIme from service and  persistence differs.");
+                    Assert.fail("Time from service and  persistence differs.");
                 }
 
 
                 // second login! to check  login in case when user is online!
                 try {
+                    long activity = service.readLastActivity(accountId);
                     service.notifyLoggedIn(accountId);
-                    Assert.fail("Exception expected ! cause user is online now");
-                } catch (AccountIsOnlineException e) {
+                    Assert.assertTrue("Last activity time was not changed", activity <= service.readLastActivity(accountId));
+                } catch (OnlineServiceException e) {
+                    Assert.fail("Time from service and  persistence differs.");
                 }
 
 

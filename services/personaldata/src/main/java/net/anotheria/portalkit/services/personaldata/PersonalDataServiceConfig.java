@@ -64,6 +64,11 @@ public final class PersonalDataServiceConfig {
      */
     @Configure
     private String connectionString;
+    /**
+     * Collection name.
+     */
+    @Configure
+    private String collectionName;
 
 
     /**
@@ -146,6 +151,14 @@ public final class PersonalDataServiceConfig {
 
     public void setConnectionString(String connectionString) {
         this.connectionString = connectionString;
+    }
+
+    public String getCollectionName() {
+        return collectionName;
+    }
+
+    public void setCollectionName(String collectionName) {
+        this.collectionName = collectionName;
     }
 
     @Override

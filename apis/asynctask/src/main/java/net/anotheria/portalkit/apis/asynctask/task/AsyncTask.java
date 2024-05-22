@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * Based implementation for async task.
+ *
  * @author ynikonchuk
  */
 public abstract class AsyncTask implements Serializable {
@@ -14,16 +16,28 @@ public abstract class AsyncTask implements Serializable {
      * Creation timestamp helps to determine how long the task have been in queue before it was executed.
      */
     private long creationTimestamp = System.currentTimeMillis();
-
+    /**
+     * Unique id parameter for task based on {@link IdCodeGenerator}.
+     */
     private static String vmId = IdCodeGenerator.generateCode(3);
+    /**
+     * Unique id parameter for task based on {@link AtomicLong}.
+     */
     private static AtomicLong taskId = new AtomicLong();
+    /**
+     * Task id.
+     */
     private String id;
-
     /**
      * Unique task type
      */
     protected String taskType;
 
+    /**
+     * Default constructor.
+     *
+     * @param aTaskType task type name
+     */
     protected AsyncTask(String aTaskType) {
         id = generateId();
         taskType = aTaskType;
@@ -62,5 +76,4 @@ public abstract class AsyncTask implements Serializable {
     private String generateId() {
         return vmId + taskId.incrementAndGet();
     }
-
 }

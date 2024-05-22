@@ -24,9 +24,10 @@ public interface OnlineService extends Service {
     /**
      * Notify current service that some account  with {@link AccountId} was logged in.
      * During current operation Account - last login date will be triggered to currentTime.
+     * If account already online - perform user activity {@link OnlineService#notifyUserActivity(AccountId)}
      *
      * @param account {@link AccountId}
-     * @throws OnlineServiceException on errors, {@link AccountIsOnlineException} in case if such account is online, or still online.
+     * @throws OnlineServiceException on errors
      */
     void notifyLoggedIn(final AccountId account) throws OnlineServiceException;
 

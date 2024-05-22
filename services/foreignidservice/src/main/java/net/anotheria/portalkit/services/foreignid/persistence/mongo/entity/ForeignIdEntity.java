@@ -1,11 +1,11 @@
 package net.anotheria.portalkit.services.foreignid.persistence.mongo.entity;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
 import net.anotheria.portalkit.services.foreignid.ForeignId;
 import org.bson.types.ObjectId;
-import org.mongodb.morphia.annotations.Entity;
-import org.mongodb.morphia.annotations.Id;
 
 /**
  * Created by Roman Stetsiuk

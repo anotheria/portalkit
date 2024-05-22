@@ -53,11 +53,11 @@ public final class MongoClientUtil {
 		try {
 			MongoClientOptions.Builder optionsBuilder = new MongoClientOptions.Builder();
 
-			optionsBuilder.description(configuration.getDescription());
+//			optionsBuilder.description(configuration.getDescription());
 			optionsBuilder.connectionsPerHost(configuration.getConnectionsPerHost());
 			optionsBuilder.connectTimeout(configuration.getConnectionTimeout());
 			optionsBuilder.socketTimeout(configuration.getSocketTimeout());
-			optionsBuilder.socketKeepAlive(configuration.isSocketKeepAlive());
+//			optionsBuilder.socketKeepAlive(configuration.isSocketKeepAlive());
 			//LEON: removed this in migration to 3.6
 			//optionsBuilder.autoConnectRetry(configuration.isAutoConnectRetry());
 			//optionsBuilder.maxAutoConnectRetryTime(configuration.getAutoConnectRetryMaxTimeout());
@@ -95,26 +95,26 @@ public final class MongoClientUtil {
 			case UNACKNOWLEDGED:
 				optionsBuilder.writeConcern(WriteConcern.UNACKNOWLEDGED);
 				break;
-			case FSYNCED:
-				optionsBuilder.writeConcern(WriteConcern.FSYNCED);
-				break;
+//			case FSYNCED:
+//				optionsBuilder.writeConcern(WriteConcern.FSYNCED);
+//				break;
 			case JOURNALED:
 				optionsBuilder.writeConcern(WriteConcern.JOURNALED);
 				break;
-			case REPLICA_ACKNOWLEDGED:
-				optionsBuilder.writeConcern(WriteConcern.REPLICA_ACKNOWLEDGED);
-				break;
+//			case REPLICA_ACKNOWLEDGED:
+//				optionsBuilder.writeConcern(WriteConcern.REPLICA_ACKNOWLEDGED);
+//				break;
 			case MAJORITY:
 				optionsBuilder.writeConcern(WriteConcern.MAJORITY);
 				break;
-			case CUSTOM:
-				int strategy = configuration.getWriteConcernWriteStrategy();
-				int timeout = configuration.getWriteConcernWriteTimeout();
-				boolean forceFsync = configuration.isWriteConcernForceFSyncToDisk();
-				boolean waitGroupCommit = configuration.isWriteConcernWaitGroupCommitToJournal();
-				boolean continueOnErrors = configuration.isWriteConcernContinueOnInsertError();
-				optionsBuilder.writeConcern(new WriteConcern(strategy, timeout, forceFsync, waitGroupCommit));
-				break;
+//			case CUSTOM:
+//				int strategy = configuration.getWriteConcernWriteStrategy();
+//				int timeout = configuration.getWriteConcernWriteTimeout();
+//				boolean forceFsync = configuration.isWriteConcernForceFSyncToDisk();
+//				boolean waitGroupCommit = configuration.isWriteConcernWaitGroupCommitToJournal();
+//				boolean continueOnErrors = configuration.isWriteConcernContinueOnInsertError();
+//				optionsBuilder.writeConcern(new WriteConcern(strategy, timeout, forceFsync, waitGroupCommit));
+//				break;
 			default:
 				throw new UnsupportedOperationException("WriteConcernType[" + writeConcernType + "] is unsupported.");
 			}

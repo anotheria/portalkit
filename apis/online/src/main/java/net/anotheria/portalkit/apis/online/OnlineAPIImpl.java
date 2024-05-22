@@ -237,7 +237,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
                         return;
                     }
                     //sync
-                    performLogin(account);
+                    onlineService.notifyLoggedIn(account);
                     resetLastActivityUpdateTime();
                     break;
 
@@ -330,26 +330,9 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
     }
 
     /**
-     * Delegate call to {@link OnlineService#notifyLoggedIn(AccountId)} (AccountId)}.
-     * In case of {@link AccountIsOnlineException} -  if {@link OnlineAPIConfiguration#isPerformActivityUpdateOnLoginOnlineErrors} enabled - system will try
-     * to  call {@link this#performActivityUpdate(AccountId)}.
-     *
-     * @param accountId {@link AccountId}
-     * @throws OnlineServiceException on errors
-     */
-    private void performLogin(final AccountId accountId) throws OnlineServiceException {
-        try {
-            onlineService.notifyLoggedIn(accountId);
-        } catch (AccountIsOnlineException e) {
-            if (config.isPerformActivityUpdateOnLoginOnlineErrors())
-                performActivityUpdate(accountId);
-        }
-    }
-
-    /**
      * Delegate call to {@link OnlineService#notifyUserActivity(AccountId)} (AccountId)}.
      * In case of {@link AccountIsOfflineException} -  if {@link OnlineAPIConfiguration#isPerformLoginNotificationOnActivityOfflineErrors} enabled - system will try
-     * to  call {@link this#performLogin(AccountId)}.
+     * to  call {@link OnlineService#notifyLoggedIn(AccountId)}.
      *
      * @param accountId {@link AccountId}
      * @throws OnlineServiceException on errors
@@ -359,7 +342,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
             onlineService.notifyUserActivity(accountId);
         } catch (AccountIsOfflineException e) {
             if (config.isPerformLoginNotificationOnActivityOfflineErrors())
-                performLogin(accountId);
+                onlineService.notifyLoggedIn(accountId);
         }
     }
 
@@ -495,7 +478,7 @@ public class OnlineAPIImpl extends AbstractAPIImpl implements OnlineAPI, Observe
                         performActivityUpdate(activityEvent.getAccount());
                         break;
                     case LOGIN:
-                        performLogin(activityEvent.getAccount());
+                        onlineService.notifyLoggedIn(activityEvent.getAccount());
                         break;
                     case LOGOUT:
                         performLogout(activityEvent.getAccount());

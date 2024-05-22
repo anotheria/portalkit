@@ -1,10 +1,15 @@
 package net.anotheria.portalkit.services.pushtoken.persistence;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;

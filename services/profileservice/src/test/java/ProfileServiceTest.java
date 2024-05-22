@@ -1,14 +1,19 @@
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.profileservice.ProfileService;
 import net.anotheria.portalkit.services.profileservice.ProfileServiceFactory;
+import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,10 +33,15 @@ public class ProfileServiceTest {
 
     @Test
     public void dd() {
-		MongoClient mongoClient = new MongoClient("localhost", 27017);
-		DB my_test_db = mongoClient.getDB("test_profile_db");
-		DBCollection test_profiles = my_test_db.getCollection("test_profiles_collection");
-		test_profiles.drop();
+        MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
+
+            settingsBuilder.applyToClusterSettings(builder -> {
+                builder.hosts(Collections.singletonList(new ServerAddress("localhost", 27017)));
+            });
+        MongoClient mongoClient = MongoClients.create(settingsBuilder.build());
+        MongoDatabase my_test_db = mongoClient.getDatabase("test_profile_db");
+        MongoCollection<Document> test_profiles = my_test_db.getCollection("test_profiles_collection");
+        test_profiles.drop();
 //        try {
 //            ProfileBO profile18 = createProfile(18);
 //            ProfileBO profile19 = createProfile(19);
