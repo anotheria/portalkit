@@ -207,6 +207,19 @@ public class SubscriptionServiceImpl implements SubscriptionService, EntityManag
 	}
 
 	@Override
+	public List<TransactionLogEntry> getTransactionLogEntriesByMessageMask(String messageMask) throws SubscriptionServiceException {
+		List<TransactionLogEntryEntity> fromService = null;
+
+		try {
+			fromService = transactionLogEntryPersistenceService.getTransactionLogEntriesByMessageMask(messageMask);
+		} catch (TransactionPersistenceException e) {
+			throw new SubscriptionServiceException("Error occurred while getting transaction log entries", e);
+		}
+
+		return convertToTransactionLogEntry(fromService);
+	}
+
+	@Override
 	public void deleteTransactionLogs(AccountId accountId) throws SubscriptionServiceException {
 		try {
 			transactionLogEntryPersistenceService.deleteTransactionLogEntrys(accountId.getInternalId());

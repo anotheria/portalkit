@@ -114,6 +114,15 @@ public interface SubscriptionService extends Service {
 	List<TransactionLogEntry> getTransactionLogEntries() throws SubscriptionServiceException;
 
 	/**
+	 * Returns all transaction log enties for specific message mask.
+	 *
+	 * @param messageMask	{@link String} message mask
+	 * @return				{@link List} of {@link TransactionLogEntry}
+	 * @throws SubscriptionServiceException if any errors occurs
+	 */
+	List<TransactionLogEntry> getTransactionLogEntriesByMessageMask(String messageMask) throws SubscriptionServiceException;
+
+	/**
 	 * Delete all transaction logs.
 	 *
 	 * @throws SubscriptionServiceException

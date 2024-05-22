@@ -36,6 +36,16 @@ public interface TransactionLogEntryPersistenceService {
 	 * @return
 	 */
 	List<TransactionLogEntryEntity> getTransactionLogEntries() throws TransactionPersistenceException;
+
+	/**
+	 * Returns all transaction log entries for given message mask
+	 *
+	 * @param messageMask message mask
+	 * @return			  list of transaction log entries
+	 * @throws TransactionPersistenceException if any errors occurs
+	 */
+	List<TransactionLogEntryEntity> getTransactionLogEntriesByMessageMask(String messageMask) throws TransactionPersistenceException;
+
 	long getTransactionLogEntriesCount() throws TransactionPersistenceException;
 
 }
