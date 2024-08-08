@@ -3,7 +3,6 @@ package net.anotheria.portalkit.services.personaldata;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import dev.morphia.Datastore;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
@@ -11,13 +10,14 @@ import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.mongodb.client.model.Filters.*;
 
 /**
  * @author Vlad Lukjanenko
@@ -61,7 +61,7 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
 
     @Override
     public PersonalData get(AccountId accountId) throws PersonalDataServiceException {
-        Document personalData = getCollection().find(Filters.eq("_id", accountId.getInternalId())).first();
+        Document personalData = getCollection().find(eq("_id", accountId.getInternalId())).first();
         if (personalData == null) {
             return null;
         }
@@ -89,7 +89,7 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
             if (oldData == null) {
                 getCollection().insertOne(entity);
             }
-            getCollection().replaceOne(Filters.eq("_id", personalData.getAccountId().getInternalId()), entity);
+            getCollection().replaceOne(eq("_id", personalData.getAccountId().getInternalId()), entity);
         } catch (Exception e) {
             throw new PersonalDataServiceException(e.getMessage());
         }
@@ -99,7 +99,7 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
     public void delete(AccountId accountId) throws PersonalDataServiceException {
         PersonalData personalData = get(accountId);
         if (personalData != null) {
-            getCollection().deleteOne(Filters.eq("id", new ObjectId(accountId.getInternalId())));
+            getCollection().deleteOne(eq("_id", accountId.getInternalId()));
         }
     }
 
