@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountNote;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.common.AccountId;
 
@@ -112,5 +113,7 @@ public interface AccountPersistenceService extends Service {
 	 * @throws AccountPersistenceServiceException if error.
 	 */
 	List<Account> getAccountsByQuery(AccountQuery query) throws AccountPersistenceServiceException;
-
+	void saveAccountNote(AccountNote accountNote) throws AccountPersistenceServiceException;
+	AccountNote getAccountNoteById(long id) throws AccountPersistenceServiceException;
+	List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountPersistenceServiceException;
 }
