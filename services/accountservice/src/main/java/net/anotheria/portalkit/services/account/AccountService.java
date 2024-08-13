@@ -98,4 +98,27 @@ public interface AccountService extends Service {
 	 * @throws AccountServiceException if any errors occurs
 	 */
 	AccountId getAccountIdByEmail(String accountEmail, String brand) throws AccountServiceException;
+
+    /**
+     * Save note for account
+     * @param accountNote {@link AccountNote}
+     * @throws AccountServiceException when error
+     */
+	void saveAccountNote(AccountNote accountNote) throws AccountServiceException;
+
+    /**
+     * Get account note by it`s ID
+     * @param id long id of {@link AccountNote}
+     * @return {@link AccountNote}
+     * @throws AccountServiceException when error
+     */
+	AccountNote getAccountNoteById(long id) throws AccountServiceException;
+
+    /**
+     * Get account notes list by given account id
+     * @param accountId
+     * @return list of {@link AccountNote} for given user id
+     * @throws AccountServiceException when error
+     */
+	List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountServiceException;
 }

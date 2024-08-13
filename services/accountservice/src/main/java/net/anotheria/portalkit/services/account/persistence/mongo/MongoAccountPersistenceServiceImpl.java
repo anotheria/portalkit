@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.account.persistence.mongo;
 import dev.morphia.Datastore;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.account.Account;
+import net.anotheria.portalkit.services.account.AccountNote;
 import net.anotheria.portalkit.services.account.AccountQuery;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
@@ -199,6 +200,21 @@ public class MongoAccountPersistenceServiceImpl extends BaseMongoPersistenceServ
 	@Override
 	public List<Account> getAccountsByQuery(AccountQuery query) throws AccountPersistenceServiceException {
 		return null;
+	}
+
+	@Override
+	public void saveAccountNote(AccountNote accountNote) throws AccountPersistenceServiceException {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	@Override
+	public AccountNote getAccountNoteById(long id) throws AccountPersistenceServiceException {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	@Override
+	public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountPersistenceServiceException {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 }

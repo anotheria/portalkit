@@ -12,6 +12,8 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.AccountPersistenceServiceException;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.StringUtils;
 
@@ -43,6 +45,7 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	 * {@link AccountAuditPersistenceService} service.
 	 */
 	private AccountAuditPersistenceService accountAuditPersistenceService;
+	private AccountNotePersistenceService accountNotePersistenceService;
 
 	/**
 	 * {@link AccountServiceEventSupplier} instance.
@@ -316,6 +319,33 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 		return id;
 	}
 
+	@Override
+	public void saveAccountNote(AccountNote accountNote) throws AccountServiceException {
+		try {
+			accountNotePersistenceService.saveAccountNote(accountNote);
+		} catch (AccountNotePersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public AccountNote getAccountNoteById(long id) throws AccountServiceException {
+		try {
+			return accountNotePersistenceService.getAccountNoteById(id);
+		} catch (AccountNotePersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountServiceException {
+		try {
+			return accountNotePersistenceService.getNotesByAccountId(accountId);
+		} catch (AccountNotePersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
 	private AccountId getAccountIdByEmailInternally(String accountEmail, String brand) throws AccountServiceException{
 		AccountId fromCache = emailAndBrand2idCache.get(getBrandKey(accountEmail, brand));
 		if (fromCache != null)
@@ -442,6 +472,11 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 			if (config.isAuditEnabled()) {
 				accountAuditPersistenceService = MetaFactory.get(AccountAuditPersistenceService.class);
 			}
+		} catch (MetaFactoryException e) {
+			throw new IllegalStateException("Can't start without persistence service ", e);
+		}
+		try {
+			accountNotePersistenceService = MetaFactory.get(AccountNotePersistenceService.class);
 		} catch (MetaFactoryException e) {
 			throw new IllegalStateException("Can't start without persistence service ", e);
 		}
