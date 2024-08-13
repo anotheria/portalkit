@@ -1,6 +1,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.anotheria.portalkit/portalkit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.anotheria.portalkit/portalkit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
+(Change log)[wiki/Change-log].
 
 PortalKIT.
 =========
@@ -17,3 +18,4 @@ It consists of following services:
 6. ForeignIdService - management of foreign ids for 3rd party systems. I.e. storage of facebook login token and similar.
 
 to be continued.
+
