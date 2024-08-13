@@ -1,7 +1,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.anotheria.portalkit/portalkit/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.anotheria.portalkit/portalkit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-[Change log](wiki/Change-log).
+[Change log](https://github.com/anotheria/portalkit/wiki/Change-log).
 
 PortalKIT.
 =========
