@@ -158,7 +158,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
             // remove dataspace from cache
             DataspaceCacheHolder holder = cache.get(accountId);
 
-            if (holder.get(type) != null && success == true) {
+            if (holder!=null && holder.get(type) != null && success == true) {
                 holder.remove(type);
             }
 
