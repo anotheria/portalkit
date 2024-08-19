@@ -8,8 +8,12 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceService;
 import net.anotheria.portalkit.services.foreignid.persistence.ForeignIdPersistenceServiceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,7 @@ import java.util.List;
 @Monitor(subsystem = "portalkit")
 public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingService {
 
+	private static final Logger log = LoggerFactory.getLogger(ForeignIdServiceImpl.class);
 	/**
 	 * Persistence service.
 	 */
@@ -151,4 +156,23 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 		}
 	}
 
+	@Override
+	public void deleteUserData(AccountId accountId) {
+		try {
+			persistenceService.deleteForeignIds(accountId);
+			cacheByAccountId.remove(accountId);
+		} catch (ForeignIdPersistenceServiceException e) {
+			log.error("Unable to delete foreign ids", e);
+		}
+	}
+
+	@Override
+	public String describeData() {
+		return "foreignIdService";
+	}
+
+	@Override
+	public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+		return null;
+	}
 }

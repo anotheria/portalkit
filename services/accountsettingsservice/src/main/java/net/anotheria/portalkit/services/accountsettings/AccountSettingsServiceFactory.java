@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.services.accountsettings;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
-import net.anotheria.portalkit.services.common.DeletionService;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
@@ -13,7 +13,7 @@ public class AccountSettingsServiceFactory implements ServiceFactory<AccountSett
 
 	@Override
 	public AccountSettingsService create() {
-		return ServiceProxyUtil.createServiceProxy(AccountSettingsService.class, new AccountSettingsServiceImpl(), "service", "portal-kit", true, DeletionService.class);
+		return ServiceProxyUtil.createServiceProxy(AccountSettingsService.class, new AccountSettingsServiceImpl(), "service", "portal-kit", true, UserDataManagingService.class);
 	}
 
 }
