@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.relation;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
 import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
@@ -20,7 +21,7 @@ import java.util.Set;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface RelationService extends Service {
+public interface RelationService extends Service, UserDataManagingService {
 
     /**
      * @param owner

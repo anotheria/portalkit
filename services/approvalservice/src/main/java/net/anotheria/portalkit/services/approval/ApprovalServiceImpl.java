@@ -8,7 +8,11 @@ import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistence
 import net.anotheria.portalkit.services.approval.persistence.ApprovalPersistenceServiceException;
 import net.anotheria.portalkit.services.approval.persistence.TicketDO;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.util.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +35,7 @@ import java.util.stream.Collectors;
 @Monitor(subsystem = "approval", category = "portalkit-service")
 public class ApprovalServiceImpl implements ApprovalService, EntityManagingService {
 
+	private static final Logger log = LoggerFactory.getLogger(ApprovalServiceImpl.class);
 	/**
 	 * Persistence service.
 	 */
@@ -99,23 +104,6 @@ public class ApprovalServiceImpl implements ApprovalService, EntityManagingServi
 			cachedTickets.remove(ticketId);
 		} catch (ApprovalPersistenceServiceException e) {
 			throw new ApprovalServiceException("Error occurred while deleteTicket("+ticketId+")", e);
-		}
-	}
-
-	@Override
-	public void deleteTicketsByAccountId(AccountId accountId) throws ApprovalServiceException {
-		try {
-			List<Long> ids = approvalPersistenceService.getTicketsByAccountId(accountId).stream()
-					.map(TicketDO::getTicketId)
-					.collect(Collectors.toList());
-
-			for (Long id: ids) {
-				lockedTickets.remove(id);
-				cachedTickets.remove(id);
-			}
-			approvalPersistenceService.deleteTicketsByAccountId(accountId);
-		} catch (ApprovalPersistenceServiceException e) {
-			throw new ApprovalServiceException("Error occurred while delete tickets for " + accountId);
 		}
 	}
 
@@ -310,6 +298,32 @@ public class ApprovalServiceImpl implements ApprovalService, EntityManagingServi
 		return result;
 	}
 
+	@Override
+	public void deleteUserData(AccountId accountId) {
+		try {
+			List<Long> ids = approvalPersistenceService.getTicketsByAccountId(accountId).stream()
+					.map(TicketDO::getTicketId)
+					.collect(Collectors.toList());
+
+			for (Long id: ids) {
+				lockedTickets.remove(id);
+				cachedTickets.remove(id);
+			}
+			approvalPersistenceService.deleteTicketsByAccountId(accountId);
+		} catch (ApprovalPersistenceServiceException e) {
+			log.error("Error while deleting user approval tickets data", e);
+		}
+	}
+
+	@Override
+	public String describeData() {
+		return "approvalService";
+	}
+
+	@Override
+	public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+		return null;
+	}
 
 	/**
 	 * Unlocks tickets after some period of time.

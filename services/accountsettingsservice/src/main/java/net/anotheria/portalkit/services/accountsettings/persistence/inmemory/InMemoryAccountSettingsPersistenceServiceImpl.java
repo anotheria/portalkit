@@ -47,7 +47,7 @@ public class InMemoryAccountSettingsPersistenceServiceImpl implements AccountSet
 	}
 
 	@Override
-	public boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+	public void deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
 		throw new IllegalStateException("Not implemented yet");
 	}
 }

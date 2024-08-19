@@ -123,4 +123,9 @@ public class InMemoryForeignIdPersistenceServiceImpl implements ForeignIdPersist
 	public long getForeignIdsCount() throws ForeignIdPersistenceServiceException {
 		return storage.size();
 	}
+
+	@Override
+	public void deleteForeignIds(AccountId accountId) throws ForeignIdPersistenceServiceException {
+		storage.remove(accountId);
+	}
 }

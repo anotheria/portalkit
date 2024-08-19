@@ -3,6 +3,8 @@ package net.anotheria.portalkit.services.authentication;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,7 +198,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
     }
 
     @Override
-    public void deleteData(AccountId accountId) {
+    public void deleteUserData(AccountId accountId) {
         if (accountId == null)
             throw new IllegalArgumentException("Incoming accountId is NULL.");
 
@@ -211,6 +213,16 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         } catch (AuthenticationPersistenceServiceException e) {
             log.error("Couldn't delete encrypt password for " + accountId);
         }
+    }
+
+    @Override
+    public String describeData() {
+        return "secretKeyAuthenticationService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        return null;
     }
 
     @Override
