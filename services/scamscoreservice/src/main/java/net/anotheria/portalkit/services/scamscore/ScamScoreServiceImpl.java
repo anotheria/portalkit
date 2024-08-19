@@ -2,10 +2,15 @@ package net.anotheria.portalkit.services.scamscore;
 
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
+import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.scamscore.persistence.ScamScorePersistenceService;
 import net.anotheria.portalkit.services.scamscore.persistence.ScamScorePersistenceServiceException;
 import net.anotheria.portalkit.services.scamscore.persistence.ScoreDO;
 import net.anotheria.portalkit.services.scamscore.persistence.UserScamRecordDO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,7 @@ import java.util.List;
 @Service
 public class ScamScoreServiceImpl implements ScamScoreService, EntityManagingService {
 
+    private static final Logger log = LoggerFactory.getLogger(ScamScoreServiceImpl.class);
     @Autowired
     private ScamScorePersistenceService scamScorePersistenceService;
 
@@ -187,11 +193,21 @@ public class ScamScoreServiceImpl implements ScamScoreService, EntityManagingSer
     }
 
     @Override
-    public void deleteUserData(String userId) throws ScamScoreServiceException {
+    public void deleteUserData(AccountId userId) {
         try {
-            scamScorePersistenceService.deleteUserData(userId);
+            scamScorePersistenceService.deleteUserData(userId.getInternalId());
         } catch (ScamScorePersistenceServiceException e) {
-            throw new ScamScoreServiceException("Error occurred while removing user data", e);
+            log.error("Error occurred while removing user data", e);
         }
+    }
+
+    @Override
+    public String describeData() {
+        return "scamScoreService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package net.anotheria.portalkit.services.scamscore;
 
 import net.anotheria.anoprise.metafactory.Service;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -18,7 +19,7 @@ import java.util.List;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface ScamScoreService extends Service {
+public interface ScamScoreService extends Service, UserDataManagingService {
 
     /**
      * Creates user scam record.
@@ -103,9 +104,4 @@ public interface ScamScoreService extends Service {
      * @return {@link ScoreBO}.
      * */
     List<ScoreBO> getScoreRecordsByUserId(String userId) throws ScamScoreServiceException;
-
-    /**
-     * Delete user data.
-     * */
-    void deleteUserData(String userId) throws ScamScoreServiceException;
 }

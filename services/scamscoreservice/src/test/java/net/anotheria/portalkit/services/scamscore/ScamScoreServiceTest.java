@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.scamscore;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.scamscore.persistence.ScamScorePersistenceService;
 import net.anotheria.portalkit.services.scamscore.persistence.UserScamRecordDO;
 import org.junit.Test;
@@ -114,13 +115,14 @@ public class ScamScoreServiceTest {
     public void testDeleteUserData() throws Exception {
 
         UserScamRecordBO userScamRecord = getUserScamRecord();
+        AccountId accountId = new AccountId("accountId");
         ScoreBO score = getScore();
 
         scamScoreService.createUserScamRecord(userScamRecord);
         scamScoreService.createScoreRecord(score);
-        scamScoreService.deleteUserData("1");
+        scamScoreService.deleteUserData(accountId);
 
-        Mockito.verify(scamScorePersistenceService, atLeastOnce()).deleteUserData("1");
+        Mockito.verify(scamScorePersistenceService, atLeastOnce()).deleteUserData(accountId.getInternalId());
     }
 
 
