@@ -156,7 +156,7 @@ public class ApprovalServiceImplTest {
         when(persistenceService.getTicketsByAccountId(accountId)).thenReturn(ticketDOS);
         doNothing().when(persistenceService).deleteTicketsByAccountId(accountId);
 
-        approvalService.deleteTicketsByAccountId(accountId);
+        approvalService.deleteUserData(accountId);
 
         verify(persistenceService, atLeastOnce()).getTicketsByAccountId(accountId);
         verify(persistenceService, atLeastOnce()).deleteTicketsByAccountId(accountId);

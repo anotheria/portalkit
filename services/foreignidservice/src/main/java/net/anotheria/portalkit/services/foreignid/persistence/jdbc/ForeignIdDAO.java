@@ -182,4 +182,16 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 			JDBCUtil.close(stat);
 		}
 	}
+
+	public void deleteForeignIds(Connection connection, AccountId accId) throws DAOException, SQLException {
+		String deleteSQL = "DELETE FROM " + TABLE_NAME + " WHERE accid=?;";
+		PreparedStatement deleteStatement = null;
+		try {
+			deleteStatement = connection.prepareStatement(deleteSQL);
+			deleteStatement.setString(1, accId.getInternalId());
+			deleteStatement.executeUpdate();
+		} finally {
+			JDBCUtil.close(deleteStatement);
+		}
+	}
 }

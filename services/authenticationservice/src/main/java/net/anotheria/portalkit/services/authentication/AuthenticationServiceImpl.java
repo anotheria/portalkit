@@ -8,6 +8,8 @@ import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,7 +232,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
     }
 
     @Override
-    public void deleteData(AccountId accountId) {
+    public void deleteUserData(AccountId accountId) {
         if (accountId == null)
             throw new IllegalArgumentException("Incoming accountId is NULL.");
         try {
@@ -243,6 +245,17 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         } catch (AuthenticationPersistenceServiceException e) {
             log.error("Couldn't delete encrypt password for " + accountId);
         }
+    }
+
+    @Override
+    public String describeData() {
+        return "authenticationService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
     }
 
     @Override

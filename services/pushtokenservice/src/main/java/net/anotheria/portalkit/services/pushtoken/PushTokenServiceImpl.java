@@ -6,6 +6,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceService;
 import net.anotheria.portalkit.services.pushtoken.persistence.PushTokenPersistenceServiceException;
 import org.slf4j.Logger;
@@ -101,15 +103,24 @@ public class PushTokenServiceImpl implements PushTokenService, EntityManagingSer
     }
 
     @Override
-    public void removeAllFromAccount(AccountId accountId) throws PushTokenServiceException {
+    public void deleteUserData(AccountId accountId) {
         try {
             persistenceService.deleteAllFromAccount(accountId);
-
             // cache sync
             cache.remove(accountId);
         } catch (PushTokenPersistenceServiceException any) {
             log.error("Cannot remove tokens from account", any);
-            throw new PushTokenServiceException("Cannot remove tokens from account", any);
         }
+    }
+
+    @Override
+    public String describeData() {
+        return "pushTokenService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
     }
 }

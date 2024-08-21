@@ -75,9 +75,11 @@ public class MongoAccountSettingsPersistenceServiceImpl extends GenericMongoServ
 	}
 
 	@Override
-	public boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+	public void deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException {
+		QueryBuilder builder = QueryBuilder.create();
 		try {
-			return delete(owner.getInternalId()) != null;
+			builder.add(EqualQuery.create("key.accountId", owner.getInternalId()));
+			delete(builder.build());
 		} catch (StorageException ex) {
 			throw new AccountSettingsPersistenceServiceException("deleteDataspace(" + owner + ") failed", ex);
 		}

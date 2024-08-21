@@ -2,7 +2,9 @@ package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
+import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
+import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.mongo.BaseEntity;
@@ -123,4 +125,12 @@ public class MongoForeignIdDAOImpl implements MongoForeignIdDAO {
         }
     }
 
+    @Override
+    public void deleteUserData(Datastore datastore, AccountId accountId) throws MongoDaoException {
+        if (accountId == null)
+            throw new IllegalArgumentException("Entity accountId is null.");
+
+        Query<ForeignIdEntity> query = datastore.find(ForeignIdEntity.class).filter(Filters.eq("accountId", accountId));
+        query.delete();
+    }
 }

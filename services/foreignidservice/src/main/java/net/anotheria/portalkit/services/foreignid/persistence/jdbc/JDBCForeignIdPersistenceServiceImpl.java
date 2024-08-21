@@ -115,10 +115,22 @@ public class JDBCForeignIdPersistenceServiceImpl extends BasePersistenceServiceJ
 		} catch (DAOException e) {
 			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
 		} catch (SQLException e) {
-			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+
 		} finally {
 			JDBCUtil.close(conn);
 		}
 	}
 
+	@Override
+	public void deleteForeignIds(AccountId accountId) throws ForeignIdPersistenceServiceException {
+		Connection conn = null;
+		try {
+			conn = getConnection();
+			dao.deleteForeignIds(conn, accountId);
+		} catch (DAOException | SQLException e) {
+			throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(conn);
+		}
+	}
 }

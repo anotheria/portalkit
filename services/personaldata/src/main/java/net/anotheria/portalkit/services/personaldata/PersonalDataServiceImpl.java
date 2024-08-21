@@ -7,6 +7,8 @@ import dev.morphia.Datastore;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.personaldata.storage.MongoConnector;
 import net.anotheria.util.crypt.CryptTool;
 import org.bson.Document;
@@ -96,13 +98,27 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
     }
 
     @Override
-    public void delete(AccountId accountId) throws PersonalDataServiceException {
-        PersonalData personalData = get(accountId);
-        if (personalData != null) {
-            getCollection().deleteOne(eq("_id", accountId.getInternalId()));
+    public void deleteUserData(AccountId accountId) {
+        try {
+            PersonalData personalData = get(accountId);
+            if (personalData != null) {
+                getCollection().deleteOne(eq("_id", accountId.getInternalId()));
+            }
+        } catch (Exception e) {
+            LOGGER.error("Unable to delete personal data", e);
         }
     }
 
+    @Override
+    public String describeData() {
+        return "personalDataService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
+    }
 
     private PersonalData decryptPersonalData(PersonalData toDecrypt) {
 

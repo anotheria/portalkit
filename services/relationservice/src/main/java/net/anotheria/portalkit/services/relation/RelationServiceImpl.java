@@ -7,6 +7,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
 import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
@@ -236,6 +238,27 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
         relationCache.clear();
 
         LOGGER.info("Deleted {} user relations for partner={}", deletedCount, partner);
+    }
+
+    @Override
+    public void deleteUserData(AccountId accountId) {
+        try {
+            deleteOwnerRelations(accountId);
+            deletePartnerRelations(accountId);
+        } catch (RelationServiceException e) {
+            LOGGER.error("Unable to delete relation data", e);
+        }
+    }
+
+    @Override
+    public String describeData() {
+        return "relationService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
     }
 
     @DontMonitor

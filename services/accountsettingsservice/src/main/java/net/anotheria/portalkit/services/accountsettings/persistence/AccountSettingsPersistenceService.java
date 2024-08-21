@@ -32,7 +32,7 @@ public interface AccountSettingsPersistenceService extends Service {
 
 	boolean deleteDataspace(AccountId owner, int dataspaceId) throws AccountSettingsPersistenceServiceException;
 
-	boolean deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
+	void deleteDataspaces(AccountId owner) throws AccountSettingsPersistenceServiceException;
 
 	/**
 	 *

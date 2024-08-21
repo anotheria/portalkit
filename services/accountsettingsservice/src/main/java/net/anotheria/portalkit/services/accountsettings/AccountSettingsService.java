@@ -3,13 +3,12 @@ package net.anotheria.portalkit.services.accountsettings;
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
 
-import net.anotheria.portalkit.services.common.DeletionService;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 
@@ -19,7 +18,7 @@ import java.util.List;
  */
 @DistributeMe
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface AccountSettingsService extends Service, DeletionService {
+public interface AccountSettingsService extends Service, UserDataManagingService {
 
 	/**
 	 * Loads dataspace from persistence by given userId and dataspaceId.
@@ -62,12 +61,4 @@ public interface AccountSettingsService extends Service, DeletionService {
 	 * @throws AccountSettingsServiceException
 	 */
 	boolean deleteDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException;
-
-	/**
-	 * Deletes all dataspaces of user. Returns amount of dataspaces deleted.
-	 * @param accountId account id.
-	 * @return	int
-	 * @throws AccountSettingsServiceException
-	 */
-	int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException;
 }

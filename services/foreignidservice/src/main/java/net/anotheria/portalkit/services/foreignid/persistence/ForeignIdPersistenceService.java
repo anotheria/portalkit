@@ -64,6 +64,19 @@ public interface ForeignIdPersistenceService extends Service {
 	 */
 	void unlink(AccountId accountId, int sid, String fid) throws ForeignIdPersistenceServiceException;
 
+	/**
+	 * Get total count of foreign ids.
+	 *
+	 * @return	count of total foreign ids
+	 * @throws ForeignIdPersistenceServiceException if any errors occurs
+	 */
 	long getForeignIdsCount() throws ForeignIdPersistenceServiceException;
 
+	/**
+	 *	Remove all foreign ids for given account.
+	 *
+	 * @param accountId	{@link AccountId} of the user
+	 * @throws ForeignIdPersistenceServiceException if any errors occurs
+	 */
+	void deleteForeignIds(AccountId accountId) throws ForeignIdPersistenceServiceException;
 }

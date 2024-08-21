@@ -9,6 +9,8 @@ import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceService;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
@@ -187,20 +189,27 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
     }
 
     @Override
-    public int deleteDataspaces(AccountId accountId) throws AccountSettingsServiceException {
+    public void deleteUserData(AccountId accountId) {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
         try {
-            return persistence.deleteDataspaces(accountId) ? 1 : 0;
+            persistence.deleteDataspaces(accountId);
+            cache.remove(accountId);
         } catch (AccountSettingsPersistenceServiceException e) {
-            throw new AccountSettingsServiceException("persistence failed ", e);
+            log.error("Unable to delete user data", e);
+        } finally {
+            lock.unlock();
         }
     }
 
     @Override
-    public void deleteData(AccountId accountId) {
-        try {
-            persistence.deleteDataspaces(accountId);
-        } catch (AccountSettingsPersistenceServiceException e) {
-            log.error("Deleting settings data for " + accountId + " failed.");
-        }
+    public String describeData() {
+        return "accountSettingsService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
     }
 }
