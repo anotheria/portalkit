@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.pushtoken;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -19,7 +20,7 @@ import java.util.List;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface PushTokenService extends Service {
+public interface PushTokenService extends Service, UserDataManagingService {
 
     /**
      * Returns a list of tokens that are belonged to provided user.
@@ -46,12 +47,4 @@ public interface PushTokenService extends Service {
      * @return returns account that was owner of token
      */
     AccountId removeToken(String token) throws PushTokenServiceException;
-
-    /**
-     * Deletes all tokens that are belonged to provided account.
-     *
-     * @param accountId account whom tokens will be deleted
-     */
-    void removeAllFromAccount(AccountId accountId) throws PushTokenServiceException;
-
 }

@@ -7,6 +7,8 @@ import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.moskito.core.stats.TimeUnit;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPersistenceServiceException;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceServiceException;
@@ -217,7 +219,7 @@ public class OnlineServiceImpl implements OnlineService, EntityManagingService {
 	}
 
 	@Override
-	public void removeActivityData(AccountId accountId) throws OnlineServiceException {
+	public void deleteUserData(AccountId accountId) {
 		if (accountId == null)
 			throw new IllegalArgumentException("Incoming parameter : [accountId] in not valid");
 
@@ -229,15 +231,24 @@ public class OnlineServiceImpl implements OnlineService, EntityManagingService {
 			//removing from Online storage
 			if (onlineUserStorage.isAccountOnline(accountId))
 				onlineUserStorage.notifyLogOut(accountId);
-		} catch (ActivityPersistenceServiceException e) {
+		} catch (ActivityPersistenceServiceException | AccountIsOfflineException e) {
 			final String message = LogMessageUtil.failMsg(e, accountId);
 			LOG.error(message, e);
-			throw new OnlineServiceException(message, e);
 		} finally {
 			lock.unlock();
 		}
 	}
 
+	@Override
+	public String describeData() {
+		return "onlineService";
+	}
+
+	@Override
+	public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+		//TODO. Please, implement me
+		return null;
+	}
 
 	/**
 	 * Read single time, from online storage - or persistence.

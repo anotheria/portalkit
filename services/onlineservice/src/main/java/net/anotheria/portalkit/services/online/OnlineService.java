@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.online;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -20,7 +21,7 @@ import java.util.Map;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface OnlineService extends Service {
+public interface OnlineService extends Service, UserDataManagingService {
     /**
      * Notify current service that some account  with {@link AccountId} was logged in.
      * During current operation Account - last login date will be triggered to currentTime.
@@ -102,14 +103,4 @@ public interface OnlineService extends Service {
      * @throws OnlineServiceException on errors
      */
     Map<AccountId, Long> readLastActivityTime(final List<AccountId> accounts) throws OnlineServiceException;
-
-    /**
-     * Remove all stored data about incoming {@link AccountId}, performs log-out if still online.
-     * Useful to use  current after  performing Account#remove.
-     *
-     * @param accountId {@link AccountId} target account
-     * @throws OnlineServiceException on errors
-     */
-    void removeActivityData(final AccountId accountId) throws OnlineServiceException;
-
 }

@@ -116,6 +116,7 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
 
     @Override
     public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
         return null;
     }
 

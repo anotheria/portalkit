@@ -12,20 +12,24 @@ import java.util.HashSet;
  * @since 23.08.15 19:38
  */
 public class IntegrityCheckHelper {
-
 	/**
 	 * {@link HashSet} of {@link AccountId}
 	 */
 	private final HashSet<AccountId> accountIds;
+	/**
+	 * Basic usages. If this parameter equals {@code true} incorrect data will be deleted.
+	 */
+	private final boolean performDelete;
 
 	/**
 	 * Default constructor.
 	 *
 	 * @param someAccountIds for integrity check
 	 */
-	public IntegrityCheckHelper(Collection<AccountId> someAccountIds){
+	public IntegrityCheckHelper(Collection<AccountId> someAccountIds, boolean performDelete){
 		accountIds = new HashSet<>(someAccountIds.size());
         accountIds.addAll(someAccountIds);
+		this.performDelete = performDelete;
 	}
 
 	/**
@@ -36,6 +40,10 @@ public class IntegrityCheckHelper {
 	 */
 	public boolean accountExists(AccountId accountId){
 		return accountIds.contains(accountId);
+	}
+
+	public boolean isPerformDelete() {
+		return performDelete;
 	}
 
 	@Override

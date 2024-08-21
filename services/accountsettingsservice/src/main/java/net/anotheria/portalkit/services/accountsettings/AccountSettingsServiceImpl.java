@@ -209,6 +209,7 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
 
     @Override
     public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
         return null;
     }
 }
