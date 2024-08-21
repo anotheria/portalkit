@@ -153,6 +153,8 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
 
     @Override
     public boolean deleteDataspace(AccountId accountId, DataspaceType dataspaceType) throws AccountSettingsServiceException {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
         try {
             int type = dataspaceType.getId();
             boolean success = persistence.deleteDataspace(accountId, type);
@@ -167,11 +169,15 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
             return success;
         } catch (AccountSettingsPersistenceServiceException e) {
             throw new AccountSettingsServiceException("persistence failed ", e);
+        } finally {
+            lock.unlock();
         }
     }
 
     @Override
     public boolean deleteDataspace(AccountId accountId, int dataspaceId) throws AccountSettingsServiceException {
+        IdBasedLock<AccountId> lock = accountsLockManager.obtainLock(accountId);
+        lock.lock();
         try {
             boolean success = persistence.deleteDataspace(accountId, dataspaceId);
 
@@ -185,6 +191,8 @@ public class AccountSettingsServiceImpl implements AccountSettingsService, Entit
             return success;
         } catch (AccountSettingsPersistenceServiceException e) {
             throw new AccountSettingsServiceException("persistence failed ", e);
+        } finally {
+            lock.unlock();
         }
     }
 
