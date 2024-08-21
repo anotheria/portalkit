@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.personaldata;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -11,7 +12,7 @@ import org.distributeme.core.failing.RetryCallOnce;
  */
 @DistributeMe()
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface PersonalDataService extends Service {
+public interface PersonalDataService extends Service, UserDataManagingService {
 
     /**
      * Returns user personal data.
@@ -29,12 +30,4 @@ public interface PersonalDataService extends Service {
      * @throws PersonalDataServiceException id error occurs.
      * */
     void save(PersonalData personalData) throws PersonalDataServiceException;
-
-    /**
-     * Removes user personal data.
-     *
-     * @param accountId user account id.
-     * @throws PersonalDataServiceException id error occurs.
-     * */
-    void delete(AccountId accountId) throws PersonalDataServiceException;
 }

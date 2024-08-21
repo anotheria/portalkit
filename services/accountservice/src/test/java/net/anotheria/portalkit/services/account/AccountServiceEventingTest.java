@@ -8,6 +8,8 @@ import net.anotheria.portalkit.services.account.event.data.AccountDeleteEventDat
 import net.anotheria.portalkit.services.account.event.data.AccountUpdateEventData;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.eventing.ServiceEventData;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
@@ -55,6 +57,23 @@ public final class AccountServiceEventingTest {
 
 			@Override
 			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
+				return null;
+			}
+		});
+		MetaFactory.createOnTheFlyFactory(AccountNotePersistenceService.class, Extension.NONE, new AccountNotePersistenceService() {
+
+			@Override
+			public void saveAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+
+			}
+
+			@Override
+			public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException {
+				return null;
+			}
+
+			@Override
+			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
 				return null;
 			}
 		});

@@ -259,7 +259,7 @@ public class OnlineServiceTest {
 
         //remove!
         try {
-            service.removeActivityData(accountId);
+            service.deleteUserData(accountId);
             //check that Offline!
             Assert.assertFalse("Should be offline NOW", service.isOnline(accountId));
             try {

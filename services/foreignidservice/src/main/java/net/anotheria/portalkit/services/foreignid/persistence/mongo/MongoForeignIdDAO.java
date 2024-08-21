@@ -19,4 +19,6 @@ public interface MongoForeignIdDAO {
     void deleteEntity(Datastore datastore, AccountId accountId, int sid, String fid) throws MongoDaoException;
 
     ForeignIdEntity getForeignIdBySidAndFid(Datastore datastore, int sid, String fid) throws MongoDaoException;
+
+    void deleteUserData(Datastore datastore, AccountId accountId) throws MongoDaoException;
 }

@@ -6,6 +6,8 @@ import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
@@ -39,6 +41,23 @@ public class AccountServiceTest {
 
 			@Override
 			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
+				return null;
+			}
+		});
+		MetaFactory.createOnTheFlyFactory(AccountNotePersistenceService.class, Extension.NONE, new AccountNotePersistenceService() {
+
+			@Override
+			public void saveAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+
+			}
+
+			@Override
+			public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException {
+				return null;
+			}
+
+			@Override
+			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
 				return null;
 			}
 		});

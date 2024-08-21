@@ -6,6 +6,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
+import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
 import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
@@ -316,6 +318,24 @@ public class MatchServiceImpl implements MatchService, EntityManagingService {
         isMatchedCache.put(cacheKey, persistenceValue);
 
         return persistenceValue;
+    }
+
+
+    @Override
+    public void deleteUserData(AccountId accountId) {
+        deleteMatchesByOwner(accountId);
+        deleteMatchesByTarget(accountId);
+    }
+
+    @Override
+    public String describeData() {
+        return "matchService";
+    }
+
+    @Override
+    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
+        //TODO. Please, implement me
+        return null;
     }
 
     private String getMatchedCacheKey(AccountId owner, AccountId target, int type) {

@@ -7,6 +7,8 @@ import net.anotheria.portalkit.services.account.persistence.AccountPersistenceSe
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
 import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
 import net.anotheria.portalkit.services.account.persistence.inmemory.InMemoryAccountPersistenceServiceImpl;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
+import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.After;
 import org.junit.Before;
@@ -77,6 +79,23 @@ public class AccountServiceImplCachingTest {
 
 			@Override
 			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
+				return null;
+			}
+		});
+		MetaFactory.createOnTheFlyFactory(AccountNotePersistenceService.class, Extension.NONE, new AccountNotePersistenceService() {
+
+			@Override
+			public void saveAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+
+			}
+
+			@Override
+			public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException {
+				return null;
+			}
+
+			@Override
+			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
 				return null;
 			}
 		});

@@ -133,4 +133,15 @@ public class MongoForeignIdPersistenceServiceImpl  extends BaseMongoPersistenceS
             throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public void deleteForeignIds(AccountId accountId) throws ForeignIdPersistenceServiceException {
+        try {
+            Datastore datastore = connect();
+            foreignIdDAO.deleteUserData(datastore, accountId);
+        } catch (MongoDaoException e) {
+            log.error("Can't delete foreign ids for account", e);
+            throw new ForeignIdPersistenceServiceException(e.getMessage(), e);
+        }
+    }
 }
