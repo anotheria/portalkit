@@ -114,6 +114,21 @@ public interface AccountService extends Service {
      */
 	AccountNote getAccountNoteById(long id) throws AccountServiceException;
 
+	/**
+	 * Update {@link AccountNote} with new values for Author(i.e. editor) and text
+	 * @param accountNote {@link AccountNote} to update
+	 * @return {@link AccountNote} if update was successful
+	 * @throws AccountServiceException when error
+	 */
+	AccountNote updateAccountNote(AccountNote accountNote) throws AccountServiceException;
+
+	/**
+	 * Delete {@link AccountNote} by id
+	 * @param id of {@link AccountNote}
+	 * @throws AccountServiceException when error
+	 */
+	void deleteAccountNote(long id) throws AccountServiceException;
+
     /**
      * Get account notes list by given account id
      * @param accountId

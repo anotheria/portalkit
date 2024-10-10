@@ -338,6 +338,24 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	}
 
 	@Override
+	public AccountNote updateAccountNote(AccountNote accountNote) throws AccountServiceException {
+		try {
+			return accountNotePersistenceService.updateAccountNote(accountNote);
+		} catch (AccountNotePersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
+	public void deleteAccountNote(long id) throws AccountServiceException {
+		try {
+			accountNotePersistenceService.deleteAccountNote(id);
+		} catch (AccountNotePersistenceServiceException e) {
+			throw new AccountServiceException(e);
+		}
+	}
+
+	@Override
 	public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountServiceException {
 		try {
 			return accountNotePersistenceService.getNotesByAccountId(accountId);
