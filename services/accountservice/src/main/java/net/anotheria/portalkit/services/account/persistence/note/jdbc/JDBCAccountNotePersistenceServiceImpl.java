@@ -63,4 +63,30 @@ public class JDBCAccountNotePersistenceServiceImpl extends BasePersistenceServic
             JDBCUtil.close(connection);
         }
     }
+
+    @Override
+    public AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            return accountNoteDAO.updateAccountNote(connection, accountNote);
+        } catch (DAOException | SQLException e) {
+            throw new AccountNotePersistenceServiceException(e.getMessage(), e);
+        } finally {
+            JDBCUtil.close(connection);
+        }
+    }
+
+    @Override
+    public void deleteAccountNote(long id) throws AccountNotePersistenceServiceException {
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            accountNoteDAO.deleteAccountNote(connection, id);
+        } catch (DAOException | SQLException e) {
+            throw new AccountNotePersistenceServiceException(e.getMessage(), e);
+        } finally {
+            JDBCUtil.close(connection);
+        }
+    }
 }

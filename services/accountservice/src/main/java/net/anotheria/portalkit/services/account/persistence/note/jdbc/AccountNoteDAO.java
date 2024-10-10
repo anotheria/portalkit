@@ -45,6 +45,43 @@ public class AccountNoteDAO extends AbstractDAO implements DAO {
         }
     }
 
+    public AccountNote updateAccountNote(Connection connection, AccountNote accountNote) throws DAOException, SQLException {
+        String update = "UPDATE " + TABLE_NAME + " SET author = ?, text = ? WHERE id = ?";
+
+        PreparedStatement updateStatement = null;
+        try {
+            updateStatement = connection.prepareStatement(update);
+
+            updateStatement.setString(1, accountNote.getAuthor());
+            updateStatement.setString(2, accountNote.getText());
+            updateStatement.setLong(3, accountNote.getId());
+            int rowsAffected = updateStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new DAOException("Update failed, no rows affected.");
+            }
+            return accountNote;
+        } finally {
+            JDBCUtil.close(updateStatement);
+        }
+    }
+
+    public void deleteAccountNote(Connection connection, long id) throws DAOException, SQLException {
+        String delete = "DELETE FROM " + TABLE_NAME + " WHERE id = ?";
+
+        PreparedStatement deleteStatement = null;
+        try {
+            deleteStatement = connection.prepareStatement(delete);
+            deleteStatement.setLong(1, id);
+            int rowsAffected = deleteStatement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new DAOException("Delete failed, no rows affected.");
+            }
+        } finally {
+            JDBCUtil.close(deleteStatement);
+        }
+    }
+
 
     public AccountNote getAccountNoteById(Connection connection, long id) throws DAOException, SQLException {
         String selectQuery = "SELECT id, timestamp, author, text, accountId FROM " + TABLE_NAME + " WHERE id=?;";

@@ -12,4 +12,6 @@ public interface AccountNotePersistenceService extends Service {
     List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException;
 
     AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException;
+    AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException;
+    void deleteAccountNote(long id) throws AccountNotePersistenceServiceException;
 }
