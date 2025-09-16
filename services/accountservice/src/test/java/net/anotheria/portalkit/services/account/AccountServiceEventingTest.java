@@ -76,6 +76,16 @@ public final class AccountServiceEventingTest {
 			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
 				return null;
 			}
+
+			@Override
+			public AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+				return null;
+			}
+
+			@Override
+			public void deleteAccountNote(long id) throws AccountNotePersistenceServiceException {
+
+			}
 		});
 
 		accountService = AccountServiceImpl.INSTANCE;

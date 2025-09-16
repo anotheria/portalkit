@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>net.anotheria.portalkit</groupId>
 		<artifactId>pk-apis</artifactId>
-		<version>4.1.1-SNAPSHOT</version>
+		<version>4.2.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -22,7 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.anotheria.portalkit</groupId>
-			<artifactId>pk-services-authenticationservice</artifactId>
+			<artifactId>pk-services-accountsettingsservice</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

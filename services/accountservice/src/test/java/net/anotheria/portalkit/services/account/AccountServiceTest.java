@@ -60,6 +60,16 @@ public class AccountServiceTest {
 			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
 				return null;
 			}
+
+			@Override
+			public AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
+				return null;
+			}
+
+			@Override
+			public void deleteAccountNote(long id) throws AccountNotePersistenceServiceException {
+
+			}
 		});
 
 		MetaFactory.addFactoryClass(AccountService.class, Extension.LOCAL, AccountServiceFactory.class);
