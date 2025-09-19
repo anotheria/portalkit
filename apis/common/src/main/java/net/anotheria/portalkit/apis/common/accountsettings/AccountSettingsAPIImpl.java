@@ -10,6 +10,8 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.apis.common.BasePortalKitAPIImpl;
 import net.anotheria.portalkit.services.accountsettings.*;
 import net.anotheria.portalkit.services.accountsettings.attribute.Attribute;
+import net.anotheria.portalkit.services.accountsettings.attribute.BooleanAttribute;
+import net.anotheria.portalkit.services.accountsettings.attribute.LongAttribute;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
@@ -140,4 +142,36 @@ public class AccountSettingsAPIImpl extends BasePortalKitAPIImpl implements Acco
         }finally {
             lock.unlock();
         }
-    }}
+    }
+
+    protected String getStringAttributeOrNull(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<String> attr = getStringAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? null : attr.get();
+    }
+
+    protected Boolean getBooleanAttributeOrNull(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<Boolean> attr = getBooleanAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? null : attr.get();
+    }
+
+    protected Long getLongAttributeOrNull(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<Long> attr = getLongAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? null : attr.get();
+    }
+
+    protected Optional<String> getStringAttribute(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<Attribute> attr = getAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? Optional.empty() : Optional.of(attr.get().getValueAsString());
+    }
+
+    protected Optional<Long> getLongAttribute(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<Attribute> attr = getAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? Optional.empty() : Optional.of(((LongAttribute) attr.get()).getValue());
+    }
+
+    protected Optional<Boolean> getBooleanAttribute(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException {
+        Optional<Attribute> attr = getAttribute(accountId, dataspaceType, attributeName);
+        return attr.isEmpty() ? Optional.empty() : Optional.of(((BooleanAttribute) attr.get()).getValue());
+    }
+
+}
