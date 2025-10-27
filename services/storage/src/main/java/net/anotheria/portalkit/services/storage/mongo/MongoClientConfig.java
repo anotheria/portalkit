@@ -72,6 +72,9 @@ public final class MongoClientConfig implements Serializable {
 	@Configure
 	private String connectionString;
 
+	@Configure
+	private boolean forceSSL = true;
+
 	/**
 	 * Maximum connections amount per host.
 	 */
@@ -819,4 +822,11 @@ public final class MongoClientConfig implements Serializable {
 
 	}
 
+	public boolean isForceSSL() {
+		return forceSSL;
+	}
+
+	public void setForceSSL(boolean forceSSL) {
+		this.forceSSL = forceSSL;
+	}
 }

@@ -88,7 +88,7 @@ public abstract class AbstractMongoService {
 		} else {
 			settings = MongoClientSettings.builder()
 					.applyConnectionString(new ConnectionString(mongoClientConfiguration.getConnectionString()))
-					.applyToSslSettings(builder -> builder.enabled(true))
+					.applyToSslSettings(builder -> builder.enabled(mongoClientConfiguration.isForceSSL()))
 					.applyToSocketSettings(builder -> {
 						builder.connectTimeout(options.getConnectTimeout(), TimeUnit.MILLISECONDS);
 						builder.readTimeout(options.getSocketTimeout(), TimeUnit.MILLISECONDS);
