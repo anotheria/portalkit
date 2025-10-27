@@ -53,13 +53,10 @@
 		<module>authenticationservice</module>
 		<module>onlineservice</module>
 		<module>recordservice</module>
-		<!-- module>notificationservice</module -->
-		<!-- module>messagingservice</module -->
 		<module>foreignidservice</module>
 		<module>approvalservice</module>
         <module>accountarchiveservice</module>
         <module>profileservice</module>
-		<!--module>combined</module-->
 		<module>matchservice</module>
 		<module>subscriptionservice</module>
 		<module>relationservice</module>
