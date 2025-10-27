@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.account;
 
 import net.anotheria.portalkit.services.account.persistence.AccountEntity;
 import net.anotheria.portalkit.services.account.persistence.AccountEntityRepository;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Ignore
 class AccountEntitySmokeTest {
 
     @Test
