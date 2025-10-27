@@ -47,6 +47,7 @@
 		<module>common</module>
 		<module>storage</module>
 		<module>accountservice</module>
+		<module>accountservice-spring-mongo</module>
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
