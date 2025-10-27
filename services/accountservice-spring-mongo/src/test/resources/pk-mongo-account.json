@@ -1,0 +1,4 @@
+{
+  "uri":"mongodb://localhost:27017/pk_mongo_test",
+  "dbName":"pk_mongo_test",
+}
