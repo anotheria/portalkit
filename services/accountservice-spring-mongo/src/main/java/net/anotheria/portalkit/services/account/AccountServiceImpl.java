@@ -434,7 +434,12 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	public List<Account> getAccountsByQuery(final AccountQuery query) throws AccountAdminServiceException {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");
-		throw new AccountAdminServiceException("Not yet implemented");
+		List<AccountEntity> accountEntities = accountEntityRepository.search(query);
+		List<Account> accounts = new ArrayList<>();
+		for (AccountEntity entity : accountEntities) {
+			accounts.add(entity.toAccount());
+		}
+		return accounts;
 	}
 
 	private void createAuditForAccount(Account account) throws AccountServiceException {
