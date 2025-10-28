@@ -8,17 +8,18 @@ import java.util.Objects;
 public class AccountNote implements Serializable, Cloneable {
 	private static final long serialVersionUID = -6849321598382243709L;
 
-    private long id;
+
+    private String id;
     private long timestamp = System.currentTimeMillis();
     private String author;
     private String text;
     private AccountId accountId;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

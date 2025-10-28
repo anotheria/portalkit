@@ -1,13 +1,8 @@
 package net.anotheria.portalkit.services.account;
 
 import junit.framework.Assert;
-import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
@@ -28,53 +23,6 @@ import static org.junit.Assert.*;
  */
 @Ignore
 public class AccountServiceTest {
-
-	@After
-	@Before
-	public void setup() {
-		MetaFactory.reset();
-		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
-
-		MetaFactory.createOnTheFlyFactory(AccountAuditPersistenceService.class, Extension.NONE, new AccountAuditPersistenceService() {
-			@Override
-			public void saveAccountAudit(AccountAudit accountAudit) throws AccountAuditPersistenceServiceException {
-
-			}
-
-			@Override
-			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
-				return null;
-			}
-		});
-		MetaFactory.createOnTheFlyFactory(AccountNotePersistenceService.class, Extension.NONE, new AccountNotePersistenceService() {
-
-			@Override
-			public void saveAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
-
-			}
-
-			@Override
-			public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public void deleteAccountNote(long id) throws AccountNotePersistenceServiceException {
-
-			}
-		});
-
-	}
 
 	// this test will be removed later, for now it 'tests' the new metafactory
 	// functionality, instantiation of service

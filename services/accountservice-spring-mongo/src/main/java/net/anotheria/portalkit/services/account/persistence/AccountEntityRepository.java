@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountEntityRepository extends MongoRepository<AccountEntity, String> {
+public interface AccountEntityRepository extends MongoRepository<AccountEntity, String> , AccountEntityRepositoryCustom{
     @Query(value = "{ 'name' : ?0 }", fields = "{ '_id' : 1 }")
     Optional<String> findIdByName(String name);
 
