@@ -19,8 +19,8 @@ import net.anotheria.portalkit.services.accountlist.events.AccountListServiceEve
 import net.anotheria.portalkit.services.accountlist.sorter.AccountListFieldComparators;
 import net.anotheria.portalkit.services.accountlist.sorter.Pager;
 import net.anotheria.portalkit.services.accountlist.sorter.SortingDirection;
-import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 
 /**

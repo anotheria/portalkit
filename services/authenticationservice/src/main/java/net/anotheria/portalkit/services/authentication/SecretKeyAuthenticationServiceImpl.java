@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.authentication;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
 import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import org.configureme.ConfigurationManager;
@@ -15,7 +16,6 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.encryptors.BlowfishPasswordEncryptionAlgorithm;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
-import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * Implementation of the AuthenticationService.

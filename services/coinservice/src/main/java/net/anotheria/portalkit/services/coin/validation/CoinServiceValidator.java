@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.coin.validation;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.apache.commons.lang3.StringUtils;
 
 import net.anotheria.portalkit.services.coin.exception.CoinServiceValidationException;
-import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * @author

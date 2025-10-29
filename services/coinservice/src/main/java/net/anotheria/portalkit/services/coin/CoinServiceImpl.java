@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.coin;
 import java.util.List;
 import java.util.UUID;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,6 @@ import net.anotheria.portalkit.services.coin.persistence.CoinPersistenceService;
 import net.anotheria.portalkit.services.coin.persistence.entity.CoinBalanceEntity;
 import net.anotheria.portalkit.services.coin.persistence.entity.CoinTransactionEntity;
 import net.anotheria.portalkit.services.coin.validation.CoinServiceValidator;
-import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;

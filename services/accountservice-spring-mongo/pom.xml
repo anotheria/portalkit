@@ -16,7 +16,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.anotheria.portalkit</groupId>
-			<artifactId>pk-services-common</artifactId>
+			<artifactId>pk-services-essentials</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-eventing</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -93,6 +98,11 @@
 			<version>1.21.3</version>  <!-- oder aktuelle Version -->
 			<scope>test</scope>
 		</dependency>
-		</dependencies>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>

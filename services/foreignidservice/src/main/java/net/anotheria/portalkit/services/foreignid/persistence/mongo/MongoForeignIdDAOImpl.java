@@ -2,7 +2,6 @@ package net.anotheria.portalkit.services.foreignid.persistence.mongo;
 
 import com.mongodb.DuplicateKeyException;
 import com.mongodb.MongoException;
-import com.mongodb.client.result.DeleteResult;
 import dev.morphia.Datastore;
 import dev.morphia.query.Query;
 import dev.morphia.query.filters.Filters;

@@ -18,7 +18,6 @@ import net.anotheria.util.concurrency.IdBasedLockManager;
 import net.anotheria.util.concurrency.SafeIdBasedLockManager;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
 
 @Monitor(category = "api", subsystem = "portalkit")

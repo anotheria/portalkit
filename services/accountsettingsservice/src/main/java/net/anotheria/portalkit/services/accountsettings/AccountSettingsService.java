@@ -1,12 +1,13 @@
 package net.anotheria.portalkit.services.accountsettings;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
 
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
+
+import net.anotheria.portalkit.services.common.AccountId;
 
 import java.util.Collection;
 
@@ -18,7 +19,7 @@ import java.util.Collection;
  */
 @DistributeMe
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface AccountSettingsService extends Service, UserDataManagingService {
+public interface AccountSettingsService extends Service, UserDataManagingServiceWithIntegrityCheck {
 
 	/**
 	 * Loads dataspace from persistence by given userId and dataspaceId.

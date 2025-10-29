@@ -7,7 +7,6 @@ import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAO;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceAttributeAO;
 import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceExistsAPIException;
-import net.anotheria.portalkit.adminapi.api.admin.dataspace.DataspaceTypeInternal;
 import net.anotheria.portalkit.adminapi.api.shared.PageResult;
 import net.anotheria.portalkit.adminapi.config.AdminAPIConfig;
 import net.anotheria.portalkit.adminapi.rest.account.request.AccountUpdateRequest;

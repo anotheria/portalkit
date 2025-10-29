@@ -24,7 +24,6 @@ import net.anotheria.anoprise.processor.QueuedMultiProcessorBuilder;
 import net.anotheria.anoprise.processor.UnrecoverableQueueOverflowException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.online.AccountIsOfflineException;
-import net.anotheria.portalkit.services.online.AccountIsOnlineException;
 import net.anotheria.portalkit.services.online.NoActivityDataFoundException;
 import net.anotheria.portalkit.services.online.OnlineService;
 import net.anotheria.portalkit.services.online.OnlineServiceException;

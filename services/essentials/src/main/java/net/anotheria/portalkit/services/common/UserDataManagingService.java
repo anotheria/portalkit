@@ -1,8 +1,5 @@
 package net.anotheria.portalkit.services.common;
 
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
-
 /**
  * This interface declares a services that manages user data. It allows us to define operations that can be used on any service that manages user data.
  *
@@ -22,12 +19,4 @@ public interface UserDataManagingService {
      */
     String describeData();
 
-    /**
-     * Perform integrity check for given service.
-     *
-     * @param helper {@link IntegrityCheckHelper} instance
-     * @return  {@link IntegrityCheckResult} result of integrity check
-     * @throws Exception if any errors occurs
-     */
-    IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception;
 }

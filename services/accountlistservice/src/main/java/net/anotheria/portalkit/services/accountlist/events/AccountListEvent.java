@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.accountlist.events;
 
-import java.io.Serializable;
-
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.io.Serializable;
 
 /**
  * Account list event object class.

@@ -4,7 +4,6 @@ import junit.framework.Assert;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;

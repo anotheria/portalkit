@@ -11,6 +11,18 @@
 	<description>PortalKIT Services: Common</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-essentials</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-eventing</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
 		<!--Mongo-->
 		<dependency>
 			<groupId>org.mongodb</groupId>

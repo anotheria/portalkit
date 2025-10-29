@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.pushtoken.persistence;
 
-import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.concurrency.IdBasedLock;
 import net.anotheria.util.concurrency.IdBasedLockManager;

@@ -6,8 +6,8 @@ import net.anotheria.anoprise.eventservice.EventServiceFactory;
 import net.anotheria.anoprise.eventservice.EventServicePushSupplier;
 import net.anotheria.anoprise.eventservice.util.QueueFullException;
 import net.anotheria.anoprise.eventservice.util.QueuedEventSender;
-import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

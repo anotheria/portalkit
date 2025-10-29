@@ -7,7 +7,6 @@ import net.anotheria.portalkit.services.account.event.data.AccountDeleteEventDat
 import net.anotheria.portalkit.services.account.event.data.AccountUpdateEventData;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.eventing.ServiceEventData;
-import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,10 +40,6 @@ public final class AccountServiceEventingTest {
 
 	@Before
 	public void init() {
-		MetaFactory.reset();
-		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
-
-
 		accountService = AccountServiceImpl.INSTANCE;
 		accountService.unitTestReset();
 		eventConsumer = new AccountServiceTestEventConsumer();

@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.pushtoken;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -20,7 +20,7 @@ import java.util.List;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface PushTokenService extends Service, UserDataManagingService {
+public interface PushTokenService extends Service, UserDataManagingServiceWithIntegrityCheck {
 
     /**
      * Returns a list of tokens that are belonged to provided user.

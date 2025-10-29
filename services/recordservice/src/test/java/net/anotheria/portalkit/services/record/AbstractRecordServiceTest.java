@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.anotheria.anoprise.metafactory.MetaFactoryException;
-import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.junit.Test;
 
 /**
