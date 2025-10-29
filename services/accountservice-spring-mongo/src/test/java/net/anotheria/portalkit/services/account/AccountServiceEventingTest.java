@@ -1,23 +1,15 @@
 package net.anotheria.portalkit.services.account;
 
-import net.anotheria.anoprise.metafactory.Extension;
 import net.anotheria.anoprise.metafactory.MetaFactory;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventConsumer;
 import net.anotheria.portalkit.services.account.event.data.AccountCreateEventData;
 import net.anotheria.portalkit.services.account.event.data.AccountDeleteEventData;
 import net.anotheria.portalkit.services.account.event.data.AccountUpdateEventData;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.eventing.ServiceEventData;
-import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -48,48 +40,6 @@ public final class AccountServiceEventingTest {
 
 	@Before
 	public void init() {
-		MetaFactory.reset();
-		MetaFactory.addOnTheFlyConflictResolver(new InMemoryPickerConflictResolver());
-
-		MetaFactory.createOnTheFlyFactory(AccountAuditPersistenceService.class, Extension.NONE, new AccountAuditPersistenceService() {
-			@Override
-			public void saveAccountAudit(AccountAudit accountAudit) throws AccountAuditPersistenceServiceException {
-
-			}
-
-			@Override
-			public List<AccountAudit> getAccountAudits(AccountId accountId) throws AccountAuditPersistenceServiceException {
-				return null;
-			}
-		});
-		MetaFactory.createOnTheFlyFactory(AccountNotePersistenceService.class, Extension.NONE, new AccountNotePersistenceService() {
-
-			@Override
-			public void saveAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
-
-			}
-
-			@Override
-			public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public AccountNote getAccountNoteById(long id) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public AccountNote updateAccountNote(AccountNote accountNote) throws AccountNotePersistenceServiceException {
-				return null;
-			}
-
-			@Override
-			public void deleteAccountNote(long id) throws AccountNotePersistenceServiceException {
-
-			}
-		});
-
 		accountService = AccountServiceImpl.INSTANCE;
 		accountService.unitTestReset();
 		eventConsumer = new AccountServiceTestEventConsumer();

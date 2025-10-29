@@ -8,8 +8,8 @@ import net.anotheria.portalkit.services.accountsettings.attribute.LongAttribute;
 import net.anotheria.portalkit.services.accountsettings.attribute.StringAttribute;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceService;
 import net.anotheria.portalkit.services.accountsettings.persistence.AccountSettingsPersistenceServiceFactory;
-import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.configureme.ConfigurationManager;
 import org.configureme.environments.DynamicEnvironment;
 import org.junit.Ignore;

@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.accountlist;
 
-import java.io.Serializable;
-
 import net.anotheria.portalkit.services.common.AccountId;
+
+import java.io.Serializable;
 
 /**
  * Container for addition information like creation time stamp and anything that

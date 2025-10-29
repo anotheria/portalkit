@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.services.scamscore;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -19,7 +19,7 @@ import java.util.List;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface ScamScoreService extends Service, UserDataManagingService {
+public interface ScamScoreService extends Service, UserDataManagingServiceWithIntegrityCheck {
 
     /**
      * Creates user scam record.

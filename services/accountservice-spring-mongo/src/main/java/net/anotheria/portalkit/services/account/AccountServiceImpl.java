@@ -2,18 +2,11 @@ package net.anotheria.portalkit.services.account;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
-import net.anotheria.anoprise.metafactory.MetaFactory;
-import net.anotheria.anoprise.metafactory.MetaFactoryException;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.account.event.AccountServiceEventSupplier;
-import net.anotheria.portalkit.services.account.persistence.AccountEntity;
-import net.anotheria.portalkit.services.account.persistence.AccountEntityRepository;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceService;
-import net.anotheria.portalkit.services.account.persistence.audit.AccountAuditPersistenceServiceException;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceService;
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
+import net.anotheria.portalkit.services.account.persistence.*;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.StringUtils;
 
@@ -36,12 +29,6 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	 */
 	private AccountServiceConfig config;
 
-
-	/**
-	 * {@link AccountAuditPersistenceService} service.
-	 */
-	private AccountAuditPersistenceService accountAuditPersistenceService;
-	private AccountNotePersistenceService accountNotePersistenceService;
 
 	/**
 	 * {@link AccountServiceEventSupplier} instance.
@@ -83,12 +70,15 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	 */
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
+	// mongo repositories.
 	private AccountEntityRepository accountEntityRepository;
+	private AccountNoteEntityRepository accountNoteEntityRepository;
+	private AccountAuditEntityRepository accountAuditEntityRepository;
 
 	/**
 	 * Default constructor.
 	 */
-	private AccountServiceImpl() {
+	AccountServiceImpl() {
 		init();
 	}
 
@@ -326,45 +316,58 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	@Override
 	public void saveAccountNote(AccountNote accountNote) throws AccountServiceException {
 		try {
-			accountNotePersistenceService.saveAccountNote(accountNote);
-		} catch (AccountNotePersistenceServiceException e) {
-			throw new AccountServiceException(e);
+			AccountNoteEntity newEntity = AccountNoteEntity.createFromAccountNote(accountNote);
+			accountNoteEntityRepository.save(newEntity);
+		} catch (Exception e) {
+			throw new AccountServiceException("Can't save account note for account id: " + accountNote.getAccountId(), e);
 		}
 	}
 
 	@Override
-	public AccountNote getAccountNoteById(long id) throws AccountServiceException {
+	public AccountNote getAccountNoteById(String id) throws AccountServiceException {
 		try {
-			return accountNotePersistenceService.getAccountNoteById(id);
-		} catch (AccountNotePersistenceServiceException e) {
-			throw new AccountServiceException(e);
+			AccountNoteEntity entity = accountNoteEntityRepository.findById(id).orElse(null);
+			return entity == null ? null : entity.toAccountNote();
+		} catch (Exception e) {
+			throw new AccountServiceException("Mongo failed to get account note by id: " + id, e);
 		}
 	}
 
 	@Override
 	public AccountNote updateAccountNote(AccountNote accountNote) throws AccountServiceException {
 		try {
-			return accountNotePersistenceService.updateAccountNote(accountNote);
-		} catch (AccountNotePersistenceServiceException e) {
-			throw new AccountServiceException(e);
+			AccountNoteEntity existingEntity = accountNoteEntityRepository.findById(accountNote.getId()).orElse(null);
+			if (existingEntity == null)
+				throw new AccountServiceException("Account note with id " + accountNote.getId() + " does not exist and thus cannot be updated.");
+			existingEntity.updateFromAccountNote(accountNote);
+			accountNoteEntityRepository.save(existingEntity);
+			return existingEntity.toAccountNote();
+		} catch (Exception e) {
+			throw new AccountServiceException("Mongo failed to update account note with id " + accountNote.getId(), e);
 		}
 	}
 
 	@Override
-	public void deleteAccountNote(long id) throws AccountServiceException {
+	public void deleteAccountNote(String id) throws AccountServiceException {
 		try {
-			accountNotePersistenceService.deleteAccountNote(id);
-		} catch (AccountNotePersistenceServiceException e) {
-			throw new AccountServiceException(e);
+			accountNoteEntityRepository.deleteById(id);
+		} catch (Exception e) {
+			throw new AccountServiceException("Mongo failed to delete account note by id: " + id, e);
 		}
 	}
 
 	@Override
 	public List<AccountNote> getNotesByAccountId(AccountId accountId) throws AccountServiceException {
 		try {
-			return accountNotePersistenceService.getNotesByAccountId(accountId);
-		} catch (AccountNotePersistenceServiceException e) {
-			throw new AccountServiceException(e);
+			List<AccountNoteEntity> entities =
+					accountNoteEntityRepository.findAllByAccountId(accountId.getInternalId());
+			List<AccountNote> notes = new ArrayList<>();
+			for (AccountNoteEntity entity : entities) {
+				notes.add(entity.toAccountNote());
+			}
+			return notes;
+		} catch (Exception e) {
+			throw new AccountServiceException("Mongo failed to get account notes by account id: " + accountId, e);
 		}
 	}
 
@@ -431,7 +434,12 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	public List<Account> getAccountsByQuery(final AccountQuery query) throws AccountAdminServiceException {
 		if (query == null)
 			throw new IllegalArgumentException("query argument is null.");
-		throw new AccountAdminServiceException("Not yet implemented");
+		List<AccountEntity> accountEntities = accountEntityRepository.search(query);
+		List<Account> accounts = new ArrayList<>();
+		for (AccountEntity entity : accountEntities) {
+			accounts.add(entity.toAccount());
+		}
+		return accounts;
 	}
 
 	private void createAuditForAccount(Account account) throws AccountServiceException {
@@ -467,8 +475,8 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 		accountAudit.setCreated(timestamp);
 
 		try {
-			accountAuditPersistenceService.saveAccountAudit(accountAudit);
-		} catch (AccountAuditPersistenceServiceException e) {
+			accountAuditEntityRepository.save(AccountAuditEntity.createFromAccountAudit(accountAudit));
+		} catch (Exception e) {
 			throw new AccountServiceException("Fail save account audit", e);
 		}
 	}
@@ -480,8 +488,14 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 		}
 
 		try {
-			return accountAuditPersistenceService.getAccountAudits(accountId);
-		} catch (AccountAuditPersistenceServiceException e) {
+			List<AccountAuditEntity> auditEntities = accountAuditEntityRepository.findAllByAccountId(accountId.getInternalId());
+
+			List<AccountAudit> audits = new ArrayList<>();
+			for (AccountAuditEntity entity : auditEntities) {
+				audits.add(entity.toAccountAudit());
+			}
+			return audits;
+		} catch (Exception e) {
 			throw new AccountAdminServiceException("Account audit persistence error", e);
 		}
 	}
@@ -500,14 +514,6 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 			email2idCache = Caches.createConfigurableHardwiredCache("pk-cache-accountservice-email2id");
 		}
 
-		try {
-			if (config.isAuditEnabled()) {
-				accountAuditPersistenceService = MetaFactory.get(AccountAuditPersistenceService.class);
-			}
-		} catch (MetaFactoryException e) {
-			throw new IllegalStateException("Can't start without persistence service ", e);
-		}
-		accountNotePersistenceService = null;//MetaFactory.get(AccountNotePersistenceService.class);
 		EntityManagingServices.createEntityCounter(this, "Accounts");
 	}
 
@@ -531,6 +537,14 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 
 	public void setAccountEntityRepository(AccountEntityRepository accountEntityRepository) {
 		this.accountEntityRepository = accountEntityRepository;
+	}
+
+	public void setAccountNoteEntityRepository(AccountNoteEntityRepository accountNoteEntityRepository) {
+		this.accountNoteEntityRepository = accountNoteEntityRepository;
+	}
+
+	public void setAccountAuditEntityRepository(AccountAuditEntityRepository accountAuditEntityRepository) {
+		this.accountAuditEntityRepository = accountAuditEntityRepository;
 	}
 
 }

@@ -1,8 +1,8 @@
 package net.anotheria.portalkit.services.coin;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -11,7 +11,6 @@ import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.coin.bean.CoinTransactionBO;
 import net.anotheria.portalkit.services.coin.exception.CoinServiceException;
 import net.anotheria.portalkit.services.coin.exception.InsufficientFundsCoinServiceException;
-import net.anotheria.portalkit.services.common.AccountId;
 
 @DistributeMe(initcode = {
         "net.anotheria.portalkit.services.coin.CoinServiceSpringConfigurator.configure();"

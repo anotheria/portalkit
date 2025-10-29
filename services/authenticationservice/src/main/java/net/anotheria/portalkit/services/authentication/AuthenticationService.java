@@ -1,9 +1,9 @@
 package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
 
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.AccountId;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -16,7 +16,7 @@ import org.distributeme.core.failing.RetryCallOnce;
  */
 @DistributeMe
 @FailBy(strategyClass = RetryCallOnce.class)
-public interface AuthenticationService extends Service, UserDataManagingService {
+public interface AuthenticationService extends Service, UserDataManagingServiceWithIntegrityCheck {
 
     /**
      * Sets new password for the user.

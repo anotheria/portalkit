@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.record.persistence;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.record.IntRecord;
 import net.anotheria.portalkit.services.record.Record;

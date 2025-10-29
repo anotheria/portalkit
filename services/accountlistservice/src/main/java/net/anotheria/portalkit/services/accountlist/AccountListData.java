@@ -1,13 +1,13 @@
 package net.anotheria.portalkit.services.accountlist;
 
+import net.anotheria.portalkit.services.common.AccountId;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * Represents account with list of linked accounts through the lists like

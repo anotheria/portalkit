@@ -2,12 +2,12 @@ package net.anotheria.portalkit.services.coin.cache;
 
 import java.util.concurrent.TimeUnit;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.stereotype.Component;
 
 import net.anotheria.anoprise.cache.Cache;
 import net.anotheria.anoprise.cache.Caches;
 import net.anotheria.portalkit.services.coin.bean.CoinBalanceBO;
-import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * @author

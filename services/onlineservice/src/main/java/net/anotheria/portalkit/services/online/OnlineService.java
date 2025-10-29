@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.online;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -21,7 +21,7 @@ import java.util.Map;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface OnlineService extends Service, UserDataManagingService {
+public interface OnlineService extends Service, UserDataManagingServiceWithIntegrityCheck {
     /**
      * Notify current service that some account  with {@link AccountId} was logged in.
      * During current operation Account - last login date will be triggered to currentTime.

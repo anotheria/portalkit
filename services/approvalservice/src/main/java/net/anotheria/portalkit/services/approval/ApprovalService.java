@@ -1,8 +1,7 @@
 package net.anotheria.portalkit.services.approval;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.UserDataManagingService;
+import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -23,7 +22,7 @@ import java.util.Set;
 		}
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface ApprovalService extends Service, UserDataManagingService {
+public interface ApprovalService extends Service, UserDataManagingServiceWithIntegrityCheck {
 
 	/**
 	 * Creates a ticket.

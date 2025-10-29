@@ -3,8 +3,8 @@ package net.anotheria.portalkit.services.record;
 import java.util.Collection;
 
 import net.anotheria.anoprise.metafactory.Service;
-import net.anotheria.portalkit.services.common.AccountId;
 
+import net.anotheria.portalkit.services.common.AccountId;
 import org.distributeme.annotation.DistributeMe;
 
 /**

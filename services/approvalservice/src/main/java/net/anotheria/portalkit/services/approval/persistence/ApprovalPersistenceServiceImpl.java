@@ -3,7 +3,6 @@ package net.anotheria.portalkit.services.approval.persistence;
 import java.util.List;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
-import net.anotheria.portalkit.services.common.AccountId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +10,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
-
+import net.anotheria.portalkit.services.common.AccountId;
 /**
  * JDBC implementation of ApprovalPersistenceService.
  * 

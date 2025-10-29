@@ -112,7 +112,7 @@ public interface AccountService extends Service {
      * @return {@link AccountNote}
      * @throws AccountServiceException when error
      */
-	AccountNote getAccountNoteById(long id) throws AccountServiceException;
+	AccountNote getAccountNoteById(String id) throws AccountServiceException;
 
 	/**
 	 * Update {@link AccountNote} with new values for Author(i.e. editor) and text
@@ -127,7 +127,7 @@ public interface AccountService extends Service {
 	 * @param id of {@link AccountNote}
 	 * @throws AccountServiceException when error
 	 */
-	void deleteAccountNote(long id) throws AccountServiceException;
+	void deleteAccountNote(String id) throws AccountServiceException;
 
     /**
      * Get account notes list by given account id

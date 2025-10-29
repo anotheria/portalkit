@@ -1,10 +1,10 @@
 package net.anotheria.portalkit.services.account;
 
+import net.anotheria.portalkit.services.common.AccountId;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.anotheria.portalkit.services.common.AccountId;
 
 /**
  * Query parameters.

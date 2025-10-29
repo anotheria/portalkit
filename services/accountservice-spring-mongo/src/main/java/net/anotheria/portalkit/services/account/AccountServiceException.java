@@ -1,6 +1,5 @@
 package net.anotheria.portalkit.services.account;
 
-import net.anotheria.portalkit.services.account.persistence.note.AccountNotePersistenceServiceException;
 import net.anotheria.portalkit.services.common.exceptions.PortalKitServiceException;
 /**
  * Base exception for the account service.
@@ -17,7 +16,4 @@ public class AccountServiceException extends PortalKitServiceException {
 		super(message, cause);
 	}
 
-	public AccountServiceException(AccountNotePersistenceServiceException exception){
-		super("Account Note Persistence failure", exception);
-	}
 }
