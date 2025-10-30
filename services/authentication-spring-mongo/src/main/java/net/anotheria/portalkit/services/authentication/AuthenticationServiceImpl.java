@@ -9,8 +9,6 @@ import net.anotheria.portalkit.services.authentication.persistence.AuthTokenEnti
 import net.anotheria.portalkit.services.authentication.persistence.PasswordEntity;
 import net.anotheria.portalkit.services.authentication.persistence.PasswordEntityRepository;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.util.StringUtils;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
@@ -249,11 +247,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         return "authenticationService";
     }
 
-    @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        //TODO. Please, implement me
-        return null;
-    }
 
     @Override
     public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {

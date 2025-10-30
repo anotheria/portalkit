@@ -19,12 +19,18 @@
     <dependencies>
         <dependency>
             <groupId>net.anotheria.portalkit</groupId>
-            <artifactId>pk-services-common</artifactId>
+            <artifactId>pk-services-essentials</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.anotheria.portalkit</groupId>
+            <artifactId>pk-services-eventing</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <version>1.4.12</version>
             <scope>test</scope>
         </dependency>
         <!-- Kern-Spring für @Service, @ComponentScan, etc. -->
