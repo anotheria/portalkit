@@ -53,7 +53,7 @@
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
-        <module>authentication-spring-mongo</module>
+        <module>authenticationservice-spring-mongo</module>
 		<module>onlineservice</module>
 		<module>recordservice</module>
 		<module>foreignidservice</module>
