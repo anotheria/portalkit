@@ -21,8 +21,7 @@ import java.util.List;
  * @since 12.12.12 11:28
  */
 @Monitor (subsystem = "account", category = "portalkit-service")
-public enum AccountServiceImpl implements AccountService, AccountAdminService, EntityManagingService {
-	INSTANCE;
+public class AccountServiceImpl implements AccountService, AccountAdminService, EntityManagingService {
 
 	/**
 	 * Config.
@@ -71,14 +70,19 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 	private static final NullAccount NULL_ACCOUNT = NullAccount.INSTANCE;
 
 	// mongo repositories.
-	private AccountEntityRepository accountEntityRepository;
-	private AccountNoteEntityRepository accountNoteEntityRepository;
-	private AccountAuditEntityRepository accountAuditEntityRepository;
+	private final AccountEntityRepository accountEntityRepository;
+	private final AccountNoteEntityRepository accountNoteEntityRepository;
+	private final AccountAuditEntityRepository accountAuditEntityRepository;
 
 	/**
 	 * Default constructor.
 	 */
-	AccountServiceImpl() {
+	AccountServiceImpl(AccountEntityRepository accountEntityRepository,
+					   AccountNoteEntityRepository accountNoteEntityRepository,
+					   AccountAuditEntityRepository accountAuditEntityRepository) {
+		this.accountEntityRepository = accountEntityRepository;
+		this.accountNoteEntityRepository = accountNoteEntityRepository;
+		this.accountAuditEntityRepository = accountAuditEntityRepository;
 		init();
 	}
 
@@ -535,16 +539,5 @@ public enum AccountServiceImpl implements AccountService, AccountAdminService, E
 		}
 	}
 
-	public void setAccountEntityRepository(AccountEntityRepository accountEntityRepository) {
-		this.accountEntityRepository = accountEntityRepository;
-	}
-
-	public void setAccountNoteEntityRepository(AccountNoteEntityRepository accountNoteEntityRepository) {
-		this.accountNoteEntityRepository = accountNoteEntityRepository;
-	}
-
-	public void setAccountAuditEntityRepository(AccountAuditEntityRepository accountAuditEntityRepository) {
-		this.accountAuditEntityRepository = accountAuditEntityRepository;
-	}
 
 }

@@ -40,7 +40,7 @@ public final class AccountServiceEventingTest {
 
 	@Before
 	public void init() {
-		accountService = AccountServiceImpl.INSTANCE;
+		accountService = null;//AccountServiceImpl.INSTANCE;
 		accountService.unitTestReset();
 		eventConsumer = new AccountServiceTestEventConsumer();
 	}

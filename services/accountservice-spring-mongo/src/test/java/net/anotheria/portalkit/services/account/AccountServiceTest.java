@@ -35,7 +35,7 @@ public class AccountServiceTest {
 	@Test
 	public void testNotExistingAccount() throws MetaFactoryException, AccountServiceException {
 		AccountId newAccountId = AccountId.generateNew();
-		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		AccountServiceImpl service = null;//AccountServiceImpl.INSTANCE;
 		service.unitTestReset();
 
 
@@ -65,7 +65,7 @@ public class AccountServiceTest {
 		accountIds.add(second);
 		accountIds.add(third);
 
-		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		AccountServiceImpl service = null;//AccountServiceImpl.INSTANCE;
 		service.unitTestReset();
 		List<Account> accounts1 = service.getAccounts(accountIds);
 		assertNotNull(accounts1);
@@ -113,7 +113,7 @@ public class AccountServiceTest {
 
 	@Test
 	public void testGetByName() throws AccountServiceException, MetaFactoryException {
-		AccountServiceImpl service = AccountServiceImpl.INSTANCE;
+		AccountServiceImpl service = null;//AccountServiceImpl.INSTANCE;
 		service.unitTestReset();
 		Account toCreate = new Account();
 		toCreate.setName("petrov");
