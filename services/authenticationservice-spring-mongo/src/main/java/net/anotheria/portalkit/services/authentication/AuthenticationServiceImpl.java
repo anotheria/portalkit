@@ -43,17 +43,19 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
     /**
      * {@link PasswordEntityRepository} instance.
      */
-    private PasswordEntityRepository passwordEntityRepository;
+    private final PasswordEntityRepository passwordEntityRepository;
     /**
      * {@link AuthTokenEntityRepository} instance.
      */
-    private AuthTokenEntityRepository authTokenEntityRepository;
-
+    private final AuthTokenEntityRepository authTokenEntityRepository;
 
     /**
      * Default constructor.
      */
-    public AuthenticationServiceImpl() {
+    public AuthenticationServiceImpl(PasswordEntityRepository passwordEntityRepository, AuthTokenEntityRepository authTokenEntityRepository) {
+        this.passwordEntityRepository = passwordEntityRepository;
+        this.authTokenEntityRepository = authTokenEntityRepository;
+
         accountIdAlgorithm = new BlowfishPasswordEncryptionAlgorithm();
         accountIdAlgorithm.customize(APP_KEY);
 
@@ -73,14 +75,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         passwordAlgorithm.customize(config.getPasswordKey());
         EntityManagingServices.createEntityCounter(this, "AuthTokens");
         EntityManagingServices.createEntityCounter(this, "AuthPasswords");
-    }
-
-    public void setPasswordEntityRepository(PasswordEntityRepository passwordEntityRepository) {
-        this.passwordEntityRepository = passwordEntityRepository;
-    }
-
-    public void setAuthTokenEntityRepository(AuthTokenEntityRepository authTokenEntityRepository) {
-        this.authTokenEntityRepository = authTokenEntityRepository;
     }
 
     @Override
