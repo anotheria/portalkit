@@ -4,6 +4,7 @@ import net.anotheria.portalkit.services.common.id.IdGenerator;
 import net.anotheria.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Account unique identifier.
@@ -40,6 +41,15 @@ public class AccountId implements Serializable, Cloneable {
 
 		this.internalId = aInternalId;
 	}
+
+    /**
+     * Expects UDID. Although the accountid will be still saved as string internally, it is enforcing safety of the internal
+     * representtion.
+     * @param anUDID
+     */
+    private AccountId(UUID anUDID) {
+        this.internalId = anUDID.toString();
+    }
 
 	public void setInternalId(final String aInternalId) {
 		if (StringUtils.isEmpty(aInternalId))
@@ -98,6 +108,10 @@ public class AccountId implements Serializable, Cloneable {
 				new AccountIdPair(second, first);
 
 	}
+
+    public static AccountId fromUDID(String udidAsString){
+        return new AccountId(UUID.fromString(udidAsString));
+    }
 
 
 }
