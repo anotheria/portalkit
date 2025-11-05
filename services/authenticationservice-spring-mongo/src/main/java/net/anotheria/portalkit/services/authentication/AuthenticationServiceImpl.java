@@ -123,8 +123,9 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             throw new IllegalArgumentException("password can't be empty");
 
         try {
-            String storedEncryptedPassword = passwordEntityRepository.findPasswordByAccountId(getEncrypted(id).getInternalId()).orElse(null);
-            return storedEncryptedPassword != null && storedEncryptedPassword.equals(passwordAlgorithm.encryptPassword(password));
+            PasswordEntity storedEncryptedPassword = passwordEntityRepository.findById(getEncrypted(id).getInternalId()).orElse(null);
+            return storedEncryptedPassword != null && !StringUtils.isEmpty(storedEncryptedPassword.getPassword())
+                    && storedEncryptedPassword.getPassword().equals(passwordAlgorithm.encryptPassword(password));
         } catch (Exception e) {
             throw new AuthenticationServiceException("Unable to check password for user: " + id, e);
         }
@@ -135,7 +136,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         if (StringUtils.isEmpty(token))
             throw new IllegalArgumentException("token can't be empty");
 
-        if (!authTokenEntityRepository.existsByToken(token))
+        if (!authTokenEntityRepository.existsById(token))
             throw new AuthTokenNotFoundException();
 
         AuthToken authToken = decrypt(token);
@@ -144,7 +145,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
 
         if (!authToken.isMultiUse()) {
             try {
-                authTokenEntityRepository.deleteByToken(token);
+                authTokenEntityRepository.deleteById(token);
             } catch (Exception e) {
                 log.warn("Couldn't delete used auth token {} for {}", token,  authToken.getAccountId());
             }
@@ -159,7 +160,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             throw new IllegalArgumentException("token can't be empty");
 
         try {
-            if (!authTokenEntityRepository.existsByToken(token))
+            if (!authTokenEntityRepository.existsById(token))
                 return false;
 
             AuthToken authToken = decrypt(token);
@@ -230,7 +231,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             log.error("Unable to delete auth tokens for account: {}", accountId, e);
         }
         try {
-            passwordEntityRepository.deleteByAccountId(encrypted.getInternalId());
+            passwordEntityRepository.deleteById(encrypted.getInternalId());
         } catch (Exception e) {
             log.error("Unable to delete password for account: {}", accountId, e);
         }
@@ -256,16 +257,15 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
     }
 
     @Override
-    public void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException {
+    public void deleteToken(String token) throws AuthenticationServiceException {
         if (StringUtils.isEmpty(token))
             throw new IllegalArgumentException("token can't be empty");
-        if (accountId == null)
-            throw new IllegalArgumentException("Incoming accountId is NULL.");
+
 
         try {
-            authTokenEntityRepository.deleteByAccountIdAndToken(getEncrypted(accountId).getInternalId(), token);
+            authTokenEntityRepository.deleteById(token);
         } catch (Exception e) {
-            log.error("Unable to delete auth token for account: {}", accountId, e);
+            log.error("Unable to delete auth token.", e);
         }
     }
 

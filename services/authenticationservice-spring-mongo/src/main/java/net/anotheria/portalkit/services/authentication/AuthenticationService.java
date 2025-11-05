@@ -86,11 +86,10 @@ public interface AuthenticationService extends Service, UserDataManagingService 
     /**
      * Removes one user token from database.
      *
-     * @param accountId account id.
      * @param token     token.
      * @throws AuthenticationServiceException if error
      */
-    void deleteToken(AccountId accountId, String token) throws AuthenticationServiceException;
+    void deleteToken(String token) throws AuthenticationServiceException;
 
     /**
      * Returns token for given user and type.
