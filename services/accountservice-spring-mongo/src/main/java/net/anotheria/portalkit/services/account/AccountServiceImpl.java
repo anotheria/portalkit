@@ -249,8 +249,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 		if (fromCache != null)
 			return fromCache;
 		try {
-			String repositoryAccountId = accountEntityRepository.findIdByName(accountName).orElse(null);
-			AccountId fromPersistence = repositoryAccountId == null ? null : new AccountId(repositoryAccountId);
+			String repositoryAccountId = accountEntityRepository.findIdByName(accountName).map(IDOnly::getId).orElse(null);
+			AccountId fromPersistence = repositoryAccountId == null ? null : AccountId.fromUDID(repositoryAccountId);
 			if (fromPersistence != null) {
 				name2idCache.put(accountName, fromPersistence);
 			}
@@ -273,8 +273,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 		if (fromCache != null)
 			return fromCache;
 		try {
-			String repositoryAccountId = accountEntityRepository.findIdByEmail(email).orElse(null);
-			AccountId fromPersistence = repositoryAccountId == null ? null : new AccountId(repositoryAccountId);
+			String repositoryAccountId = accountEntityRepository.findIdByEmail(email).map(IDOnly::getId).orElse(null);
+			AccountId fromPersistence = repositoryAccountId == null ? null : AccountId.fromUDID(repositoryAccountId);
 			if (fromPersistence != null) {
 				email2idCache.put(email, fromPersistence);
 			}
@@ -298,8 +298,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 			return fromCache;
 
 		try {
-			String repositoryAccountId = accountEntityRepository.findIdByNameAndBrand(accountName, brand).orElse(null);
-			AccountId fromPersistence = repositoryAccountId == null ? null : new AccountId(repositoryAccountId);
+			String repositoryAccountId = accountEntityRepository.findIdByNameAndBrand(accountName, brand).map(IDOnly::getId).orElse(null);
+			AccountId fromPersistence = repositoryAccountId == null ? null : AccountId.fromUDID(repositoryAccountId);
 			if (fromPersistence != null)
 				nameAndBrand2idCache.put(getBrandKey(accountName, brand), fromPersistence);
 
@@ -381,8 +381,8 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 			return fromCache;
 
 		try {
-			String entityAccountId = accountEntityRepository.findIdByEmailAndBrand(accountEmail, brand).orElse(null);
-			AccountId fromPersistence = entityAccountId == null ? null : new AccountId(entityAccountId);
+			String entityAccountId = accountEntityRepository.findIdByEmailAndBrand(accountEmail, brand).map(IDOnly::getId).orElse(null);
+			AccountId fromPersistence = entityAccountId == null ? null : AccountId.fromUDID(entityAccountId);
 			if (fromPersistence != null)
 				emailAndBrand2idCache.put(getBrandKey(accountEmail, brand), fromPersistence);
 
@@ -398,7 +398,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 			List<String> accountIdsFromEntity = accountEntityRepository.findAllIdsByBrand(brand);
 			List<AccountId> accountIds = new ArrayList<>();
 			for (String id : accountIdsFromEntity) {
-				accountIds.add(new AccountId(id));
+				accountIds.add(AccountId.fromUDID(id));
 			}
 			return accountIds;
 		} catch (Exception e) {
@@ -412,7 +412,7 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 			List<String> accountIdsFromEntity = accountEntityRepository.findAllIds();
 			List<AccountId> accountIds = new ArrayList<>();
 			for (String id : accountIdsFromEntity) {
-				accountIds.add(new AccountId(id));
+				accountIds.add(AccountId.fromUDID(id));
 			}
 			return accountIds;
 		} catch (Exception e) {
