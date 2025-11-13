@@ -395,10 +395,10 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 	@Override
 	public Collection<AccountId> getAllAccountIds(String brand) throws AccountAdminServiceException {
 		try {
-			List<String> accountIdsFromEntity = accountEntityRepository.findAllIdsByBrand(brand);
+			List<IDOnly> accountIdsFromEntity = accountEntityRepository.findAllIdsByBrand(brand);
 			List<AccountId> accountIds = new ArrayList<>();
-			for (String id : accountIdsFromEntity) {
-				accountIds.add(AccountId.fromUDID(id));
+			for (IDOnly id : accountIdsFromEntity) {
+				accountIds.add(AccountId.fromUDID(id.getId()));
 			}
 			return accountIds;
 		} catch (Exception e) {
@@ -409,10 +409,10 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 	@Override
 	public Collection<AccountId> getAllAccountIds() throws AccountAdminServiceException {
 		try {
-			List<String> accountIdsFromEntity = accountEntityRepository.findAllIds();
+			List<IDOnly> accountIdsFromEntity = accountEntityRepository.findAllIds();
 			List<AccountId> accountIds = new ArrayList<>();
-			for (String id : accountIdsFromEntity) {
-				accountIds.add(AccountId.fromUDID(id));
+			for (IDOnly id : accountIdsFromEntity) {
+				accountIds.add(AccountId.fromUDID(id.getId()));
 			}
 			return accountIds;
 		} catch (Exception e) {
@@ -423,10 +423,10 @@ public class AccountServiceImpl implements AccountService, AccountAdminService, 
 	@Override
 	public List<AccountId> getAccountsByType(@SuppressWarnings("rawtypes") AccountType accountType) throws AccountServiceException {
 		try {
-			List<String> accountIdsFromEntity = accountEntityRepository.findAllIdsByType(accountType.getId());
+			List<IDOnly> accountIdsFromEntity = accountEntityRepository.findAllIdsByType(accountType.getId());
 			List<AccountId> accountIds = new ArrayList<>();
-			for (String id : accountIdsFromEntity) {
-				accountIds.add(new AccountId(id));
+			for (IDOnly id : accountIdsFromEntity) {
+				accountIds.add(new AccountId(id.getId()));
 			}
 			return accountIds;
 		} catch (Exception e) {

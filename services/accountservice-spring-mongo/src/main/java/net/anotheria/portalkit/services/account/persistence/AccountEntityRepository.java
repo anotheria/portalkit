@@ -20,12 +20,12 @@ public interface AccountEntityRepository extends MongoRepository<AccountEntity, 
     Optional<IDOnly> findIdByEmailAndBrand(String email, String brand);
 
     @Query(value = "{ 'brand' : ?0 }", fields = "{ '_id' : 1 }")
-    List<String> findAllIdsByBrand(String brand);
+    List<IDOnly> findAllIdsByBrand(String brand);
 
     @Query(value ="{}", fields = "{ '_id' : 1 }")
-    List<String> findAllIds();
+    List<IDOnly> findAllIds();
 
     @Query(value = "{ 'type' : ?0 }", fields = "{ '_id' : 1 }")
-    List<String> findAllIdsByType(int type);
+    List<IDOnly> findAllIdsByType(int type);
 
 }
