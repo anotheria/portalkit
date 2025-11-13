@@ -45,9 +45,10 @@ public class AccountId implements Serializable, Cloneable {
     /**
      * Expects UDID. Although the accountid will be still saved as string internally, it is enforcing safety of the internal
      * representtion.
+     * In the future the internal ID will be represented as UUID only.
      * @param anUDID
      */
-    private AccountId(UUID anUDID) {
+    public AccountId(UUID anUDID) {
         this.internalId = anUDID.toString();
     }
 
@@ -62,13 +63,17 @@ public class AccountId implements Serializable, Cloneable {
 		return internalId;
 	}
 
+    public UUID getUUID() {
+        return UUID.fromString(internalId);
+    }
+
 	/**
 	 * Generate new unique {@link AccountId}.
 	 * 
 	 * @return generated {@link AccountId}
 	 */
 	public static final AccountId generateNew() {
-		return new AccountId(IdGenerator.generateUniqueRandomId());
+		return new AccountId(UUID.randomUUID());
 	}
 
 	@Override
@@ -110,7 +115,11 @@ public class AccountId implements Serializable, Cloneable {
 	}
 
     public static AccountId fromUDID(String udidAsString){
-        return new AccountId(UUID.fromString(udidAsString));
+        try {
+            return new AccountId(UUID.fromString(udidAsString));
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format("Invalid AccountId: %s (%s)", udidAsString, e.getMessage()));
+        }
     }
 
 
