@@ -57,6 +57,7 @@
 		<module>onlineservice</module>
 		<module>recordservice</module>
 		<module>foreignidservice</module>
+        <module>foreignidservice-spring-mongo</module>
 		<module>approvalservice</module>
         <module>accountarchiveservice</module>
         <module>profileservice</module>
