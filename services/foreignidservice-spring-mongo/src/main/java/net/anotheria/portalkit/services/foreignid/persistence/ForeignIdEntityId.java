@@ -21,7 +21,7 @@ public class ForeignIdEntityId implements Serializable {
     /**
      * Key of foreign id.
      */
-    private int sourceId;
+    private String sourceId;
 
     /**
      * Default constructor.
@@ -34,7 +34,7 @@ public class ForeignIdEntityId implements Serializable {
      * @param foreignId foreign id
      * @param sourceId  source id
      */
-    public  ForeignIdEntityId(String foreignId, int sourceId) {
+    public  ForeignIdEntityId(String foreignId, String sourceId) {
         this.foreignId = foreignId;
         this.sourceId = sourceId;
     }
@@ -47,11 +47,11 @@ public class ForeignIdEntityId implements Serializable {
         this.foreignId = foreignId;
     }
 
-    public int getSourceId() {
+    public String getSourceId() {
         return sourceId;
     }
 
-    public void setSourceId(int sourceId) {
+    public void setSourceId(String sourceId) {
         this.sourceId = sourceId;
     }
 
@@ -59,7 +59,7 @@ public class ForeignIdEntityId implements Serializable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ForeignIdEntityId that = (ForeignIdEntityId) o;
-        return sourceId == that.sourceId && Objects.equals(foreignId, that.foreignId);
+        return Objects.equals(foreignId, that.foreignId) && Objects.equals(sourceId, that.sourceId);
     }
 
     @Override

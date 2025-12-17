@@ -26,7 +26,7 @@ public interface ForeignIdService extends Service, UserDataManagingService {
 	 * @param sourceId source id.
 	 * @throws ForeignIdServiceException if error.
 	 */
-	void addForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException;
+	void addForeignId(AccountId accId, String foreignId, String sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Removes previously created association with another account.
@@ -36,7 +36,7 @@ public interface ForeignIdService extends Service, UserDataManagingService {
 	 * @param sourceId source id.
 	 * @throws ForeignIdServiceException if error.
 	 */
-	void removeForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException;
+	void removeForeignId(AccountId accId, String foreignId, String sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Returns the associated account id for this source/foreign Id combination.
@@ -46,7 +46,7 @@ public interface ForeignIdService extends Service, UserDataManagingService {
 	 * @return {@link AccountId}
 	 * @throws ForeignIdServiceException if error.
 	 */
-	AccountId getAccountIdByForeignId(String foreignId, int sourceId) throws ForeignIdServiceException;
+	AccountId getAccountIdByForeignId(String foreignId, String sourceId) throws ForeignIdServiceException;
 
 	/**
 	 * Returns all associations for given account id.

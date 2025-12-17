@@ -63,7 +63,7 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 	}
 
 	@Override
-	public void addForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException {
+	public void addForeignId(AccountId accId, String foreignId, String sourceId) throws ForeignIdServiceException {
         try {
             ForeignIdEntityId id = new ForeignIdEntityId(foreignId, sourceId);
             ForeignIdEntity entity = repository.findById(id).orElse(null);
@@ -88,7 +88,7 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 	}
 
 	@Override
-	public void removeForeignId(AccountId accId, String foreignId, int sourceId) throws ForeignIdServiceException {
+	public void removeForeignId(AccountId accId, String foreignId, String sourceId) throws ForeignIdServiceException {
 		try {
 			ForeignIdEntityId id = new ForeignIdEntityId(foreignId, sourceId);
             repository.deleteById(id);
@@ -104,7 +104,7 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 	}
 
 	@Override
-	public AccountId getAccountIdByForeignId(String foreignId, int sourceId) throws ForeignIdServiceException {
+	public AccountId getAccountIdByForeignId(String foreignId, String sourceId) throws ForeignIdServiceException {
 		if (foreignId == null)
 			throw new IllegalArgumentException("Null parameter foreignId to getForeignIds(foreignId, sourceId)");
 
@@ -141,7 +141,7 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 			List<ForeignIdEntity> fromPersistence = repository.findByAccountId(accId.getInternalId());
             if (fromPersistence != null)
                 for (ForeignIdEntity entity : fromPersistence)
-                    foreignIds.add(new ForeignId(accId, entity.getId().getSourceId(), entity.getId().getForeignId()));
+                    foreignIds.add(new ForeignId(accId, entity.getId().getForeignId(), entity.getId().getSourceId()));
 
 			cacheByAccountId.put(accId, foreignIds);
 			return foreignIds;

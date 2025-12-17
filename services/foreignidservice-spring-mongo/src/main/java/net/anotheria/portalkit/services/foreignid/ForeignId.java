@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.foreignid;
 import net.anotheria.portalkit.services.common.AccountId;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * ForeignId bean.
@@ -18,15 +19,14 @@ public class ForeignId implements Serializable {
 	private static final long serialVersionUID = -3724518051843205604L;
 
 	/**
-	 * The source id, this is dependent on the concrete source.
+	 * The foreign id, this is dependent on the concrete source.
 	 */
-	private String id;
+	private String foreignId;
 
 	/**
-	 * The id of the source. This is application specific. However, we have
-	 * collected some common sourceids in ForeignIdSources class.
+	 * The id of the source.
 	 */
-	private int sourceId;
+	private String sourceId;
 
 	/**
 	 * The account id in our system.
@@ -44,32 +44,32 @@ public class ForeignId implements Serializable {
 	 * Additional constructor that fills needed fields.
 	 * 
 	 * @param accountId	account id.
+	 * @param foreignId foreign id.
 	 * @param sourceId source id.
-	 * @param id	foreign id.
 	 */
-	public ForeignId(AccountId accountId, int sourceId, String id) {
+	public ForeignId(AccountId accountId, String foreignId, String sourceId) {
 		this.accountId = accountId;
-		this.sourceId = sourceId;
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public int getSourceId() {
-		return sourceId;
-	}
-
-	public void setSourceId(int sourceId) {
+		this.foreignId = foreignId;
 		this.sourceId = sourceId;
 	}
 
-	public AccountId getAccountId() {
+    public String getForeignId() {
+        return foreignId;
+    }
+
+    public void setForeignId(String foreignId) {
+        this.foreignId = foreignId;
+    }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
+    public AccountId getAccountId() {
 		return accountId;
 	}
 
@@ -77,37 +77,24 @@ public class ForeignId implements Serializable {
 		this.accountId = accountId;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + sourceId;
-		return result;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        ForeignId foreignId1 = (ForeignId) o;
+        return Objects.equals(foreignId, foreignId1.foreignId) && Objects.equals(sourceId, foreignId1.sourceId) && Objects.equals(accountId, foreignId1.accountId);
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ForeignId other = (ForeignId) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (sourceId != other.sourceId)
-			return false;
-		return true;
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(foreignId, sourceId, accountId);
+    }
 
-	@Override
-	public String toString() {
-		return "ForeignId [id=" + id + ", sourceId=" + sourceId + ", accountId=" + accountId + "]";
-	}
-
+    @Override
+    public String toString() {
+        return "ForeignId{" +
+                "foreignId='" + foreignId + '\'' +
+                ", sourceId='" + sourceId + '\'' +
+                ", accountId=" + accountId +
+                '}';
+    }
 }

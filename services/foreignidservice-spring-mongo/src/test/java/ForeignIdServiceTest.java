@@ -35,7 +35,7 @@ class ForeignIdServiceTest {
     void testAddForeignId() throws Exception {
         AccountId accId = new AccountId("acc1");
         String foreignId = "fid";
-        int sourceId = 1;
+        String sourceId = "1";
         ForeignIdEntityId id = new ForeignIdEntityId(foreignId, sourceId);
 
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -52,7 +52,7 @@ class ForeignIdServiceTest {
     void testRemoveForeignId() throws Exception {
         AccountId accId = new AccountId("acc1");
         String foreignId = "fid";
-        int sourceId = 1;
+        String sourceId = "1";
         ForeignIdEntityId id = new ForeignIdEntityId(foreignId, sourceId);
 
         service.removeForeignId(accId, foreignId, sourceId);
@@ -62,7 +62,7 @@ class ForeignIdServiceTest {
     @Test
     void testGetAccountIdByForeignId() throws Exception {
         String foreignId = "fid";
-        int sourceId = 1;
+        String sourceId = "1";
         ForeignIdEntityId id = new ForeignIdEntityId(foreignId, sourceId);
         ForeignIdEntity entity = new ForeignIdEntity();
         entity.setId(id);
@@ -79,14 +79,14 @@ class ForeignIdServiceTest {
     void testGetForeignIds() throws Exception {
         AccountId accId = new AccountId("acc1");
         ForeignIdEntity entity = new ForeignIdEntity();
-        entity.setId(new ForeignIdEntityId("fid", 1));
+        entity.setId(new ForeignIdEntityId("fid", "1"));
         entity.setAccountId("acc1");
 
         when(repository.findByAccountId("acc1")).thenReturn(List.of(entity));
 
         List<ForeignId> result = service.getForeignIds(accId);
         assertEquals(1, result.size());
-        assertEquals("fid", result.get(0).getId());
+        assertEquals("fid", result.get(0).getForeignId());
     }
 
     @Test
