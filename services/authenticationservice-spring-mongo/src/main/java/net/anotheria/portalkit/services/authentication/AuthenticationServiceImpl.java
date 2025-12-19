@@ -10,6 +10,7 @@ import net.anotheria.portalkit.services.authentication.persistence.PasswordEntit
 import net.anotheria.portalkit.services.authentication.persistence.PasswordEntityRepository;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.util.StringUtils;
+import org.bson.types.ObjectId;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -249,7 +250,9 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             throw new IllegalArgumentException("Incoming accountId is NULL.");
 
         try {
-            authTokenEntityRepository.deleteByAccountIdAndType(getEncrypted(accountId).getInternalId(), type);
+            System.out.println("Calling delete for "+accountId+" "+type);
+            authTokenEntityRepository.deleteByAccountIdAndType(accountId.getUUID().toString(), type);
+            System.out.println("Called delete for "+accountId+" "+type);
         } catch (Exception e) {
             log.error("Unable to delete auth tokens for account: {} and type {}", accountId, type, e);
             throw new AuthenticationServiceException("Unable to delete tokens for account: " + accountId + " and type: " + type, e);
@@ -275,13 +278,14 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             throw new IllegalArgumentException("Incoming accountId is NULL.");
 
         try {
-            List<String> tokens = authTokenEntityRepository.findTokensByAccountIdAndType(getEncrypted(accountId).getInternalId(), type);
+            List<AuthTokenEntity> tokens = authTokenEntityRepository.findTokensByAccountIdAndType(accountId.getUUID().toString(), type);
             if (tokens.size() > 1)
                 log.warn("Multiple auth tokens for account: {} and type: {}", accountId, type);
 
-            return tokens.get(0);
+            return tokens.get(0).getToken();
         } catch (Exception e) {
             throw new AuthenticationServiceException("Unable to get auth token for account: " + accountId, e);
+
         }
     }
 

@@ -1,5 +1,6 @@
 package net.anotheria.portalkit.services.authentication.persistence;
 
+import net.anotheria.portalkit.services.authentication.AuthToken;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
@@ -39,8 +40,8 @@ public interface AuthTokenEntityRepository extends MongoRepository<AuthTokenEnti
      * @param type the token type
      * @return a list of token strings associated with the account and type
      */
-    @Query(value = "{ 'accountId': ?0, 'type': ?1 }", fields = "{ '_id': 1 }")
-    List<String> findTokensByAccountIdAndType(String accountId, int type);
+    @Query(value = "{ 'accountId': ?0, 'type': ?1 }")
+    List<AuthTokenEntity> findTokensByAccountIdAndType(String accountId, int type);
     /**
      * Find all ids.
      *
