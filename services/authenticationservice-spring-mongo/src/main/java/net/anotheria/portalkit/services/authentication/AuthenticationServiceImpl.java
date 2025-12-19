@@ -250,9 +250,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             throw new IllegalArgumentException("Incoming accountId is NULL.");
 
         try {
-            System.out.println("Calling delete for "+accountId+" "+type);
             authTokenEntityRepository.deleteByAccountIdAndType(accountId.getUUID().toString(), type);
-            System.out.println("Called delete for "+accountId+" "+type);
         } catch (Exception e) {
             log.error("Unable to delete auth tokens for account: {} and type {}", accountId, type, e);
             throw new AuthenticationServiceException("Unable to delete tokens for account: " + accountId + " and type: " + type, e);
