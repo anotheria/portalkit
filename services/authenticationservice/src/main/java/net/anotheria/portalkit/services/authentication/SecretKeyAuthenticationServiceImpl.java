@@ -221,11 +221,6 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
     }
 
     @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        return null;
-    }
-
-    @Override
     public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {
         Set<String> tokens = null;
         AccountId encrypted = getEncrypted(accountId);

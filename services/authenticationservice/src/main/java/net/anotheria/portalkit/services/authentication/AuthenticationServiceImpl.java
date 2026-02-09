@@ -253,12 +253,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
     }
 
     @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        //TODO. Please, implement me
-        return null;
-    }
-
-    @Override
     public void deleteTokensByType(AccountId accountId, int type) throws AuthenticationServiceException {
         Set<String> tokens = null;
         try {
