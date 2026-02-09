@@ -40,6 +40,8 @@ public class JDBCConfig {
      */
     private String datasourceName;
 
+    private String applicationName = null;
+
 	public int getMaxConnections() {
 		return maxConnections;
 	}
@@ -49,7 +51,15 @@ public class JDBCConfig {
 	}
 
 	public String getUrl() {
-		return url;
+        if (applicationName == null) {
+            return url;
+        }
+        String ret = url;
+        if (url.contains("?")) {
+            return url+="&ApplicationName="+applicationName;
+        }else{
+            return url+="?ApplicationName="+applicationName;
+        }
 	}
 
 	public void setUrl(String url) {
@@ -88,6 +98,14 @@ public class JDBCConfig {
         this.datasourceName = datasourceName;
     }
 
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
     @Override
     public String toString() {
         return "JDBCConfig{" +
@@ -97,6 +115,7 @@ public class JDBCConfig {
                 ", password='" + password + '\'' +
                 ", maxConnections=" + maxConnections +
                 ", datasourceName='" + datasourceName + '\'' +
+                ", applicationName='" + applicationName + '\'' +
                 '}';
     }
 }

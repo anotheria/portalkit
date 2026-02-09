@@ -139,6 +139,7 @@ public abstract class BasePersistenceServiceJDBCImpl implements BasePersistenceS
         newDataSource.setUrl(config.getUrl());
         newDataSource.setUsername(config.getUsername());
         newDataSource.setPassword(config.getPassword());
+
         if (config.getMaxConnections() != Integer.MAX_VALUE && config.getMaxConnections() > 0)
             newDataSource.setMaxTotal(config.getMaxConnections());
         return newDataSource;
