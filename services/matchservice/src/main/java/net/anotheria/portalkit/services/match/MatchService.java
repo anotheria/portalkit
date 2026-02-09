@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.match;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import net.anotheria.portalkit.services.match.exception.MatchAlreadyExistsException;
 import net.anotheria.portalkit.services.match.exception.MatchNotFoundException;
 import net.anotheria.portalkit.services.match.exception.MatchServiceException;
@@ -23,7 +23,7 @@ import java.util.List;
         }
 )
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface MatchService extends Service, UserDataManagingServiceWithIntegrityCheck {
+public interface MatchService extends Service, UserDataManagingService {
 
     /**
      *

@@ -320,12 +320,6 @@ public class ApprovalServiceImpl implements ApprovalService, EntityManagingServi
 		return "approvalService";
 	}
 
-	@Override
-	public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-		//TODO. Please, implement me
-		return null;
-	}
-
 	/**
 	 * Unlocks tickets after some period of time.
 	 * */

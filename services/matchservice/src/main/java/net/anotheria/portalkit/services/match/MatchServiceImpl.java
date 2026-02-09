@@ -332,11 +332,6 @@ public class MatchServiceImpl implements MatchService, EntityManagingService {
         return "matchService";
     }
 
-    @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        //TODO. Please, implement me
-        return null;
-    }
 
     private String getMatchedCacheKey(AccountId owner, AccountId target, int type) {
         return owner + "|" + target + "|" + type;

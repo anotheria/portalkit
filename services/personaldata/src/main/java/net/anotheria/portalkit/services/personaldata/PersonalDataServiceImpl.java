@@ -114,12 +114,6 @@ public class PersonalDataServiceImpl implements PersonalDataService, EntityManag
         return "personalDataService";
     }
 
-    @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        //TODO. Please, implement me
-        return null;
-    }
-
     private PersonalData decryptPersonalData(PersonalData toDecrypt) {
 
         Map<String, String> decrypted = new HashMap<>();

@@ -206,8 +206,4 @@ public class ScamScoreServiceImpl implements ScamScoreService, EntityManagingSer
         return "scamScoreService";
     }
 
-    @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        return null;
-    }
 }

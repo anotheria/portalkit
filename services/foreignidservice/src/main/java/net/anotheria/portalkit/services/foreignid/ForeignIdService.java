@@ -2,7 +2,7 @@ package net.anotheria.portalkit.services.foreignid;
 
 import net.anotheria.anoprise.metafactory.Service;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 @DistributeMe
 @FailBy(strategyClass=RetryCallOnce.class)
-public interface ForeignIdService extends Service, UserDataManagingServiceWithIntegrityCheck {
+public interface ForeignIdService extends Service, UserDataManagingService {
 	/**
 	 * Creates a new association between our account and another account.
 	 * 

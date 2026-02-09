@@ -255,12 +255,6 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
         return "relationService";
     }
 
-    @Override
-    public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-        //TODO. Please, implement me
-        return null;
-    }
-
     @DontMonitor
     private String getRelatedCacheKey(Relation relation) {
         return getRelatedCacheKey(relation.getOwner(), relation.getPartner(), relation.getRelationName());

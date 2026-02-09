@@ -171,9 +171,4 @@ public class ForeignIdServiceImpl implements ForeignIdService, EntityManagingSer
 		return "foreignIdService";
 	}
 
-	@Override
-	public IntegrityCheckResult performIntegrityCheck(IntegrityCheckHelper helper) throws Exception {
-		//TODO. Please, implement me
-		return null;
-	}
 }
