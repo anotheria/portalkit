@@ -1,7 +1,7 @@
 package net.anotheria.portalkit.services.authentication;
 
 import net.anotheria.anoprise.metafactory.ServiceFactory;
-import net.anotheria.portalkit.services.common.integrity.UserDataManagingServiceWithIntegrityCheck;
+import net.anotheria.portalkit.services.common.UserDataManagingService;
 import net.anotheria.portalkit.services.common.util.ServiceProxyUtil;
 
 /**
@@ -11,7 +11,7 @@ public class SecretKeyAuthenticationServiceFactory implements ServiceFactory<Sec
 
     @Override
     public SecretKeyAuthenticationService create() {
-        return ServiceProxyUtil.createServiceProxy(SecretKeyAuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, UserDataManagingServiceWithIntegrityCheck.class, AuthenticationService.class);
+        return ServiceProxyUtil.createServiceProxy(SecretKeyAuthenticationService.class, new SecretKeyAuthenticationServiceImpl(), "service", "portal-kit", true, UserDataManagingService.class, AuthenticationService.class);
     }
 
 }
