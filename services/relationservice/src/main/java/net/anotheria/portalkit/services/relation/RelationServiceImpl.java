@@ -51,8 +51,11 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
      */
     private Cache<String, Relation> relationCache;
 
+    private Cache<String, Boolean> nullRelationCache;
+
     public RelationServiceImpl() {
         relationCache = Caches.createConfigurableHardwiredCache("pk-cache-relation-service");
+        nullRelationCache = Caches.createConfigurableHardwiredCache("pk-cache-null-relation-service");
         EntityManagingServices.createEntityCounter(this, "Relations");
     }
 
@@ -87,7 +90,9 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
         RelationEntity relationEntity = relationBO2relationEntity(relation);
         entityManager.persist(relationEntity);
 
-        relationCache.put(getRelatedCacheKey(relation), relation);
+        String key = getRelatedCacheKey(relation);
+        relationCache.put(key, relation);
+        nullRelationCache.remove(key);
     }
 
     private void checkRelationNotExists(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
@@ -118,13 +123,23 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
             return cachedRelation;
         }
 
+        Boolean cachedNull = nullRelationCache.get(cacheKey);
+        if (Boolean.TRUE.equals(cachedNull)) {
+            return NULL_RELATION;
+        }
+
         RelationId relationId = new RelationId(owner, partner, relationName);
         RelationEntity relationEntity = entityManager.find(RelationEntity.class, relationId);
-        Relation relation = relationEntity != null ? relationEntity2relationBO(relationEntity) : NULL_RELATION;
 
-        relationCache.put(cacheKey, relation);
+        if (relationEntity != null) {
+            Relation relation = relationEntity2relationBO(relationEntity);
+            relationCache.put(cacheKey, relation);
+            nullRelationCache.remove(cacheKey);
+            return relation;
+        }
 
-        return relation;
+        nullRelationCache.put(cacheKey, Boolean.TRUE);
+        return NULL_RELATION;
     }
 
     @Override
@@ -196,7 +211,9 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
 
         entityManager.remove(relationEntity);
 
-        relationCache.put(getRelatedCacheKey(owner, partner, relationName), NULL_RELATION);
+        String key = getRelatedCacheKey(owner, partner, relationName);
+        relationCache.remove(key);
+        nullRelationCache.put(key, Boolean.TRUE);
     }
 
     @Override
@@ -210,6 +227,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
                 .executeUpdate();
 
         relationCache.clear();
+        nullRelationCache.clear();
 
         LOGGER.info("Deleted {} user relations for owner={}, partner={}", deletedCount, owner, partner);
     }
@@ -223,6 +241,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
                 .executeUpdate();
 
         relationCache.clear();
+        nullRelationCache.clear();
 
         LOGGER.info("Deleted {} user relations for owner={}", deletedCount, owner);
     }
@@ -236,6 +255,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
                 .executeUpdate();
 
         relationCache.clear();
+        nullRelationCache.clear();
 
         LOGGER.info("Deleted {} user relations for partner={}", deletedCount, partner);
     }
