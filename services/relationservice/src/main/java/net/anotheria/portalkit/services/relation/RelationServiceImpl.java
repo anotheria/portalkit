@@ -7,8 +7,6 @@ import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.moskito.core.entity.EntityManagingService;
 import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.common.AccountId;
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckHelper;
-import net.anotheria.portalkit.services.common.integrity.IntegrityCheckResult;
 import net.anotheria.portalkit.services.relation.exception.RelationAlreadyExistsException;
 import net.anotheria.portalkit.services.relation.exception.RelationNotFoundException;
 import net.anotheria.portalkit.services.relation.exception.RelationServiceException;
@@ -102,6 +100,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Relation getRelation(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
         Relation relation = getRelationInternally(owner, partner, relationName);
 
@@ -143,6 +142,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean isRelated(AccountId owner, AccountId partner, String relationName) throws RelationServiceException {
         Relation relation = getRelationInternally(owner, partner, relationName);
 
@@ -150,6 +150,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Relation> getOwnerRelations(AccountId owner) throws RelationServiceException {
         Args.notNull(owner, "owner id");
 
@@ -161,6 +162,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Relation> getOwnerRelations(AccountId owner, String relationName) throws RelationServiceException {
         Args.notNull(owner, "owner id");
         Args.notEmpty(relationName, "relation name");
@@ -174,6 +176,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Relation> getPartnerRelations(AccountId partner) throws RelationServiceException {
         Args.notNull(partner, "partner id");
 
@@ -185,6 +188,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Set<Relation> getPartnerRelations(AccountId partner, String relationName) throws RelationServiceException {
         Args.notNull(partner, "partner id");
         Args.notEmpty(relationName, "relation name");
@@ -307,7 +311,7 @@ public class RelationServiceImpl implements RelationService, EntityManagingServi
 
     @DontMonitor
     private Set<Relation> relationEntities2relationBOs(Collection<RelationEntity> userRelationEntities) {
-        Set<Relation> results = new HashSet<>();
+        Set<Relation> results = new HashSet<>(userRelationEntities.size());
 
         for (RelationEntity relationEntity : userRelationEntities) {
             Relation relation = relationEntity2relationBO(relationEntity);
