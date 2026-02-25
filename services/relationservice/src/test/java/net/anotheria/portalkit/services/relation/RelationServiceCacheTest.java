@@ -35,7 +35,10 @@ public class RelationServiceCacheTest {
     private EntityManager entityManagerMock;
 
     @Mock
-    private Cache<String, Relation> isRelatedCacheMock;
+    private Cache<String, Relation> relationCache;
+
+    @Mock
+    private Cache<String, Boolean> nullRelationCache;
 
     @InjectMocks
     private RelationServiceImpl relationService;
@@ -47,20 +50,21 @@ public class RelationServiceCacheTest {
 
         relationService.isRelated(OWNER, PARTNER, RELATION_NAME);
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verify(isRelatedCacheMock).put(CACHE_KEY, new Relation(OWNER, PARTNER, RELATION_NAME));
+        verify(relationCache).get(CACHE_KEY);
+        verify(nullRelationCache).get(CACHE_KEY);
+        verify(relationCache).put(CACHE_KEY, new Relation(OWNER, PARTNER, RELATION_NAME));
 
         verify(entityManagerMock).find(RelationEntity.class, relationId);
     }
 
     @Test
     public void testIsRelated_filledCache() throws RelationServiceException {
-        when(isRelatedCacheMock.get(CACHE_KEY)).thenReturn(CACHED_RELATION);
+        when(relationCache.get(CACHE_KEY)).thenReturn(CACHED_RELATION);
 
         relationService.isRelated(OWNER, PARTNER, RELATION_NAME);
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verifyNoMoreInteractions(isRelatedCacheMock);
+        verify(relationCache).get(CACHE_KEY);
+        verifyNoMoreInteractions(relationCache);
 
         verifyNoInteractions(entityManagerMock);
     }
@@ -72,8 +76,9 @@ public class RelationServiceCacheTest {
 
         relationService.getRelation(OWNER, PARTNER, RELATION_NAME);
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verify(isRelatedCacheMock).put(CACHE_KEY, new Relation(OWNER, PARTNER, RELATION_NAME));
+        verify(relationCache).get(CACHE_KEY);
+        verify(nullRelationCache).get(CACHE_KEY);
+        verify(relationCache).put(CACHE_KEY, new Relation(OWNER, PARTNER, RELATION_NAME));
 
         verify(entityManagerMock).find(RelationEntity.class, relationId);
     }
@@ -89,29 +94,32 @@ public class RelationServiceCacheTest {
         } catch (RelationNotFoundException e) {
         }
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verify(isRelatedCacheMock).put(CACHE_KEY, NULL_RELATION);
+        verify(relationCache).get(CACHE_KEY);
+        verify(nullRelationCache).put(CACHE_KEY, Boolean.TRUE);
+        verify(relationCache, never()).put(eq(CACHE_KEY), any());
 
+        verify(nullRelationCache).get(CACHE_KEY);
         verify(entityManagerMock).find(RelationEntity.class, relationId);
     }
 
     @Test
     public void testGetRelation_filledCache() throws RelationServiceException {
-        when(isRelatedCacheMock.get(CACHE_KEY)).thenReturn(CACHED_RELATION);
+        when(relationCache.get(CACHE_KEY)).thenReturn(CACHED_RELATION);
 
         Relation relation = relationService.getRelation(OWNER, PARTNER, RELATION_NAME);
 
         assertThat(relation, is(CACHED_RELATION));
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verifyNoMoreInteractions(isRelatedCacheMock);
+        verify(relationCache).get(CACHE_KEY);
+        verifyNoMoreInteractions(relationCache);
 
         verifyNoInteractions(entityManagerMock);
     }
 
     @Test
     public void testGetRelation_nullCache() throws RelationServiceException {
-        when(isRelatedCacheMock.get(CACHE_KEY)).thenReturn(NULL_RELATION);
+        when(relationCache.get(CACHE_KEY)).thenReturn(null);
+        when(nullRelationCache.get(CACHE_KEY)).thenReturn(Boolean.TRUE);
 
         try {
             relationService.getRelation(OWNER, PARTNER, RELATION_NAME);
@@ -119,9 +127,10 @@ public class RelationServiceCacheTest {
         } catch (RelationNotFoundException e) {
         }
 
-        verify(isRelatedCacheMock).get(CACHE_KEY);
-        verifyNoMoreInteractions(isRelatedCacheMock);
+        verify(relationCache).get(CACHE_KEY);
+        verify(nullRelationCache).get(CACHE_KEY);
 
         verifyNoInteractions(entityManagerMock);
+        verify(relationCache, never()).put(anyString(), any());
     }
 }
