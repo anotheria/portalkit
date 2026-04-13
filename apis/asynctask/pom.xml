@@ -11,7 +11,7 @@
     <name>apis - async</name>
 
     <properties>
-        <kafka-version>3.9.1</kafka-version>
+        <kafka-version>3.9.2</kafka-version>
         <amazon-sqs-version>1.12.587</amazon-sqs-version>
     </properties>
 
