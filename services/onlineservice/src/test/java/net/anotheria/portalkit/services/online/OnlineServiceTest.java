@@ -10,7 +10,6 @@ import net.anotheria.portalkit.services.online.persistence.ActivityNotFoundInPer
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceService;
 import net.anotheria.portalkit.services.online.persistence.ActivityPersistenceServiceException;
 import net.anotheria.portalkit.services.online.persistence.inmemory.InMemoryActivityPersistenceServiceFactory;
-import net.anotheria.portalkit.services.online.persistence.jdbc.JDBCActivityPersistenceServiceFactory;
 import net.anotheria.portalkit.services.online.persistence.storagebased.SBActivityPersistenceConstants;
 import net.anotheria.portalkit.services.online.persistence.storagebased.SBActivityPersistenceServiceFactory;
 import net.anotheria.portalkit.services.storage.StorageService;
@@ -511,9 +510,6 @@ public class OnlineServiceTest {
             case INMEMORY:
                 MetaFactory.addFactoryClass(ActivityPersistenceService.class, Extension.LOCAL, InMemoryActivityPersistenceServiceFactory.class);
                 break;
-            case JDBС:
-                MetaFactory.addFactoryClass(ActivityPersistenceService.class, Extension.LOCAL, JDBCActivityPersistenceServiceFactory.class);
-                break;
             case STORAGE_BASED:
                 // Storage services INitialization!!!
                 Map<String, Serializable> factoryParameters = new HashMap<String, Serializable>();
@@ -536,7 +532,6 @@ public class OnlineServiceTest {
      */
     private enum PersistenceServiceType {
         INMEMORY,
-        JDBС,
         STORAGE_BASED
     }
 

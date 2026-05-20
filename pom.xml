@@ -146,11 +146,6 @@
                 <artifactId>postgresql</artifactId>
                 <version>42.7.11</version>
 			</dependency>
-			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>1.4.200</version>
-			</dependency>
             <!-- For using Args -->
 			<dependency>
 				<groupId>org.apache.httpcomponents.core5</groupId>
