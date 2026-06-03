@@ -10,7 +10,7 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
  * @author ykalapusha
  * @since 03.06.2026
  */
-public class TestPersonalDataCryptTool {
+public class PersonalDataCryptToolTest {
 
     private char[] configurationReadKey = {'z', 'F', 'P', (char) 121, 'T', 'b', (char) 97, 'a', (char) 5, (char) 71, 'W', 'n'};
     private String applicationSecret = "4661971E68115138349812C14A8B8E2A";
