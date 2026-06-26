@@ -42,7 +42,49 @@ public interface AccountSettingsAPI extends API {
     void deleteDataspaces(AccountId accountId) throws APIException;
 
 
+    /**
+     * Set one of multiple attributes
+     * @param accountId
+     * @param dataspaceType
+     * @param attribute
+     * @throws APIException
+     */
     void setAttribute(AccountId accountId, DataspaceType dataspaceType, Attribute... attribute) throws APIException;
 
+    /**
+     * Set one or multiple attributes for current user.
+     * @param dataspaceType
+     * @param attribute
+     * @throws APIException
+     */
+    void setMyAttribute(DataspaceType dataspaceType, Attribute... attribute) throws APIException ;
+
+    /**
+     * Returns an attribute.
+     * @param accountId
+     * @param dataspaceType
+     * @param attributeName
+     * @return
+     * @throws APIException
+     */
     Optional<Attribute> getAttribute(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException;
+
+    /**
+     * Returns an attribute for currently logged in account.
+     * @param dataspaceType
+     * @param attributeName
+     * @return
+     * @throws APIException
+     */
+    Optional<Attribute> getMyAttribute(DataspaceType dataspaceType, String attributeName) throws APIException;
+
+    /**
+     * Returns stored attribute or default attribute if not stored attribute is present.
+     * @param dataspaceType
+     * @param attributeName
+     * @param defaultValue
+     * @return
+     * @throws APIException
+     */
+    Attribute getMyAttributeOrDefault(DataspaceType dataspaceType, String attributeName, Attribute defaultValue) throws APIException;
 }

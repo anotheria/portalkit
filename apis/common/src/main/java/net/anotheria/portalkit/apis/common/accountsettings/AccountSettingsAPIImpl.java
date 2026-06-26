@@ -127,6 +127,21 @@ public class AccountSettingsAPIImpl extends BasePortalKitAPIImpl implements Acco
         }
     }
 
+    @Override
+    public void setMyAttribute(DataspaceType dataspaceType, Attribute... attributes) throws APIException {
+        setAttribute(getCurrentAccountId(), dataspaceType, attributes);
+    }
+
+    @Override
+    public Optional<Attribute> getMyAttribute(DataspaceType dataspaceType, String attributeName) throws APIException {
+        return getAttribute(getCurrentAccountId(), dataspaceType, attributeName);
+    }
+
+    @Override
+    public Attribute getMyAttributeOrDefault(DataspaceType dataspaceType, String attributeName, Attribute defaultValue) throws APIException {
+        return getMyAttribute(dataspaceType, attributeName).orElse(defaultValue);
+    }
+
     public Optional<Attribute> getAttribute(AccountId accountId, DataspaceType dataspaceType, String attributeName) throws APIException{
         IdBasedLock<AccountId> lock = lockManager.obtainLock(accountId);
         lock.lock();
