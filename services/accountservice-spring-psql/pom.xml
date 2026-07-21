@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>net.anotheria.portalkit</groupId>
+		<artifactId>pk-services</artifactId>
+		<version>4.2.9-SNAPSHOT</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>pk-services-accountservice-spring-psql</artifactId>
+	<name>services - account service for postgres and springdata</name>
+	<description>Services: Account Service (Spring Data JPA / PostgreSQL). Drop-in replacement for accountservice.</description>
+
+	<properties>
+		<spring-version>6.1.20</spring-version>
+	</properties>
+
+	<dependencies>
+		<!-- brings essentials (AccountId), eventing, spring-context/tx, spring-data-jpa, hibernate,
+		     flyway-core, postgresql, commons-dbcp2 and the shared JpaSpringConfiguration/FlywayUtils -->
+		<dependency>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-common</artifactId>
+			<version>${project.version}</version>
+			<!-- This module runs its migrations with modern org.flywaydb Flyway (see below), so the legacy
+			     com.googlecode flyway 2.0.3 that pk-services-common pulls in is unused here. Exclude it so it
+			     doesn't ride along onto an embedding application's classpath. Nothing in this module references
+			     the pk-services-common classes that use it (JpaSpringConfiguration / FlywayUtils / the JDBC
+			     BasePersistenceService), so they are never loaded. -->
+			<exclusions>
+				<exclusion>
+					<groupId>com.googlecode.flyway</groupId>
+					<artifactId>flyway-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.anotheria.portalkit</groupId>
+			<artifactId>pk-services-eventing</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Modern Flyway runs the account migrations. Unlike the legacy com.googlecode flyway 2.0.3
+		     (pulled transitively via pk-services-common), it scans only the configured classpath location
+		     instead of always sweeping the standard db/migration folder, so it coexists with an embedding
+		     Spring Boot application's own Flyway. Scope 'provided': the host (e.g. a Boot app) supplies its
+		     own, Boot-managed flyway-core at runtime; 9.22.3 is the last Java-11-compatible line and is
+		     API-compatible with the Boot 4 / Flyway 11 the host provides. -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>9.22.3</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- spring-test 6.x (root BOM manages 5.x for legacy modules, so pin explicitly) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.10.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.10.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>3.3.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.21.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>1.21.3</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

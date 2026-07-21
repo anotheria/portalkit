@@ -1,0 +1,6 @@
+-- Intentionally inactive migration, kept as a version placeholder so the migration history stays
+-- identical to the legacy accountservice. The unique index on account(name) is deliberately NOT
+-- created here (see V1_10__ChangeIndexes.sql for the non-unique index that is actually used).
+--
+-- Original (commented out in the legacy Java migration):
+-- CREATE UNIQUE INDEX name_idx ON account (name);

@@ -1,0 +1,1 @@
+ALTER TABLE account add column brand VARCHAR(32) ;

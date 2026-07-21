@@ -50,10 +50,12 @@
 		<module>storage</module>
 		<module>accountservice</module>
 		<module>accountservice-spring-mongo</module>
+		<module>accountservice-spring-psql</module>
 		<module>accountsettingsservice</module>
 		<module>accountlistservice</module>
 		<module>authenticationservice</module>
         <module>authenticationservice-spring-mongo</module>
+        <module>authenticationservice-spring-psql</module>
 		<module>onlineservice</module>
 		<module>recordservice</module>
 		<module>foreignidservice</module>
