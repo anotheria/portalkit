@@ -174,7 +174,7 @@ public class ForeignIdDAO extends AbstractDAO implements DAO {
 		PreparedStatement stat = null;
 		ResultSet result = null;
 		try {
-			stat = connection.prepareStatement("SELECT count(id) from " + TABLE_NAME);
+			stat = connection.prepareStatement("SELECT count(accid) from " + TABLE_NAME);
 			result = stat.executeQuery();
 			return result.next() ? result.getLong(1) : 0;
 		} finally {
