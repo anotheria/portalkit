@@ -65,9 +65,9 @@ public class MatchServiceImpl implements MatchService, EntityManagingService {
 
 
     public MatchServiceImpl() {
-        isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service");
-        ownersCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
-        targetsCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service");
+        isMatchedCache = Caches.createConfigurableHardwiredCache("pk-cache-match-service-matched");
+        ownersCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service-owners");
+        targetsCache = Caches.createConfigurableSoftReferenceCache("pk-cache-match-service-targets");
         EntityManagingServices.createEntityCounter(this, "Matches");
     }
 
