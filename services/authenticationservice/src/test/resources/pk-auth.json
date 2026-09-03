@@ -3,18 +3,34 @@
     "passwordKey": "PORTALKITFOREVER",
     //auth token encryptors config. Each element should have authenticationAlgorithm.SHORTCUT + authenticationKey.SHORTCUT
     //since the shortcut will be transmitted as part of the auth link, don#t use long names here.
+    //every configured algorithm stays available for decryption, so switching the default below does not
+    //invalidate the tokens which are already out there - only remove an entry once its tokens have expired.
 
     "@authenticationAlgorithms":[
         {
+            //plain text, for debugging only. Its output is NOT safe to be put into a link.
             "shortcut": "P",
             "clazz": "net.anotheria.portalkit.services.authentication.encryptors.PlanAuthTokenEncryptionAlgorithm",
             "key": "this-is-ignored-anyway-for-plain-authentication"
         },
         {
+            //legacy, kept for tokens which were issued before the switch to AES-GCM.
             "shortcut": "B",
             "clazz": "net.anotheria.portalkit.services.authentication.encryptors.BlowfishAuthTokenEncryptionAlgorithm",
             "key": "PORTALKITFORBLOWFISH"
+        },
+        {
+            //recommended: authenticated, link safe and shorter than blowfish.
+            "shortcut": "A",
+            "clazz": "net.anotheria.portalkit.services.authentication.encryptors.AesGcmAuthTokenEncryptionAlgorithm",
+            "key": "PORTALKITFORAESGCM"
+        },
+        {
+            //alternative to AES-GCM, preferable on hardware without AES instructions.
+            "shortcut": "C",
+            "clazz": "net.anotheria.portalkit.services.authentication.encryptors.ChaCha20Poly1305AuthTokenEncryptionAlgorithm",
+            "key": "PORTALKITFORCHACHA20"
         }
     ],
-    "authenticationAlgorithm": "B"
+    "authenticationAlgorithm": "A"
 }

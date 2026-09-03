@@ -6,7 +6,11 @@ import net.anotheria.portalkit.services.authentication.AuthTokenEncryptors;
 import net.anotheria.util.crypt.CryptTool;
 
 /**
- * Password encryption based on blowfish. Easy to use but has a weakness, passwords are decryptable.
+ * Auth token encryption based on blowfish, the original algorithm of this package.
+ *
+ * The hex output is link safe, but it is twice as long as it needs to be and blowfish operates on 64 bit blocks
+ * and without authentication, so a manipulated token is not detected as such. Kept for compatibility with tokens
+ * which are already out there, for new setups prefer {@link AesGcmAuthTokenEncryptionAlgorithm}.
  *
  * @author lrosenberg
  * @since 12.12.12 23:21
