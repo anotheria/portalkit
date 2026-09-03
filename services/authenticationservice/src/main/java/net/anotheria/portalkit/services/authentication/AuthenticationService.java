@@ -4,6 +4,8 @@ import net.anotheria.anoprise.metafactory.Service;
 
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.UserDataManagingService;
+
+import java.util.List;
 import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
@@ -69,14 +71,18 @@ public interface AuthenticationService extends Service, UserDataManagingService 
     EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
     /**
-     * Creates a new token with same parameters as parameter token. The returned token is already saved in the db (with
-     * all consequences and parameters) and can be issued to the user by calling getEncodedAuthString.
+     * Creates a new token with same parameters as parameter token.
      *
      * @param accountId      account id.
      * @param prefilledToken {@link AuthToken}
      * @return {@link EncryptedAuthToken}
      * @throws AuthenticationServiceException if error
+     * @deprecated this method used to be the variant which stored the token properties alongside the token,
+     * whereas generateEncryptedToken stored the token only. Both do the former now, so this method is nothing but
+     * an alias for {@link #generateEncryptedToken(AccountId, AuthToken)} and is only kept because removing it
+     * would break remote clients. Use generateEncryptedToken.
      */
+    @Deprecated
     EncryptedAuthToken saveEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException;
 
     /**
@@ -114,4 +120,31 @@ public interface AuthenticationService extends Service, UserDataManagingService 
      * @throws AuthenticationServiceException if error
      */
     String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException;
+
+    /**
+     * Returns the inventory of all tokens of the given account - what exists, when it was created and when it was
+     * last used, without revealing the tokens themselves.
+     *
+     * The result describes the tokens which exist right now, it is not a history: an entry disappears when its
+     * token is deleted, consumed or replaced.
+     *
+     * @param accountId account id.
+     * @return the inventory entries, never null.
+     * @throws AuthenticationServiceException if error
+     */
+    List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId accountId) throws AuthenticationServiceException;
+
+    /**
+     * Returns the inventory of tokens of the given type across all accounts.
+     *
+     * The result is bound by limit because a token type which is used for logins matches millions of rows in a
+     * large installation, and this list is serialized to the caller.
+     *
+     * @param type   token type.
+     * @param limit  maximum number of entries to return, must be greater than zero.
+     * @param offset number of entries to skip, must not be negative.
+     * @return the inventory entries, never null.
+     * @throws AuthenticationServiceException if error
+     */
+    List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationServiceException;
 }

@@ -3,6 +3,7 @@ package net.anotheria.portalkit.services.authentication.persistence.mongo;
 import dev.morphia.Datastore;
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
+import net.anotheria.portalkit.services.authentication.TokenInventoryEntry;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.authentication.persistence.mongo.entities.AuthPasswordEntity;
@@ -13,6 +14,7 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Set;
 
 @Monitor(category = "portalkit-persistence-service", subsystem = "authentication")
@@ -82,25 +84,7 @@ public class MongoAuthenticationPersistenceServiceImpl extends BaseMongoPersiste
 	}
 
 	@Override
-	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
-		try {
-			Datastore datastore = connect();
-			//create new entity
-			AuthTokenEntity authToken = new AuthTokenEntity(new ObjectId());
-			authToken.setAccid(owner.getInternalId());
-			authToken.setToken(encryptedToken);
-			authToken.setDaoCreated(System.currentTimeMillis());
-			authToken.setDaoUpdated(System.currentTimeMillis());
-
-			tokenDao.createEntity(datastore, authToken);
-		} catch (MongoDaoException e) {
-			log.error("Can't create campaign", e);
-			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	public void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
+	public void saveAuthToken(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
 		try {
 			Datastore datastore = connect();
 			//create new entity
@@ -173,6 +157,39 @@ public class MongoAuthenticationPersistenceServiceImpl extends BaseMongoPersiste
 			return tokenDao.getAuthTokensCount(datastore, AuthTokenEntity.class);
 		} catch (MongoDaoException e) {
 			log.error("Can't get tokens count");
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId owner) throws AuthenticationPersistenceServiceException {
+		try {
+			Datastore datastore = connect();
+			return tokenDao.getTokenInventoryByAccount(datastore, owner.getInternalId(), AuthTokenEntity.class);
+		} catch (MongoDaoException e) {
+			log.error("Can't get token inventory for accid= " + owner.getInternalId(), e);
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationPersistenceServiceException {
+		try {
+			Datastore datastore = connect();
+			return tokenDao.getTokenInventoryByType(datastore, type, limit, offset, AuthTokenEntity.class);
+		} catch (MongoDaoException e) {
+			log.error("Can't get token inventory for type " + type, e);
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void updateLastUsed(String encryptedToken, long timestamp, long onlyIfOlderThan) throws AuthenticationPersistenceServiceException {
+		try {
+			Datastore datastore = connect();
+			tokenDao.updateLastUsed(datastore, encryptedToken, timestamp, onlyIfOlderThan, AuthTokenEntity.class);
+		} catch (MongoDaoException e) {
+			log.error("Can't update last used timestamp", e);
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		}
 	}

@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.authentication.persistence.jdbc;
 
 import net.anotheria.moskito.aop.annotation.Monitor;
 import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
+import net.anotheria.portalkit.services.authentication.TokenInventoryEntry;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -11,6 +12,7 @@ import net.anotheria.portalkit.services.common.persistence.jdbc.JDBCUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,22 +84,7 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 
 
 	@Override
-	public void saveAuthToken(AccountId owner, String encryptedToken) throws AuthenticationPersistenceServiceException {
-		Connection con = null;
-		try{
-			con = getConnection();
-			authTokenDAO.saveAuthToken(con, owner, encryptedToken);
-		}catch(SQLException e){
-			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
-		}catch(DAOException e){
-			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
-		}finally{
-			JDBCUtil.close(con);
-		}
-	}
-
-	@Override
-	public void saveAuthTokenAdditional(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
+	public void saveAuthToken(AccountId owner, EncryptedAuthToken encryptedToken) throws AuthenticationPersistenceServiceException {
 		Connection con = null;
 		try{
 			con = getConnection();
@@ -177,6 +164,45 @@ public class JDBCAuthenticationPersistenceServiceImpl extends BasePersistenceSer
 		try {
 			con = getConnection();
 			return authTokenDAO.getAuthTokensCount(con);
+		} catch (SQLException | DAOException e) {
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId owner) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
+		try {
+			con = getConnection();
+			return authTokenDAO.getTokenInventoryByAccount(con, owner);
+		} catch (SQLException | DAOException e) {
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
+		try {
+			con = getConnection();
+			return authTokenDAO.getTokenInventoryByType(con, type, limit, offset);
+		} catch (SQLException | DAOException e) {
+			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
+		} finally {
+			JDBCUtil.close(con);
+		}
+	}
+
+	@Override
+	public void updateLastUsed(String encryptedToken, long timestamp, long onlyIfOlderThan) throws AuthenticationPersistenceServiceException {
+		Connection con = null;
+		try {
+			con = getConnection();
+			authTokenDAO.updateLastUsed(con, encryptedToken, timestamp, onlyIfOlderThan);
 		} catch (SQLException | DAOException e) {
 			throw new AuthenticationPersistenceServiceException(e.getMessage(), e);
 		} finally {

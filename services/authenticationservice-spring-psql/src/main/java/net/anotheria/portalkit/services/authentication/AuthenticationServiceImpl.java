@@ -6,6 +6,7 @@ import net.anotheria.moskito.core.entity.EntityManagingServices;
 import net.anotheria.portalkit.services.authentication.encryptors.BlowfishPasswordEncryptionAlgorithm;
 import net.anotheria.portalkit.services.authentication.persistence.AuthTokenEntity;
 import net.anotheria.portalkit.services.authentication.persistence.AuthTokenEntityRepository;
+import net.anotheria.portalkit.services.authentication.persistence.OffsetPageable;
 import net.anotheria.portalkit.services.authentication.persistence.PasswordEntity;
 import net.anotheria.portalkit.services.authentication.persistence.PasswordEntityRepository;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -13,7 +14,9 @@ import net.anotheria.util.StringUtils;
 import org.configureme.ConfigurationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,6 +51,11 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
      * {@link AuthTokenEntityRepository} instance.
      */
     private final AuthTokenEntityRepository authTokenEntityRepository;
+    /**
+     * How old the stored last used timestamp of a token has to be before it is written again, in millis. See
+     * {@link AuthenticationServiceConfig#getLastUsedUpdateIntervalInHours()}.
+     */
+    private final long lastUsedUpdateIntervalInMillis;
 
     /**
      * Default constructor.
@@ -73,6 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         }
 
         passwordAlgorithm.customize(config.getPasswordKey());
+        lastUsedUpdateIntervalInMillis = config.getLastUsedUpdateIntervalInHours() * 60L * 60L * 1000L;
         EntityManagingServices.createEntityCounter(this, "AuthTokens");
         EntityManagingServices.createEntityCounter(this, "AuthPasswords");
     }
@@ -149,6 +158,9 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
             } catch (Exception e) {
                 log.warn("Couldn't delete used auth token {} for {}", token,  authToken.getAccountId());
             }
+        } else {
+            //a single use token is gone anyway, tracking when it was used would only produce a write followed by a delete.
+            updateLastUsed(token);
         }
 
         return authToken.getAccountId();
@@ -179,6 +191,74 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
      */
     private AuthToken decrypt(String token) {
         return AuthTokenEncryptors.decrypt(token);
+    }
+
+    /**
+     * Marks the given token as used now, unless the stored timestamp is younger than the configured interval.
+     * Failing to write it is not a reason to fail the authentication which just succeeded, so an error is logged
+     * and swallowed.
+     *
+     * @param token the token which was successfully authenticated with.
+     */
+    private void updateLastUsed(String token) {
+        long now = System.currentTimeMillis();
+        try {
+            authTokenEntityRepository.updateLastUsed(token, now, now - lastUsedUpdateIntervalInMillis);
+        } catch (Exception e) {
+            log.warn("Couldn't update the last used timestamp of an auth token", e);
+        }
+    }
+
+    /**
+     * Maps a stored token to an inventory entry.
+     *
+     * @param entity    the stored token.
+     * @param accountId the account id to report, which is the plain one where the caller supplied it and the
+     *                  stored, encrypted one otherwise.
+     * @return the inventory entry.
+     */
+    private TokenInventoryEntry toInventoryEntry(AuthTokenEntity entity, AccountId accountId) {
+        long created = entity.getDaoCreated() == null ? TokenInventoryEntry.TIMESTAMP_UNKNOWN : entity.getDaoCreated();
+        long lastUsed = entity.getLastUsedAt() == null ? TokenInventoryEntry.TIMESTAMP_UNKNOWN : entity.getLastUsedAt();
+
+        return new TokenInventoryEntry(accountId, entity.getType(), TokenObfuscator.obfuscate(entity.getToken()),
+                created, lastUsed, entity.getExpiryTimestamp(), entity.isMultiUse(), entity.isExclusive(),
+                entity.isExclusiveInType());
+    }
+
+    @Override
+    public List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId accountId) throws AuthenticationServiceException {
+        if (accountId == null)
+            throw new IllegalArgumentException("accountId can't be null");
+        try {
+            //tokens are stored with the plain account id here (AuthToken.toEntity uses it), the same form
+            //getTokenByType and deleteTokensByType query with. See the note on getEncrypted usage in this class.
+            List<AuthTokenEntity> stored = authTokenEntityRepository.findByAccountId(accountId.getInternalId());
+            List<TokenInventoryEntry> ret = new ArrayList<>(stored.size());
+            for (AuthTokenEntity entity : stored)
+                ret.add(toInventoryEntry(entity, accountId));
+            return ret;
+        } catch (Exception e) {
+            throw new AuthenticationServiceException("Unable to retrieve the token inventory of " + accountId, e);
+        }
+    }
+
+    @Override
+    public List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationServiceException {
+        if (limit <= 0)
+            throw new IllegalArgumentException("limit has to be greater than zero");
+        if (offset < 0)
+            throw new IllegalArgumentException("offset can't be negative");
+        try {
+            List<AuthTokenEntity> stored = authTokenEntityRepository.findByType(type,
+                    new OffsetPageable(offset, limit, Sort.by("token")));
+            List<TokenInventoryEntry> ret = new ArrayList<>(stored.size());
+            for (AuthTokenEntity entity : stored)
+                ret.add(toInventoryEntry(entity, new AccountId(entity.getAccountId())));
+            return ret;
+        } catch (Exception e) {
+            throw new AuthenticationServiceException("Unable to retrieve the token inventory of type " + type, e);
+        }
     }
 
 

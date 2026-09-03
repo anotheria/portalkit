@@ -1,6 +1,8 @@
 package net.anotheria.portalkit.services.authentication;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import net.anotheria.portalkit.services.common.AccountId;
@@ -36,6 +38,11 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
      */
     private AuthenticationPersistenceService persistenceService;
     /**
+     * How old the stored last used timestamp of a token has to be before it is written again, in millis. See
+     * AuthenticationServiceConfig#getLastUsedUpdateIntervalInHours().
+     */
+    private long lastUsedUpdateIntervalInMillis;
+    /**
      * Application secret.
      */
     private final static String APP_KEY = (char) 56 + 'x' + "8UJlqYBKS4dh";
@@ -65,6 +72,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         }
 
         passwordAlgorithm.customize(config.getPasswordKey());
+        lastUsedUpdateIntervalInMillis = config.getLastUsedUpdateIntervalInHours() * 60L * 60L * 1000L;
 
         //note, this will work with a) only one AuthenticationPersistenceService impl or b) configured metafactory
         try {
@@ -120,6 +128,9 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
             } catch (AuthenticationPersistenceServiceException e) {
                 log.warn("Couldn't delete used auth token " + token + " for " + authToken.getAccountId());
             }
+        } else {
+            //a single use token is gone anyway, tracking when it was used would only produce a write followed by a delete.
+            updateLastUsed(token);
         }
 
         return authToken.getAccountId();
@@ -150,6 +161,22 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         return AuthTokenEncryptors.decrypt(token);
     }
 
+    /**
+     * Marks the given token as used now, unless the stored timestamp is younger than the configured interval.
+     * Failing to write it is not a reason to fail the authentication which just succeeded, so an error is logged
+     * and swallowed.
+     *
+     * @param token the token which was successfully authenticated with.
+     */
+    private void updateLastUsed(String token) {
+        long now = System.currentTimeMillis();
+        try {
+            persistenceService.updateLastUsed(token, now, now - lastUsedUpdateIntervalInMillis);
+        } catch (AuthenticationPersistenceServiceException e) {
+            log.warn("Couldn't update the last used timestamp of an auth token", e);
+        }
+    }
+
 
     @Override
     public EncryptedAuthToken generateEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
@@ -177,7 +204,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
             }
 
 
-            persistenceService.saveAuthToken(encryptedAccountId, encryption);
+            persistenceService.saveAuthToken(encryptedAccountId, encToken);
         } catch (AuthenticationPersistenceServiceException e) {
             throw new AuthenticationServiceException(e);
         }
@@ -297,31 +324,58 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
     }
 
     @Override
+    @Deprecated
     public EncryptedAuthToken saveEncryptedToken(AccountId accountId, AuthToken prefilledToken) throws AuthenticationServiceException {
-        accountId = getEncrypted(accountId);
-        AuthToken newToken = (AuthToken) prefilledToken.clone();
-        String encryption = AuthTokenEncryptors.encrypt(newToken);
+        return generateEncryptedToken(accountId, prefilledToken);
+    }
 
-        EncryptedAuthToken encToken = new EncryptedAuthToken();
-        encToken.setAuthToken(newToken);
-        encToken.setEncryptedVersion(encryption);
-
+    @Override
+    public List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId accountId) throws AuthenticationServiceException {
+        if (accountId == null)
+            throw new IllegalArgumentException("accountId can't be null");
         try {
-            if (newToken.isExclusive())
-                persistenceService.deleteAuthTokens(accountId);
-
-            if (!newToken.isExclusive() && newToken.isExclusiveInType()) {
-                for (String token : persistenceService.getAuthTokens(newToken.getAccountId())) {
-                    AuthToken t = AuthTokenEncryptors.decrypt(token);
-                    if (t.getType() == newToken.getType())
-                        persistenceService.deleteAuthToken(newToken.getAccountId(), token);
-                }
-            }
-            persistenceService.saveAuthTokenAdditional(accountId, encToken);
+            //the tokens are stored under the encrypted account id, but the caller handed us the real one, so the
+            //entries can be stamped with it instead of being decrypted back - the account id encryption is one way.
+            List<TokenInventoryEntry> stored = persistenceService.getTokenInventoryByAccount(getEncrypted(accountId));
+            List<TokenInventoryEntry> ret = new ArrayList<TokenInventoryEntry>(stored.size());
+            for (TokenInventoryEntry entry : stored)
+                ret.add(withAccountId(entry, accountId));
+            return ret;
         } catch (AuthenticationPersistenceServiceException e) {
-            throw new AuthenticationServiceException(e);
+            throw new AuthenticationServiceException("Can't retrieve the token inventory of " + accountId, e);
         }
-        return encToken;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Note that this implementation stores the account ids encrypted and there is no plain account id in scope
+     * for a type wide query, so the returned entries carry the encrypted account id.
+     */
+    @Override
+    public List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationServiceException {
+        if (limit <= 0)
+            throw new IllegalArgumentException("limit has to be greater than zero");
+        if (offset < 0)
+            throw new IllegalArgumentException("offset can't be negative");
+        try {
+            return persistenceService.getTokenInventoryByType(type, limit, offset);
+        } catch (AuthenticationPersistenceServiceException e) {
+            throw new AuthenticationServiceException("Can't retrieve the token inventory of type " + type, e);
+        }
+    }
+
+    /**
+     * Returns a copy of the given entry which carries the given account id.
+     *
+     * @param entry     the entry to copy.
+     * @param accountId the account id to set.
+     * @return the copy.
+     */
+    private TokenInventoryEntry withAccountId(TokenInventoryEntry entry, AccountId accountId) {
+        return new TokenInventoryEntry(accountId, entry.getType(), entry.getObfuscatedToken(), entry.getCreated(),
+                entry.getLastUsed(), entry.getExpiryTimestamp(), entry.isMultiUse(), entry.isExclusive(),
+                entry.isExclusiveInType());
     }
 
     @Override

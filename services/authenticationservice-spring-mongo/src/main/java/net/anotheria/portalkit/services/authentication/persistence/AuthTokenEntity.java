@@ -45,6 +45,18 @@ public class AuthTokenEntity {
     private int type;
 
     /**
+     * Creation timestamp of the token. Null for tokens which were stored before this field existed, which is
+     * reported as unknown and not as the epoch.
+     */
+    private Long daoCreated;
+
+    /**
+     * Timestamp of the last successful authentication with this token. Null means the token has not been used
+     * since last used tracking was introduced, which is not the same as never used.
+     */
+    private Long lastUsedAt;
+
+    /**
      * Default constructor.
      */
     public AuthTokenEntity() {}
@@ -103,5 +115,21 @@ public class AuthTokenEntity {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public Long getDaoCreated() {
+        return daoCreated;
+    }
+
+    public void setDaoCreated(Long daoCreated) {
+        this.daoCreated = daoCreated;
+    }
+
+    public Long getLastUsedAt() {
+        return lastUsedAt;
+    }
+
+    public void setLastUsedAt(Long lastUsedAt) {
+        this.lastUsedAt = lastUsedAt;
     }
 }

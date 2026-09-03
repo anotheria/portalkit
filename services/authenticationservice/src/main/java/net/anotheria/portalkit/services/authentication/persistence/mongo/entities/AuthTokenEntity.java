@@ -33,6 +33,12 @@ public class AuthTokenEntity extends BaseEntity {
 
     private int type;
 
+    /**
+     * Timestamp of the last successful authentication with this token. Zero means the token has not been used
+     * since last used tracking was introduced, which is reported as unknown and not as never used.
+     */
+    private long lastUsedAt;
+
     public AuthTokenEntity() {
     }
 
@@ -136,5 +142,13 @@ public class AuthTokenEntity extends BaseEntity {
                 ", exclusiveInType=" + exclusiveInType +
                 ", type=" + type +
                 '}';
+    }
+
+    public long getLastUsedAt() {
+        return lastUsedAt;
+    }
+
+    public void setLastUsedAt(long lastUsedAt) {
+        this.lastUsedAt = lastUsedAt;
     }
 }

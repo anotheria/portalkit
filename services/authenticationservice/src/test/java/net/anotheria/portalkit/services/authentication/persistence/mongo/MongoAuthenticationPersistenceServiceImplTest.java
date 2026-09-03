@@ -2,6 +2,7 @@ package net.anotheria.portalkit.services.authentication.persistence.mongo;
 
 import net.anotheria.portalkit.services.authentication.AuthToken;
 import net.anotheria.portalkit.services.authentication.AuthTokenEncryptors;
+import net.anotheria.portalkit.services.authentication.EncryptedAuthToken;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceService;
 import net.anotheria.portalkit.services.authentication.persistence.AuthenticationPersistenceServiceException;
 import net.anotheria.portalkit.services.common.AccountId;
@@ -142,16 +143,19 @@ public class MongoAuthenticationPersistenceServiceImplTest {
         String t1 = AuthTokenEncryptors.encrypt(token1);
         String t2 = AuthTokenEncryptors.encrypt(token2);
 
+        EncryptedAuthToken encrypted1 = toEncrypted(token1, t1);
+        EncryptedAuthToken encrypted2 = toEncrypted(token2, t2);
+
         assertFalse(service.authTokenExists(t1));
         assertFalse(service.authTokenExists(t2));
 
         //store token 1
-        service.saveAuthToken(id, t1);
+        service.saveAuthToken(id, encrypted1);
         assertTrue(service.authTokenExists(t1));
         assertFalse(service.authTokenExists(t2));
 
         //this should
-        service.saveAuthToken(id, t2);
+        service.saveAuthToken(id, encrypted2);
         assertTrue(service.authTokenExists(t1));
         assertTrue(service.authTokenExists(t2));
 
@@ -178,5 +182,17 @@ public class MongoAuthenticationPersistenceServiceImplTest {
         return token;
     }
 
-
+    /**
+     * Wraps a token and its encrypted form the way the service does it.
+     *
+     * @param token     the token.
+     * @param encrypted its encrypted form.
+     * @return the pair of both.
+     */
+    private EncryptedAuthToken toEncrypted(AuthToken token, String encrypted) {
+        EncryptedAuthToken ret = new EncryptedAuthToken();
+        ret.setAuthToken(token);
+        ret.setEncryptedVersion(encrypted);
+        return ret;
+    }
 }

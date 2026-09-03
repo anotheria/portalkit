@@ -26,6 +26,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -191,8 +192,86 @@ class AuthenticationServicePsqlTest {
 
         MigrateResult result = flyway.migrate();
         assertEquals(0, result.migrationsExecuted, "no migrations should be applied on an up-to-date database");
-        assertEquals("1.2", flyway.info().current().getVersion().toString(),
+        assertEquals("1.3", flyway.info().current().getVersion().toString(),
                 "current version should be the last auth migration");
+    }
+
+    @Test
+    void tokenInventoryDescribesTheStoredToken() throws Exception {
+        AccountId id = AccountId.generateNew();
+        AuthToken token = new AuthToken();
+        token.setAccountId(id);
+        token.setType(21);
+        token.setMultiUse(true);
+        token.setExpiryTimestamp(System.currentTimeMillis() + 60000L);
+
+        EncryptedAuthToken encrypted = authenticationService.generateEncryptedToken(token);
+
+        List<TokenInventoryEntry> inventory = authenticationService.getTokenInventoryByAccount(id);
+        assertEquals(1, inventory.size());
+
+        TokenInventoryEntry entry = inventory.get(0);
+        assertEquals(id, entry.getAccountId());
+        assertEquals(21, entry.getType());
+        assertTrue(entry.isMultiUse());
+        assertTrue(entry.isCreatedKnown(), "dao_created is written on insert");
+        assertFalse(entry.isUsed(), "a fresh token has no last used timestamp");
+        assertFalse(encrypted.getEncryptedVersion().equals(entry.getObfuscatedToken()),
+                "the inventory must never carry the raw token");
+    }
+
+    @Test
+    void authenticationWritesTheLastUsedTimestamp() throws Exception {
+        AccountId id = AccountId.generateNew();
+        AuthToken token = new AuthToken();
+        token.setAccountId(id);
+        token.setType(22);
+        token.setMultiUse(true);
+        token.setExpiryTimestamp(System.currentTimeMillis() + 60000L);
+
+        EncryptedAuthToken encrypted = authenticationService.generateEncryptedToken(token);
+        assertFalse(authenticationService.getTokenInventoryByAccount(id).get(0).isUsed());
+
+        authenticationService.authenticateByEncryptedToken(encrypted.getEncryptedVersion());
+
+        TokenInventoryEntry entry = authenticationService.getTokenInventoryByAccount(id).get(0);
+        assertTrue(entry.isUsed(), "authenticating with a multi use token records the last used timestamp");
+
+        // probing does not count as a use, so the recorded value stays where it was
+        long afterFirstUse = entry.getLastUsed();
+        assertTrue(authenticationService.canAuthenticateByEncryptedToken(encrypted.getEncryptedVersion()));
+        assertEquals(afterFirstUse, authenticationService.getTokenInventoryByAccount(id).get(0).getLastUsed());
+    }
+
+    @Test
+    void tokenInventoryByTypeIsBoundByLimitAndOffset() throws Exception {
+        for (int i = 0; i < 4; i++) {
+            AccountId id = AccountId.generateNew();
+            AuthToken token = new AuthToken();
+            token.setAccountId(id);
+            token.setType(23);
+            token.setMultiUse(true);
+            token.setExpiryTimestamp(System.currentTimeMillis() + 60000L);
+            authenticationService.generateEncryptedToken(token);
+        }
+
+        assertEquals(4, authenticationService.getTokenInventoryByType(23, 100, 0).size());
+        assertEquals(2, authenticationService.getTokenInventoryByType(23, 2, 0).size());
+        assertEquals(1, authenticationService.getTokenInventoryByType(23, 100, 3).size());
+        assertEquals(0, authenticationService.getTokenInventoryByType(23, 100, 4).size());
+
+        // an offset which is not a multiple of the limit has to work as well
+        assertEquals(2, authenticationService.getTokenInventoryByType(23, 2, 1).size());
+    }
+
+    @Test
+    void tokenInventoryByTypeRejectsAnUnboundedCall() throws Exception {
+        try {
+            authenticationService.getTokenInventoryByType(23, 0, 0);
+            fail("a limit of zero has to be rejected");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
     }
 
     private boolean tableExists(String table) throws Exception {

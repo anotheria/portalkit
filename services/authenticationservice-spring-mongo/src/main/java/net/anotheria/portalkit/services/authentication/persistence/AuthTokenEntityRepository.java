@@ -1,8 +1,10 @@
 package net.anotheria.portalkit.services.authentication.persistence;
 
 import net.anotheria.portalkit.services.authentication.AuthToken;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.Update;
 
 import java.util.List;
 
@@ -49,4 +51,36 @@ public interface AuthTokenEntityRepository extends MongoRepository<AuthTokenEnti
      */
     @Query(value ="{}", fields = "{ '_id' : 1 }")
     List<String> findAllIds();
+
+    /**
+     * Returns all tokens of the given account.
+     *
+     * @param accountId the account id.
+     * @return the stored tokens, never null.
+     */
+    List<AuthTokenEntity> findByAccountId(String accountId);
+
+    /**
+     * Returns the tokens of the given type, windowed by the given pageable.
+     *
+     * @param type     the token type.
+     * @param pageable the window, see OffsetPageable.
+     * @return the stored tokens, never null.
+     */
+    List<AuthTokenEntity> findByType(int type, Pageable pageable);
+
+    /**
+     * Sets the last used timestamp of the given token, but only if the stored one is older than the given
+     * threshold or not present at all. The condition is part of the query so that a token which is used
+     * constantly costs one update per interval and not one per authentication. Documents written before the
+     * field existed do not carry it, and mongo does not match a missing field with a comparison, hence the
+     * explicit exists clause.
+     *
+     * @param token           the token which was used.
+     * @param timestamp       the timestamp to store.
+     * @param onlyIfOlderThan store only if the currently stored value is smaller than this.
+     */
+    @Query("{ 'token': ?0, $or: [ { 'lastUsedAt': { $lt: ?2 } }, { 'lastUsedAt': { $exists: false } } ] }")
+    @Update("{ '$set': { 'lastUsedAt': ?1 } }")
+    void updateLastUsed(String token, long timestamp, long onlyIfOlderThan);
 }

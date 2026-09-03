@@ -59,6 +59,14 @@ public class AuthTokenEntity {
     @Column(name = "type")
     private int type;
 
+    /**
+     * Timestamp of the last successful authentication with this token, added by V1_3__AddLastUsedAt.sql. Null
+     * means the token has not been used since last used tracking was introduced, which is reported as unknown
+     * and not as never used.
+     */
+    @Column(name = "last_used_at")
+    private Long lastUsedAt;
+
     @Column(name = "dao_created")
     private Long daoCreated;
 
@@ -141,5 +149,13 @@ public class AuthTokenEntity {
 
     public Long getDaoUpdated() {
         return daoUpdated;
+    }
+
+    public Long getLastUsedAt() {
+        return lastUsedAt;
+    }
+
+    public void setLastUsedAt(Long lastUsedAt) {
+        this.lastUsedAt = lastUsedAt;
     }
 }

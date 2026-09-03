@@ -7,6 +7,8 @@ import org.distributeme.annotation.DistributeMe;
 import org.distributeme.annotation.FailBy;
 import org.distributeme.core.failing.RetryCallOnce;
 
+import java.util.List;
+
 /**
  * Authentication service infrastructure.
  *
@@ -100,4 +102,32 @@ public interface AuthenticationService extends Service, UserDataManagingService 
      * @throws AuthenticationServiceException if error
      */
     String getTokenByType(AccountId accountId, int type) throws AuthenticationServiceException;
+
+    /**
+     * Returns the inventory of all tokens of the given account - what exists, when it was created and when it was
+     * last used, without revealing the tokens themselves.
+     *
+     * The result describes the tokens which exist right now, it is not a history: an entry disappears when its
+     * token is deleted, consumed or replaced.
+     *
+     * @param accountId account id.
+     * @return the inventory entries, never null.
+     * @throws AuthenticationServiceException if error
+     */
+    List<TokenInventoryEntry> getTokenInventoryByAccount(AccountId accountId) throws AuthenticationServiceException;
+
+    /**
+     * Returns the inventory of tokens of the given type across all accounts.
+     *
+     * The result is bound by limit because a token type which is used for logins matches millions of rows in a
+     * large installation, and this list is serialized to the caller. The entries carry the account id in the
+     * form it is stored in, which is the encrypted one.
+     *
+     * @param type   token type.
+     * @param limit  maximum number of entries to return, must be greater than zero.
+     * @param offset number of entries to skip, must not be negative.
+     * @return the inventory entries, never null.
+     * @throws AuthenticationServiceException if error
+     */
+    List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationServiceException;
 }
