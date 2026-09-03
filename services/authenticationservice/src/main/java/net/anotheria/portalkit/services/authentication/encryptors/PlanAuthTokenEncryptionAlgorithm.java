@@ -7,7 +7,7 @@ import net.anotheria.portalkit.services.authentication.AuthTokenEncryptors;
 /**
  * Plain, unencrypted pass through of the parameter string. For debugging and testing only.
  *
- * Its output is neither encrypted nor link safe - it contains the '&' and ':' separators of the parameter string -
+ * Its output is neither encrypted nor link safe - it contains the '&amp;' and ':' separators of the parameter string -
  * so it must never be used for tokens which are sent out in a link.
  *
  * @author lrosenberg
