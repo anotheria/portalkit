@@ -115,6 +115,13 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
 
     @Override
     public AccountId authenticateByEncryptedToken(String token) throws AuthenticationServiceException {
+        //everything which can be decided from the token itself is decided first, so a forged, manipulated or
+        //expired token costs no database query at all.
+        AuthToken authToken = decryptOrReject(token);
+
+        if (authToken.isExpired())
+            throw new AuthTokenExpiredException();
+
         try {
             boolean tokenExists = persistenceService.authTokenExists(token);
             if (!tokenExists)
@@ -122,11 +129,6 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
         } catch (AuthenticationPersistenceServiceException e) {
             throw new AuthenticationServiceException(e);
         }
-
-        AuthToken authToken = decrypt(token);
-
-        if (authToken.isExpired())
-            throw new AuthTokenExpiredException();
 
         if (!authToken.isMultiUse()) {
             try {
@@ -144,16 +146,22 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
 
     @Override
     public boolean canAuthenticateByEncryptedToken(String token) throws AuthenticationServiceException {
+        AuthToken authToken;
         try {
-            boolean tokenExists = persistenceService.authTokenExists(token);
-            if (!tokenExists)
-                return false;
+            authToken = decrypt(token);
+        } catch (RuntimeException e) {
+            //not authentic, so not something this service issued - no database query needed to say no.
+            return false;
+        }
+
+        if (authToken.isExpired())
+            return false;
+
+        try {
+            return persistenceService.authTokenExists(token);
         } catch (AuthenticationPersistenceServiceException e) {
             throw new AuthenticationServiceException(e);
         }
-
-        AuthToken authToken = decrypt(token);
-        return !authToken.isExpired();
 
     }
 
@@ -165,6 +173,27 @@ public class AuthenticationServiceImpl implements AuthenticationService, EntityM
      */
     private AuthToken decrypt(String token) {
         return AuthTokenEncryptors.decrypt(token);
+    }
+
+    /**
+     * Decrypts the token and rejects it if it is not authentic. With one of the authenticated algorithms this is
+     * a proof that the token was minted with the configured phrase, so a forged or manipulated token is rejected
+     * here, before any persistence is touched. Anything which does not decrypt was not issued by this service and
+     * is reported as not found - a caller can not tell a forgery from a revoked token, and does not need to.
+     *
+     * @param token the token to check.
+     * @return the decrypted token.
+     * @throws AuthTokenNotFoundException if the token is not authentic.
+     */
+    private AuthToken decryptOrReject(String token) throws AuthTokenNotFoundException {
+        try {
+            return decrypt(token);
+        } catch (RuntimeException e) {
+            //a failing tag check, a broken encoding or an algorithm shortcut which is not configured - all of
+            //them mean the same thing here. The token itself is never logged, it is a secret.
+            log.debug("Rejecting a token which can't be decrypted: " + e.getMessage());
+            throw new AuthTokenNotFoundException();
+        }
     }
 
     /**
