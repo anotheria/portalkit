@@ -32,7 +32,7 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
     /**
      * Encryption algorithm for accountId.
      */
-    private PasswordEncryptionAlgorithm accountIdAlgorithm;
+    private BlowfishPasswordEncryptionAlgorithm accountIdAlgorithm;
     /**
      * The persistence service.
      */
@@ -375,12 +375,6 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * Note that this implementation stores the account ids encrypted and there is no plain account id in scope
-     * for a type wide query, so the returned entries carry the encrypted account id.
-     */
     @Override
     public List<TokenInventoryEntry> getTokenInventoryByType(int type, int limit, int offset) throws AuthenticationServiceException {
         if (limit <= 0)
@@ -388,10 +382,30 @@ public class SecretKeyAuthenticationServiceImpl implements SecretKeyAuthenticati
         if (offset < 0)
             throw new IllegalArgumentException("offset can't be negative");
         try {
-            return persistenceService.getTokenInventoryByType(type, limit, offset);
+            //this implementation stores the account ids encrypted, and unlike the account scoped call there is
+            //no plain account id in scope here. An entry carrying the encrypted id would be useless to the
+            //caller - the point of the inventory is to be able to look up who owns or created a token - so the
+            //ids are mapped back before they leave.
+            List<TokenInventoryEntry> stored = persistenceService.getTokenInventoryByType(type, limit, offset);
+            List<TokenInventoryEntry> ret = new ArrayList<TokenInventoryEntry>(stored.size());
+            for (TokenInventoryEntry entry : stored)
+                ret.add(withAccountId(entry, getDecrypted(entry.getAccountId())));
+            return ret;
         } catch (AuthenticationPersistenceServiceException e) {
             throw new AuthenticationServiceException("Can't retrieve the token inventory of type " + type, e);
         }
+    }
+
+    /**
+     * Reverses {@link #getEncrypted(AccountId)}.
+     *
+     * @param id the stored, encrypted account id.
+     * @return the real account id.
+     */
+    private AccountId getDecrypted(AccountId id) {
+        //blowfish encrypts whole 8 byte blocks, so a 36 character uuid comes back padded to 40 with spaces.
+        //An account id never carries surrounding whitespace, and a padded one would not match any account.
+        return new AccountId(accountIdAlgorithm.decryptPassword(id.getInternalId()).trim());
     }
 
     /**

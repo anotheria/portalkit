@@ -8,6 +8,8 @@ import net.anotheria.portalkit.services.authentication.persistence.Authenticatio
 import net.anotheria.portalkit.services.authentication.persistence.inmemory.InMemoryAuthenticationPersistenceServiceFactory;
 import net.anotheria.portalkit.services.common.AccountId;
 import net.anotheria.portalkit.services.common.persistence.InMemoryPickerConflictResolver;
+
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +53,30 @@ public class SecretKeyAuthenticationServiceTest {
 
         assertFalse(persistenceService.authTokenExists(oldEncrypted.getEncryptedVersion()));
         assertTrue(persistenceService.authTokenExists(newEncrypted.getEncryptedVersion()));
+    }
+
+    @Test
+    public void tokenInventoryReportsRealAccountIds() throws MetaFactoryException, AuthenticationServiceException {
+        SecretKeyAuthenticationService service = MetaFactory.get(SecretKeyAuthenticationService.class);
+
+        AccountId accountId = AccountId.generateNew();
+        AuthToken token = new AuthToken();
+        token.setType(15);
+        token.setMultiUse(true);
+        token.setAccountId(accountId);
+        token.setExpiryTimestamp(System.currentTimeMillis() + 60000L);
+
+        service.generateEncryptedToken(accountId, token);
+
+        //this implementation stores the account id encrypted. An inventory entry carrying that encrypted id
+        //would be useless - the caller wants to look the account up to see who owns or created the token.
+        List<TokenInventoryEntry> byAccount = service.getTokenInventoryByAccount(accountId);
+        assertEquals(1, byAccount.size());
+        assertEquals(accountId, byAccount.get(0).getAccountId());
+
+        List<TokenInventoryEntry> byType = service.getTokenInventoryByType(15, 100, 0);
+        assertEquals(1, byType.size());
+        assertEquals("the type scoped inventory has to report the real account id too", accountId, byType.get(0).getAccountId());
     }
 
 }

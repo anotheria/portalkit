@@ -21,11 +21,15 @@ public class BlowfishPasswordEncryptionAlgorithm implements PasswordEncryptionAl
 	}
 
 	/**
-	 * Decrypts a password, shouldn't be used.
-	 * @param encryptedPassword
-	 * @return
+	 * Decrypts what {@link #encryptPassword(String)} produced. Blowfish is a cipher and not a hash, which is the
+	 * documented weakness of this algorithm for passwords - but it is exactly what makes it usable for the
+	 * reversible account id mapping of SecretKeyAuthenticationServiceImpl, which has to get the real account id
+	 * back to be able to report it.
+	 *
+	 * @param encryptedPassword the encrypted value.
+	 * @return the decrypted value.
 	 */
-	/* test */String decryptPassword(String encryptedPassword) {
+	public String decryptPassword(String encryptedPassword) {
 		if (cryptTool==null)
 			throw new IllegalStateException("Uninitialzed call customize(key) first");
 		return cryptTool.decryptFromHex(encryptedPassword);

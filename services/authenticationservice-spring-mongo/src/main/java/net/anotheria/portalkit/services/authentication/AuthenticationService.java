@@ -120,8 +120,8 @@ public interface AuthenticationService extends Service, UserDataManagingService 
      * Returns the inventory of tokens of the given type across all accounts.
      *
      * The result is bound by limit because a token type which is used for logins matches millions of rows in a
-     * large installation, and this list is serialized to the caller. The entries carry the account id in the
-     * form it is stored in, which is the encrypted one.
+     * large installation, and this list is serialized to the caller. The entries carry real account ids, so the
+     * owner of a token can actually be looked up.
      *
      * @param type   token type.
      * @param limit  maximum number of entries to return, must be greater than zero.
